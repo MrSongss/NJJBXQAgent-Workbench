@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会议纪要智能生成智能体 v5</title>
+<style>
+    /* ========== 基础 ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px; color: #333; background: #f5f7fa;
+        height: 100vh; overflow: hidden;
+    }
+    :root {
+        --primary: #1e5aa8; --primary-hover: #164a8f;
+        --primary-light: #e8f0fa; --primary-lighter: #f4f8fd;
+        --border: #dce3ec; --border-light: #eaeef3;
+        --text-main: #333; --text-sub: #666; --text-tip: #999;
+        --success: #52c41a; --warning: #faad14; --danger: #f5222d;
+    }
+    .layout { display: flex; height: 100vh; }
+
+    /* ========== 侧边栏 ========== */
+    .sidebar { width: 260px; background: #fff; border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: width 0.25s ease; flex-shrink: 0; }
+    .sidebar.collapsed { width: 56px; }
+    .sidebar-header { height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
+    .sidebar-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--primary); white-space: nowrap; overflow: hidden; }
+    .sidebar-logo-icon { width: 28px; height: 28px; background: var(--primary); color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .sidebar.collapsed .sidebar-logo-text { display: none; }
+    .collapse-btn { width: 28px; height: 28px; border: none; background: transparent; cursor: pointer; color: var(--text-sub); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .collapse-btn:hover { background: var(--primary-light); color: var(--primary); }
+    .sidebar.collapsed .collapse-btn { transform: rotate(180deg); }
+    .new-meeting-btn { margin: 12px; padding: 10px 12px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; transition: background 0.2s; white-space: nowrap; overflow: hidden; }
+    .new-meeting-btn:hover { background: var(--primary-hover); }
+    .sidebar.collapsed .new-meeting-btn { padding: 10px 8px; }
+    .sidebar.collapsed .new-meeting-btn .btn-text { display: none; }
+
+    /* 筛选区 */
+    .filter-section { padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+    .sidebar.collapsed .filter-section { display: none; }
+    .filter-title { font-size: 12px; color: var(--text-tip); font-weight: 500; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    .filter-input { width: 100%; height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; margin-bottom: 6px; font-family: inherit; }
+    .filter-input:focus { border-color: var(--primary); }
+    .filter-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .filter-row .filter-input { margin-bottom: 0; }
+    .filter-select { width: 100%; height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: #fff; outline: none; margin-bottom: 6px; font-family: inherit; }
+    .filter-btns { display: flex; gap: 6px; }
+    .filter-btn { flex: 1; height: 26px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: inherit; }
+    .filter-btn.primary { background: var(--primary); color: #fff; }
+    .filter-btn.primary:hover { background: var(--primary-hover); }
+    .filter-btn.ghost { background: #fff; color: var(--text-sub); border: 1px solid var(--border); }
+    .filter-btn.ghost:hover { color: var(--primary); border-color: var(--primary); }
+
+    .history-section { flex: 1; overflow-y: auto; padding: 0 8px; }
+    .history-title { padding: 12px 8px 6px; font-size: 12px; color: var(--text-tip); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+    .sidebar.collapsed .history-title, .sidebar.collapsed .history-list { display: none; }
+    .history-item { padding: 8px 10px; margin-bottom: 2px; border-radius: 6px; cursor: pointer; transition: background 0.15s; border: 1px solid transparent; }
+    .history-item:hover { background: var(--primary-lighter); }
+    .history-item.active { background: var(--primary-light); border-color: #cddfff; }
+    .history-item.active .history-item-title { color: var(--primary); font-weight: 500; }
+    .history-item-title { font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .history-item-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-tip); }
+    .history-status { padding: 1px 6px; border-radius: 8px; font-size: 10px; }
+    .history-status.done { background: #f6ffed; color: var(--success); }
+    .history-status.draft { background: #f0f5ff; color: var(--primary); }
+    .history-status.review { background: #fff7e6; color: var(--warning); }
+    .history-empty { padding: 20px 8px; text-align: center; font-size: 12px; color: var(--text-tip); }
+    .sidebar-footer { padding: 10px 12px; border-top: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-sub); }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+    .sidebar.collapsed .user-info { display: none; }
+
+    /* ========== 主区 ========== */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .main-header { height: 56px; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .main-title { display: flex; align-items: center; gap: 10px; }
+    .main-title-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), #3a7bc8); color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .main-title-text { font-size: 16px; font-weight: 600; color: var(--text-main); }
+    .main-title-sub { font-size: 12px; color: var(--text-tip); margin-top: 2px; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .back-btn { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px solid var(--border); background: #fff; color: var(--text-sub); border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .back-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-text-primary { background: transparent; color: var(--primary); border: none; cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; }
+    .btn-text-primary:hover { background: var(--primary-light); }
+    .main-content { flex: 1; overflow-y: auto; padding: 24px 32px; }
+
+    /* ========== 新建 ========== */
+    .welcome-container { max-width: 900px; margin: 0 auto; }
+    .welcome-header { text-align: center; padding: 20px 0 16px; }
+    .welcome-title { font-size: 22px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; }
+    .welcome-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
+
+    .card { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; padding: 20px 24px; margin-bottom: 16px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .card-title::before { content: ""; width: 3px; height: 14px; background: var(--primary); border-radius: 2px; }
+    .card-title-sub { font-size: 12px; color: var(--text-tip); font-weight: normal; }
+    .step-number { display: inline-block; width: 20px; height: 20px; background: var(--primary); color: #fff; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+
+    /* 上传 */
+    .upload-tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 1px solid var(--border-light); }
+    .upload-tab { padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text-sub); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+    .upload-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 500; }
+    .upload-tab:hover { color: var(--primary); }
+    .upload-area { border: 2px dashed var(--border); border-radius: 8px; padding: 32px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--primary-lighter); position: relative; }
+    .upload-area:hover, .upload-area.dragover { border-color: var(--primary); background: var(--primary-light); }
+    .upload-icon { font-size: 36px; color: var(--primary); margin-bottom: 8px; }
+    .upload-text { font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
+    .upload-text b { color: var(--primary); }
+    .upload-hint { font-size: 12px; color: var(--text-tip); line-height: 1.7; }
+    .upload-hint b { color: var(--text-sub); }
+    .upload-progress { position: absolute; left: 20px; right: 20px; bottom: 16px; height: 4px; background: #e0e6ee; border-radius: 2px; overflow: hidden; display: none; }
+
+    /* 附加材料折叠区 */
+    .attach-material { margin-top: 14px; border: 1px solid var(--border-light); border-radius: 6px; overflow: hidden; background: #fcfdfe; }
+    .attach-material-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; transition: background 0.15s; }
+    .attach-material-bar:hover { background: var(--primary-lighter); }
+    .attach-bar-left { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-main); font-weight: 500; }
+    .attach-bar-left svg { color: var(--primary); }
+    .attach-count { display: inline-block; min-width: 18px; height: 18px; line-height: 18px; text-align: center; background: var(--primary); color: #fff; border-radius: 9px; font-size: 11px; padding: 0 5px; margin-left: 2px; }
+    .attach-count:empty { display: none; }
+    .attach-bar-right { display: flex; align-items: center; gap: 8px; }
+    .attach-tip { font-size: 11px; color: var(--text-tip); font-weight: normal; }
+    .attach-arrow { color: var(--text-tip); transition: transform 0.2s; }
+    .attach-material.expanded .attach-arrow { transform: rotate(180deg); }
+    .attach-material-body { display: none; padding: 12px 14px; border-top: 1px solid var(--border-light); }
+    .attach-material.expanded .attach-material-body { display: block; }
+    .attach-upload-area { border: 1.5px dashed var(--border); border-radius: 6px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .attach-upload-area:hover, .attach-upload-area.dragover { border-color: var(--primary); background: var(--primary-lighter); }
+    .attach-upload-area svg { color: var(--primary); }
+    .attach-upload-area span { font-size: 12px; color: var(--text-main); }
+    .attach-upload-hint { font-size: 11px !important; color: var(--text-tip) !important; }
+    .upload-progress.show { display: block; }
+    .upload-progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.15s linear; }
+    .upload-progress-text { font-size: 11px; color: var(--primary); margin-top: 6px; text-align: center; }
+
+    .file-list { margin-top: 12px; }
+    .file-item { display: flex; align-items: center; padding: 8px 12px; background: #fafbfc; border: 1px solid var(--border-light); border-radius: 4px; margin-bottom: 6px; font-size: 13px; }
+    .file-item-icon { color: var(--primary); margin-right: 8px; font-size: 15px; }
+    .file-item-name { flex: 1; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-item-meta { color: var(--text-tip); margin-right: 12px; font-size: 12px; }
+    .file-item-tag { padding: 1px 6px; border-radius: 3px; font-size: 10px; margin-right: 8px; }
+    .file-item-tag.primary { background: var(--primary-light); color: var(--primary); }
+    .file-item-tag.aux { background: #fff7e6; color: var(--warning); }
+    .file-item-remove { color: var(--danger); cursor: pointer; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+    .file-item-remove:hover { background: #ffe6e6; }
+
+    /* 智能识别 */
+    .recognize-card { background: linear-gradient(135deg, #f4f8fd 0%, #eaf2fb 100%); border: 1px solid #cddfff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; }
+    .recognize-header { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--primary); font-weight: 600; margin-bottom: 12px; }
+    .recognize-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px; }
+    .recognize-item { display: flex; flex-direction: column; }
+    .recognize-label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .recognize-label .ai-tag { display: inline-block; padding: 1px 5px; background: var(--primary); color: #fff; border-radius: 2px; font-size: 10px; }
+
+    /* 表单 */
+    .form-input, .form-select, .form-textarea { height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-main); outline: none; transition: border-color 0.2s; background: #fff; font-family: inherit; width: 100%; }
+    .form-textarea { height: 72px; padding: 8px 10px; resize: vertical; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+    .form-input.error, .form-select.error { border-color: var(--danger); }
+    .form-error { font-size: 12px; color: var(--danger); margin-top: 4px; min-height: 16px; }
+    .form-item { display: flex; flex-direction: column; margin-bottom: 12px; }
+    .form-label { font-size: 13px; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; }
+    .form-label.required::before { content: "*"; color: var(--danger); margin-right: 4px; }
+    .form-tip { font-size: 12px; color: var(--text-tip); margin-left: 8px; }
+
+    /* 生成设置 */
+    .simple-settings { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .simple-settings-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-main); }
+    .simple-settings-item label { color: var(--text-sub); white-space: nowrap; }
+    .simple-settings-item select { min-width: 180px; height: 32px; }
+    .secret-hint { margin-top: 12px; padding: 10px 12px; background: #fafbfc; border-left: 3px solid var(--primary); font-size: 12px; color: var(--text-sub); border-radius: 0 4px 4px 0; line-height: 1.7; display: none; }
+    .secret-hint.show { display: block; }
+    .secret-hint b { color: var(--primary); }
+
+    /* 按钮 */
+    .btn { padding: 8px 20px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn-default { background: #fff; color: var(--text-main); border-color: var(--border); }
+    .btn-default:hover { color: var(--primary); border-color: var(--primary); }
+    .btn-danger { background: #fff; color: var(--danger); border-color: #ffccc7; }
+    .btn-danger:hover { background: #fff2f0; }
+    .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
+    .btn-success:hover { background: #389e0d; border-color: #389e0d; }
+    .btn-large { padding: 10px 32px; font-size: 14px; }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .form-footer { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+
+    /* 进度 */
+    .progress-container { padding: 20px 24px; }
+    .progress-header { text-align: center; margin-bottom: 24px; }
+    .progress-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .progress-subtitle { font-size: 13px; color: var(--text-tip); }
+    .steps { display: flex; justify-content: space-around; padding: 20px 40px 12px; position: relative; }
+    .steps::before { content: ""; position: absolute; top: 34px; left: 68px; right: 68px; height: 2px; background: var(--border); z-index: 0; }
+    .step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 130px; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: #fff; border: 2px solid var(--border); color: var(--text-tip); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; margin-bottom: 8px; transition: all 0.3s; }
+    .step.active .step-num { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30, 90, 168, 0.15); }
+    .step.done .step-num { background: var(--success); color: #fff; border-color: var(--success); }
+    .step.done .step-num::after { content: "✓"; }
+    .step.done .step-num-text { display: none; }
+    .step-label { font-size: 12px; color: var(--text-sub); text-align: center; }
+    .step.active .step-label, .step.done .step-label { color: var(--text-main); font-weight: 500; }
+    .progress-log { margin-top: 16px; padding: 14px 16px; background: #fafbfc; border: 1px solid var(--border-light); border-radius: 6px; max-height: 200px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
+    .log-item { display: flex; gap: 8px; color: var(--text-sub); }
+    .log-time { color: var(--text-tip); flex-shrink: 0; }
+    .log-item.success .log-msg { color: var(--success); }
+    .log-item.info .log-msg { color: var(--primary); }
+
+    /* 结果视图 */
+    .info-notice { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; margin-bottom: 12px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px; font-size: 13px; color: #874d00; }
+    .info-notice-icon { color: var(--warning); margin-right: 8px; display: inline-flex; align-items: center; }
+    .info-notice.completed { background: #f6ffed; border-color: #b7eb8f; color: #389e0d; }
+    .info-notice.completed .info-notice-icon { color: var(--success); }
+    /* 要素完善提醒（详细版内醒目提示） */
+    .element-notice { display: flex; align-items: center; gap: 8px; padding: 10px 14px; margin-bottom: 12px; background: #fffbe6; border: 1px solid #ffc53d; border-left: 4px solid #faad14; border-radius: 6px; font-size: 13px; color: #874d00; line-height: 1.7; }
+    .element-notice.completed { background: #f6ffed; border-color: #b7eb8f; border-left-color: var(--success); color: #389e0d; }
+    .result-header { padding: 16px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 8px 8px 0 0; }
+    .result-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
+    .result-meta { font-size: 12px; color: var(--text-tip); margin-top: 4px; }
+    .result-actions { display: flex; gap: 8px; }
+    .result-tabs { display: flex; border-bottom: 1px solid var(--border-light); margin-bottom: 16px; gap: 4px; }
+    .result-tab { padding: 10px 18px; cursor: pointer; font-size: 13px; color: var(--text-sub); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .result-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 500; }
+    .result-tab:hover { color: var(--primary); }
+    .result-panel { display: none; }
+    .result-panel.active { display: block; }
+    .action-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+    .action-bar-left { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub); }
+    .action-bar-right { display: flex; gap: 8px; }
+
+    /* 纪要文档 */
+    .doc-container { background: #fff; padding: 30px 50px; min-height: 500px; line-height: 1.9; font-size: 14px; position: relative; overflow: hidden; }
+    .doc-container > * { position: relative; z-index: 1; }
+    .doc-container.editing { border: 2px solid var(--primary); border-radius: 6px; }
+    .security-banner { display: none; text-align: center; padding: 6px 12px; margin: -30px -50px 20px; font-size: 13px; font-weight: 600; letter-spacing: 2px; }
+    .security-banner.show { display: block; }
+    .security-banner.internal { background: #fff7e6; color: #d46b08; border-bottom: 2px solid #ffd591; }
+    .security-banner.secret { background: #fff1f0; color: var(--danger); border-bottom: 2px solid #ffa39e; }
+    .security-banner .banner-mark { display: inline-block; padding: 0 8px; }
+    .doc-container.level-secret::before, .doc-container.level-secret::after { content: "秘密文件"; position: absolute; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); font-size: 100px; color: rgba(245, 34, 45, 0.06); pointer-events: none; z-index: 0; font-weight: bold; letter-spacing: 20px; white-space: nowrap; }
+    .doc-container.level-secret::before { top: 30%; }
+    .doc-container.level-secret::after { bottom: 20%; transform: translate(-50%, 50%) rotate(-25deg); }
+    .doc-security-header { display: none; justify-content: space-between; align-items: center; padding: 0 0 12px; margin-bottom: 12px; border-bottom: 1px dashed #ccc; font-size: 12px; }
+    .doc-security-header.show { display: flex; }
+    .doc-security-header .level-name { color: var(--danger); font-weight: 600; }
+    .doc-security-header .level-internal-name { color: #d46b08; font-weight: 600; }
+    .doc-title { text-align: center; font-size: 20px; font-weight: 600; margin-bottom: 20px; letter-spacing: 2px; color: #000; }
+    .doc-meta { padding: 12px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; margin-bottom: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 24px; font-size: 13px; }
+    .doc-meta-item { display: flex; }
+    .doc-meta-label { color: var(--text-sub); margin-right: 8px; flex-shrink: 0; }
+    .doc-section-title { font-size: 15px; font-weight: 600; margin: 18px 0 8px; color: #000; }
+    .doc-paragraph { text-indent: 2em; margin-bottom: 8px; color: #333; }
+    .doc-list { padding-left: 2em; margin-bottom: 8px; }
+    .doc-list li { margin-bottom: 4px; }
+    .doc-empty { color: var(--text-tip); font-style: italic; }
+
+    /* 编辑工具栏 */
+    .edit-toolbar { display: none; align-items: center; gap: 4px; padding: 8px 16px; background: #fafbfc; border-bottom: 1px solid var(--border-light); flex-wrap: wrap; }
+    .edit-toolbar.show { display: flex; }
+    .edit-tool-btn { padding: 4px 10px; border: 1px solid var(--border); background: #fff; border-radius: 3px; cursor: pointer; font-size: 12px; color: var(--text-sub); display: inline-flex; align-items: center; gap: 4px; }
+    .edit-tool-btn:hover { color: var(--primary); border-color: var(--primary); }
+    .edit-tool-btn.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    .edit-tool-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+    .edit-tool-info { font-size: 11px; color: var(--text-tip); margin-left: auto; }
+
+    /* 概览版 */
+    .quick-doc { background: #fff; padding: 30px 50px; min-height: 500px; font-size: 14px; line-height: 1.9; position: relative; overflow: hidden; }
+    .quick-doc > * { position: relative; z-index: 1; }
+    .quick-doc.editing { border: 2px solid var(--primary); border-radius: 6px; }
+    .quick-doc.level-secret::before { content: "秘密文件"; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); font-size: 90px; color: rgba(245, 34, 45, 0.06); pointer-events: none; z-index: 0; font-weight: bold; letter-spacing: 20px; white-space: nowrap; }
+    .quick-title { text-align: center; font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #000; }
+    .quick-subtitle { text-align: center; font-size: 12px; color: var(--text-tip); margin-bottom: 24px; }
+    .quick-section { margin-bottom: 20px; padding: 14px 16px; background: #fafbfc; border-left: 3px solid var(--primary); border-radius: 4px; }
+    .quick-section h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .quick-section ul { padding-left: 22px; font-size: 13px; line-height: 1.9; color: var(--text-main); }
+    .quick-section ul li { margin-bottom: 4px; }
+    .quick-tag { display: inline-block; padding: 1px 6px; background: var(--primary); color: #fff; border-radius: 2px; font-size: 11px; margin-right: 6px; }
+
+    /* 议题 */
+    .topic-item { margin-bottom: 16px; padding: 14px 16px; background: #fafbfc; border-left: 3px solid var(--primary); border-radius: 4px; transition: all 0.3s; }
+    .topic-item.highlighted { background: #fff9db; border-left-color: var(--warning); box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.2); animation: highlight-pulse 1.5s ease-in-out 2; }
+    @keyframes highlight-pulse { 0%, 100% { background: #fff9db; } 50% { background: #fff3bf; } }
+    .topic-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+    .topic-content { font-size: 13px; color: var(--text-sub); line-height: 1.7; margin-bottom: 8px; }
+    .topic-conclusion { margin-top: 8px; padding: 10px 12px; background: #fff; border: 1px solid var(--border-light); border-radius: 4px; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+    .topic-conclusion-label { display: inline-block; padding: 1px 8px; border-radius: 3px; font-size: 11px; color: #fff; vertical-align: middle; flex-shrink: 0; line-height: 1.5; }
+    .conclusion-text { flex: 1; }
+    .status-agreed { background: var(--success); }
+    .status-pending { background: var(--warning); }
+    .status-diff { background: var(--danger); }
+    .editable-field { padding: 4px 8px; border: 1px dashed var(--primary); background: #fff; border-radius: 3px; outline: none; min-height: 1.5em; }
+    .editable-field:focus { border-color: var(--primary); border-style: solid; box-shadow: 0 0 0 2px rgba(30, 90, 168, 0.15); }
+    .status-selector { border: 1px solid var(--border); background: #fff; border-radius: 3px; padding: 2px 6px; font-size: 11px; color: var(--text-main); cursor: pointer; }
+    .conclusion-actions { display: flex; gap: 4px; margin-left: 8px; }
+    .conclusion-del { color: var(--danger); cursor: pointer; padding: 2px 6px; font-size: 11px; border-radius: 3px; }
+    .conclusion-del:hover { background: #ffe6e6; }
+    .add-conclusion-btn { margin-top: 8px; padding: 4px 10px; border: 1px dashed var(--primary); color: var(--primary); background: #fff; border-radius: 3px; cursor: pointer; font-size: 12px; }
+    .add-conclusion-btn:hover { background: var(--primary-lighter); }
+
+    /* 待办 */
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th, .table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+    .table th { background: #fafbfc; color: var(--text-sub); font-weight: 500; }
+    .table tbody tr:hover { background: var(--primary-lighter); }
+    .table .col-content { min-width: 220px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; background: var(--primary-light); color: var(--primary); }
+    .tag-urgent { background: #fff2f0; color: var(--danger); }
+    .tag-normal { background: #f6ffed; color: var(--success); }
+    .owner-cell { display: flex; align-items: center; gap: 4px; min-height: 24px; }
+    .owner-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 12px; cursor: pointer; background: var(--primary-light); color: var(--primary); transition: all 0.15s; }
+    .owner-tag:hover { background: var(--primary); color: #fff; }
+    .owner-tag .edit-icon { opacity: 0.6; font-size: 10px; }
+    .owner-tag:hover .edit-icon { opacity: 1; }
+    .owner-empty { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 3px; font-size: 12px; cursor: pointer; background: #fff7e6; color: #d46b08; border: 1px dashed #ffb96a; transition: all 0.15s; }
+    .owner-empty:hover { background: #ffe7ba; }
+    .owner-input, .cell-input { width: 100%; height: 24px; padding: 0 6px; border: 1px solid var(--primary); border-radius: 3px; font-size: 12px; outline: none; background: #fff; font-family: inherit; }
+    .owner-input { width: 100px; }
+    .cell-input.wide { width: 220px; }
+    .owner-actions { display: inline-flex; gap: 4px; margin-left: 4px; }
+    .owner-actions button { border: none; background: transparent; cursor: pointer; padding: 0 4px; font-size: 14px; display: inline-flex; align-items: center; }
+    .owner-actions .save-btn { color: var(--success); }
+    .owner-actions .cancel-btn { color: var(--danger); }
+    .content-cell { cursor: text; border-radius: 3px; padding: 2px 4px; }
+    .content-cell:hover { background: var(--primary-lighter); }
+    .content-cell .edit-hint { font-size: 10px; color: var(--text-tip); opacity: 0; margin-left: 4px; }
+    .content-cell:hover .edit-hint { opacity: 1; }
+    .topic-link { display: inline-flex; align-items: center; gap: 3px; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: 3px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+    .topic-link:hover { background: var(--primary); color: #fff; }
+    .source-link { display: inline-flex; align-items: center; gap: 4px; color: var(--primary); cursor: pointer; font-size: 12px; padding: 4px 8px; border-radius: 3px; transition: background 0.15s; }
+    .source-link:hover { background: var(--primary-light); }
+
+    /* 转写文本 & 播放器 */
+    .audio-player { background: #fafbfc; border: 1px solid var(--border-light); border-radius: 6px; padding: 14px 16px; margin-bottom: 14px; }
+    .player-controls { display: flex; align-items: center; gap: 12px; }
+    .play-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
+    .play-btn:hover { background: var(--primary-hover); }
+    .player-time { font-family: 'Courier New', monospace; font-size: 12px; color: var(--text-sub); min-width: 55px; text-align: center; flex-shrink: 0; }
+    .progress-bar-wrapper { flex: 1; height: 6px; background: #e0e6ee; border-radius: 3px; cursor: pointer; position: relative; }
+    .progress-bar-played { height: 100%; background: var(--primary); border-radius: 3px; width: 0%; transition: width 0.15s linear; position: relative; }
+    .progress-bar-thumb { position: absolute; top: 50%; right: -6px; transform: translateY(-50%); width: 12px; height: 12px; background: var(--primary); border: 2px solid #fff; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .player-speed { padding: 3px 8px; border: 1px solid var(--border); border-radius: 3px; background: #fff; font-size: 12px; cursor: pointer; color: var(--text-sub); }
+    .player-speed:hover { border-color: var(--primary); color: var(--primary); }
+    .speaker-manage-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #fafbfc; border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 12px; }
+    .speaker-manage-info { font-size: 12px; color: var(--text-sub); display: flex; align-items: center; gap: 6px; }
+    .speaker-manage-info b { color: var(--primary); }
+    .transcript-list { max-height: 480px; overflow-y: auto; padding: 4px 0; }
+    .transcript-line { padding: 10px 12px; border-bottom: 1px dashed var(--border-light); font-size: 13px; line-height: 1.7; transition: background 0.15s; border-radius: 4px; }
+    .transcript-line.clickable { cursor: pointer; }
+    .transcript-line.clickable:hover { background: var(--primary-lighter); }
+    .transcript-line:last-child { border-bottom: none; }
+    .transcript-line.playing { background: var(--primary-light); border-left: 3px solid var(--primary); padding-left: 9px; }
+    .transcript-line.highlighted { background: #fff9db; border-left: 3px solid var(--warning); padding-left: 9px; animation: highlight-pulse 1.5s ease-in-out 2; }
+    .transcript-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+    .transcript-speaker-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; background: var(--primary-light); color: var(--primary); }
+    .transcript-speaker-tag:hover { background: var(--primary); color: #fff; }
+    .transcript-speaker-tag .spk-edit { opacity: 0.5; font-size: 10px; }
+    .transcript-speaker-tag:hover .spk-edit { opacity: 1; }
+    .transcript-time { color: var(--text-tip); font-size: 12px; font-family: 'Courier New', monospace; }
+    .transcript-para-num { display: inline-block; padding: 1px 8px; background: var(--primary-light); color: var(--primary); border-radius: 3px; font-size: 11px; font-weight: 500; }
+    .transcript-text { color: var(--text-main); line-height: 1.7; }
+
+    /* 弹窗 */
+    .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-mask.show { display: flex; }
+    .modal { background: #fff; border-radius: 8px; min-width: 400px; max-width: 580px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); }
+    .modal-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .modal-close { cursor: pointer; color: var(--text-tip); font-size: 18px; line-height: 1; }
+    .modal-close:hover { color: var(--text-main); }
+    .modal-body { padding: 20px; font-size: 13px; color: var(--text-sub); line-height: 1.7; max-height: 65vh; overflow-y: auto; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-light); text-align: right; display: flex; justify-content: flex-end; gap: 8px; }
+    .modal-icon { text-align: center; font-size: 40px; margin-bottom: 10px; }
+    .modal-icon.success { color: var(--success); }
+    .modal-icon.warning { color: var(--warning); }
+
+    /* 说话人管理弹窗 */
+    .speaker-list { display: flex; flex-direction: column; gap: 10px; }
+    .speaker-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #fafbfc; border: 1px solid var(--border-light); border-radius: 6px; }
+    .speaker-row .spk-id { width: 60px; font-size: 12px; color: var(--text-tip); flex-shrink: 0; }
+    .speaker-row .spk-color { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .speaker-row .spk-input { flex: 1; height: 32px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; outline: none; font-family: inherit; }
+    .speaker-row .spk-input:focus { border-color: var(--primary); }
+    .speaker-row .spk-count { font-size: 11px; color: var(--text-tip); flex-shrink: 0; min-width: 50px; text-align: right; }
+
+    /* 修改历史弹窗 */
+    .history-log-list { max-height: 360px; overflow-y: auto; }
+    .history-log-item { padding: 10px 12px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .history-log-item:last-child { border-bottom: none; }
+    .history-log-info { font-size: 12px; color: var(--text-sub); }
+    .history-log-time { color: var(--text-tip); }
+    .history-log-action { color: var(--primary); font-weight: 500; }
+    .history-log-empty { padding: 20px; text-align: center; color: var(--text-tip); font-size: 12px; }
+
+    /* 要素补充 Tab */
+    .sup-mode-tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); }
+    .sup-mode-tab { padding: 10px 20px; cursor: pointer; color: var(--text-sub); font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .sup-mode-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 500; }
+    .sup-mode-tab:hover { color: var(--primary); }
+    .sup-mode-tab .hot-badge { display: inline-block; padding: 1px 5px; background: var(--danger); color: #fff; border-radius: 2px; font-size: 10px; }
+    .ai-input-area { border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; background: #fafbfc; margin-bottom: 12px; }
+    .ai-input-header { font-size: 12px; color: var(--text-sub); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .ai-input-header .ai-tag-inline { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; background: var(--primary); color: #fff; border-radius: 2px; font-size: 10px; }
+    .ai-input-textarea { width: 100%; min-height: 90px; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-main); outline: none; resize: vertical; font-family: inherit; line-height: 1.7; background: #fff; transition: border-color 0.2s; }
+    .ai-input-textarea:focus { border-color: var(--primary); }
+    .ai-example-title { font-size: 12px; color: var(--text-tip); margin: 10px 0 6px; }
+    .ai-examples { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ai-example { padding: 4px 10px; background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; font-size: 12px; color: var(--text-sub); transition: all 0.15s; }
+    .ai-example:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lighter); }
+    .ai-btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .ai-btn-hint { font-size: 11px; color: var(--text-tip); }
+    .ai-parse-result { margin-top: 14px; padding: 12px 14px; background: var(--primary-lighter); border: 1px solid #cddfff; border-radius: 6px; display: none; }
+    .ai-parse-result.show { display: block; }
+    .ai-parse-header { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .ai-parse-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 16px; font-size: 13px; }
+    .ai-parse-item { display: flex; align-items: flex-start; }
+    .ai-parse-key { color: var(--text-sub); min-width: 60px; margin-right: 6px; }
+    .ai-parse-value { color: var(--text-main); font-weight: 500; flex: 1; word-break: break-all; }
+    .ai-parse-value.miss { color: var(--text-tip); font-style: italic; font-weight: normal; }
+    .ai-parse-footer { margin-top: 10px; font-size: 12px; color: var(--text-sub); padding-top: 8px; border-top: 1px dashed #cddfff; }
+    .ai-parse-tip { color: #d46b08; margin-top: 6px; font-size: 12px; display: none; padding: 6px 10px; background: #fff7e6; border-radius: 4px; }
+    .ai-parse-tip.show { display: block; }
+
+    /* Toast */
+    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background: rgba(0, 0, 0, 0.75); color: #fff; border-radius: 4px; font-size: 13px; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 80%; text-align: center; }
+    .toast.show { opacity: 1; }
+    .loading-dot { display: inline-block; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: blink 1.4s infinite both; margin: 0 2px; }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+    .hidden { display: none !important; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d0d6de; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b0b6be; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .recognizing-tip { text-align: center; padding: 20px; color: var(--primary); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- ============ 侧边栏 ============ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">纪</div>
+                <span class="sidebar-logo-text">会议纪要智能体</span>
+            </div>
+            <button class="collapse-btn" id="collapseBtn" title="折叠侧边栏">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+        </div>
+
+        <button class="new-meeting-btn" id="newMeetingBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span class="btn-text">新建会议纪要</span>
+        </button>
+
+        <!-- 筛选区 -->
+        <div class="filter-section">
+            <div class="filter-title"><span>历史记录筛选</span></div>
+            <input type="text" class="filter-input" id="filterKeyword" placeholder="搜索会议主题/名称" oninput="applyFilter()">
+            <div class="filter-row">
+                <input type="date" class="filter-input" id="filterDateStart" title="开始日期" onchange="applyFilter()">
+                <input type="date" class="filter-input" id="filterDateEnd" title="结束日期" onchange="applyFilter()">
+            </div>
+            <div class="filter-btns">
+                <button class="filter-btn ghost" onclick="resetFilter()">重置</button>
+                <button class="filter-btn primary" onclick="applyFilter()">筛选</button>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title"><span>历史生成记录</span><span id="historyCount" style="color:var(--primary);"></span></div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar">张</div>
+            <div class="user-info">
+                <div style="color:var(--text-main);font-size:13px;">张秘书</div>
+                <div style="font-size:11px;color:var(--text-tip);">办公室</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============ 主区 ============ -->
+    <main class="main">
+        <div class="main-header">
+            <div class="main-title" id="mainTitleBlock">
+                <div class="main-title-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+                </div>
+                <div>
+                    <div class="main-title-text">会议纪要智能生成智能体</div>
+                    <div class="main-title-sub">音频转写 · 议题提炼 · 待办抽取 · 标准纪要 · 摘要概览</div>
+                </div>
+            </div>
+            <div class="main-title hidden" id="resultHeaderBlock">
+                <button class="back-btn" onclick="backToCreate()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    返回
+                </button>
+                <div style="margin-left:12px;">
+                    <div class="main-title-text" id="topResultName">会议纪要</div>
+                    <div class="main-title-sub" id="topResultDesc">生成结果</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-text-primary" onclick="showHelp()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    使用说明
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 视图1：新建/上传 -->
+            <div class="view active" id="viewCreate">
+                <div class="welcome-container">
+                    <div class="welcome-header">
+                        <div class="welcome-title">会议纪要智能生成</div>
+                        <div class="welcome-desc">上传会议录音或已转写文本，可附加会议方案材料，智能体自动识别并生成纪要</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title"><span class="step-number">1</span>上传会议资料<span class="card-title-sub">（录音或转写文本为主，可附加方案材料辅助识别）</span></div>
+                        </div>
+                        <div class="upload-tabs">
+                            <div class="upload-tab active" data-tab="audio">会议录音</div>
+                            <div class="upload-tab" data-tab="text">已转写文本</div>
+                        </div>
+
+                        <div class="upload-panel" id="upload-audio">
+                            <div class="upload-area" id="audioUploadArea" onclick="simulateUpload('audio')">
+                                <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></div>
+                                <div class="upload-text">点击上传或<b>拖拽文件</b>到此处</div>
+                                <div class="upload-hint">支持 <b>MP3、WAV、M4A、AAC、FLAC、OGG、WMA、AMR</b> 等主流音频格式<br>系统将自动处理大文件与长录音，无需关心切分，<b>单次上传 1 个录音文件</b></div>
+                                <div class="upload-progress" id="audioProgress"><div class="upload-progress-bar" id="audioProgressBar"></div></div>
+                            </div>
+                            <div class="file-list" id="fileList-audio"></div>
+                        </div>
+
+                        <div class="upload-panel hidden" id="upload-text">
+                            <div class="upload-area" onclick="simulateUpload('text')">
+                                <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
+                                <div class="upload-text">点击上传或<b>拖拽文件</b>到此处</div>
+                                <div class="upload-hint">支持 <b>DOCX、DOC、TXT、PDF</b><br>单次上传 1 个转写文本文件</div>
+                            </div>
+                            <div class="file-list" id="fileList-text"></div>
+                        </div>
+
+                        <!-- 附加会议材料（折叠式，与主材料共用同一卡片） -->
+                        <div class="attach-material">
+                            <div class="attach-material-bar" id="attachBar" onclick="toggleAttachMaterial()">
+                                <div class="attach-bar-left">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                                    <span>附加会议方案/材料（可选）</span>
+                                    <span class="attach-count" id="attachCount"></span>
+                                </div>
+                                <div class="attach-bar-right">
+                                    <span class="attach-tip">辅助识别会议重点，优化纪要/议题/待办生成</span>
+                                    <svg class="attach-arrow" id="attachArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                            <div class="attach-material-body" id="attachBody">
+                                <div class="attach-upload-area" onclick="simulateUpload('material')" id="attachUploadArea">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    <span>点击或拖拽会议方案/材料到此处</span>
+                                    <span class="attach-upload-hint">支持 PDF、DOCX、DOC、TXT、PPTX、XLSX，可上传多个</span>
+                                </div>
+                                <div class="file-list" id="fileList-material"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 会议信息填写卡（用户自填，不再AI推荐） -->
+                    <div class="card" id="infoCard">
+                        <div class="card-header"><div class="card-title"><span class="step-number">2</span>填写会议信息</div></div>
+                        <div class="form-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 24px;">
+                            <div class="form-item"><label class="form-label required">会议名称</label><input type="text" class="form-input" id="meetingName" placeholder="如：办公室工作例会（2026年第7次）"></div>
+                            <div class="form-item"><label class="form-label required">会议类型</label>
+                                <select class="form-select" id="meetingType" onchange="autoSelectTemplate()">
+                                    <option value="" selected>请选择会议类型</option><option value="1">工作例会</option><option value="2">专题协调会议</option><option value="3">项目推进会议</option><option value="4">工作调度会议</option><option value="5">部门会商会议</option>
+                                </select>
+                            </div>
+                            <div class="form-item"><label class="form-label required">纪要模板</label>
+                                <div style="display:flex;gap:6px;align-items:center;">
+                                    <select class="form-select" id="template"><option value="" selected>请选择纪要模板</option><option value="1">工作例会标准模板</option><option value="2">专题协调会议模板</option><option value="3">项目推进会议模板</option><option value="4">部门会商模板</option></select>
+                                    <button class="btn btn-default btn-sm" onclick="openTemplatePreview()" style="white-space:nowrap;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>查看模板</button>
+                                </div>
+                            </div>
+                            <div class="form-item"><label class="form-label required">保密级别</label>
+                                <select class="form-select" id="secret" onchange="updateSecretHint()"><option value="0">普通</option><option value="1">内部</option><option value="2">秘密</option></select>
+                            </div>
+                        </div>
+                        <div class="secret-hint" id="secretHint"><div id="secretHintText"></div></div>
+                        <div style="margin-top:10px;font-size:12px;color:var(--text-tip);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>会议时间、地点、出席人员等要素可在生成后直接在详细版纪要中在线编辑完善。</div>
+                        <div class="form-footer">
+                            <button class="btn btn-default btn-large" onclick="resetForm()">重置</button>
+                            <button class="btn btn-primary btn-large" id="mainActionBtn" onclick="mainAction()" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span id="mainActionText">请先上传会议资料</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 视图2：进度 -->
+            <div class="view" id="viewProgress">
+                <div class="welcome-container"><div class="card"><div class="progress-container">
+                    <div class="progress-header"><div class="progress-title"><span id="progressStepText">正在处理会议资料</span><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div><div class="progress-subtitle" id="progressSubtitle">系统正在自动处理，请稍候</div></div>
+                    <div class="steps" id="stepsContainer"></div>
+                    <div class="progress-log" id="progressLog"></div>
+                    <div style="text-align:center;margin-top:20px;"><button class="btn btn-default" onclick="cancelGenerate()">取消生成</button></div>
+                </div></div></div>
+            </div>
+
+            <!-- 视图：转写文本标记（左右分栏，仅录音路径） -->
+            <div class="view" id="viewTranscribe">
+                <div style="display:flex;gap:16px;align-items:flex-start;">
+                    <!-- 左侧：收缩的填写信息 -->
+                    <div style="width:300px;flex-shrink:0;">
+                        <div class="card" style="padding:16px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                <div style="font-size:14px;font-weight:600;color:var(--text-main);">会议信息</div>
+                                <button class="btn btn-default btn-sm" onclick="backToEditInfo()">修改</button>
+                            </div>
+                            <div id="transcribeInfoSummary" style="font-size:12px;color:var(--text-sub);line-height:2;"></div>
+                        </div>
+                        <div style="text-align:center;margin-top:16px;">
+                            <button class="btn btn-primary btn-large" onclick="startGenerate()" style="width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>开始智能生成</button>
+                            <div style="font-size:11px;color:var(--text-tip);margin-top:8px;">标记完成后生成议题结论、待办事项、详细版与概览版纪要</div>
+                        </div>
+                    </div>
+                    <!-- 右侧：转写文本 + 说话人标记 + 筛选 -->
+                    <div style="flex:1;min-width:0;">
+                        <div class="card" style="padding:0;">
+                            <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                                <div style="font-size:15px;font-weight:600;color:var(--text-main);">转写文本（可标记说话人）</div>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <select class="form-select" id="transcribeSpeakerFilter" onchange="renderTranscribeTranscript()" style="width:140px;height:30px;font-size:12px;"><option value="">全部说话人</option></select>
+                                    <button class="btn btn-primary btn-sm" onclick="openSpeakerManage()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M23 11h-6"></path></svg>说话人标记</button>
+                                </div>
+                            </div>
+                            <div class="transcript-list" id="transcribeTranscriptList" style="max-height:560px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 视图3：结果 -->
+            <div class="view" id="viewResult">
+                <div class="card" style="padding:0;">
+                    <div class="result-header">
+                        <div>
+                            <div class="result-title" id="resultMeetingName">办公室工作例会（2026年第7次）</div>
+                            <div class="result-meta"><span id="resultMeetingType">工作例会</span> · <span id="resultMeetingTime">时间待补充</span> · <span id="resultMeetingPlace">地点待补充</span> · <span id="resultSecretLevel" style="color:var(--danger);"></span></div>
+                        </div>
+                        <div class="result-actions">
+                            <button class="btn btn-default" onclick="showExport()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>导出</button>
+                            <button class="btn btn-primary" onclick="window.print()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>打印</button>
+                        </div>
+                    </div>
+
+                    <div style="padding:0 24px;">
+                        <div class="result-tabs">
+                            <div class="result-tab active" data-tab="detailed"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>详细版纪要</div>
+                            <div class="result-tab" data-tab="quick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line></svg>概览版纪要</div>
+                            <div class="result-tab" data-tab="topics"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>议题结论</div>
+                            <div class="result-tab" data-tab="todos"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>待办事项</div>
+                            <div class="result-tab" data-tab="transcript" id="transcriptTab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span id="transcriptTabLabel">转写文本</span></div>
+                        </div>
+                    </div>
+
+                    <div style="padding:20px 24px;">
+                        <!-- 详细版 -->
+                        <div class="result-panel active" id="panel-detailed">
+                            <div class="action-bar">
+                                <div class="action-bar-left">详细版会议纪要 · 完整公文格式</div>
+                                <div class="action-bar-right">
+                                    <button class="btn btn-default btn-sm" onclick="toggleDocEdit('detailed')" id="detailedEditBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑</button>
+                                </div>
+                            </div>
+                            <div class="element-notice" id="elementNotice"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span id="elementNoticeText">提醒：会议时间、地点、主持人、出席人员、记录人等要素尚未完善，请点击「编辑」直接在线补充修改。</span></div>
+                            <div class="edit-toolbar" id="detailedToolbar">
+                                <button class="edit-tool-btn" onclick="formatDoc('bold')"><b>B</b> 加粗</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('italic')"><i>I</i> 斜体</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('underline')"><u>U</u> 下划线</button>
+                                <span class="edit-tool-divider"></span>
+                                <button class="edit-tool-btn" onclick="formatDoc('insertUnorderedList')">• 列表</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('formatBlock','<h3>')">标题</button>
+                                <span class="edit-tool-info">修改实时保存</span>
+                            </div>
+                            <div class="doc-container" id="detailedDoc">
+                                <div class="doc-security-header" id="detailedSecHeader"><span class="level-mark"></span><span class="save-period"></span></div>
+                                <div class="security-banner internal" id="detailedBannerInternal"><span class="banner-mark">内 部 资 料</span> · 注 意 保 存</div>
+                                <div class="security-banner secret" id="detailedBannerSecret"><span class="banner-mark">★ 秘 密 ★</span> · 请 妥 善 保 管</div>
+                                <div class="doc-editable-region" id="detailedEditableRegion">
+                                    <div class="doc-title">办公室工作例会纪要</div>
+                                    <div class="doc-meta">
+                                        <div class="doc-meta-item"><span class="doc-meta-label">会议名称：</span><span id="docMeetingName">办公室工作例会（2026年第7次）</span></div>
+                                        <div class="doc-meta-item"><span class="doc-meta-label">会议时间：</span><span id="docMeetingTime" class="doc-empty">（待补充）</span></div>
+                                        <div class="doc-meta-item"><span class="doc-meta-label">会议地点：</span><span id="docMeetingPlace" class="doc-empty">（待补充）</span></div>
+                                        <div class="doc-meta-item"><span class="doc-meta-label">主持人：</span><span id="docHost" class="doc-empty">（待补充）</span></div>
+                                        <div class="doc-meta-item" style="grid-column:1/-1;"><span class="doc-meta-label">出席人员：</span><span id="docAttendees" class="doc-empty">（待补充）</span></div>
+                                        <div class="doc-meta-item"><span class="doc-meta-label">记录人：</span><span id="docRecorder" class="doc-empty">（待补充）</span></div>
+                                    </div>
+                                    <div class="doc-section-title">一、会议议题</div>
+                                    <div class="doc-paragraph">本次会议主要研究部署三项工作：一是2026年上半年工作总结与下半年工作安排；二是政务信息化项目推进情况汇报；三是干部培训工作方案研究。</div>
+                                    <div class="doc-section-title">二、议定事项</div>
+                                    <div class="doc-paragraph"><b>（一）关于2026年上半年工作总结与下半年工作安排。</b>会议听取了办公室上半年工作情况汇报，充分肯定了各项工作取得的成效。会议决定：</div>
+                                    <div class="doc-list"><li>各处室于7月20日前完成上半年工作总结报告，交由综合处汇总；</li><li>下半年重点抓好三项重点任务：政务服务标准化建设、机关效能提升、干部队伍建设；</li><li>由王副主任牵头，7月底前形成下半年工作要点报领导审定。</li></div>
+                                    <div class="doc-paragraph"><b>（二）关于政务信息化项目推进情况。</b>会议听取了政务信息化项目一期建设情况汇报。会议决定：</div>
+                                    <div class="doc-list"><li>加快推进项目一期收尾工作，确保8月15日前完成系统上线试运行；</li><li>由张处长负责，牵头组织业务培训，8月30日前完成全员培训；</li><li>项目二期需求调研工作9月初启动，由信息化处承办。</li></div>
+                                    <div class="doc-paragraph"><b>（三）关于干部培训工作方案。</b>会议原则通过干部培训工作方案，明确培训对象、内容及组织形式。会议决定：</div>
+                                    <div class="doc-list"><li>由赵科长负责修改完善方案，7月18日前提交办公会审议；</li><li>培训时间安排在9月中下旬，为期一周；</li><li>培训经费按预算标准执行，人事处做好相关保障工作。</li></div>
+                                    <div class="doc-section-title">三、其他事项</div>
+                                    <div class="doc-paragraph">会议还就近期文明创建工作、机关后勤保障等事项进行了研究部署，要求各处室按照职责分工，抓好各项工作的贯彻落实。</div>
+                                    <div style="margin-top:40px;text-align:right;padding-right:60px;"><div>办公室</div><div>2026年7月13日</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 概览版 -->
+                        <div class="result-panel" id="panel-quick">
+                            <div class="action-bar">
+                                <div class="action-bar-left">概览版会议纪要 · 聚焦核心决议与关键行动</div>
+                                <div class="action-bar-right">
+                                    <button class="btn btn-default btn-sm" onclick="toggleDocEdit('quick')" id="quickEditBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑</button>
+                                </div>
+                            </div>
+                            <div class="edit-toolbar" id="quickToolbar">
+                                <button class="edit-tool-btn" onclick="formatDoc('bold')"><b>B</b> 加粗</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('italic')"><i>I</i> 斜体</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('underline')"><u>U</u> 下划线</button>
+                                <span class="edit-tool-divider"></span>
+                                <button class="edit-tool-btn" onclick="formatDoc('insertUnorderedList')">• 列表</button>
+                                <span class="edit-tool-info">修改实时保存</span>
+                            </div>
+                            <div class="quick-doc" id="quickDoc">
+                                <div class="doc-security-header" id="quickSecHeader"><span class="level-mark"></span><span class="save-period"></span></div>
+                                <div class="security-banner internal" id="quickBannerInternal" style="margin:-30px -50px 20px;"><span class="banner-mark">内 部 资 料</span> · 注 意 保 存</div>
+                                <div class="security-banner secret" id="quickBannerSecret" style="margin:-30px -50px 20px;"><span class="banner-mark">★ 秘 密 ★</span> · 请 妥 善 保 管</div>
+                                <div class="doc-editable-region" id="quickEditableRegion">
+                                    <div class="quick-title">办公室工作例会纪要（概览版）</div>
+                                    <div class="quick-subtitle">聚焦核心决议与关键行动 · 便于快速阅知</div>
+                                    <div class="quick-section"><h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>核心决议</h4><ul><li>下半年重点抓好政务服务标准化建设、机关效能提升、干部队伍建设三项重点任务。</li><li>政务信息化项目一期于8月15日前完成系统上线试运行，8月30日前完成全员培训。</li><li>原则通过干部培训工作方案，9月中下旬开展为期一周的干部培训。</li></ul></div>
+                                    <div class="quick-section"><h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>关键行动</h4><ul><li><span class="quick-tag">7月18日前</span>赵科长修改完善干部培训方案并提交办公会审议</li><li><span class="quick-tag">7月20日前</span>各处室完成上半年工作总结报告并交综合处汇总</li><li><span class="quick-tag">7月底前</span>王副主任牵头形成下半年工作要点报领导审定</li><li><span class="quick-tag">8月15日前</span>张处长推动政务信息化项目一期上线试运行</li><li><span class="quick-tag">8月30日前</span>张处长牵头完成信息化系统全员业务培训</li></ul></div>
+                                    <div class="quick-section"><h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>后续跟踪</h4><ul><li>项目二期需求调研工作9月初由信息化处启动。</li><li>培训经费按预算标准执行，人事处做好相关保障。</li><li>关于是否邀请外部专家授课尚存分歧，需进一步研究后再定。</li></ul></div>
+                                    <div style="margin-top:30px;text-align:right;color:var(--text-tip);font-size:12px;">智能体自动生成 · 建议与详细版纪要配合使用</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 议题结论 -->
+                        <div class="result-panel" id="panel-topics">
+                            <div class="action-bar">
+                                <div class="action-bar-left">共识别 <b style="color:var(--primary);" id="topicCount">3</b> 个议题，<b style="color:var(--primary);" id="conclusionCount">9</b> 项结论</div>
+                                <div class="action-bar-right" id="topicsActions">
+                                    <button class="btn btn-default btn-sm" onclick="toggleTopicsEdit()" id="editTopicsBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑</button>
+                                </div>
+                            </div>
+                            <div id="topicsContainer"></div>
+                        </div>
+
+                        <!-- 待办事项 -->
+                        <div class="result-panel" id="panel-todos">
+                            <div class="action-bar">
+                                <div class="action-bar-left">共 <b style="color:var(--primary);" id="todoTotal">6</b> 项待办 <span id="todoMissTip" style="color:var(--warning);margin-left:8px;display:none;">· <b id="todoMissCount">1</b> 项未识别到责任主体，请手工补充</span> · 分组查看：
+                                    <select class="form-select" style="height:28px;padding:0 8px;font-size:12px;width:auto;" onchange="showToast('已按 '+this.options[this.selectedIndex].text+' 分组')"><option>全部</option><option>按责任主体</option><option>按时限</option><option>按议题</option></select>
+                                </div>
+                                <div class="action-bar-right"><button class="btn btn-default btn-sm" onclick="showToast('已导出待办清单')">导出清单</button></div>
+                            </div>
+                            <table class="table"><thead><tr><th style="width:40px;">序号</th><th class="col-content">任务内容</th><th style="width:150px;">责任主体</th><th style="width:130px;">时限</th><th style="width:110px;">关联议题</th><th style="width:150px;" id="sourceColTitle">信息来源</th></tr></thead><tbody id="todosBody"></tbody></table>
+                            <div style="margin-top:12px;font-size:12px;color:var(--text-tip);text-align:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>点击「任务内容/时限/责任主体」可直接编辑；点击「关联议题」定位议题结论；点击「信息来源」定位转写文本</div>
+                        </div>
+
+                        <!-- 转写文本 -->
+                        <div class="result-panel" id="panel-transcript">
+                            <div class="audio-player" id="audioPlayerBlock">
+                                <div class="player-controls">
+                                    <button class="play-btn" id="playBtn" onclick="togglePlay()"><svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg><svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button>
+                                    <span class="player-time" id="currentTime">00:00:00</span>
+                                    <div class="progress-bar-wrapper" id="progressBar"><div class="progress-bar-played" id="progressPlayed"><div class="progress-bar-thumb"></div></div></div>
+                                    <span class="player-time" id="totalTime">01:28:45</span>
+                                    <select class="player-speed" id="playSpeed" onchange="changeSpeed()"><option value="1">1.0×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2.0×</option></select>
+                                </div>
+                                <div style="margin-top:10px;font-size:12px;color:var(--text-tip);">时长 01:28:45 · 点击下方文本可跳转对应时间</div>
+                            </div>
+                            <div class="audio-player hidden" id="textOnlyBlock">
+                                <div style="font-size:13px;color:var(--text-sub);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>已转写文本 · 共 <b id="paraTotal">10</b> 段 <span style="color:var(--text-tip);margin-left:8px;">（未上传音频，无播放功能）</span></div>
+                            </div>
+                            <div class="speaker-manage-bar">
+                                <div class="speaker-manage-info"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M23 11h-6"></path></svg>转写文本仅支持查看，说话人标记请在生成前的转写标记环节完成</div>
+                            </div>
+                            <div class="transcript-list" id="transcriptList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 弹窗：取消 -->
+<div class="modal-mask" id="modalCancel"><div class="modal"><div class="modal-header">确认取消<span class="modal-close" onclick="hideModal('modalCancel')">×</span></div><div class="modal-body"><div class="modal-icon warning"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><div style="text-align:center;">是否确认取消本次生成任务？当前处理进度将会丢失。</div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalCancel')">继续生成</button><button class="btn btn-danger" onclick="confirmCancel()">确认取消</button></div></div></div>
+
+<!-- 弹窗：成功 -->
+<div class="modal-mask" id="modalSuccess"><div class="modal"><div class="modal-header">生成成功<span class="modal-close" onclick="hideModal('modalSuccess')">×</span></div><div class="modal-body"><div class="modal-icon success"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div><div style="text-align:center;"><div style="font-size:15px;color:var(--text-main);font-weight:500;margin-bottom:8px;">会议纪要已生成完成！</div><div>已智能识别 <b style="color:var(--primary);">3</b> 个议题、<b style="color:var(--primary);">9</b> 项结论、<b style="color:var(--primary);">6</b> 项待办事项<br>同步输出「详细版」与「概览版」双版本纪要<br><br><span style="color:var(--warning);">建议使用「一句话生成」快速补充会议要素</span></div></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="hideModal('modalSuccess')">查看结果</button></div></div></div>
+
+<!-- 弹窗：导出 -->
+<div class="modal-mask" id="modalExport"><div class="modal"><div class="modal-header">导出会议纪要<span class="modal-close" onclick="hideModal('modalExport')">×</span></div><div class="modal-body"><div id="exportSecretWarn" style="display:none;padding:8px 12px;background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;color:var(--danger);font-size:12px;margin-bottom:14px;"><b>密级提示：</b>当前文件为「秘密」级别，导出后请通过安全通道传递，禁止上传至公开网络。</div><div id="exportInternalWarn" style="display:none;padding:8px 12px;background:#fff7e6;border:1px solid #ffd591;border-radius:4px;color:#d46b08;font-size:12px;margin-bottom:14px;"><b>密级提示：</b>当前文件为「内部」级别，仅限单位内部使用。</div><div style="margin-bottom:14px;"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;">选择导出内容</div><div style="display:flex;flex-wrap:wrap;gap:12px;"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" checked>详细版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" checked>概览版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox">议题结论</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox">待办事项清单</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="exportTranscript">转写文本</label></div></div><div><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;">导出格式</div><div style="display:flex;gap:16px;"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="radio" name="exportFormat" value="docx" checked>DOCX</label></div></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalExport')">取消</button><button class="btn btn-primary" onclick="doExport()">确认导出</button></div></div></div>
+
+<!-- 弹窗：要素补充 -->
+<div class="modal-mask" id="modalSupplement"><div class="modal" style="min-width:580px;"><div class="modal-header">要素补充与修改<span class="modal-close" onclick="tryCloseSupplement()">×</span></div><div class="modal-body"><div class="sup-mode-tabs"><div class="sup-mode-tab active" data-mode="ai" onclick="switchSupMode('ai')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>一句话生成<span class="hot-badge">推荐</span></div><div class="sup-mode-tab" data-mode="manual" onclick="switchSupMode('manual')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>手动填写</div></div><div id="supModeAI"><div class="ai-input-area"><div class="ai-input-header"><span class="ai-tag-inline"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>AI</span>用一句话描述会议基本情况，智能体将自动补齐要素</div><textarea class="ai-input-textarea" id="aiSentence" placeholder="例如：今天上午9点半在第一会议室，李主任主持召开办公室工作例会，王副主任、张处长、赵科长参加，张秘书做记录"></textarea><div class="ai-example-title">您也可以点击以下常用示例快速填入：</div><div class="ai-examples" id="aiExamples"></div><div class="ai-btn-row"><div class="ai-btn-hint"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>可识别：时间 / 地点 / 主持人 / 出席人员 / 记录人</div><button class="btn btn-primary btn-sm" onclick="aiParse()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>智能识别</button></div></div><div class="ai-parse-result" id="aiParseResult"><div class="ai-parse-header"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>AI 识别结果，请确认后保存</div><div class="ai-parse-grid" id="aiParseGrid"></div><div class="ai-parse-tip" id="aiParseMissTip"></div><div class="ai-parse-footer"><span style="color:var(--text-tip);">识别不准？</span><a href="javascript:void(0);" style="color:var(--primary);" onclick="switchSupMode('manual')">切换到手动填写</a>&nbsp;或&nbsp;<a href="javascript:void(0);" style="color:var(--primary);" onclick="aiReset()">重新描述</a></div></div></div><div id="supModeManual" class="hidden"><div style="color:var(--text-tip);margin-bottom:14px;font-size:12px;">请补充或修正会议基本要素，保存后将自动更新至详细版纪要</div><div class="form-item"><label class="form-label required">会议时间</label><input type="datetime-local" class="form-input" id="supMeetingTime"><div class="form-error" id="err-supMeetingTime"></div></div><div class="form-item"><label class="form-label">会议地点</label><input type="text" class="form-input" id="supMeetingPlace" placeholder="例如：第一会议室"></div><div class="form-item"><label class="form-label">主持人</label><input type="text" class="form-input" id="supHost" placeholder="例如：李主任"></div><div class="form-item"><label class="form-label">出席人员 <span class="form-tip">多人以顿号分隔</span></label><input type="text" class="form-input" id="supAttendees" placeholder="例如：李主任、王副主任、张处长、赵科长"></div><div class="form-item"><label class="form-label">列席人员</label><input type="text" class="form-input" id="supObservers" placeholder="如有列席人员，请填写"></div><div class="form-item"><label class="form-label">记录人</label><input type="text" class="form-input" id="supRecorder" placeholder="例如：张秘书"></div><div class="form-item"><label class="form-label">备注说明</label><textarea class="form-textarea" id="supRemark" placeholder="如需补充说明的信息"></textarea></div></div></div><div class="modal-footer"><button class="btn btn-default" onclick="tryCloseSupplement()">取消</button><button class="btn btn-primary" onclick="saveSupplement()">保存并更新纪要</button></div></div></div>
+
+<!-- 弹窗：编辑取消 -->
+<div class="modal-mask" id="modalEditCancel"><div class="modal"><div class="modal-header">放弃编辑？<span class="modal-close" onclick="hideModal('modalEditCancel')">×</span></div><div class="modal-body"><div style="text-align:center;">当前编辑内容尚未保存，是否放弃修改？</div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalEditCancel')">继续编辑</button><button class="btn btn-danger" onclick="confirmCancelEdit()">放弃修改</button></div></div></div>
+
+<!-- 弹窗：说话人标记 -->
+<div class="modal-mask" id="modalSpeaker"><div class="modal" style="min-width:480px;"><div class="modal-header">说话人标记<span class="modal-close" onclick="hideModal('modalSpeaker')">×</span></div><div class="modal-body"><div style="color:var(--text-tip);margin-bottom:14px;font-size:12px;">为每个编号说话人指定身份，保存后<b style="color:var(--primary);">自动同步</b>至所有相同编号的发言记录</div><div class="speaker-list" id="speakerList"></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalSpeaker')">取消</button><button class="btn btn-primary" onclick="saveSpeakers()">保存并同步</button></div></div></div>
+
+<!-- 弹窗：修改历史 -->
+<div class="modal-mask" id="modalHistory"><div class="modal" style="min-width:460px;"><div class="modal-header">修改历史记录<span class="modal-close" onclick="hideModal('modalHistory')">×</span></div><div class="modal-body"><div class="history-log-list" id="historyLogList"></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalHistory')">关闭</button></div></div></div>
+
+<!-- 弹窗：模板预览 -->
+<div class="modal-mask" id="modalTemplate"><div class="modal" style="min-width:560px;max-width:680px;"><div class="modal-header">纪要模板预览<span class="modal-close" onclick="hideModal('modalTemplate')">×</span></div><div class="modal-body"><div style="margin-bottom:12px;font-size:12px;color:var(--text-tip);">可在下方切换查看各类模板结构，选中模板将作为生成依据。</div><div style="margin-bottom:12px;"><select class="form-select" id="templatePreviewSelect" onchange="renderTemplatePreview()" style="max-width:300px;"><option value="auto">智能匹配（推荐）</option><option value="1">工作例会标准模板</option><option value="2">专题协调会议模板</option><option value="3">项目推进会议模板</option><option value="4">部门会商模板</option></select></div><div id="templatePreviewContent" style="background:#fafbfc;border:1px solid var(--border-light);border-radius:6px;padding:16px;max-height:420px;overflow-y:auto;font-size:13px;line-height:1.9;"></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalTemplate')">关闭</button><button class="btn btn-primary" onclick="applyTemplatePreview()">使用该模板</button></div></div></div>
+
+<!-- 弹窗：使用说明 -->
+<div class="modal-mask" id="modalHelp"><div class="modal" style="min-width:560px;max-width:600px;"><div class="modal-header">使用说明<span class="modal-close" onclick="hideModal('modalHelp')">×</span></div><div class="modal-body"><div style="line-height:1.9;"><div style="color:var(--text-main);font-weight:500;margin-bottom:8px;">使用步骤：</div><ol style="padding-left:20px;color:var(--text-sub);"><li><b style="color:var(--text-main);">上传会议资料：</b>录音（自动转写）或转写文本，可附加方案材料辅助</li><li><b style="color:var(--text-main);">确认推荐信息：</b>智能体基于转写内容推荐会议名称、类型、纪要模板，可修改并查看模板</li><li><b style="color:var(--text-main);">选择保密级别：</b>选择后点击「开始智能生成」</li><li><b style="color:var(--text-main);">生成纪要：</b>系统生成议题结论、待办事项、详细版与概览版纪要</li><li><b style="color:var(--text-main);">要素补充：</b><b>推荐使用「一句话生成」</b>快速补齐会议要素</li><li><b style="color:var(--text-main);">说话人标记：</b>在转写文本中标记说话人身份，自动同步</li><li><b style="color:var(--text-main);">内容编辑：</b>纪要全文、待办任务内容与时限均可在线编辑</li></ol><div style="margin-top:14px;padding:10px 12px;background:var(--primary-lighter);border-radius:4px;color:var(--text-sub);"><b style="color:var(--primary);">无感处理：</b>系统自动切分大文件与长录音，保证上下文完整，全程透明无感知</div></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="hideModal('modalHelp')">我知道了</button></div></div></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ JavaScript ============ -->
+<script>
+/* ========================================================
+   会议纪要智能生成智能体 v5
+   新增：材料上传 / 历史筛选 / 说话人标记同步 / 无感处理 / 内容编辑(含修改历史)
+   ======================================================== */
+
+/* ==================== 全局数据 ==================== */
+let historyData = [
+    { id: 'h1', title: '办公室工作例会（第7次）', time: '今天 09:30', dateStr: '2026-07-16', type: '工作例会', status: 'done' },
+    { id: 'h2', title: '政务信息化项目推进会', time: '昨天 14:00', dateStr: '2026-07-15', type: '项目推进会议', status: 'review' },
+    { id: 'h3', title: '干部培训工作专题协调会', time: '07-10 15:20', dateStr: '2026-07-10', type: '专题协调会议', status: 'done' },
+    { id: 'h4', title: '综合处会商会议', time: '07-08 10:00', dateStr: '2026-07-08', type: '部门会商会议', status: 'draft' },
+    { id: 'h5', title: '机关效能提升调度会', time: '07-05 09:00', dateStr: '2026-07-05', type: '工作调度会议', status: 'done' },
+    { id: 'h6', title: '数字政府建设推进会', time: '06-28 14:30', dateStr: '2026-06-28', type: '项目推进会议', status: 'done' }
+];
+
+const uploadFiles = { audio: null, text: null, material: [] };
+let uploadMode = null;
+let currentSecretLevel = '0';
+let progressTimer = null;
+let audioUploadTimer = null;
+
+const transcriptData = [
+    { id: 1, para: 1, speakerId: 'sp1', speaker: '说话人1', timeStr: '00:00:15', startSec: 15, text: '好，同志们，我们现在开始今天的工作例会。今天的会议主要有三项议题：一是2026年上半年工作总结与下半年工作安排；二是政务信息化项目推进情况汇报；三是干部培训工作方案研究。下面我们进入第一项议题。' },
+    { id: 2, para: 2, speakerId: 'sp2', speaker: '说话人2', timeStr: '00:01:32', startSec: 92, text: '上半年工作情况我先做个简要汇报。总体上看，我们各项工作推进比较顺利，重点任务完成情况良好。下面我从几个方面详细介绍......' },
+    { id: 3, para: 3, speakerId: 'sp1', speaker: '说话人1', timeStr: '00:15:48', startSec: 948, text: '刚才王副主任的汇报很全面。我认为，下半年工作要突出三个重点：第一是政务服务标准化建设，第二是机关效能提升，第三是干部队伍建设。请王副主任牵头，7月底前形成一个下半年工作要点，报我这里审定。' },
+    { id: 4, para: 4, speakerId: 'sp2', speaker: '说话人2', timeStr: '00:17:22', startSec: 1042, text: '好的，我这边7月底前一定完成。另外建议各处室在7月20日前把上半年工作总结报告交给综合处，方便统一汇总。' },
+    { id: 5, para: 5, speakerId: 'sp3', speaker: '说话人3', timeStr: '00:32:10', startSec: 1930, text: '下面我汇报下政务信息化项目一期的进展情况。目前系统开发已经完成85%，测试环境已经搭建完毕，预计8月15日之前可以完成上线试运行。培训方面，我们计划8月30日之前完成全员的业务培训......' },
+    { id: 6, para: 6, speakerId: 'sp1', speaker: '说话人1', timeStr: '00:45:33', startSec: 2733, text: '信息化项目非常重要，张处长要盯紧一点。二期的需求调研也要早点启动，我看9月初就可以开始。' },
+    { id: 7, para: 7, speakerId: 'sp4', speaker: '说话人4', timeStr: '01:02:15', startSec: 3735, text: '关于干部培训方案，我做个简要汇报。培训对象覆盖机关全体干部，培训内容包括理论学习、业务能力、政务礼仪等。时间安排上，建议9月中下旬集中一周开展......' },
+    { id: 8, para: 8, speakerId: 'sp5', speaker: '说话人5', timeStr: '01:12:08', startSec: 4328, text: '我补充一下，是否可以考虑邀请一些外部专家授课，这样培训效果可能更好。' },
+    { id: 9, para: 9, speakerId: 'sp6', speaker: '说话人6', timeStr: '01:13:42', startSec: 4422, text: '邀请外部专家成本比较高，而且日程安排也不好协调，我建议以内部讲师为主。' },
+    { id: 10, para: 10, speakerId: 'sp1', speaker: '说话人1', timeStr: '01:20:05', startSec: 4805, text: '这个问题大家还有分歧，赵科长在修改方案时综合考虑一下，7月18日前把方案再拿到办公会讨论。今天的会议就到这里，散会。' }
+];
+
+/* 说话人映射：speakerId -> 显示名 */
+let speakerMap = {
+    sp1: '说话人1', sp2: '说话人2', sp3: '说话人3',
+    sp4: '说话人4', sp5: '说话人5', sp6: '说话人6'
+};
+/* 说话人颜色 */
+const speakerColors = { sp1: '#1e5aa8', sp2: '#52c41a', sp3: '#faad14', sp4: '#13c2c2', sp5: '#722ed1', sp6: '#eb2f96' };
+
+let topicsData = [
+    { id: 't1', num: '议题一', title: '2026年上半年工作总结与下半年工作安排', content: '会议听取了办公室2026年上半年工作情况汇报，与会人员对上半年工作成效进行了充分讨论，并就下半年重点任务进行了研究部署。', conclusions: [{ status: 'agreed', text: '各处室于7月20日前完成上半年工作总结报告，交由综合处汇总。' }, { status: 'agreed', text: '下半年重点抓好政务服务标准化建设、机关效能提升、干部队伍建设三项工作。' }, { status: 'agreed', text: '由王副主任牵头，7月底前形成下半年工作要点报领导审定。' }] },
+    { id: 't2', num: '议题二', title: '政务信息化项目推进情况', content: '张处长汇报了政务信息化项目一期建设进展，就系统上线、业务培训、二期启动等事项进行了讨论。', conclusions: [{ status: 'agreed', text: '加快推进项目一期收尾，确保8月15日前完成系统上线试运行。' }, { status: 'agreed', text: '由张处长负责，牵头组织业务培训，8月30日前完成全员培训。' }, { status: 'pending', text: '项目二期具体建设内容需进一步调研，9月初正式启动需求调研工作。' }] },
+    { id: 't3', num: '议题三', title: '干部培训工作方案研究', content: '会议围绕干部培训对象、内容、时间安排、经费保障等进行了充分讨论。', conclusions: [{ status: 'agreed', text: '原则通过干部培训工作方案，由赵科长负责修改完善。' }, { status: 'agreed', text: '培训时间安排在9月中下旬，为期一周。' }, { status: 'diff', text: '关于是否邀请外部专家授课，与会人员意见不一，需进一步研究后再定。' }] }
+];
+
+let topicsEditing = false;
+let topicsBackup = null;
+
+let todosData = [
+    { seq: 1, content: '修改完善干部培训工作方案并提交办公会审议', owner: '赵科长', deadline: '2026-07-18', priority: 'urgent', topicId: 't3', lineId: 10, editing: false },
+    { seq: 2, content: '完成上半年工作总结报告并交综合处汇总', owner: '各处室', deadline: '2026-07-20', priority: 'urgent', topicId: 't1', lineId: 4, editing: false },
+    { seq: 3, content: '牵头形成下半年工作要点报领导审定', owner: '王副主任', deadline: '2026-07-31', priority: 'normal', topicId: 't1', lineId: 3, editing: false },
+    { seq: 4, content: '推动政务信息化项目一期完成系统上线试运行', owner: '张处长', deadline: '2026-08-15', priority: 'normal', topicId: 't2', lineId: 5, editing: false },
+    { seq: 5, content: '牵头组织信息化系统全员业务培训', owner: '张处长', deadline: '2026-08-30', priority: 'normal', topicId: 't2', lineId: 5, editing: false },
+    { seq: 6, content: '启动政务信息化项目二期需求调研工作', owner: '', deadline: '2026-09-初', priority: 'normal', topicId: 't2', lineId: 6, editing: false }
+];
+
+const audioPlayer = { duration: 5325, currentTime: 0, playing: false, speed: 1, timer: null };
+let meetingInfo = { time: '', place: '', host: '', attendees: '', observers: '', recorder: '', remark: '' };
+
+const secretLevelMap = { '0': { name: '普通', color: '' }, '1': { name: '内部', color: '#d46b08' }, '2': { name: '秘密', color: 'var(--danger)' } };
+
+/* 要素补充状态 */
+let supMode = 'ai';
+let aiParsed = null;
+let pendingAction = null;
+
+/* 编辑状态与修改历史 */
+let docEditMode = { detailed: false, quick: false };
+let docEditTimers = { detailed: null, quick: null };
+let editHistory = { detailed: [], quick: [], todos: [] };
+
+/* 筛选状态 */
+let filterState = { keyword: '', dateStart: '', dateEnd: '' };
+
+/* ==================== 初始化 ==================== */
+document.addEventListener('DOMContentLoaded', () => {
+    renderHistory();
+    renderTopics();
+    renderTodos();
+    renderTranscript();
+    renderAIExamples();
+    bindEvents();
+    updateSecretHint();
+});
+
+document.getElementById('collapseBtn').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
+
+/* ==================== 历史记录与筛选 ==================== */
+function applyFilter() {
+    filterState.keyword = (document.getElementById('filterKeyword').value || '').trim().toLowerCase();
+    filterState.dateStart = document.getElementById('filterDateStart').value;
+    filterState.dateEnd = document.getElementById('filterDateEnd').value;
+    renderHistory();
+}
+
+function resetFilter() {
+    document.getElementById('filterKeyword').value = '';
+    document.getElementById('filterDateStart').value = '';
+    document.getElementById('filterDateEnd').value = '';
+    filterState = { keyword: '', dateStart: '', dateEnd: '' };
+    renderHistory();
+    showToast('已重置筛选条件');
+}
+
+function filterDataList(list) {
+    return list.filter(item => {
+        if (filterState.keyword && !item.title.toLowerCase().includes(filterState.keyword) && !item.type.toLowerCase().includes(filterState.keyword)) return false;
+        if (filterState.dateStart && item.dateStr < filterState.dateStart) return false;
+        if (filterState.dateEnd && item.dateStr > filterState.dateEnd) return false;
+        return true;
+    });
+}
+
+function renderHistory() {
+    const filtered = filterDataList(historyData);
+    const list = document.getElementById('historyList');
+    document.getElementById('historyCount').textContent = filtered.length ? `(${filtered.length})` : '';
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<div class="history-empty">未找到匹配的记录</div>';
+        return;
+    }
+
+    const statusMap = { done: '已完成', draft: '草稿', review: '待审核' };
+    list.innerHTML = filtered.map(item => {
+        const isActive = document.querySelector('.history-item.active');
+        const activeId = isActive ? isActive.dataset.id : null;
+        return `<div class="history-item ${item.id === activeId ? 'active' : ''}" data-id="${item.id}" onclick="viewHistory('${item.id}')"><div class="history-item-title">${escapeHtml(item.title)}</div><div class="history-item-meta"><span>${item.time}</span><span class="history-status ${item.status}">${statusMap[item.status]}</span></div></div>`;
+    }).join('');
+}
+
+function viewHistory(id) {
+    if (topicsEditing) { pendingAction = () => viewHistory(id); showModal('modalEditCancel'); return; }
+    if (anyDocEditing()) { pendingAction = () => viewHistory(id); showModal('modalEditCancel'); return; }
+    todosData.forEach(t => t.editing = false);
+    document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+    const activeEl = document.querySelector(`.history-item[data-id="${id}"]`);
+    if (activeEl) activeEl.classList.add('active');
+    const item = historyData.find(h => h.id === id);
+    if (!item) return;
+    uploadMode = 'audio';
+    document.getElementById('resultMeetingName').textContent = item.title;
+    document.getElementById('resultMeetingType').textContent = item.type;
+    document.getElementById('topResultName').textContent = item.title;
+    document.getElementById('topResultDesc').textContent = item.type + ' · 生成结果';
+    document.getElementById('docMeetingName').textContent = item.title;
+    switchView('viewResult');
+    renderTranscript();
+    renderTodos();
+    switchResultTab('detailed');
+    showToast(`已加载：${item.title}`);
+}
+
+document.getElementById('newMeetingBtn').addEventListener('click', () => {
+    if (topicsEditing || anyDocEditing()) {
+        pendingAction = () => {
+            todosData.forEach(t => t.editing = false);
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+            resetForm();
+            switchView('viewCreate');
+        };
+        showModal('modalEditCancel');
+        return;
+    }
+    todosData.forEach(t => t.editing = false);
+    document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+    resetForm();
+    switchView('viewCreate');
+});
+
+/* ==================== 视图切换 ==================== */
+function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    document.querySelector('.main-content').scrollTop = 0;
+    const isResult = (viewId === 'viewResult');
+    document.getElementById('mainTitleBlock').classList.toggle('hidden', isResult);
+    document.getElementById('resultHeaderBlock').classList.toggle('hidden', !isResult);
+}
+
+function backToCreate() {
+    if (topicsEditing || anyDocEditing()) {
+        pendingAction = () => {
+            if (audioPlayer.playing) togglePlay();
+            todosData.forEach(t => t.editing = false);
+            switchView('viewCreate');
+            showToast('已返回上一步');
+        };
+        showModal('modalEditCancel');
+        return;
+    }
+    if (audioPlayer.playing) togglePlay();
+    todosData.forEach(t => t.editing = false);
+    switchView('viewCreate');
+    showToast('已返回上一步');
+}
+
+function confirmCancelEdit() {
+    if (topicsBackup) { topicsData = JSON.parse(JSON.stringify(topicsBackup)); topicsBackup = null; }
+    topicsEditing = false;
+    // 退出所有文档编辑模式
+    Object.keys(docEditMode).forEach(k => { if (docEditMode[k]) { exitDocEdit(k, false); } });
+    document.getElementById('topicsActions').innerHTML = `<button class="btn btn-default btn-sm" onclick="toggleTopicsEdit()" id="editTopicsBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑</button>`;
+    renderTopics();
+    renderTodos();
+    hideModal('modalEditCancel');
+    if (pendingAction) { const act = pendingAction; pendingAction = null; act(); }
+}
+
+function anyDocEditing() { return docEditMode.detailed || docEditMode.quick; }
+
+function bindEvents() {
+    document.querySelectorAll('.upload-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.upload-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`upload-${tab.dataset.tab}`).classList.remove('hidden');
+        });
+    });
+
+    document.querySelectorAll('.result-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchResultTab(tab.dataset.tab));
+    });
+
+    document.querySelectorAll('.upload-area').forEach(area => {
+        area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+        area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+        area.addEventListener('drop', e => {
+            e.preventDefault();
+            area.classList.remove('dragover');
+            const panel = area.closest('.upload-panel');
+            if (!panel) return;
+            const type = panel.id.replace('upload-', '');
+            simulateUpload(type);
+        });
+    });
+
+    // 附加材料区拖拽（独立绑定，不在 upload-panel 内）
+    const attachArea = document.getElementById('attachUploadArea');
+    if (attachArea) {
+        attachArea.addEventListener('dragover', e => { e.preventDefault(); attachArea.classList.add('dragover'); });
+        attachArea.addEventListener('dragleave', () => attachArea.classList.remove('dragover'));
+        attachArea.addEventListener('drop', e => {
+            e.preventDefault();
+            attachArea.classList.remove('dragover');
+            simulateUpload('material');
+        });
+    }
+
+    document.getElementById('progressBar').addEventListener('click', e => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        audioPlayer.currentTime = Math.floor(audioPlayer.duration * percent);
+        updatePlayerUI();
+    });
+
+    document.querySelectorAll('.modal-mask').forEach(mask => {
+        mask.addEventListener('click', e => {
+            if (e.target === mask) {
+                if (mask.id === 'modalSupplement') { tryCloseSupplement(); return; }
+                mask.classList.remove('show');
+            }
+        });
+    });
+}
+
+function switchResultTab(tabName) {
+    if (topicsEditing && tabName !== 'topics') { pendingAction = () => switchResultTab(tabName); showModal('modalEditCancel'); return; }
+    if (tabName !== 'todos') { todosData.forEach(t => t.editing = false); renderTodos(); }
+    document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.result-tab[data-tab="${tabName}"]`).classList.add('active');
+    document.querySelectorAll('.result-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${tabName}`).classList.add('active');
+    if (tabName === 'todos') renderTodos();
+}
+
+/* ==================== 上传（含无感处理） ==================== */
+function simulateUpload(type) {
+    if (type === 'audio') {
+        if (uploadFiles.audio) { showToast('单次仅可上传 1 个录音文件，请先删除现有文件'); return; }
+        if (uploadFiles.text) { showToast('已上传转写文本，请先删除再上传录音'); return; }
+        startAudioUploadProgress();
+        return;
+    }
+    if (type === 'text') {
+        if (uploadFiles.text) { showToast('单次仅可上传 1 个文本文件，请先删除现有文件'); return; }
+        if (uploadFiles.audio) { showToast('已上传录音，请先删除再上传文本'); return; }
+        uploadFiles.text = { name: `会议转写文稿_${new Date().toISOString().slice(0,10)}.docx`, meta: (Math.random() * 500 + 100).toFixed(0) + ' KB · 约 12,000 字' };
+        renderFileList('text');
+        showToast('文件上传成功');
+        uploadMode = 'text';
+        updateMainActionBtn();
+        return;
+    }
+    if (type === 'material') {
+        const name = `会议材料${uploadFiles.material.length + 1}.pdf`;
+        uploadFiles.material.push({ name, meta: (Math.random() * 5 + 1).toFixed(1) + ' MB' });
+        // 自动展开附加区，让用户看到已上传材料
+        const wrap = document.querySelector('.attach-material');
+        if (wrap && !wrap.classList.contains('expanded')) wrap.classList.add('expanded');
+        renderFileList('material');
+        showToast('材料已上传，将辅助优化识别');
+        return;
+    }
+}
+
+/* 音频上传：无感处理 - 统一进度条，后端自动切分，用户无感知 */
+function startAudioUploadProgress() {
+    const fileName = `会议录音_${new Date().toISOString().slice(0,10)}.mp3`;
+    const progress = document.getElementById('audioProgress');
+    const bar = document.getElementById('audioProgressBar');
+    progress.classList.add('show');
+    let pct = 0;
+    if (audioUploadTimer) clearInterval(audioUploadTimer);
+    audioUploadTimer = setInterval(() => {
+        pct += Math.random() * 8 + 3;
+        if (pct >= 100) {
+            pct = 100;
+            clearInterval(audioUploadTimer);
+            bar.style.width = '100%';
+            setTimeout(() => {
+                progress.classList.remove('show');
+                bar.style.width = '0%';
+                uploadFiles.audio = { name: fileName, meta: (Math.random() * 400 + 100).toFixed(1) + ' MB · 时长约 88 分钟' };
+                renderFileList('audio');
+                showToast('文件上传成功，系统已自动处理');
+                uploadMode = 'audio';
+                updateMainActionBtn();
+            }, 300);
+        }
+        bar.style.width = pct + '%';
+    }, 150);
+}
+
+function renderFileList(type) {
+    const list = document.getElementById(`fileList-${type}`);
+    if (type === 'material') {
+        if (uploadFiles.material.length === 0) {
+            list.innerHTML = '';
+        } else {
+            list.innerHTML = uploadFiles.material.map((f, i) => `<div class="file-item"><div class="file-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div><div class="file-item-name">${escapeHtml(f.name)}</div><div class="file-item-meta">${f.meta}</div><span class="file-item-tag aux">辅助材料</span><span class="file-item-remove" onclick="removeFile('material', ${i})">删除</span></div>`).join('');
+        }
+        updateAttachCount();
+        return;
+    }
+    if (!uploadFiles[type]) { list.innerHTML = ''; return; }
+    const f = uploadFiles[type];
+    list.innerHTML = `<div class="file-item"><div class="file-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div><div class="file-item-name">${escapeHtml(f.name)}</div><div class="file-item-meta">${f.meta}</div><span class="file-item-tag primary">主材料</span><span class="file-item-remove" onclick="removeFile('${type}')">删除</span></div>`;
+}
+
+/* 附加材料折叠与计数 */
+function toggleAttachMaterial() {
+    const wrap = document.querySelector('.attach-material');
+    if (!wrap) return;
+    wrap.classList.toggle('expanded');
+}
+
+function updateAttachCount() {
+    const el = document.getElementById('attachCount');
+    if (!el) return;
+    const n = uploadFiles.material.length;
+    el.textContent = n > 0 ? n : '';
+}
+
+function removeFile(type, idx) {
+    if (type === 'material') {
+        uploadFiles.material.splice(idx, 1);
+    } else {
+        uploadFiles[type] = null;
+        if (type === 'audio' && audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
+    }
+    renderFileList(type);
+    if (!uploadFiles.audio && !uploadFiles.text) {
+        uploadMode = null;
+    }
+    updateMainActionBtn();
+    showToast('文件已删除');
+}
+
+/* 主按钮状态：根据上传类型与填写情况更新 */
+function updateMainActionBtn() {
+    const btn = document.getElementById('mainActionBtn');
+    const txt = document.getElementById('mainActionText');
+    if (!btn || !txt) return;
+    if (!uploadMode) {
+        btn.disabled = true; txt.textContent = '请先上传会议资料';
+        return;
+    }
+    btn.disabled = false;
+    txt.textContent = uploadMode === 'audio' ? '开始转写文本' : '开始智能生成';
+}
+
+/* 主操作入口：录音→转写标记视图；文本→直接生成 */
+function mainAction() {
+    if (!uploadMode) { showToast('请先上传会议资料'); return; }
+    // 校验填写
+    const name = document.getElementById('meetingName').value.trim();
+    const typeVal = document.getElementById('meetingType').value;
+    const tplVal = document.getElementById('template').value;
+    if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
+    if (!typeVal) { showToast('请选择会议类型'); return; }
+    if (!tplVal) { showToast('请选择纪要模板'); return; }
+    currentSecretLevel = document.getElementById('secret').value;
+    if (uploadMode === 'audio') {
+        startTranscribeFlow();
+    } else {
+        startGenerate();
+    }
+}
+
+/* 录音路径：开始转写文本 → 进度 → 转写标记视图 */
+function startTranscribeFlow() {
+    switchView('viewProgress');
+    // 转写阶段步骤
+    const stepLabels = ['音频自动处理', '音频高精度转写', '文本拼接与清洗'];
+    const steps = [
+        { text: '正在自动处理音频文件', logs: ['读取音频文件...', '自动切分音频片段（含重叠区）...', '合并处理结果...'] },
+        { text: '正在进行音频高精度转写', logs: ['调用语音识别引擎...', '声纹识别多说话人...', '标注时间戳与发言人...', '过滤语气词、合并中断句子...'] },
+        { text: '正在拼接与清洗转写文本', logs: ['段序重编与时间戳偏移...', '上下文还原与清洗...', '转写文本稿生成完成 ✓'] }
+    ];
+    renderSteps(stepLabels);
+    document.getElementById('progressSubtitle').textContent = '正在生成转写文本，完成后可标记说话人';
+    let stepIdx = 0, logIdx = 0;
+    const logEl = document.getElementById('progressLog');
+    logEl.innerHTML = '';
+    if (progressTimer) clearInterval(progressTimer);
+    progressTimer = setInterval(() => {
+        if (stepIdx >= steps.length) {
+            clearInterval(progressTimer);
+            document.getElementById('progressStepText').textContent = '转写完成';
+            setTimeout(() => {
+                enterTranscribeView();
+            }, 500);
+            return;
+        }
+        const step = steps[stepIdx];
+        document.getElementById('progressStepText').textContent = step.text;
+        if (logIdx < step.logs.length) { appendLog(step.logs[logIdx], 'info'); logIdx++; }
+        else {
+            markStepDone(stepIdx);
+            appendLog(`【第 ${stepIdx + 1} 步】${step.text.replace('正在', '')} · 完成`, 'success');
+            stepIdx++; logIdx = 0;
+            if (stepIdx < steps.length) markStepActive(stepIdx);
+        }
+    }, 480);
+}
+
+/* 进入转写标记视图（左右分栏） */
+function enterTranscribeView() {
+    // 渲染左侧信息概要
+    const typeText = document.getElementById('meetingType').options[document.getElementById('meetingType').selectedIndex].text;
+    const tplText = document.getElementById('template').options[document.getElementById('template').selectedIndex].text;
+    const secretText = document.getElementById('secret').options[document.getElementById('secret').selectedIndex].text;
+    // 辅助材料列表（如已上传）
+    let materialHtml = '';
+    if (uploadFiles.material.length > 0) {
+        materialHtml = `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-light);"><b style="color:var(--text-main);">辅助材料：</b>${uploadFiles.material.map(f => escapeHtml(f.name)).join('、')}</div>`;
+    }
+    document.getElementById('transcribeInfoSummary').innerHTML = `
+        <div><b style="color:var(--text-main);">会议名称：</b>${escapeHtml(document.getElementById('meetingName').value.trim())}</div>
+        <div><b style="color:var(--text-main);">会议类型：</b>${escapeHtml(typeText)}</div>
+        <div><b style="color:var(--text-main);">纪要模板：</b>${escapeHtml(tplText)}</div>
+        <div><b style="color:var(--text-main);">保密级别：</b>${escapeHtml(secretText)}</div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-light);color:var(--text-tip);">上传文件：${escapeHtml(uploadFiles.audio ? uploadFiles.audio.name : '')}</div>
+        ${materialHtml}
+    `;
+    // 渲染说话人筛选项与转写文本
+    renderTranscribeSpeakerFilter();
+    renderTranscribeTranscript();
+    switchView('viewTranscribe');
+    showToast('转写完成，请标记说话人后点击「开始智能生成」');
+}
+
+function backToEditInfo() {
+    if (audioPlayer.playing) togglePlay();
+    if (!confirm('修改会议信息后，转写文本将需要重新生成，已标记的说话人信息也会被清除。是否确认返回修改？')) return;
+    // 重置转写标记状态，返回后重新转写
+    resetSpeakerMap();
+    switchView('viewCreate');
+    updateMainActionBtn();
+    showToast('已返回信息填写，修改后需重新转写');
+}
+
+/* 重置说话人映射为默认编号（重新转写前调用） */
+function resetSpeakerMap() {
+    Object.keys(speakerMap).forEach(id => {
+        const num = id.replace('sp', '');
+        speakerMap[id] = '说话人' + num;
+    });
+    transcriptData.forEach(t => { t.speaker = speakerMap[t.speakerId]; });
+}
+
+/* 转写标记视图：说话人筛选下拉 */
+function renderTranscribeSpeakerFilter() {
+    const sel = document.getElementById('transcribeSpeakerFilter');
+    if (!sel) return;
+    const ids = Object.keys(speakerMap);
+    sel.innerHTML = '<option value="">全部说话人</option>' + ids.map(id => `<option value="${id}">${escapeHtml(speakerMap[id])}</option>`).join('');
+}
+
+/* 转写标记视图：渲染转写文本（支持筛选+标记，无播放器不绑定seekTo） */
+function renderTranscribeTranscript() {
+    const list = document.getElementById('transcribeTranscriptList');
+    if (!list) return;
+    const filter = document.getElementById('transcribeSpeakerFilter').value;
+    const data = filter ? transcriptData.filter(t => t.speakerId === filter) : transcriptData;
+    list.innerHTML = data.map(line => {
+        const color = speakerColors[line.speakerId] || '#1e5aa8';
+        return `<div class="transcript-line"><div class="transcript-meta"><span class="transcript-speaker-tag" style="background:${color}15;color:${color};" onclick="quickMarkSpeaker('${line.speakerId}')" title="点击标记说话人">${escapeHtml(speakerMap[line.speakerId] || line.speaker)}<svg class="spk-edit" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span><span class="transcript-time">${line.timeStr}</span></div><div class="transcript-text">${escapeHtml(line.text)}</div></div>`;
+    }).join('');
+}
+
+/* 选择会议类型后自动带出对应纪要模板（用户仍可修改） */
+function autoSelectTemplate() {
+    const typeVal = document.getElementById('meetingType').value;
+    const tplEl = document.getElementById('template');
+    if (!tplEl) return;
+    // 会议类型→模板映射：1工作例会→1，2专题协调→2，3项目推进→3，4工作调度→4，5部门会商→4（暂用部门会商模板）
+    const typeTemplateMap = { '1': '1', '2': '2', '3': '3', '4': '4', '5': '4' };
+    if (typeVal && typeTemplateMap[typeVal]) {
+        tplEl.value = typeTemplateMap[typeVal];
+    }
+}
+
+function updateSecretHint() {
+    const level = document.getElementById('secret').value;
+    const hint = document.getElementById('secretHint');
+    const text = document.getElementById('secretHintText');
+    const map = {
+        '0': '',
+        '1': '<b>【内部】</b>纪要顶部将加"内部资料·注意保存"标识；导出时会提示"仅限单位内部使用"。',
+        '2': '<b>【秘密】</b>纪要顶部标注"★秘密★"及保存期限，页面加"秘密文件"水印；导出前会显示密级提示，建议通过安全通道传递。'
+    };
+    if (map[level]) { text.innerHTML = map[level]; hint.classList.add('show'); }
+    else { hint.classList.remove('show'); }
+}
+
+function startGenerate() {
+    if (!uploadFiles.audio && !uploadFiles.text) { showToast('请先上传会议录音或转写文本'); return; }
+    const name = document.getElementById('meetingName').value.trim();
+    if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
+    const typeVal = document.getElementById('meetingType').value;
+    if (!typeVal) { showToast('请选择会议类型'); return; }
+    const tplVal = document.getElementById('template').value;
+    if (!tplVal) { showToast('请选择纪要模板'); return; }
+    currentSecretLevel = document.getElementById('secret').value;
+    switchView('viewProgress');
+    runProgress();
+}
+
+function runProgress() {
+    const hasMaterial = uploadFiles.material.length > 0;
+    const matLog = hasMaterial ? ['已关联会议方案/材料，作为辅助信息参与生成...'] : [];
+    // 生成阶段统一4步：议题结论→待办抽取→详细版→概览版（转写已在上传后前置完成）
+    const steps = [
+        { text: '正在进行议题与结论智能提取', logs: [...matLog, '文本分段与议题边界识别...','大模型分析各段落主旨...','智能命名核心议题...','提炼各议题结论与决议...'] },
+        { text: '正在抽取待办事项与责任主体', logs: ['扫描行动导向语句...','提取任务内容...','识别责任主体...','识别时限...','关联转写文本来源位置...'] },
+        { text: '正在生成标准纪要（详细版）', logs: ['匹配政务纪要模板...','应用密级标识：' + secretLevelMap[currentSecretLevel].name + '...','要素自动填充至模板...','语言润色与正式化处理...'] },
+        { text: '正在生成概览纪要（概览版）', logs: ['提取核心结论...','筛选关键待办任务...','生成精炼摘要文本...','详细版+概览版双版本同步输出...'] }
+    ];
+    const stepLabels = ['议题结论提取', '待办与责任主体抽取', '详细版纪要生成', '概览版纪要生成'];
+
+    renderSteps(stepLabels);
+    document.getElementById('progressSubtitle').textContent = '系统正在基于转写文本生成纪要，请稍候';
+
+    let stepIdx = 0, logIdx = 0;
+    const logEl = document.getElementById('progressLog');
+    logEl.innerHTML = '';
+
+    function nextLog() {
+        if (stepIdx >= steps.length) {
+            clearInterval(progressTimer);
+            document.getElementById('progressStepText').textContent = '生成完成';
+            appendLog('会议纪要详细版与概览版已生成完成 ✓', 'success');
+            setTimeout(() => {
+                switchView('viewResult');
+                showModal('modalSuccess');
+                addHistory();
+                updateResultHeader();
+                applySecretLevel();
+                renderTodos();
+                renderTranscript();
+                switchResultTab('detailed');
+            }, 800);
+            return;
+        }
+        const step = steps[stepIdx];
+        document.getElementById('progressStepText').textContent = step.text;
+        if (logIdx < step.logs.length) { appendLog(step.logs[logIdx], 'info'); logIdx++; }
+        else {
+            markStepDone(stepIdx);
+            appendLog(`【第 ${stepIdx + 1} 步】${step.text.replace('正在', '')} · 完成`, 'success');
+            stepIdx++; logIdx = 0;
+            if (stepIdx < steps.length) markStepActive(stepIdx);
+        }
+    }
+    progressTimer = setInterval(nextLog, 480);
+}
+
+function renderSteps(labels) {
+    document.getElementById('stepsContainer').innerHTML = labels.map((label, i) => `<div class="step ${i === 0 ? 'active' : ''}" data-step="${i}"><div class="step-num"><span class="step-num-text">${i + 1}</span></div><div class="step-label">${label}</div></div>`).join('');
+}
+
+function markStepDone(idx) { const step = document.querySelector(`.step[data-step="${idx}"]`); if (!step) return; step.classList.remove('active'); step.classList.add('done'); }
+function markStepActive(idx) { const step = document.querySelector(`.step[data-step="${idx}"]`); if (step) step.classList.add('active'); }
+function appendLog(msg, type = '') {
+    const el = document.getElementById('progressLog');
+    const time = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+    const div = document.createElement('div');
+    div.className = 'log-item ' + type;
+    div.innerHTML = `<span class="log-time">[${time}]</span><span class="log-msg">${escapeHtml(msg)}</span>`;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+}
+
+function updateResultHeader() {
+    const name = document.getElementById('meetingName').value.trim();
+    const typeText = document.getElementById('meetingType').options[document.getElementById('meetingType').selectedIndex].text;
+    document.getElementById('resultMeetingName').textContent = name;
+    document.getElementById('resultMeetingType').textContent = typeText;
+    document.getElementById('topResultName').textContent = name;
+    document.getElementById('topResultDesc').textContent = typeText + ' · 生成结果';
+    document.getElementById('docMeetingName').textContent = name;
+    document.getElementById('transcriptTabLabel').textContent = uploadMode === 'audio' ? '转写文本' : '已转写文本';
+    const secEl = document.getElementById('resultSecretLevel');
+    const level = currentSecretLevel;
+    if (level === '0') { secEl.textContent = ''; }
+    else { secEl.textContent = '密级：' + secretLevelMap[level].name; secEl.style.color = secretLevelMap[level].color; }
+}
+
+function applySecretLevel() {
+    const level = currentSecretLevel;
+    const detailedDoc = document.getElementById('detailedDoc');
+    const quickDoc = document.getElementById('quickDoc');
+    detailedDoc.classList.remove('level-secret', 'level-internal');
+    quickDoc.classList.remove('level-secret', 'level-internal');
+    [document.getElementById('detailedBannerInternal'), document.getElementById('detailedBannerSecret'), document.getElementById('quickBannerInternal'), document.getElementById('quickBannerSecret'), document.getElementById('detailedSecHeader'), document.getElementById('quickSecHeader')].forEach(el => el.classList.remove('show'));
+    if (level === '1') {
+        detailedDoc.classList.add('level-internal'); quickDoc.classList.add('level-internal');
+        ['detailedBannerInternal', 'quickBannerInternal', 'detailedSecHeader', 'quickSecHeader'].forEach(id => document.getElementById(id).classList.add('show'));
+        ['detailedSecHeader', 'quickSecHeader'].forEach(id => { const h = document.getElementById(id); h.querySelector('.level-mark').innerHTML = '<span class="level-internal-name">内部资料</span>'; h.querySelector('.save-period').textContent = '编号：（  ）字第  号'; });
+    } else if (level === '2') {
+        detailedDoc.classList.add('level-secret'); quickDoc.classList.add('level-secret');
+        ['detailedBannerSecret', 'quickBannerSecret', 'detailedSecHeader', 'quickSecHeader'].forEach(id => document.getElementById(id).classList.add('show'));
+        ['detailedSecHeader', 'quickSecHeader'].forEach(id => { const h = document.getElementById(id); h.querySelector('.level-mark').innerHTML = '<span class="level-name">秘密★</span>'; h.querySelector('.save-period').textContent = '保存期限：5 年 · 编号：（  ）字第  号'; });
+    }
+}
+
+function addHistory() {
+    const name = document.getElementById('meetingName').value.trim();
+    const typeText = document.getElementById('meetingType').options[document.getElementById('meetingType').selectedIndex].text;
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+    const newItem = { id: 'h' + Date.now(), title: name, time: '刚刚', dateStr, type: typeText, status: 'done' };
+    historyData.unshift(newItem);
+    renderHistory();
+    const el = document.querySelector(`.history-item[data-id="${newItem.id}"]`);
+    if (el) el.classList.add('active');
+}
+
+function cancelGenerate() { showModal('modalCancel'); }
+function confirmCancel() { if (progressTimer) clearInterval(progressTimer); hideModal('modalCancel'); switchView('viewCreate'); showToast('已取消生成'); }
+
+function resetForm() {
+    uploadFiles.audio = null; uploadFiles.text = null; uploadFiles.material = [];
+    uploadMode = null;
+    if (audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
+    renderFileList('audio'); renderFileList('text'); renderFileList('material');
+    document.getElementById('meetingName').value = '';
+    document.getElementById('meetingType').value = '';
+    document.getElementById('template').value = '';
+    document.getElementById('secret').value = '0';
+    updateSecretHint();
+    updateMainActionBtn();
+    meetingInfo = { time:'', place:'', host:'', attendees:'', observers:'', recorder:'', remark:'' };
+}
+
+/* ==================== 议题 ==================== */
+const statusOptions = [{ value: 'agreed', label: '已达成一致' }, { value: 'pending', label: '待进一步研究' }, { value: 'diff', label: '存在分歧' }];
+function statusLabel(status) { const o = statusOptions.find(x => x.value === status); return o ? o.label : ''; }
+
+function renderTopics() {
+    document.getElementById('topicCount').textContent = topicsData.length;
+    document.getElementById('conclusionCount').textContent = topicsData.reduce((s, t) => s + t.conclusions.length, 0);
+    const container = document.getElementById('topicsContainer');
+    if (topicsEditing) {
+        container.innerHTML = topicsData.map((t, ti) => `<div class="topic-item" data-tid="${t.id}"><div style="margin-bottom:6px;font-size:12px;color:var(--text-tip);">${t.num}</div><div class="topic-title editable-field" contenteditable="true" data-field="title" data-ti="${ti}">${escapeHtml(t.title)}</div><div style="height:6px;"></div><div class="topic-content editable-field" contenteditable="true" data-field="content" data-ti="${ti}">${escapeHtml(t.content)}</div>${t.conclusions.map((c, ci) => `<div class="topic-conclusion"><select class="status-selector" data-ti="${ti}" data-ci="${ci}">${statusOptions.map(o => `<option value="${o.value}" ${o.value === c.status ? 'selected' : ''}>${o.label}</option>`).join('')}</select><span class="conclusion-text editable-field" contenteditable="true" data-ti="${ti}" data-ci="${ci}">${escapeHtml(c.text)}</span><div class="conclusion-actions"><span class="conclusion-del" onclick="deleteConclusion(${ti}, ${ci})">删除</span></div></div>`).join('')}<button class="add-conclusion-btn" onclick="addConclusion(${ti})">+ 添加结论</button></div>`).join('');
+    } else {
+        container.innerHTML = topicsData.map(t => `<div class="topic-item" data-tid="${t.id}"><div class="topic-title">${t.num}：${escapeHtml(t.title)}</div><div class="topic-content">${escapeHtml(t.content)}</div>${t.conclusions.map(c => `<div class="topic-conclusion"><span class="topic-conclusion-label status-${c.status}">${statusLabel(c.status)}</span><span class="conclusion-text">${escapeHtml(c.text)}</span></div>`).join('')}</div>`).join('');
+    }
+}
+
+function toggleTopicsEdit() {
+    topicsBackup = JSON.parse(JSON.stringify(topicsData));
+    topicsEditing = true;
+    renderTopics();
+    document.getElementById('topicsActions').innerHTML = `<button class="btn btn-default btn-sm" onclick="cancelTopicsEdit()">取消</button><button class="btn btn-success btn-sm" onclick="saveTopicsEdit()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>保存修改</button>`;
+    showToast('已进入编辑模式');
+}
+
+function saveTopicsEdit() {
+    syncTopicsDOMToData();
+    topicsBackup = null; topicsEditing = false;
+    renderTopics();
+    document.getElementById('topicsActions').innerHTML = `<button class="btn btn-default btn-sm" onclick="toggleTopicsEdit()" id="editTopicsBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑</button>`;
+    addEditHistory('topics', '议题结论修改');
+    showToast('修改已保存');
+}
+
+function cancelTopicsEdit() { showModal('modalEditCancel'); }
+function addConclusion(ti) { syncTopicsDOMToData(); topicsData[ti].conclusions.push({ status: 'agreed', text: '（请填写结论内容）' }); renderTopics(); }
+function deleteConclusion(ti, ci) { syncTopicsDOMToData(); topicsData[ti].conclusions.splice(ci, 1); renderTopics(); }
+function syncTopicsDOMToData() {
+    document.querySelectorAll('.topic-item').forEach((item, i) => {
+        const topic = topicsData[i];
+        topic.title = item.querySelector('[data-field="title"]').textContent.trim();
+        topic.content = item.querySelector('[data-field="content"]').textContent.trim();
+        item.querySelectorAll('.conclusion-text').forEach((el, ci) => { if (topic.conclusions[ci]) topic.conclusions[ci].text = el.textContent.trim(); });
+        item.querySelectorAll('.status-selector').forEach((el, ci) => { if (topic.conclusions[ci]) topic.conclusions[ci].status = el.value; });
+    });
+}
+
+/* ==================== 待办渲染（任务内容/截止时间/责任人均可编辑） ==================== */
+function renderTodos() {
+    const tbody = document.getElementById('todosBody');
+    const isAudio = uploadMode !== 'text';
+    document.getElementById('sourceColTitle').textContent = isAudio ? '信息来源' : '文本段落';
+    const missCount = todosData.filter(t => !t.owner || t.owner.trim() === '').length;
+    document.getElementById('todoTotal').textContent = todosData.length;
+    const missTip = document.getElementById('todoMissTip');
+    if (missCount > 0) { missTip.style.display = 'inline'; document.getElementById('todoMissCount').textContent = missCount; }
+    else { missTip.style.display = 'none'; }
+
+    tbody.innerHTML = todosData.map((t, idx) => {
+        const topic = topicsData.find(x => x.id === t.topicId);
+        const topicLabel = topic ? topic.num : '';
+        const line = transcriptData.find(x => x.id === t.lineId);
+        let sourceHTML;
+        if (isAudio) { sourceHTML = line ? `<span class="source-link" onclick="locateSource(${t.lineId})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${line.speaker} ${line.timeStr}</span>` : '-'; }
+        else { sourceHTML = line ? `<span class="source-link" onclick="locateSource(${t.lineId})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 ${line.para} 段</span>` : '-'; }
+
+        // 责任主体
+        let ownerHTML;
+        if (t.editing === 'owner') {
+            ownerHTML = `<div class="owner-cell"><input type="text" class="owner-input" id="ownerInput-${idx}" value="${escapeHtml(t.owner || '')}" placeholder="请填写责任主体" onkeydown="handleOwnerKey(event, ${idx})"><div class="owner-actions"><button class="save-btn" title="保存(回车)" onclick="saveOwner(${idx})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button><button class="cancel-btn" title="取消(Esc)" onclick="cancelEditField(${idx})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>`;
+        } else if (t.owner && t.owner.trim() !== '') {
+            ownerHTML = `<div class="owner-cell"><span class="owner-tag" onclick="startEditField(${idx}, 'owner')">${escapeHtml(t.owner)}<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div>`;
+        } else {
+            ownerHTML = `<div class="owner-cell"><span class="owner-empty" onclick="startEditField(${idx}, 'owner')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>补充责任主体</span></div>`;
+        }
+
+        // 任务内容
+        let contentHTML;
+        if (t.editing === 'content') {
+            contentHTML = `<input type="text" class="cell-input wide" id="contentInput-${idx}" value="${escapeHtml(t.content)}" onkeydown="handleContentKey(event, ${idx})">`;
+        } else {
+            contentHTML = `<div class="content-cell" onclick="startEditField(${idx}, 'content')">${escapeHtml(t.content)}<span class="edit-hint">✎</span></div>`;
+        }
+
+        // 时限
+        let deadlineHTML;
+        if (t.editing === 'deadline') {
+            deadlineHTML = `<input type="text" class="cell-input" id="deadlineInput-${idx}" value="${escapeHtml(t.deadline)}" placeholder="如2026-07-18" onkeydown="handleDeadlineKey(event, ${idx})">`;
+        } else {
+            deadlineHTML = `<span class="content-cell" onclick="startEditField(${idx}, 'deadline')">${escapeHtml(t.deadline)}<span class="edit-hint">✎</span></span>`;
+        }
+
+        return `<tr><td>${t.seq}</td><td>${contentHTML}</td><td>${ownerHTML}</td><td>${deadlineHTML}</td><td><span class="topic-link" onclick="locateTopic('${t.topicId}')">${topicLabel}</span></td><td>${sourceHTML}</td></tr>`;
+    }).join('');
+}
+
+function startEditField(idx, field) {
+    todosData.forEach((t, i) => { if (i !== idx) t.editing = false; });
+    todosData[idx].editing = field;
+    renderTodos();
+    setTimeout(() => {
+        const id = field === 'owner' ? `ownerInput-${idx}` : field === 'content' ? `contentInput-${idx}` : `deadlineInput-${idx}`;
+        const input = document.getElementById(id);
+        if (input) { input.focus(); input.select(); }
+    }, 0);
+}
+
+function saveOwner(idx) {
+    const input = document.getElementById(`ownerInput-${idx}`);
+    if (!input) return;
+    const val = input.value.trim();
+    if (val.length > 30) { showToast('责任主体名称不能超过30个字符'); return; }
+    const originalEmpty = !todosData[idx].owner || todosData[idx].owner.trim() === '';
+    todosData[idx].owner = val; todosData[idx].editing = false;
+    renderTodos();
+    addEditHistory('todos', `修改第${todosData[idx].seq}项待办责任主体`);
+    if (val === '') showToast('已清空责任主体');
+    else if (originalEmpty) showToast('已补充责任主体：' + val);
+    else showToast('已更新责任主体：' + val);
+}
+
+function saveContent(idx) {
+    const input = document.getElementById(`contentInput-${idx}`);
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) { showToast('任务内容不能为空'); return; }
+    todosData[idx].content = val; todosData[idx].editing = false;
+    renderTodos();
+    addEditHistory('todos', `修改第${todosData[idx].seq}项待办任务内容`);
+    showToast('任务内容已更新');
+}
+
+function saveDeadline(idx) {
+    const input = document.getElementById(`deadlineInput-${idx}`);
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) { showToast('时限不能为空'); return; }
+    todosData[idx].deadline = val; todosData[idx].editing = false;
+    renderTodos();
+    addEditHistory('todos', `修改第${todosData[idx].seq}项待办时限`);
+    showToast('时限已更新');
+}
+
+function cancelEditField(idx) { todosData[idx].editing = false; renderTodos(); }
+function handleOwnerKey(e, idx) { if (e.key === 'Enter') { e.preventDefault(); saveOwner(idx); } else if (e.key === 'Escape') { e.preventDefault(); cancelEditField(idx); } }
+function handleContentKey(e, idx) { if (e.key === 'Enter') { e.preventDefault(); saveContent(idx); } else if (e.key === 'Escape') { e.preventDefault(); cancelEditField(idx); } }
+function handleDeadlineKey(e, idx) { if (e.key === 'Enter') { e.preventDefault(); saveDeadline(idx); } else if (e.key === 'Escape') { e.preventDefault(); cancelEditField(idx); } }
+
+/* ==================== 文档内容编辑（详细版/概览版） ==================== */
+function toggleDocEdit(docType) {
+    if (docEditMode[docType]) {
+        exitDocEdit(docType, true);
+    } else {
+        enterDocEdit(docType);
+    }
+}
+
+function enterDocEdit(docType) {
+    const region = document.getElementById(docType + 'EditableRegion');
+    const doc = document.getElementById(docType + 'Doc');
+    const toolbar = document.getElementById(docType + 'Toolbar');
+    const btn = document.getElementById(docType + 'EditBtn');
+    region.contentEditable = 'true';
+    region.dataset.origHtml = region.innerHTML;
+    doc.classList.add('editing');
+    toolbar.classList.add('show');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>完成`;
+    btn.classList.remove('btn-default'); btn.classList.add('btn-success');
+    docEditMode[docType] = true;
+    showToast('已进入编辑模式，修改自动保存');
+}
+
+function exitDocEdit(docType, withSave) {
+    const region = document.getElementById(docType + 'EditableRegion');
+    const doc = document.getElementById(docType + 'Doc');
+    const toolbar = document.getElementById(docType + 'Toolbar');
+    const btn = document.getElementById(docType + 'EditBtn');
+    region.contentEditable = 'false';
+    doc.classList.remove('editing');
+    toolbar.classList.remove('show');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>编辑`;
+    btn.classList.remove('btn-success'); btn.classList.add('btn-default');
+    docEditMode[docType] = false;
+    if (withSave) {
+        addEditHistory(docType, (docType === 'detailed' ? '详细版纪要' : '概览版纪要') + '内容修改');
+        showToast('修改已保存');
+    }
+}
+
+/* 富文本格式化 */
+function formatDoc(command, value) {
+    // 找到当前可编辑的区域
+    let activeRegion = null;
+    if (docEditMode.detailed) activeRegion = document.getElementById('detailedEditableRegion');
+    else if (docEditMode.quick) activeRegion = document.getElementById('quickEditableRegion');
+    if (!activeRegion) { showToast('请先进入编辑模式'); return; }
+    activeRegion.focus();
+    document.execCommand(command, false, value || null);
+    scheduleDocSave(activeRegion);
+}
+
+/* 实时保存（防抖） */
+function scheduleDocSave(region) {
+    const docType = region.id === 'detailedEditableRegion' ? 'detailed' : 'quick';
+    if (docEditTimers[docType]) clearTimeout(docEditTimers[docType]);
+    docEditTimers[docType] = setTimeout(() => {
+        addEditHistory(docType, (docType === 'detailed' ? '详细版' : '概览版') + '自动保存');
+    }, 1500);
+}
+
+/* 修改历史 */
+function addEditHistory(scope, action) {
+    const now = new Date();
+    const timeStr = now.toLocaleString('zh-CN', { hour12: false });
+    if (!editHistory[scope]) editHistory[scope] = [];
+    editHistory[scope].unshift({ time: timeStr, action });
+    if (editHistory[scope].length > 50) editHistory[scope] = editHistory[scope].slice(0, 50);
+}
+
+function showEditHistory(docType) {
+    const list = document.getElementById('historyLogList');
+    const logs = editHistory[docType] || [];
+    if (logs.length === 0) {
+        list.innerHTML = '<div class="history-log-empty">暂无修改历史</div>';
+    } else {
+        list.innerHTML = logs.map(l => `<div class="history-log-item"><div class="history-log-info"><span class="history-log-action">${escapeHtml(l.action)}</span></div><div class="history-log-time">${l.time}</div></div>`).join('');
+    }
+    showModal('modalHistory');
+}
+
+/* ==================== 说话人标记与同步 ==================== */
+function openSpeakerManage() {
+    const list = document.getElementById('speakerList');
+    const ids = Object.keys(speakerMap);
+    list.innerHTML = ids.map(id => {
+        const count = transcriptData.filter(t => t.speakerId === id).length;
+        if (count === 0) return '';
+        return `<div class="speaker-row"><span class="spk-color" style="background:${speakerColors[id]};"></span><span class="spk-id">${escapeHtml(speakerMap[id].startsWith('说话人') ? speakerMap[id] : speakerMap[id])}</span><input type="text" class="spk-input" data-spkid="${id}" value="${escapeHtml(speakerMap[id])}" placeholder="输入姓名/职务"></span><span class="spk-count">${count} 次发言</span></div>`;
+    }).join('');
+    showModal('modalSpeaker');
+}
+
+function saveSpeakers() {
+    const inputs = document.querySelectorAll('.spk-input');
+    let changed = 0;
+    inputs.forEach(input => {
+        const id = input.dataset.spkid;
+        const val = input.value.trim();
+        if (val && val !== speakerMap[id]) {
+            speakerMap[id] = val; changed++;
+        } else if (!val) {
+            // 留空则恢复默认编号
+            const num = id.replace('sp', '');
+            if (speakerMap[id] !== `说话人${num}`) { speakerMap[id] = `说话人${num}`; changed++; }
+        }
+    });
+    // 同步到转写数据
+    transcriptData.forEach(t => { t.speaker = speakerMap[t.speakerId]; });
+    renderTranscript();
+    // 若处于转写标记视图，同步刷新筛选下拉与转写文本
+    const tView = document.getElementById('viewTranscribe');
+    if (tView && tView.classList.contains('active')) {
+        renderTranscribeSpeakerFilter();
+        renderTranscribeTranscript();
+    }
+    hideModal('modalSpeaker');
+    if (changed > 0) showToast(`已标记 ${changed} 位说话人，已同步至全部发言记录`);
+    else showToast('无变更');
+}
+
+/* 转写文本点击说话人标签也可直接标记单个 */
+function quickMarkSpeaker(speakerId) {
+    openSpeakerManage();
+    setTimeout(() => {
+        const input = document.querySelector(`.spk-input[data-spkid="${speakerId}"]`);
+        if (input) { input.focus(); input.select(); }
+    }, 100);
+}
+
+/* ==================== 定位 ==================== */
+function locateTopic(topicId) {
+    if (topicsEditing || anyDocEditing()) { pendingAction = () => locateTopic(topicId); showModal('modalEditCancel'); return; }
+    todosData.forEach(t => t.editing = false); renderTodos();
+    switchResultTab('topics');
+    setTimeout(() => {
+        document.querySelectorAll('.topic-item').forEach(el => el.classList.remove('highlighted'));
+        const el = document.querySelector(`.topic-item[data-tid="${topicId}"]`);
+        if (el) { el.classList.add('highlighted'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.classList.remove('highlighted'), 3500); const t = topicsData.find(x => x.id === topicId); showToast(`已定位至：${t ? t.num : '议题'}`); }
+    }, 120);
+}
+
+function locateSource(lineId) {
+    todosData.forEach(t => t.editing = false); renderTodos();
+    switchResultTab('transcript');
+    document.querySelectorAll('.transcript-line').forEach(el => el.classList.remove('highlighted'));
+    setTimeout(() => {
+        const el = document.querySelector(`.transcript-line[data-id="${lineId}"]`);
+        if (el) { el.classList.add('highlighted'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.classList.remove('highlighted'), 3500); if (uploadMode === 'audio') { const line = transcriptData.find(t => t.id === lineId); if (line) { audioPlayer.currentTime = line.startSec; updatePlayerUI(); } } showToast('已定位至转写文本来源'); }
+    }, 120);
+}
+
+/* ==================== 播放器 ==================== */
+function togglePlay() {
+    if (uploadMode !== 'audio') return;
+    audioPlayer.playing = !audioPlayer.playing;
+    document.getElementById('playIcon').classList.toggle('hidden', audioPlayer.playing);
+    document.getElementById('pauseIcon').classList.toggle('hidden', !audioPlayer.playing);
+    if (audioPlayer.playing) { startPlayerTick(); showToast('开始播放'); }
+    else { clearInterval(audioPlayer.timer); }
+}
+function startPlayerTick() {
+    clearInterval(audioPlayer.timer);
+    const interval = 1000 / audioPlayer.speed;
+    audioPlayer.timer = setInterval(() => {
+        audioPlayer.currentTime++;
+        if (audioPlayer.currentTime >= audioPlayer.duration) { audioPlayer.currentTime = audioPlayer.duration; togglePlay(); return; }
+        updatePlayerUI();
+    }, interval);
+}
+function changeSpeed() { audioPlayer.speed = parseFloat(document.getElementById('playSpeed').value); if (audioPlayer.playing) startPlayerTick(); showToast(`播放速度: ${audioPlayer.speed}×`); }
+function updatePlayerUI() {
+    const pb = document.getElementById('progressPlayed');
+    const ct = document.getElementById('currentTime');
+    if (!pb || !ct) return;
+    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    pb.style.width = percent + '%';
+    ct.textContent = formatTime(audioPlayer.currentTime);
+    highlightCurrentLine();
+}
+function formatTime(sec) {
+    const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+    const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return `${h}:${m}:${s}`;
+}
+function highlightCurrentLine() {
+    if (uploadMode !== 'audio') return;
+    let currentLine = null;
+    for (let i = transcriptData.length - 1; i >= 0; i--) { if (transcriptData[i].startSec <= audioPlayer.currentTime) { currentLine = transcriptData[i]; break; } }
+    document.querySelectorAll('.transcript-line').forEach(el => el.classList.remove('playing'));
+    if (currentLine) {
+        const el = document.querySelector(`.transcript-line[data-id="${currentLine.id}"]`);
+        if (el) {
+            el.classList.add('playing');
+            if (audioPlayer.playing) {
+                const list = document.getElementById('transcriptList');
+                const listRect = list.getBoundingClientRect();
+                const elRect = el.getBoundingClientRect();
+                if (elRect.top < listRect.top || elRect.bottom > listRect.bottom) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+}
+
+function renderTranscript() {
+    const list = document.getElementById('transcriptList');
+    const audioBlock = document.getElementById('audioPlayerBlock');
+    const textBlock = document.getElementById('textOnlyBlock');
+    const speakerBar = document.querySelector('#panel-transcript .speaker-manage-bar');
+    const isAudio = uploadMode !== 'text';
+    audioBlock.classList.toggle('hidden', !isAudio);
+    textBlock.classList.toggle('hidden', isAudio);
+    // 文本模式隐藏"仅支持查看"提示条；音频模式显示
+    if (speakerBar) speakerBar.classList.toggle('hidden', !isAudio);
+    if (isAudio) {
+        list.innerHTML = transcriptData.map(line => {
+            const color = speakerColors[line.speakerId] || '#1e5aa8';
+            return `<div class="transcript-line clickable" data-id="${line.id}" data-start="${line.startSec}" onclick="seekTo(${line.startSec})"><div class="transcript-meta"><span class="transcript-speaker-tag" style="background:${color}15;color:${color};">${escapeHtml(line.speaker)}</span><span class="transcript-time">${line.timeStr}</span></div><div class="transcript-text">${escapeHtml(line.text)}</div></div>`;
+        }).join('');
+    } else {
+        document.getElementById('paraTotal').textContent = transcriptData.length;
+        list.innerHTML = transcriptData.map(line => `<div class="transcript-line" data-id="${line.id}"><div class="transcript-meta"><span class="transcript-para-num">第 ${line.para} 段</span></div><div class="transcript-text">${escapeHtml(line.text)}</div></div>`).join('');
+    }
+}
+
+function seekTo(sec) { if (uploadMode !== 'audio') return; audioPlayer.currentTime = sec; updatePlayerUI(); showToast(`已跳转至 ${formatTime(sec)}`); }
+
+/* ==================== 弹窗 ==================== */
+function showModal(id) { document.getElementById(id).classList.add('show'); }
+function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function showExport() {
+    document.getElementById('exportSecretWarn').style.display = currentSecretLevel === '2' ? 'block' : 'none';
+    document.getElementById('exportInternalWarn').style.display = currentSecretLevel === '1' ? 'block' : 'none';
+    const label = document.getElementById('exportTranscript').parentNode;
+    label.lastChild.textContent = uploadMode === 'text' ? '已转写文本' : '转写文本';
+    showModal('modalExport');
+}
+
+function doExport() {
+    const format = document.querySelector('input[name="exportFormat"]:checked').value;
+    hideModal('modalExport');
+    let extra = '';
+    if (currentSecretLevel === '2') extra = '（含秘密标识与水印）';
+    else if (currentSecretLevel === '1') extra = '（含内部标识）';
+    showToast(`正在导出为 ${format.toUpperCase()} 格式${extra}...`);
+    setTimeout(() => showToast(`导出成功！文件已下载${extra}`), 1200);
+}
+
+/* ==================== 要素补充 ==================== */
+const aiExamples = [
+    '今天上午9点半在第一会议室，李主任主持召开办公室工作例会，王副主任、张处长、赵科长参加，张秘书做记录',
+    '2026年7月13日上午9:30，第一会议室，李主任主持，出席：王副主任、张处长、赵科长、刘干事、陈干事',
+    '刚才在三楼会议室开的会，李主任主持，办公室全体人员参加'
+];
+function renderAIExamples() { document.getElementById('aiExamples').innerHTML = aiExamples.map((ex, i) => `<span class="ai-example" onclick="useExample(${i})">${escapeHtml(ex.length > 40 ? ex.slice(0, 40) + '...' : ex)}</span>`).join(''); }
+function useExample(idx) { document.getElementById('aiSentence').value = aiExamples[idx]; document.getElementById('aiSentence').focus(); }
+
+function showSupplement() {
+    supMode = 'ai';
+    document.querySelectorAll('.sup-mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'ai'));
+    document.getElementById('supModeAI').classList.remove('hidden');
+    document.getElementById('supModeManual').classList.add('hidden');
+    document.getElementById('supMeetingTime').value = meetingInfo.time;
+    document.getElementById('supMeetingPlace').value = meetingInfo.place;
+    document.getElementById('supHost').value = meetingInfo.host;
+    document.getElementById('supAttendees').value = meetingInfo.attendees;
+    document.getElementById('supObservers').value = meetingInfo.observers;
+    document.getElementById('supRecorder').value = meetingInfo.recorder;
+    document.getElementById('supRemark').value = meetingInfo.remark;
+    document.getElementById('err-supMeetingTime').textContent = '';
+    document.getElementById('supMeetingTime').classList.remove('error');
+    document.getElementById('aiSentence').value = '';
+    document.getElementById('aiParseResult').classList.remove('show');
+    aiParsed = null;
+    showModal('modalSupplement');
+}
+
+function switchSupMode(mode) {
+    if (mode === supMode) return;
+    if (supMode === 'ai' && mode === 'manual' && aiParsed) applyAIParsedToManualFields();
+    supMode = mode;
+    document.querySelectorAll('.sup-mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+    document.getElementById('supModeAI').classList.toggle('hidden', mode !== 'ai');
+    document.getElementById('supModeManual').classList.toggle('hidden', mode !== 'manual');
+    if (mode === 'manual' && aiParsed) showToast('已将 AI 识别结果同步至手动填写');
+}
+
+function tryCloseSupplement() {
+    const aiText = document.getElementById('aiSentence').value.trim();
+    if (supMode === 'ai' && aiText && !aiParsed) { if (!confirm('您已输入描述但尚未点击"智能识别"，是否放弃并关闭？')) return; }
+    hideModal('modalSupplement');
+}
+
+function aiParse() {
+    const text = document.getElementById('aiSentence').value.trim();
+    if (!text) { showToast('请先输入会议描述'); return; }
+    if (text.length < 5) { showToast('描述过短，请输入更详细的会议信息'); return; }
+    showToast('AI 正在解析...');
+    setTimeout(() => { aiParsed = parseSentence(text); renderAIParseResult(aiParsed); }, 600);
+}
+
+function parseSentence(text) {
+    const result = { time: '', place: '', host: '', attendees: '', recorder: '', missFields: [] };
+    result.time = extractTime(text);
+    const placeMatch = text.match(/在?([^\s，,。；;、"]{1,15}?(?:会议室|办公室|大厅|礼堂|中心|大楼|大厦))/);
+    if (placeMatch) result.place = placeMatch[1];
+    const hostMatch = text.match(/([一-龥]{2,6})(?:同志)?主持/);
+    if (hostMatch) result.host = hostMatch[1];
+    const recorderMatch = text.match(/([一-龥]{2,6})(?:同志)?(?:做|担任|负责)?(?:记录|纪录)/);
+    if (recorderMatch) result.recorder = recorderMatch[1];
+    let attList = [];
+    const attMatch1 = text.match(/(?:出席[人员：:\s]*|参加[人员：:\s]*|参会[人员：:\s]*)([^。；;]+?)(?:参加|参会|出席|等|做记录|担任记录|做纪录|$|。|；)/);
+    if (attMatch1) { attList = attMatch1[1].replace(/[,，、和及以及与]/g, '、').split('、').map(s => s.trim()).filter(s => s && s.length <= 15 && !/^(还有|其他|人员|同志们?)$/.test(s)); }
+    else { const attMatch2 = text.match(/([一-龥]{2,6}(?:[、,，]\s*[一-龥]{2,6}){1,10})(?:等)?(?:参加|参会|出席)/); if (attMatch2) { attList = attMatch2[1].replace(/[,，]/g, '、').split('、').map(s => s.trim()).filter(Boolean); } }
+    if (result.host && !attList.includes(result.host)) attList.unshift(result.host);
+    result.attendees = attList.join('、');
+    if (!result.time) result.missFields.push('会议时间');
+    if (!result.place) result.missFields.push('会议地点');
+    if (!result.host) result.missFields.push('主持人');
+    if (!result.attendees) result.missFields.push('出席人员');
+    if (!result.recorder) result.missFields.push('记录人');
+    return result;
+}
+
+function extractTime(text) {
+    const now = new Date();
+    let m = text.match(/(\d{4})[年\-\/](\d{1,2})[月\-\/](\d{1,2})[日号]?\s*(上午|下午|晚上)?\s*(\d{1,2})点半/);
+    if (m) { let h = parseInt(m[5]); if ((m[4] === '下午' || m[4] === '晚上') && h < 12) h += 12; return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}T${h.toString().padStart(2,'0')}:30`; }
+    m = text.match(/(\d{4})[年\-\/](\d{1,2})[月\-\/](\d{1,2})[日号]?\s*(上午|下午|晚上)?\s*(\d{1,2})[:：点时](\d{1,2})?/);
+    if (m) { let h = parseInt(m[5]); if ((m[4] === '下午' || m[4] === '晚上') && h < 12) h += 12; const min = m[6] ? parseInt(m[6]) : 0; return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}T${h.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}`; }
+    m = text.match(/(\d{1,2})[月\/](\d{1,2})[日号]?\s*(上午|下午|晚上)?\s*(\d{1,2})[:：点时](\d{1,2})?/);
+    if (m) { let h = parseInt(m[4]); if ((m[3] === '下午' || m[3] === '晚上') && h < 12) h += 12; const min = m[5] ? parseInt(m[5]) : 0; return `${now.getFullYear()}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}T${h.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}`; }
+    m = text.match(/(今天|明天|今日|昨天)?\s*(上午|下午|晚上)?\s*(\d{1,2})点半/);
+    if (m) { let d = new Date(now); if (m[1] === '明天') d.setDate(d.getDate() + 1); else if (m[1] === '昨天') d.setDate(d.getDate() - 1); let h = parseInt(m[3]); if ((m[2] === '下午' || m[2] === '晚上') && h < 12) h += 12; return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}T${h.toString().padStart(2,'0')}:30`; }
+    m = text.match(/(今天|明天|今日|昨天)\s*(上午|下午|晚上)?\s*(\d{1,2})[:：点时](\d{1,2})?/);
+    if (m) { let d = new Date(now); if (m[1] === '明天') d.setDate(d.getDate() + 1); else if (m[1] === '昨天') d.setDate(d.getDate() - 1); let h = parseInt(m[3]); if ((m[2] === '下午' || m[2] === '晚上') && h < 12) h += 12; const min = m[4] ? parseInt(m[4]) : 0; return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}T${h.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}`; }
+    return '';
+}
+
+function renderAIParseResult(parsed) {
+    const grid = document.getElementById('aiParseGrid');
+    const items = [
+        { key: '会议时间', value: parsed.time ? parsed.time.replace('T', ' ') : '' },
+        { key: '会议地点', value: parsed.place },
+        { key: '主持人', value: parsed.host },
+        { key: '出席人员', value: parsed.attendees },
+        { key: '记录人', value: parsed.recorder }
+    ];
+    grid.innerHTML = items.map(item => `<div class="ai-parse-item"><span class="ai-parse-key">${item.key}：</span><span class="ai-parse-value ${item.value ? '' : 'miss'}">${item.value ? escapeHtml(item.value) : '未识别'}</span></div>`).join('');
+    const tip = document.getElementById('aiParseMissTip');
+    if (parsed.missFields.length > 0) { tip.textContent = `⚠ 未识别到：${parsed.missFields.join('、')}，可在描述中补充后重新识别，或切换到"手动填写"补齐`; tip.classList.add('show'); }
+    else { tip.textContent = ''; tip.classList.remove('show'); }
+    document.getElementById('aiParseResult').classList.add('show');
+    showToast('识别完成，请确认后保存');
+}
+
+function applyAIParsedToManualFields() {
+    if (!aiParsed) return;
+    if (aiParsed.time) document.getElementById('supMeetingTime').value = aiParsed.time;
+    if (aiParsed.place) document.getElementById('supMeetingPlace').value = aiParsed.place;
+    if (aiParsed.host) document.getElementById('supHost').value = aiParsed.host;
+    if (aiParsed.attendees) document.getElementById('supAttendees').value = aiParsed.attendees;
+    if (aiParsed.recorder) document.getElementById('supRecorder').value = aiParsed.recorder;
+}
+
+function aiReset() { document.getElementById('aiSentence').value = ''; document.getElementById('aiParseResult').classList.remove('show'); aiParsed = null; document.getElementById('aiSentence').focus(); }
+
+function saveSupplement() {
+    if (supMode === 'ai') {
+        if (!aiParsed) { const txt = document.getElementById('aiSentence').value.trim(); if (txt) { showToast('请先点击"智能识别"按钮'); return; } showToast('请输入会议描述并"智能识别"，或切换到"手动填写"'); return; }
+        if (!aiParsed.time) { showToast('未识别到会议时间，请在描述中补充或切换手动填写'); return; }
+        meetingInfo.time = aiParsed.time; meetingInfo.place = aiParsed.place || ''; meetingInfo.host = aiParsed.host || ''; meetingInfo.attendees = aiParsed.attendees || ''; meetingInfo.recorder = aiParsed.recorder || '';
+    } else {
+        const time = document.getElementById('supMeetingTime').value;
+        if (!time) { document.getElementById('err-supMeetingTime').textContent = '请选择会议时间'; document.getElementById('supMeetingTime').classList.add('error'); return; }
+        document.getElementById('supMeetingTime').classList.remove('error');
+        meetingInfo.time = time; meetingInfo.place = document.getElementById('supMeetingPlace').value.trim(); meetingInfo.host = document.getElementById('supHost').value.trim(); meetingInfo.attendees = document.getElementById('supAttendees').value.trim(); meetingInfo.observers = document.getElementById('supObservers').value.trim(); meetingInfo.recorder = document.getElementById('supRecorder').value.trim(); meetingInfo.remark = document.getElementById('supRemark').value.trim();
+    }
+    updateMinutesDoc(); updateInfoNotice();
+    hideModal('modalSupplement');
+    showToast('要素已更新，纪要已同步刷新');
+}
+
+function updateMinutesDoc() {
+    const displayTime = meetingInfo.time ? meetingInfo.time.replace('T', ' ') : '（待补充）';
+    document.getElementById('docMeetingTime').textContent = displayTime;
+    document.getElementById('docMeetingTime').classList.toggle('doc-empty', !meetingInfo.time);
+    document.getElementById('docMeetingPlace').textContent = meetingInfo.place || '（待补充）';
+    document.getElementById('docMeetingPlace').classList.toggle('doc-empty', !meetingInfo.place);
+    document.getElementById('docHost').textContent = meetingInfo.host || '（待补充）';
+    document.getElementById('docHost').classList.toggle('doc-empty', !meetingInfo.host);
+    document.getElementById('docAttendees').textContent = meetingInfo.attendees || '（待补充）';
+    document.getElementById('docAttendees').classList.toggle('doc-empty', !meetingInfo.attendees);
+    document.getElementById('docRecorder').textContent = meetingInfo.recorder || '（待补充）';
+    document.getElementById('docRecorder').classList.toggle('doc-empty', !meetingInfo.recorder);
+    document.getElementById('resultMeetingTime').textContent = displayTime;
+    document.getElementById('resultMeetingPlace').textContent = meetingInfo.place || '地点待补充';
+}
+
+function updateInfoNotice() {
+    const notice = document.getElementById('elementNotice');
+    const text = document.getElementById('elementNoticeText');
+    if (!notice || !text) return;
+    // 统计未完善要素
+    const miss = [];
+    if (!meetingInfo.time) miss.push('会议时间');
+    if (!meetingInfo.place) miss.push('会议地点');
+    if (!meetingInfo.host) miss.push('主持人');
+    if (!meetingInfo.attendees) miss.push('出席人员');
+    if (!meetingInfo.recorder) miss.push('记录人');
+    if (miss.length === 0) {
+        notice.classList.add('completed');
+        text.textContent = '会议要素已完善，纪要可正式使用。';
+    } else {
+        notice.classList.remove('completed');
+        text.textContent = '提醒：' + miss.join('、') + ' 尚未完善，请点击「编辑」直接在线补充修改。';
+    }
+}
+
+/* ==================== 纪要模板预览 ==================== */
+const templateContentMap = {
+    'auto': { name: '智能匹配（推荐）', desc: '根据会议类型自动匹配对应模板，适用于大多数政务会议场景。', sections: ['一、会议议题', '二、议定事项（按议题分（一）（二）（三）列示）', '三、其他事项', '落款：部门 + 日期'] },
+    '1': { name: '工作例会标准模板', desc: '适用于机关单位周例会、月度例会等例行工作会议。', sections: ['标题：××工作例会纪要', '元信息：时间/地点/主持人/出席人员/记录人', '一、会议议题', '二、议定事项（逐条列示决定与责任分工）', '三、下阶段工作安排', '落款'] },
+    '2': { name: '专题协调会议模板', desc: '适用于跨部门专题协调、事项研究类会议。', sections: ['标题：关于××的专题协调会议纪要', '元信息', '一、协调事项背景', '二、各方意见与协调情况', '三、协调意见与责任分工', '落款'] },
+    '3': { name: '项目推进会议模板', desc: '适用于项目进度调度、节点推进类会议。', sections: ['标题：××项目推进会议纪要', '元信息', '一、项目进展情况', '二、存在问题与风险', '三、下阶段节点与责任分工', '落款'] },
+    '4': { name: '部门会商模板', desc: '适用于部门内部会商、事项研究类会议。', sections: ['标题：××部门会商会议纪要', '元信息', '一、会商事项', '二、会商意见', '三、结论与落实安排', '落款'] }
+};
+
+function openTemplatePreview() {
+    const cur = document.getElementById('template').value;
+    document.getElementById('templatePreviewSelect').value = cur;
+    renderTemplatePreview();
+    showModal('modalTemplate');
+}
+
+function renderTemplatePreview() {
+    const val = document.getElementById('templatePreviewSelect').value;
+    const tpl = templateContentMap[val] || templateContentMap['auto'];
+    const sectionsHtml = tpl.sections.map(s => `<div style="padding:4px 0;border-bottom:1px dashed var(--border-light);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>${escapeHtml(s)}</div>`).join('');
+    document.getElementById('templatePreviewContent').innerHTML = `
+        <div style="font-size:15px;font-weight:600;color:var(--primary);margin-bottom:6px;">${escapeHtml(tpl.name)}</div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;line-height:1.7;">${escapeHtml(tpl.desc)}</div>
+        <div style="font-size:12px;color:var(--text-tip);margin-bottom:6px;font-weight:500;">模板结构：</div>
+        <div>${sectionsHtml}</div>
+        <div style="margin-top:12px;padding:8px 10px;background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;font-size:11px;color:#874d00;">提示：实际生成内容将依据转写文本动态填充，密级标识按所选保密级别自动应用。</div>
+    `;
+}
+
+function applyTemplatePreview() {
+    const val = document.getElementById('templatePreviewSelect').value;
+    document.getElementById('template').value = val;
+    hideModal('modalTemplate');
+    const name = templateContentMap[val] ? templateContentMap[val].name : '';
+    showToast('已选择：' + name);
+}
+
+function showHelp() { showModal('modalHelp'); }
+
+/* Toast */
+let toastTimer = null;
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+</script>
+</body>
+</html>

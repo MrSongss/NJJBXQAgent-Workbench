@@ -1,0 +1,1467 @@
+<!doctype html>
+<!-- 重构版本：采用问题整改后直接生成报告、问题清单和留痕记录的自动闭环。 -->
+<!--
+  业务场景：南京江北新区政务 AI 智能体平台—辅助文本合规审查
+  端类型：PC 端（Vue 3 + Naive UI）
+  研发对接说明：
+  1. 将 Vue 3、Naive UI CDN 引入替换为 npm 包并接入 Vite。
+  2. 将 setup() 业务逻辑和 template 拆分为 .vue 单文件组件。
+  3. themeOverrides、CSS 变量、动效与数据结构可原样保留。
+  4. 文件解析、文种识别、合规审查、规则依据、报告生成和审查记录由后端接口替换当前演示逻辑。
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>辅助文本合规审查 - 江北新区政务AI智能体平台</title>
+  <style>
+    :root {
+      --ai-navy: #0a3573;
+      --ai-blue: #0e4c92;
+      --ai-cyan: #13a8a8;
+      --ai-green: #43a047;
+      --ai-lime: #9ccc65;
+      --page-bg: #f4f6f9;
+      --panel: #ffffff;
+      --text: #333639;
+      --muted: #667085;
+      --line: #e4eaf1;
+      --soft-blue: #edf5fc;
+      --soft-cyan: #eaf8f7;
+      --soft-green: #edf8ee;
+      --soft-amber: #fff8e9;
+      --soft-red: #fff1f0;
+      --shadow: 0 10px 32px rgba(24, 54, 91, 0.08);
+      --ai-glow: 0 0 16px rgba(19, 168, 168, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+    html, body, #app { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--page-bg);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    }
+    button, input, textarea, select { font: inherit; }
+    .icon {
+      width: 1em;
+      height: 1em;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vertical-align: -0.125em;
+    }
+
+    .app-shell { height: 100%; min-width: 1120px; display: flex; flex-direction: column; }
+    .topbar {
+      height: 64px;
+      flex: 0 0 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      background:
+        radial-gradient(circle at 82% -90%, rgba(156, 204, 101, 0.45), transparent 35%),
+        linear-gradient(90deg, var(--ai-navy), var(--ai-blue) 60%, var(--ai-cyan));
+      box-shadow: 0 4px 18px rgba(10, 53, 115, 0.2);
+      position: relative;
+      z-index: 20;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: var(--ai-glow);
+      backdrop-filter: blur(10px);
+    }
+    .brand-title { font-size: 18px; font-weight: 600; letter-spacing: -.2px; }
+    .brand-sub { margin-top: 2px; font-size: 11px; opacity: .78; }
+    .top-user { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .top-user-meta { text-align: right; }
+    .top-user-meta small { display: block; margin-top: 2px; opacity: .7; }
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.24);
+    }
+
+    .body-shell { flex: 1; min-height: 0; display: grid; grid-template-columns: 188px minmax(0, 1fr); }
+    .sidenav {
+      min-height: 0;
+      padding: 18px 12px;
+      background: rgba(255,255,255,.94);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+    .nav-caption {
+      padding: 0 12px 10px;
+      color: #98a2b3;
+      font-size: 11px;
+      letter-spacing: .5px;
+    }
+    .nav-btn {
+      width: 100%;
+      height: 44px;
+      margin-bottom: 6px;
+      padding: 0 13px;
+      border: 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #475467;
+      background: transparent;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+      text-align: left;
+    }
+    .nav-btn:hover { color: var(--ai-blue); background: #f3f7fb; }
+    .nav-btn.active {
+      color: #fff;
+      background: linear-gradient(100deg, var(--ai-blue), #1377b5);
+      box-shadow: 0 8px 18px rgba(14,76,146,.2);
+    }
+    .nav-btn .icon { width: 18px; height: 18px; }
+    .side-note {
+      margin-top: auto;
+      padding: 12px;
+      border: 1px solid #dceaf2;
+      border-radius: 11px;
+      color: #5c6f81;
+      background: linear-gradient(145deg, #f6fbfe, #eff8f6);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .side-note strong { color: var(--ai-blue); font-weight: 600; }
+
+    .main-view { min-width: 0; min-height: 0; overflow: auto; }
+    .review-view { height: 100%; min-height: 0; display: flex; flex-direction: column; }
+    .page-head {
+      flex: 0 0 auto;
+      padding: 18px 22px 14px;
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--line);
+    }
+    .page-head-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .page-title { margin: 0; color: #173454; font-size: 20px; font-weight: 600; letter-spacing: -.3px; }
+    .page-desc { margin-top: 5px; color: var(--muted); font-size: 12px; }
+
+    .workflow {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      max-width: 780px;
+    }
+    .workflow-step { position: relative; display: flex; align-items: center; color: #98a2b3; font-size: 12px; }
+    .workflow-step:not(:last-child)::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      margin: 0 10px;
+      background: #d9e2ec;
+    }
+    .workflow-step.done:not(:last-child)::after,
+    .workflow-step.current:not(:last-child)::after { background: linear-gradient(90deg, var(--ai-cyan), #b9dce1); }
+    .step-dot {
+      width: 26px;
+      height: 26px;
+      margin-right: 7px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 26px;
+      color: #7b8794;
+      background: #edf1f5;
+      border: 1px solid #dde5ed;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .workflow-step.current { color: var(--ai-blue); font-weight: 600; }
+    .workflow-step.current .step-dot {
+      color: #fff;
+      background: var(--ai-blue);
+      border-color: var(--ai-blue);
+      box-shadow: 0 0 0 4px rgba(14,76,146,.1);
+    }
+    .workflow-step.done { color: var(--ai-cyan); }
+    .workflow-step.done .step-dot { color: #fff; background: var(--ai-cyan); border-color: var(--ai-cyan); }
+
+    .empty-stage {
+      flex: 1;
+      min-height: 560px;
+      padding: 28px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(19,168,168,.08), transparent 32%),
+        var(--page-bg);
+    }
+    .empty-card {
+      width: min(820px, 92%);
+      padding: 36px 42px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #e0e8f0;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .agent-avatar {
+      width: 66px;
+      height: 66px;
+      margin: 0 auto 18px;
+      border-radius: 19px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
+      box-shadow: var(--ai-glow);
+    }
+    .agent-avatar .icon { width: 31px; height: 31px; }
+    .empty-card h2 { margin: 0; color: #14365e; font-size: 25px; font-weight: 600; letter-spacing: -.5px; }
+    .empty-card p { max-width: 590px; margin: 12px auto 22px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .capability-grid { margin: 28px 0 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: left; }
+    .capability {
+      padding: 14px;
+      border-radius: 11px;
+      border: 1px solid #e4ebf2;
+      background: #f9fbfd;
+    }
+    .capability b { display: block; margin-bottom: 5px; color: #294a6d; font-size: 13px; font-weight: 600; }
+    .capability span { color: #7a8697; font-size: 11px; line-height: 1.55; }
+
+    .thinking-stage { flex: 1; min-height: 560px; display: grid; place-items: center; padding: 28px; }
+    .thinking-card { width: 620px; padding: 34px 38px; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .thinking-title { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; color: #173f6c; font-size: 18px; font-weight: 600; }
+    .thinking-mini-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
+      box-shadow: var(--ai-glow);
+    }
+    .thinking-row {
+      margin: 11px 0;
+      padding: 13px 15px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #526476;
+      background: #f6f9fc;
+      border: 1px solid #e8edf3;
+      font-size: 13px;
+      animation: fadeUp .25s ease;
+    }
+    .thinking-row.active { color: var(--ai-blue); border-color: #b9dbe8; background: #f0f9fb; }
+    .thinking-row.done { color: var(--ai-green); }
+    .thinking-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ai-cyan); display: inline-block; animation: dot-bounce 1.2s infinite ease-in-out; }
+    .thinking-dot:nth-child(2) { animation-delay: .15s; }
+    .thinking-dot:nth-child(3) { animation-delay: .3s; }
+
+    .workspace {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(520px, 1fr) 430px;
+      background: #eef2f6;
+    }
+    .document-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; border-right: 1px solid #dce4ec; }
+    .pane-toolbar {
+      height: 52px;
+      flex: 0 0 52px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,.94);
+      border-bottom: 1px solid var(--line);
+    }
+    .doc-meta { min-width: 0; display: flex; align-items: center; gap: 9px; }
+    .doc-name { min-width: 0; max-width: 430px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #34475c; font-size: 13px; font-weight: 600; }
+    .document-scroll { flex: 1; min-height: 0; overflow: auto; padding: 22px; }
+    .result-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #eef2f6; }
+    .stale-banner {
+      flex: 0 0 auto;
+      margin: 12px 16px 0;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #8a5a00;
+      background: #fff8e9;
+      border: 1px solid #f5d48a;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .editor-tip {
+      margin-bottom: 12px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: #526476;
+      background: #f5f8fb;
+      border: 1px solid #e1e9f0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .paper-editor {
+      min-height: 800px;
+      padding: 28px 30px;
+      background: #fff;
+      border: 1px solid #e2e8ef;
+      box-shadow: 0 8px 26px rgba(35,55,78,.07);
+    }
+    .paper-editor .n-input {
+      min-height: 720px;
+      font-family: "FangSong", "STFangsong", "SimSun", serif;
+      font-size: 17px;
+      line-height: 2;
+    }
+    .paper {
+      width: min(820px, 100%);
+      min-height: 900px;
+      margin: 0 auto;
+      padding: 68px 76px 82px;
+      color: #2e3540;
+      background: #fff;
+      border: 1px solid #e2e8ef;
+      box-shadow: 0 8px 26px rgba(35,55,78,.07);
+      font-family: "FangSong", "STFangsong", "SimSun", serif;
+      font-size: 17px;
+      line-height: 2;
+    }
+    .paper p { margin: 0 0 10px; text-indent: 2em; }
+    .paper p:first-child { margin-bottom: 22px; text-align: center; text-indent: 0; font-size: 22px; font-weight: 600; font-family: "SimSun", serif; }
+    .paper p:nth-child(2) { text-indent: 0; }
+    .doc-mark {
+      padding: 1px 2px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: box-shadow .2s ease, opacity .2s ease;
+    }
+    .doc-mark.high { color: #b42318; background: #fee4e2; box-shadow: inset 0 -1px 0 #f97066; }
+    .doc-mark.medium { color: #9a6700; background: #fff0c2; box-shadow: inset 0 -1px 0 #fdb022; }
+    .doc-mark.general { color: #175cd3; background: #dbeafe; box-shadow: inset 0 -1px 0 #53b1fd; }
+    .doc-mark.accepted { color: #067647; background: #dcfae6; box-shadow: inset 0 -1px 0 #32d583; }
+    .doc-mark.ignored { color: #667085; background: #f2f4f7; box-shadow: inset 0 -1px 0 #98a2b3; opacity: .78; }
+    .doc-mark.active { box-shadow: 0 0 0 4px rgba(19,168,168,.2), inset 0 -1px 0 currentColor; }
+
+    .issue-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: #fff; }
+    .issue-summary { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); }
+    .summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .summary-title { color: #253b53; font-size: 16px; font-weight: 600; }
+    .summary-sub { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .summary-count { color: var(--ai-blue); font-size: 22px; font-weight: 600; }
+    .filter-row { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .filter-label { margin-right: 2px; color: #98a2b3; font-size: 11px; }
+    .filter-chip {
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid #dfe6ed;
+      border-radius: 999px;
+      color: #596779;
+      background: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+    .filter-chip:hover { color: var(--ai-blue); border-color: #a9c9df; }
+    .filter-chip.active { color: var(--ai-blue); background: var(--soft-blue); border-color: #9ec7e3; font-weight: 600; }
+    .issue-actions { padding: 11px 16px; display: flex; gap: 8px; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .issue-scroll { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px 18px; }
+    .issue-card {
+      margin-bottom: 10px;
+      padding: 13px 13px 12px;
+      border: 1px solid #e3e9ef;
+      border-radius: 11px;
+      background: #fff;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      animation: fadeUp .25s ease;
+      cursor: pointer;
+    }
+    .issue-card:hover, .issue-card.active { transform: translateY(-1px); border-color: #a7d5dc; box-shadow: 0 7px 18px rgba(16,78,112,.08); }
+    .issue-card.resolved { background: #fbfcfd; opacity: .86; }
+    .issue-card-head { display: flex; align-items: center; gap: 7px; }
+    .risk-dot { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; }
+    .risk-dot.high { background: #d9534f; }
+    .risk-dot.medium { background: #f0ad4e; }
+    .risk-dot.general { background: #3b82f6; }
+    .issue-title { min-width: 0; flex: 1; color: #344054; font-size: 13px; font-weight: 600; }
+    .issue-pos { color: #98a2b3; font-size: 10px; white-space: nowrap; }
+    .issue-line { margin-top: 9px; display: grid; grid-template-columns: 34px 1fr; gap: 7px; font-size: 12px; line-height: 1.65; }
+    .line-label { color: #98a2b3; }
+    .original { color: #b42318; text-decoration: line-through; text-decoration-color: rgba(180,35,24,.35); }
+    .suggestion { color: #067647; }
+    .basis-box { margin-top: 9px; padding: 9px 10px; border-radius: 8px; color: #5a6978; background: #f5f8fb; font-size: 11px; line-height: 1.6; }
+    .card-foot { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .status-text { font-size: 11px; }
+    .status-text.accepted { color: var(--ai-green); }
+    .status-text.ignored { color: #667085; }
+    .empty-issues { padding: 42px 16px; text-align: center; color: #98a2b3; font-size: 13px; }
+
+    .record-page { padding: 22px; min-height: 100%; background: var(--page-bg); }
+    .record-head { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+    .record-card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 8px 24px rgba(32,60,86,.05); }
+    .record-filter { padding: 14px 16px; display: flex; gap: 10px; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .version-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; color: var(--ai-blue); background: var(--soft-blue); font-size: 10px; font-weight: 600; }
+
+    .report-hero {
+      padding: 18px;
+      border-radius: 12px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 84% 0, rgba(156,204,101,.35), transparent 33%),
+        linear-gradient(105deg, var(--ai-navy), var(--ai-blue) 62%, var(--ai-cyan));
+    }
+    .report-hero h3 { margin: 0; font-size: 18px; font-weight: 600; }
+    .report-hero p { margin: 7px 0 0; font-size: 11px; opacity: .78; }
+    .report-kpis { margin: 14px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .report-kpi { padding: 12px; border-radius: 10px; text-align: center; background: #f7f9fb; border: 1px solid #e8edf2; }
+    .report-kpi b { display: block; color: #234564; font-size: 20px; font-weight: 600; }
+    .report-kpi span { color: #7a8795; font-size: 10px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .report-table th, .report-table td { padding: 9px 8px; border-bottom: 1px solid #e9edf2; text-align: left; vertical-align: top; }
+    .report-table th { color: #5f6c7b; background: #f7f9fb; font-weight: 600; }
+    .report-table td { color: #445364; line-height: 1.55; }
+    .log-list { margin: 0; padding: 0; list-style: none; }
+    .log-list li { position: relative; padding: 0 0 13px 20px; color: #5f6d7b; font-size: 11px; line-height: 1.55; }
+    .log-list li::before { content: ""; position: absolute; left: 3px; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--ai-cyan); }
+    .log-list li:not(:last-child)::after { content: ""; position: absolute; left: 6px; top: 14px; bottom: 0; width: 1px; background: #dce5eb; }
+
+    .modal-section-title { margin: 0 0 10px; color: #344a62; font-size: 13px; font-weight: 600; }
+    .upload-note { margin-top: 9px; color: #7e8a98; font-size: 11px; line-height: 1.6; }
+    .detect-box { margin-top: 12px; padding: 11px 13px; border-radius: 9px; color: #3e5e72; background: var(--soft-cyan); border: 1px solid #cde9e7; font-size: 12px; }
+
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes dot-bounce { 0%,80%,100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .typing-cursor::after { content: "▍"; margin-left: 2px; color: var(--ai-cyan); animation: blink 1s steps(1) infinite; }
+
+    @media (max-width: 1280px) {
+      .workspace { grid-template-columns: minmax(500px, 1fr) 390px; }
+      .paper { padding-left: 52px; padding-right: 52px; }
+    }
+    @media (max-width: 1120px) {
+      .app-shell { min-width: 960px; }
+      .body-shell { grid-template-columns: 76px minmax(0,1fr); }
+      .nav-caption, .nav-btn span, .side-note { display: none; }
+      .nav-btn { justify-content: center; padding: 0; }
+      .workspace { grid-template-columns: minmax(470px,1fr) 360px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div style="height:100%;display:grid;place-items:center;color:#667085;">正在加载辅助文本合规审查智能体…</div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/naive-ui/dist/index.prod.js"></script>
+  <script>
+    const { createApp, ref, reactive, computed, watch, nextTick } = Vue;
+
+    const app = createApp({
+      setup() {
+        const themeOverrides = {
+          common: {
+            primaryColor: "#0E4C92",
+            primaryColorHover: "#1377B5",
+            primaryColorPressed: "#0A3573",
+            primaryColorSuppl: "#13A8A8",
+            infoColor: "#13A8A8",
+            infoColorHover: "#2BBDBD",
+            successColor: "#43A047",
+            successColorHover: "#66BB6A",
+            warningColor: "#F0AD4E",
+            errorColor: "#D9534F",
+            borderRadius: "10px"
+          }
+        };
+
+        const { message } = naive.createDiscreteApi(["message"]);
+        const view = ref("review");
+        const phase = ref("empty");
+        const currentStep = ref(1);
+        const showNewTask = ref(false);
+        const showReport = ref(false);
+        const showRecordDetail = ref(false);
+        const sourceMode = ref("upload");
+        const pasteText = ref("");
+        const uploadFile = ref(null);
+        const selectedDocType = ref("通知");
+        const detectedDocType = ref("");
+        const detectConfidence = ref(null);
+        const hasInput = computed(() => sourceMode.value === "paste"
+          ? pasteText.value.trim().length > 0
+          : !!uploadFile.value);
+        const analysisStage = ref(0);
+        const activeDimension = ref("all");
+        const activeRisk = ref("all");
+        const activeIssueId = ref("");
+        const resultsStale = ref(false);
+        const staleReason = ref("");
+        const editingDocument = ref(false);
+        const documentDraft = ref("");
+        const editOriginalText = ref("");
+        const savedAnalysisText = ref("");
+        const savedAnalysisDocType = ref("");
+        const recordKeyword = ref("");
+        const recordType = ref("全部文种");
+        const selectedRecord = ref(null);
+
+        window.addEventListener("message", event => {
+          const data = event.data || {};
+          if (data.type !== "JBAI_WORKBENCH_CONTEXT" || !data.payload || !data.payload.text) return;
+          sourceMode.value = "paste";
+          pasteText.value = String(data.payload.text);
+          selectedDocType.value = "通知";
+          view.value = "review";
+          phase.value = "empty";
+          currentStep.value = 1;
+          showNewTask.value = true;
+          message.success("已带入会话生成正文，请确认后开始合规审查");
+        });
+
+        const docTypes = ["通知", "报告", "请示", "会议纪要", "讲话稿", "工作总结"];
+        const dimensionOptions = [
+          { value: "all", label: "全部维度" },
+          { value: "format", label: "格式规范" },
+          { value: "writing", label: "行文规则" },
+          { value: "content", label: "内容合规" }
+        ];
+        const riskOptions = [
+          { value: "all", label: "全部风险" },
+          { value: "high", label: "高风险" },
+          { value: "medium", label: "中风险" },
+          { value: "general", label: "一般问题" }
+        ];
+
+        const sampleDocument = [
+          "关于开展2026年度安全生产大检查的通知",
+          "各街道办事处、新区各相关部门：",
+          "为深入贯彻落实新区安全生产专项整治要求，进一步压紧压实安全生产主体责任，现就开展2026年度安全生产大检查有关事项通知如下：",
+          "一、检查范围。围绕重点企业、建筑工地、人员密集场所等重点区域，全面排查各类风险隐患，确保所有隐患一次性清零。",
+          "二、检查内容。重点检查消防设施配备、应急预案演练、值班值守安排等情况，各单位要对照有关要求逐项核查。",
+          "三、工作要求。请各单位高度重视，明确专人负责，于七月十五日前报送检查情况和问题清单。检查中发现的重大隐患，应当立即上报。",
+          "联系人：李某某，联系电话：025-58150000。",
+          "南京江北新区综合办公室",
+          "2026年7月9日"
+        ].join("\n");
+
+        const task = reactive({
+          id: "",
+          name: "",
+          type: "通知",
+          text: "",
+          createdAt: "",
+          issues: [],
+          logs: []
+        });
+
+        const seedRecords = [
+          {
+            id: "R-20260728-001",
+            name: "新区重点项目推进会会议纪要",
+            type: "会议纪要",
+            version: "V1",
+            time: "2026-07-28 16:42",
+            total: 5,
+            accepted: 4,
+            ignored: 1,
+            operator: "综合办公室",
+            issues: [],
+            logs: [
+              { time: "16:36:08", action: "上传DOCX文稿并识别为会议纪要" },
+              { time: "16:36:12", action: "完成格式规范、行文规则、内容合规审查" },
+              { time: "16:42:17", action: "生成审查报告和问题清单，保存V1版本" }
+            ]
+          },
+          {
+            id: "R-20260727-003",
+            name: "2026年上半年工作总结",
+            type: "工作总结",
+            version: "V1",
+            time: "2026-07-27 11:18",
+            total: 8,
+            accepted: 6,
+            ignored: 2,
+            operator: "政务服务中心",
+            issues: [],
+            logs: [
+              { time: "11:09:24", action: "粘贴文本并识别为工作总结" },
+              { time: "11:09:29", action: "完成合规审查并生成8项问题" },
+              { time: "11:18:03", action: "生成审查报告和问题清单，保存V1版本" }
+            ]
+          }
+        ];
+
+        function loadLocalRecords() {
+          try {
+            const raw = localStorage.getItem("jiangbeiComplianceRecords");
+            return raw ? JSON.parse(raw) : [];
+          } catch (e) {
+            return [];
+          }
+        }
+        const records = ref(loadLocalRecords().concat(seedRecords));
+
+        const now = () => new Date().toLocaleString("zh-CN", {
+          year: "numeric", month: "2-digit", day: "2-digit",
+          hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+        }).replaceAll("/", "-");
+        const clock = () => new Date().toLocaleTimeString("zh-CN", { hour12: false });
+        const addLog = (action) => task.logs.push({ time: clock(), action });
+
+        function detectDocType(text) {
+          const content = String(text || "");
+          const rules = [
+            ["会议纪要", /会议纪要|会议指出|会议强调|议定事项/],
+            ["请示", /请示|妥否.{0,4}请批示|特此请示/],
+            ["报告", /报告如下|特此报告|情况报告/],
+            ["讲话稿", /讲话稿|同志们[：:]|会议上的讲话/],
+            ["工作总结", /工作总结|现将.{0,10}总结如下|上半年工作/],
+            ["通知", /通知如下|现就.{0,12}通知|请遵照执行/]
+          ];
+          for (const [name, regex] of rules) {
+            if (regex.test(content)) return { type: name, confidence: 96 };
+          }
+          return { type: "通知", confidence: 72 };
+        }
+
+        watch(pasteText, (value) => {
+          if (!value.trim()) {
+            detectedDocType.value = "";
+            detectConfidence.value = null;
+            return;
+          }
+          const result = detectDocType(value);
+          detectedDocType.value = result.type;
+          detectConfidence.value = result.confidence;
+          selectedDocType.value = result.type;
+        });
+
+        function openNewTask() {
+          sourceMode.value = "upload";
+          pasteText.value = "";
+          uploadFile.value = null;
+          selectedDocType.value = "通知";
+          detectedDocType.value = "";
+          detectConfidence.value = null;
+          showNewTask.value = true;
+        }
+
+        function handleUploadChange(options) {
+          const list = options.fileList || [];
+          uploadFile.value = list.length ? list[list.length - 1] : null;
+          if (uploadFile.value) {
+            const result = detectDocType(uploadFile.value.name);
+            detectedDocType.value = result.type;
+            detectConfidence.value = result.confidence;
+            selectedDocType.value = result.type;
+          } else {
+            detectedDocType.value = "";
+            detectConfidence.value = null;
+          }
+        }
+
+        function makeIssue(id, dimension, risk, title, original, suggestion, basis, position) {
+          return { id, dimension, risk, title, original, suggestion, basis, position, status: "pending" };
+        }
+
+        function analyzeDocument(text, docType) {
+          const content = String(text || "");
+          const lines = content.split(/\n+/).map(s => s.trim()).filter(Boolean);
+          const result = [];
+          let id = 1;
+          const push = (...args) => result.push(makeIssue(String(id++), ...args));
+
+          if (content.includes("新区安全生产专项整治要求")) {
+            push("content", "high", "政策依据名称和文号不完整",
+              "新区安全生产专项整治要求",
+              "补充政策文件规范名称、发文机关和有效文号",
+              "政策合规校核要求：引用政策文件应准确、完整，并确认现行有效状态。",
+              "正文第1段");
+          }
+          if (content.includes("确保所有隐患一次性清零")) {
+            push("content", "high", "政策表述存在绝对化风险",
+              "确保所有隐患一次性清零",
+              "推动风险隐患排查整改形成闭环",
+              "内容合规规则：避免无法客观验证的绝对化结果承诺。",
+              "正文第2段");
+          }
+          if (content.includes("于七月十五日前")) {
+            push("format", "medium", "日期数字用法不规范",
+              "于七月十五日前",
+              "于7月15日前",
+              "格式规范规则：公文中的具体日期应使用阿拉伯数字。",
+              "正文第4段");
+          }
+          if (content.includes("立即上报")) {
+            push("writing", "general", "向上行文用语不规范",
+              "立即上报",
+              "立即报告",
+              "行文规则：向上级机关反映情况时建议使用“报告”等规范表述。",
+              "正文第4段");
+          }
+          if (content.includes("南京江北新区综合办公室")) {
+            push("content", "medium", "落款机关名称需核实",
+              "南京江北新区综合办公室",
+              "请使用机构名录中的规范全称",
+              "制度规则库：发文机关和落款机关名称应与机构名录保持一致。",
+              "落款");
+          }
+          if (content.includes("问题清单") && !/[附\s]*件[：:]/.test(content)) {
+            push("format", "medium", "正文提及附件但缺少附件说明",
+              "报送检查情况和问题清单",
+              "在正文后补充“附件：安全生产检查问题清单”",
+              "格式规范规则：正文涉及附件时，应在正文后标注附件名称。",
+              "正文末尾");
+          }
+          if (docType === "请示" && /报告如下|特此报告/.test(content)) {
+            push("writing", "high", "请示与报告存在混用",
+              content.match(/报告如下|特此报告/)[0],
+              "根据实际行文目的统一为请示用语",
+              "行文规则：请示用于请求指示或批准，报告不得夹带请示事项。",
+              "正文");
+          }
+          if (docType === "报告" && /妥否.{0,4}请批示|特此请示/.test(content)) {
+            const original = content.match(/妥否.{0,4}请批示|特此请示/)[0];
+            push("writing", "high", "报告中夹带请示事项",
+              original,
+              "删除请示性表述，需批准的事项另行形成请示",
+              "行文规则：报告不得夹带请示事项。",
+              "正文结尾");
+          }
+          const hasRecipient = lines.slice(1, 4).some(line => /[：:]$/.test(line));
+          if (!hasRecipient && ["通知", "请示", "报告"].includes(docType)) {
+            push("format", "high", "缺少主送机关",
+              "未识别到主送机关",
+              "在标题下方补充规范主送机关名称",
+              "格式规范规则：存在明确行文对象的公文应标注主送机关。",
+              "标题下方");
+          }
+          const hasDate = /\d{4}年\d{1,2}月\d{1,2}日/.test(content);
+          if (!hasDate) {
+            push("format", "general", "缺少成文日期",
+              "未识别到成文日期",
+              "在落款下方补充成文日期",
+              "格式规范规则：公文应标注完整成文日期。",
+              "文稿末尾");
+          }
+          return result;
+        }
+
+        function beginAnalysis(isRecheck = false) {
+          phase.value = "thinking";
+          currentStep.value = 2;
+          analysisStage.value = 0;
+          let index = 0;
+          const stages = [1, 2, 3, 4];
+          const timer = setInterval(() => {
+            analysisStage.value = stages[index];
+            index += 1;
+            if (index >= stages.length) {
+              clearInterval(timer);
+              setTimeout(() => {
+                task.issues = analyzeDocument(task.text, task.type);
+                savedAnalysisText.value = task.text;
+                savedAnalysisDocType.value = task.type;
+                resultsStale.value = false;
+                staleReason.value = "";
+                addLog((isRecheck ? "重新审查完成" : "完成格式规范、行文规则、内容合规审查") + "，生成" + task.issues.length + "项问题");
+                phase.value = "results";
+                currentStep.value = 3;
+                activeDimension.value = "all";
+                activeRisk.value = "all";
+                message.success(isRecheck ? "重新审查完成，问题清单已更新" : "合规审查完成");
+              }, 320);
+            }
+          }, 380);
+        }
+
+        function startTask() {
+          if (sourceMode.value === "upload" && !uploadFile.value) {
+            message.warning("请选择DOC、DOCX或PDF文件");
+            return;
+          }
+          if (sourceMode.value === "paste" && !pasteText.value.trim()) {
+            message.warning("请粘贴待审文本内容");
+            return;
+          }
+          const sourceText = sourceMode.value === "paste" ? pasteText.value.trim() : sampleDocument;
+          const sourceName = sourceMode.value === "paste"
+            ? (sourceText.split(/\n+/)[0] || "粘贴文本合规审查")
+            : uploadFile.value.name.replace(/\.[^.]+$/, "");
+
+          task.id = "TASK-" + Date.now();
+          task.name = sourceName;
+          task.type = selectedDocType.value;
+          task.text = sourceText;
+          task.createdAt = now();
+          task.issues = [];
+          task.logs = [];
+          resultsStale.value = false;
+          staleReason.value = "";
+          editingDocument.value = false;
+          documentDraft.value = "";
+          savedAnalysisText.value = "";
+          savedAnalysisDocType.value = "";
+          addLog(sourceMode.value === "paste"
+            ? "粘贴文本并识别为“" + task.type + "”"
+            : "上传“" + uploadFile.value.name + "”并识别为“" + task.type + "”");
+          showNewTask.value = false;
+          view.value = "review";
+          beginAnalysis();
+        }
+
+        function invalidateResults(reason) {
+          resultsStale.value = true;
+          staleReason.value = reason;
+          selectedRecord.value = null;
+          showReport.value = false;
+          currentStep.value = 3;
+        }
+
+        function startEditing() {
+          editOriginalText.value = task.text;
+          documentDraft.value = task.text;
+          editingDocument.value = true;
+        }
+
+        function cancelDocumentEdit() {
+          documentDraft.value = editOriginalText.value;
+          editingDocument.value = false;
+        }
+
+        function saveDocumentEdit() {
+          const changed = documentDraft.value.trim() !== task.text.trim();
+          task.text = documentDraft.value;
+          editingDocument.value = false;
+          if (changed) {
+            addLog("用户编辑正文，当前审查结果失效");
+            invalidateResults("正文已编辑，当前问题清单和审查报告已失效");
+            message.warning("正文已修改，请重新审查");
+          }
+        }
+
+        function changeTaskDocType(value) {
+          if (!value || value === task.type) return;
+          task.type = value;
+          addLog("文种由“" + (savedAnalysisDocType.value || "未确认") + "”调整为“" + value + "”");
+          invalidateResults("文种已变更，当前问题清单和审查报告已失效");
+          message.warning("文种已变更，请重新审查");
+        }
+
+        function recheckCurrentTask() {
+          if (editingDocument.value) saveDocumentEdit();
+          if (!task.text.trim()) {
+            message.warning("正文不能为空");
+            return;
+          }
+          task.issues = [];
+          addLog("针对编辑后的正文重新发起合规审查");
+          beginAnalysis(true);
+        }
+
+        const visibleIssues = computed(() => task.issues.filter(issue =>
+          (activeDimension.value === "all" || issue.dimension === activeDimension.value) &&
+          (activeRisk.value === "all" || issue.risk === activeRisk.value)
+        ));
+        const pendingCount = computed(() => task.issues.filter(i => i.status === "pending").length);
+        const acceptedCount = computed(() => task.issues.filter(i => i.status === "accepted").length);
+        const ignoredCount = computed(() => task.issues.filter(i => i.status === "ignored").length);
+        const highCount = computed(() => task.issues.filter(i => i.risk === "high").length);
+        const mediumCount = computed(() => task.issues.filter(i => i.risk === "medium").length);
+        const generalCount = computed(() => task.issues.filter(i => i.risk === "general").length);
+
+        const dimensionLabel = (value) => ({
+          format: "格式规范",
+          writing: "行文规则",
+          content: "内容合规"
+        }[value] || value);
+        const riskLabel = (value) => ({
+          high: "高风险",
+          medium: "中风险",
+          general: "一般问题"
+        }[value] || value);
+        const statusLabel = (value) => ({
+          pending: "待处理",
+          accepted: "已采纳",
+          ignored: "已忽略"
+        }[value] || value);
+
+        function escapeHtml(value) {
+          return String(value || "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        const renderedDocument = computed(() => {
+          let html = task.text.split(/\n+/).map(line => "<p>" + escapeHtml(line) + "</p>").join("");
+          task.issues.forEach(issue => {
+            if (!issue.original || issue.original.startsWith("未识别")) return;
+            const safeOriginal = escapeHtml(issue.original);
+            const css = "doc-mark " + issue.risk + " " + issue.status + (activeIssueId.value === issue.id ? " active" : "");
+            html = html.replace(safeOriginal,
+              '<mark class="' + css + '" data-issue-id="' + issue.id + '">' + safeOriginal + "</mark>");
+          });
+          return html;
+        });
+
+        function focusIssue(issue) {
+          activeIssueId.value = issue.id;
+          nextTick(() => {
+            const el = document.querySelector('[data-issue-id="' + issue.id + '"]');
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+          });
+        }
+
+        function acceptIssue(issue) {
+          if (issue.status === "accepted") return;
+          if (issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.original)) {
+            task.text = task.text.replace(issue.original, issue.suggestion);
+          }
+          issue.status = "accepted";
+          addLog("采纳整改：“" + issue.title + "”");
+          message.success("已采纳修改");
+        }
+
+        function ignoreIssue(issue) {
+          if (issue.status === "ignored") return;
+          issue.status = "ignored";
+          addLog("忽略问题：“" + issue.title + "”");
+          message.info("已忽略该问题");
+        }
+
+        function undoIssue(issue) {
+          if (issue.status === "accepted" && issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.suggestion)) {
+            task.text = task.text.replace(issue.suggestion, issue.original);
+          }
+          issue.status = "pending";
+          addLog("撤销问题处理：“" + issue.title + "”");
+          message.info("已恢复为待处理");
+        }
+
+        function acceptAll() {
+          task.issues.filter(i => i.status === "pending").forEach(issue => {
+            if (issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.original)) {
+              task.text = task.text.replace(issue.original, issue.suggestion);
+            }
+            issue.status = "accepted";
+          });
+          addLog("批量采纳全部待处理问题");
+          message.success("已采纳全部待处理问题");
+        }
+
+        function ignoreAll() {
+          task.issues.filter(i => i.status === "pending").forEach(issue => issue.status = "ignored");
+          addLog("批量忽略全部待处理问题");
+          message.info("已忽略全部待处理问题");
+        }
+
+        function persistRecord(record) {
+          try {
+            const userRecords = records.value
+              .filter(item => !seedRecords.some(seed => seed.id === item.id))
+              .slice(0, 20);
+            localStorage.setItem("jiangbeiComplianceRecords", JSON.stringify(userRecords));
+          } catch (e) {}
+        }
+
+        function generateResult() {
+          if (resultsStale.value) {
+            message.warning("当前审查结果已失效，请重新审查后再生成报告");
+            return;
+          }
+          const existing = records.value.filter(record => record.name === task.name);
+          const version = "V" + (existing.length + 1);
+          addLog("生成审查报告和问题清单，保存" + version + "审查版本");
+          const record = {
+            id: "R-" + Date.now(),
+            name: task.name,
+            type: task.type,
+            version,
+            time: now(),
+            total: task.issues.length,
+            accepted: acceptedCount.value,
+            ignored: ignoredCount.value,
+            pending: pendingCount.value,
+            operator: "综合办公室",
+            text: task.text,
+            issues: JSON.parse(JSON.stringify(task.issues)),
+            logs: JSON.parse(JSON.stringify(task.logs))
+          };
+          records.value.unshift(record);
+          persistRecord(record);
+          selectedRecord.value = record;
+          phase.value = "report";
+          currentStep.value = 4;
+          showReport.value = true;
+          message.success("审查报告、问题清单和版本记录已生成");
+        }
+
+        function viewRecord(record) {
+          selectedRecord.value = record;
+          showRecordDetail.value = true;
+        }
+
+        const filteredRecords = computed(() => records.value.filter(record =>
+          (recordType.value === "全部文种" || record.type === recordType.value) &&
+          (!recordKeyword.value.trim() || record.name.includes(recordKeyword.value.trim()))
+        ));
+
+        const recordColumns = [
+          { title: "文稿名称", key: "name", minWidth: 260, ellipsis: { tooltip: true } },
+          { title: "文种", key: "type", width: 100 },
+          {
+            title: "审查版本", key: "version", width: 100,
+            render: row => Vue.h("span", { class: "version-tag" }, row.version)
+          },
+          { title: "问题数", key: "total", width: 90 },
+          {
+            title: "处理情况", key: "handled", width: 150,
+            render: row => (row.accepted || 0) + "项采纳 / " + (row.ignored || 0) + "项忽略"
+          },
+          { title: "生成时间", key: "time", width: 170 },
+          { title: "操作人", key: "operator", width: 120 },
+          {
+            title: "操作", key: "actions", width: 100,
+            render: row => Vue.h(naive.NButton, {
+              text: true,
+              type: "primary",
+              onClick: () => viewRecord(row)
+            }, { default: () => "查看详情" })
+          }
+        ];
+
+        function downloadBlob(content, fileName, mime) {
+          const blob = new Blob([content], { type: mime });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+        }
+
+        function downloadReport(record) {
+          const rows = (record.issues || []).map((issue, index) =>
+            "<tr><td>" + (index + 1) + "</td><td>" + dimensionLabel(issue.dimension) + "</td><td>" +
+            riskLabel(issue.risk) + "</td><td>" + escapeHtml(issue.title) + "</td><td>" +
+            escapeHtml(issue.original) + "</td><td>" + escapeHtml(issue.suggestion) + "</td><td>" +
+            statusLabel(issue.status) + "</td></tr>"
+          ).join("");
+          const html = '<html><head><meta charset="UTF-8"></head><body>' +
+            "<h1>" + escapeHtml(record.name) + "—合规审查报告</h1>" +
+            "<p>文种：" + record.type + "　版本：" + record.version + "　生成时间：" + record.time + "</p>" +
+            "<p>共发现" + record.total + "项问题，采纳" + (record.accepted || 0) + "项，忽略" + (record.ignored || 0) + "项。</p>" +
+            '<table border="1" cellspacing="0" cellpadding="6"><tr><th>序号</th><th>审查维度</th><th>风险</th><th>问题</th><th>原文</th><th>整改建议</th><th>处理状态</th></tr>' +
+            rows + "</table><p>说明：本报告为智能预审结果，供文稿定稿前整改参考。</p></body></html>";
+          downloadBlob("\ufeff" + html, record.name + "_合规审查报告_" + record.version + ".doc", "application/msword;charset=utf-8");
+          message.success("审查报告已下载");
+        }
+
+        function downloadIssueList(record) {
+          const head = ["序号","审查维度","风险等级","问题","原文","整改建议","审查依据","处理状态"];
+          const lines = [head].concat((record.issues || []).map((issue, index) => [
+            index + 1,
+            dimensionLabel(issue.dimension),
+            riskLabel(issue.risk),
+            issue.title,
+            issue.original,
+            issue.suggestion,
+            issue.basis,
+            statusLabel(issue.status)
+          ]));
+          const csv = lines.map(row => row.map(cell => '"' + String(cell || "").replaceAll('"', '""') + '"').join(",")).join("\r\n");
+          downloadBlob("\ufeff" + csv, record.name + "_问题清单_" + record.version + ".csv", "text/csv;charset=utf-8");
+          message.success("问题清单已下载");
+        }
+
+        return {
+          themeOverrides, view, phase, currentStep, showNewTask, showReport, showRecordDetail,
+          sourceMode, pasteText, uploadFile, selectedDocType, detectedDocType, detectConfidence, hasInput,
+          analysisStage, activeDimension, activeRisk, activeIssueId, recordKeyword, recordType,
+          selectedRecord, docTypes, dimensionOptions, riskOptions, task, records, filteredRecords,
+          resultsStale, staleReason, editingDocument, documentDraft,
+          recordColumns, visibleIssues, pendingCount, acceptedCount, ignoredCount,
+          highCount, mediumCount, generalCount, renderedDocument,
+          openNewTask, handleUploadChange, startTask, focusIssue, acceptIssue, ignoreIssue,
+          undoIssue, acceptAll, ignoreAll, generateResult, viewRecord, startEditing,
+          cancelDocumentEdit, saveDocumentEdit, changeTaskDocType, recheckCurrentTask,
+          dimensionLabel, riskLabel, statusLabel, downloadReport, downloadIssueList
+        };
+      },
+
+      template: `
+        <n-config-provider :theme-overrides="themeOverrides">
+          <n-message-provider>
+            <div class="app-shell">
+              <header class="topbar">
+                <div class="brand">
+                  <div class="brand-mark">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.5 4.2L18 9l-4.5 1.8L12 15l-1.5-4.2L6 9l4.5-1.8L12 3z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/></svg>
+                  </div>
+                  <div>
+                    <div class="brand-title">辅助文本合规审查</div>
+                    <div class="brand-sub">南京江北新区政务 AI 智能体平台</div>
+                  </div>
+                </div>
+                <div class="top-user">
+                  <div class="top-user-meta">政务办公人员<small>综合办公室</small></div>
+                  <div class="user-avatar">政</div>
+                </div>
+              </header>
+
+              <div class="body-shell">
+                <aside class="sidenav">
+                  <div class="nav-caption">功能导航</div>
+                  <button class="nav-btn" :class="{active:view==='review'}" @click="view='review'">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+                    <span>合规审查</span>
+                  </button>
+                  <button class="nav-btn" :class="{active:view==='records'}" @click="view='records'">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>
+                    <span>审查记录</span>
+                  </button>
+                  <div class="side-note">
+                    <strong>审查范围</strong><br>
+                    格式规范、行文规则、内容合规同步核查，结果用于定稿前问题整改。
+                  </div>
+                </aside>
+
+                <main class="main-view">
+                  <section v-if="view==='review'" class="review-view">
+                    <div class="page-head">
+                      <div class="page-head-row">
+                        <div>
+                          <h1 class="page-title">文稿合规审查工作台</h1>
+                          <div class="page-desc">上传或粘贴政务文稿，智能识别文种并生成问题清单、整改指引和审查报告</div>
+                        </div>
+                        <n-button type="primary" size="large" @click="openNewTask">
+                          <template #icon>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                          </template>
+                          新建审查
+                        </n-button>
+                      </div>
+                      <div class="workflow">
+                        <div v-for="step in [{n:1,t:'上传文稿'},{n:2,t:'合规审查'},{n:3,t:'问题整改'},{n:4,t:'生成结果'}]"
+                             :key="step.n" class="workflow-step"
+                             :class="{current:currentStep===step.n,done:currentStep>step.n}">
+                          <span class="step-dot">
+                            <svg v-if="currentStep>step.n" class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            <template v-else>{{step.n}}</template>
+                          </span>
+                          <span>{{step.t}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div v-if="phase==='empty'" class="empty-stage">
+                      <div class="empty-card agent-card">
+                        <div class="agent-avatar">
+                          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M9 10h.01M15 10h.01M8 15h8M12 2v3"/></svg>
+                        </div>
+                        <h2>政务文稿智能预审</h2>
+                        <p>面向通知、报告、请示、会议纪要、讲话稿和工作总结等机关公文材料，从形式规范与内容合规两个维度同步核查。</p>
+                        <n-button type="primary" size="large" @click="openNewTask">
+                          开始审查文稿
+                        </n-button>
+                        <div class="capability-grid">
+                          <div class="capability"><b>格式规范校验</b><span>核查标题、主送、正文层级、附件说明、落款和日期等核心要素。</span></div>
+                          <div class="capability"><b>行文规则审查</b><span>识别文种混用、行文对象不当、越级行文和并行文不规范。</span></div>
+                          <div class="capability"><b>内容合规比对</b><span>结合政策法规、制度规则和保密规则，提示内容偏差并给出依据。</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div v-else-if="phase==='thinking'" class="thinking-stage">
+                      <div class="thinking-card">
+                        <div class="thinking-title">
+                          <div class="thinking-mini-avatar">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.5 4.2L18 9l-4.5 1.8L12 15l-1.5-4.2L6 9l4.5-1.8L12 3z"/></svg>
+                          </div>
+                          <span>合规审查智能体正在分析</span>
+                          <span><i class="thinking-dot"></i> <i class="thinking-dot"></i> <i class="thinking-dot"></i></span>
+                        </div>
+                        <div class="thinking-row" :class="{active:analysisStage===1,done:analysisStage>1}">① 解析文稿结构与核心要素</div>
+                        <div class="thinking-row" :class="{active:analysisStage===2,done:analysisStage>2}">② 匹配“{{task.type}}”文种版式和行文规则</div>
+                        <div class="thinking-row" :class="{active:analysisStage===3,done:analysisStage>3}">③ 比对政策法规、制度规则和保密规则</div>
+                        <div class="thinking-row" :class="{active:analysisStage===4,done:analysisStage>4}">④ 汇总风险并生成整改指引</div>
+                      </div>
+                    </div>
+
+                    <div v-else class="result-stage">
+                      <div v-if="resultsStale" class="stale-banner">
+                        <span>⚠ {{staleReason}}。请重新审查后再生成审查报告。</span>
+                        <n-button size="small" type="warning" @click="recheckCurrentTask">重新审查</n-button>
+                      </div>
+                      <div class="workspace">
+                        <section class="document-pane">
+                        <div class="pane-toolbar">
+                          <div class="doc-meta">
+                            <svg class="icon" style="color:#0e4c92" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                            <span class="doc-name">{{task.name}}</span>
+                            <n-select :value="task.type" @update:value="changeTaskDocType" :options="docTypes.map(t=>({label:t,value:t}))" size="small" style="width:108px" />
+                          </div>
+                          <div style="display:flex;align-items:center;gap:9px;color:#7a8795;font-size:11px;">
+                            <span v-if="!editingDocument">点击问题卡片可定位原文</span>
+                            <span v-else>修改正文后保存，当前审查结果将失效</span>
+                            <n-button v-if="!editingDocument" size="small" @click="startEditing">编辑正文</n-button>
+                            <template v-else>
+                              <n-button size="small" @click="cancelDocumentEdit">取消</n-button>
+                              <n-button size="small" type="primary" @click="saveDocumentEdit">保存修改</n-button>
+                            </template>
+                            <n-button size="small" @click="openNewTask">更换文稿</n-button>
+                          </div>
+                        </div>
+                        <div class="document-scroll">
+                          <article v-if="!editingDocument" class="paper" v-html="renderedDocument" @click="event => { const el=event.target.closest('[data-issue-id]'); if(el){ activeIssueId=el.dataset.issueId; } }"></article>
+                          <div v-else class="paper-editor">
+                            <div class="editor-tip">正文编辑区：可直接修改文字。保存后当前问题清单会标记为失效，需点击“重新审查”更新结果。</div>
+                            <n-input v-model:value="documentDraft" type="textarea" :autosize="false" placeholder="请输入或修改正文内容…" />
+                          </div>
+                        </div>
+                        </section>
+
+                        <aside class="issue-pane">
+                        <div class="issue-summary">
+                          <div class="summary-top">
+                            <div>
+                              <div class="summary-title">审查结果</div>
+                              <div class="summary-sub">按建设内容归并为三类审查维度</div>
+                            </div>
+                            <div style="text-align:right">
+                              <div class="summary-count">{{task.issues.length}}</div>
+                              <div class="summary-sub">项问题</div>
+                            </div>
+                          </div>
+                          <div class="filter-row">
+                            <span class="filter-label">维度</span>
+                            <button v-for="item in dimensionOptions" :key="item.value"
+                                    class="filter-chip" :class="{active:activeDimension===item.value}"
+                                    @click="activeDimension=item.value">{{item.label}}</button>
+                          </div>
+                          <div class="filter-row">
+                            <span class="filter-label">风险</span>
+                            <button v-for="item in riskOptions" :key="item.value"
+                                    class="filter-chip" :class="{active:activeRisk===item.value}"
+                                    @click="activeRisk=item.value">{{item.label}}</button>
+                          </div>
+                        </div>
+
+                        <div class="issue-actions">
+                          <n-button size="small" @click="acceptAll" :disabled="pendingCount===0">全部采纳</n-button>
+                          <n-button size="small" @click="ignoreAll" :disabled="pendingCount===0">全部忽略</n-button>
+                          <n-button size="small" type="primary" style="margin-left:auto" :disabled="resultsStale" @click="generateResult">生成审查结果</n-button>
+                        </div>
+
+                        <div class="issue-scroll">
+                          <article v-for="issue in visibleIssues" :key="issue.id"
+                                   class="issue-card" :class="{active:activeIssueId===issue.id,resolved:issue.status!=='pending'}"
+                                   @click="focusIssue(issue)">
+                            <div class="issue-card-head">
+                              <i class="risk-dot" :class="issue.risk"></i>
+                              <span class="issue-title">{{issue.title}}</span>
+                              <n-tag size="tiny" :type="issue.risk==='high'?'error':issue.risk==='medium'?'warning':'info'" :bordered="false">{{riskLabel(issue.risk)}}</n-tag>
+                              <span class="issue-pos">{{issue.position}}</span>
+                            </div>
+                            <div class="issue-line">
+                              <span class="line-label">原文</span>
+                              <span class="original">{{issue.original}}</span>
+                            </div>
+                            <div class="issue-line">
+                              <span class="line-label">建议</span>
+                              <span class="suggestion">{{issue.suggestion}}</span>
+                            </div>
+                            <div class="basis-box">
+                              <b style="color:#445b70;font-weight:600">审查依据：</b>{{issue.basis}}
+                            </div>
+                            <div class="card-foot">
+                              <span v-if="issue.status==='accepted'" class="status-text accepted">✓ 已采纳修改</span>
+                              <span v-else-if="issue.status==='ignored'" class="status-text ignored">— 已忽略</span>
+                              <span v-else class="status-text" style="color:#98a2b3">待处理</span>
+                              <div @click.stop>
+                                <template v-if="issue.status==='pending'">
+                                  <n-button text size="tiny" style="margin-right:12px" @click="ignoreIssue(issue)">忽略</n-button>
+                                  <n-button text type="primary" size="tiny" @click="acceptIssue(issue)">采纳修改</n-button>
+                                </template>
+                                <n-button v-else text size="tiny" @click="undoIssue(issue)">撤销处理</n-button>
+                              </div>
+                            </div>
+                          </article>
+                          <div v-if="visibleIssues.length===0" class="empty-issues">当前筛选条件下暂无问题</div>
+                        </div>
+                        </aside>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section v-else class="record-page">
+                    <div class="record-head">
+                      <div>
+                        <h1 class="page-title">审查记录</h1>
+                        <div class="page-desc">查看已生成的审查报告、问题清单、审查版本和操作记录</div>
+                      </div>
+                      <n-button type="primary" @click="openNewTask">新建审查</n-button>
+                    </div>
+                    <div class="record-card">
+                      <div class="record-filter">
+                        <n-select v-model:value="recordType" :options="[{label:'全部文种',value:'全部文种'}].concat(docTypes.map(t=>({label:t,value:t})))" style="width:150px" />
+                        <n-input v-model:value="recordKeyword" clearable placeholder="搜索文稿名称" style="width:280px">
+                          <template #prefix>
+                            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                          </template>
+                        </n-input>
+                      </div>
+                      <n-data-table :columns="recordColumns" :data="filteredRecords" :pagination="{pageSize:8}" :bordered="false" />
+                    </div>
+                  </section>
+                </main>
+              </div>
+            </div>
+
+            <n-modal v-model:show="showNewTask" preset="card" title="新建合规审查" style="width:680px" :mask-closable="false">
+              <n-tabs v-model:value="sourceMode" type="segment" animated>
+                <n-tab-pane name="upload" tab="上传文稿">
+                  <h3 class="modal-section-title">选择待审文件</h3>
+                  <n-upload :default-upload="false" :max="1" accept=".doc,.docx,.pdf" @change="handleUploadChange">
+                    <n-upload-dragger>
+                      <div style="padding:14px 0 10px;color:#0e4c92">
+                        <svg class="icon" style="width:34px;height:34px" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/></svg>
+                      </div>
+                      <n-text style="font-size:14px">点击或拖拽上传DOC、DOCX、PDF文件</n-text>
+                    </n-upload-dragger>
+                  </n-upload>
+                  <div class="upload-note">原型演示中，上传任意支持格式的文件后将载入示例正文；正式系统由文件解析服务读取原文和版式。</div>
+                </n-tab-pane>
+                <n-tab-pane name="paste" tab="粘贴文本">
+                  <h3 class="modal-section-title">粘贴待审正文</h3>
+                  <n-input v-model:value="pasteText" type="textarea" :autosize="{minRows:8,maxRows:12}" placeholder="请粘贴通知、报告、请示、会议纪要、讲话稿或工作总结正文…" />
+                </n-tab-pane>
+              </n-tabs>
+
+              <div v-if="hasInput" class="detect-box">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <span>智能识别文种：<b style="color:#0e4c92">{{detectedDocType}}</b>　置信度 {{detectConfidence}}%</span>
+                  <span style="color:#7a8795;font-size:11px">识别不准确时可手动修改</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+                  <span style="white-space:nowrap">确认文种</span>
+                  <n-select v-model:value="selectedDocType" :options="docTypes.map(t=>({label:t,value:t}))" style="width:210px" />
+                </div>
+              </div>
+
+              <template #footer>
+                <div style="display:flex;justify-content:flex-end;gap:10px">
+                  <n-button @click="showNewTask=false">取消</n-button>
+                  <n-button type="primary" @click="startTask">开始合规审查</n-button>
+                </div>
+              </template>
+            </n-modal>
+
+            <n-modal v-model:show="showReport" preset="card" title="审查结果已生成" style="width:920px;max-height:86vh" :mask-closable="false">
+              <n-scrollbar style="max-height:66vh" v-if="selectedRecord">
+                <div class="report-hero">
+                  <h3>{{selectedRecord.name}}</h3>
+                  <p>合规审查报告 · {{selectedRecord.version}} · {{selectedRecord.time}} · 操作人：{{selectedRecord.operator}}</p>
+                </div>
+                <div class="report-kpis">
+                  <div class="report-kpi"><b>{{selectedRecord.total}}</b><span>问题总数</span></div>
+                  <div class="report-kpi"><b style="color:#d9534f">{{highCount}}</b><span>高风险</span></div>
+                  <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.accepted}}</b><span>已采纳</span></div>
+                  <div class="report-kpi"><b style="color:#667085">{{selectedRecord.ignored}}</b><span>已忽略</span></div>
+                </div>
+                <table class="report-table">
+                  <thead><tr><th>维度</th><th>风险</th><th>问题</th><th>整改建议</th><th>状态</th></tr></thead>
+                  <tbody>
+                    <tr v-for="issue in selectedRecord.issues" :key="issue.id">
+                      <td>{{dimensionLabel(issue.dimension)}}</td>
+                      <td>{{riskLabel(issue.risk)}}</td>
+                      <td>{{issue.title}}</td>
+                      <td>{{issue.suggestion}}</td>
+                      <td>{{statusLabel(issue.status)}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:15px;color:#7b8794;font-size:11px">说明：本报告为智能预审结果，供文稿定稿前问题整改参考。报告、问题清单、审查版本及操作记录已保存。</div>
+              </n-scrollbar>
+              <template #footer>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <n-button text type="primary" @click="showReport=false;view='records'">查看审查记录</n-button>
+                  <div style="display:flex;gap:10px">
+                    <n-button @click="downloadIssueList(selectedRecord)">下载问题清单</n-button>
+                    <n-button type="primary" @click="downloadReport(selectedRecord)">下载审查报告</n-button>
+                  </div>
+                </div>
+              </template>
+            </n-modal>
+
+            <n-modal v-model:show="showRecordDetail" preset="card" title="审查记录详情" style="width:820px">
+              <template v-if="selectedRecord">
+                <div class="report-hero">
+                  <h3>{{selectedRecord.name}}</h3>
+                  <p>{{selectedRecord.type}} · {{selectedRecord.version}} · {{selectedRecord.time}} · {{selectedRecord.operator}}</p>
+                </div>
+                <n-grid :cols="2" :x-gap="18" style="margin-top:16px">
+                  <n-gi>
+                    <h3 class="modal-section-title">结果概览</h3>
+                    <div class="report-kpis" style="grid-template-columns:repeat(3,1fr)">
+                      <div class="report-kpi"><b>{{selectedRecord.total}}</b><span>问题总数</span></div>
+                      <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.accepted}}</b><span>已采纳</span></div>
+                      <div class="report-kpi"><b style="color:#667085">{{selectedRecord.ignored}}</b><span>已忽略</span></div>
+                    </div>
+                  </n-gi>
+                  <n-gi>
+                    <h3 class="modal-section-title">操作记录</h3>
+                    <ul class="log-list">
+                      <li v-for="(log,index) in selectedRecord.logs" :key="index"><b style="color:#344a62">{{log.time}}</b>　{{log.action}}</li>
+                    </ul>
+                  </n-gi>
+                </n-grid>
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+                  <n-button @click="downloadIssueList(selectedRecord)">下载问题清单</n-button>
+                  <n-button type="primary" @click="downloadReport(selectedRecord)">下载审查报告</n-button>
+                </div>
+              </template>
+            </n-modal>
+          </n-message-provider>
+        </n-config-provider>
+      `
+    });
+
+    app.use(naive);
+    app.mount("#app");
+  </script>
+</body>
+</html>

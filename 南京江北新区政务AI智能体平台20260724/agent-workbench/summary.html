@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作总结智能生成智能体 V4</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif; font-size: 14px; color: #303133; background: #f5f7fa; overflow: hidden; }
+:root {
+  --primary: #1a5cbf; --primary-hover: #1450a8;
+  --primary-light: #e8f1fc; --primary-lighter: #f0f6fd;
+  --border: #e4e7ed; --border-light: #ebeef5;
+  --text-primary: #303133; --text-regular: #606266;
+  --text-secondary: #909399; --text-placeholder: #c0c4cc;
+  --bg-page: #f5f7fa; --bg-white: #ffffff;
+  --success: #67c23a; --warning: #e6a23c;
+  --danger: #f56c6c; --info: #909399;
+  --shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+}
+.app { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+
+/* ========== 侧边栏 ========== */
+.sidebar { width: 260px; background: #fff; border-right: 1px solid var(--border-light); display: flex; flex-direction: column; transition: width 0.3s ease; flex-shrink: 0; position: relative; }
+.sidebar.collapsed { width: 56px; }
+.sidebar.collapsed .sidebar-body, .sidebar.collapsed .btn-new-text, .sidebar.collapsed .sidebar-title-text, .sidebar.collapsed .history-title { display: none; }
+.sidebar.collapsed .btn-new { padding: 0; width: 40px; height: 40px; justify-content: center; margin: 0 auto; }
+.sidebar.collapsed .sidebar-header { padding: 16px 8px; justify-content: center; }
+.sidebar.collapsed .sidebar-logo { justify-content: center; }
+.sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+.sidebar-logo { display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 600; font-size: 15px; }
+.sidebar-logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, #1a5cbf, #2980e8); border-radius: 6px; color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.sidebar-toolbar { padding: 12px 16px; }
+.btn-new { width: 100%; height: 40px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+.btn-new:hover { background: var(--primary-hover); }
+.sidebar-body { flex: 1; overflow-y: auto; padding: 0 8px 16px; }
+.history-title { padding: 12px 8px 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+.history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 2px; color: var(--text-regular); font-size: 13px; line-height: 1.4; transition: background 0.15s; display: flex; align-items: center; gap: 8px; position: relative; }
+.history-item:hover { background: var(--bg-page); }
+.history-item.active { background: var(--primary-light); color: var(--primary); font-weight: 500; }
+.history-item .item-icon { flex-shrink: 0; opacity: 0.6; font-size: 14px; }
+.history-item .item-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-item .item-delete { opacity: 0; color: var(--text-placeholder); transition: opacity 0.2s; padding: 2px; }
+.history-item:hover .item-delete { opacity: 1; }
+.history-item .item-delete:hover { color: var(--danger); }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+.sidebar-collapse-btn { background: transparent; border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; cursor: pointer; color: var(--text-regular); font-size: 12px; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
+.sidebar-collapse-btn:hover { border-color: var(--primary); color: var(--primary); }
+.sidebar.collapsed .sidebar-footer { padding: 12px 8px; justify-content: center; }
+.sidebar.collapsed .footer-user-info { display: none; }
+.footer-user-info { display: flex; align-items: center; gap: 6px; color: var(--text-regular); font-size: 12px; }
+.user-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+/* 折叠状态下的浮动展开按钮 */
+.sidebar-float-toggle { position: absolute; top: 50%; right: -14px; width: 20px; height: 40px; background: #fff; border: 1px solid var(--border); border-left: none; border-radius: 0 6px 6px 0; cursor: pointer; display: none; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 10px; transform: translateY(-50%); z-index: 10; box-shadow: 2px 0 6px rgba(0,0,0,0.05); }
+.sidebar-float-toggle:hover { color: var(--primary); }
+.sidebar.collapsed .sidebar-float-toggle { display: flex; }
+
+/* ========== 主区 ========== */
+.main { flex: 1; display: flex; flex-direction: column; background: var(--bg-page); min-width: 0; overflow: hidden; }
+.main-header { padding: 16px 24px; background: #fff; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.main-title { display: flex; align-items: center; gap: 12px; }
+.main-title-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #1a5cbf, #2980e8); border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.main-title-text h1 { font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+.main-title-text p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.main-header-actions { display: flex; gap: 8px; }
+.btn-header { background: #fff; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; color: var(--text-regular); font-size: 13px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+.btn-header:hover { border-color: var(--primary); color: var(--primary); }
+
+.content-area { flex: 1; display: flex; overflow: hidden; position: relative; }
+.workspace-left { flex: 1; display: flex; flex-direction: column; transition: flex 0.35s ease; overflow: hidden; min-width: 0; }
+.workspace-right { width: 0; background: #fff; border-left: 1px solid var(--border-light); transition: width 0.35s ease; overflow: hidden; display: flex; flex-direction: column; flex-shrink: 0; }
+.workspace-right.open { width: 55%; }
+.content-area.split .workspace-left { flex: 0 0 45%; }
+.content-area.split.expanded-right .workspace-left { flex: 0 0 25%; }
+.workspace-right.expanded { width: 75%; }
+
+.workspace-scroll { flex: 1; overflow-y: auto; padding: 24px; }
+.welcome-panel { max-width: 860px; margin: 0 auto 20px; text-align: center; padding: 24px 0 8px; }
+.welcome-title { font-size: 22px; color: var(--text-primary); font-weight: 600; margin-bottom: 8px; }
+.welcome-desc { color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+
+.example-guide { max-width: 860px; margin: 0 auto 10px; padding: 8px 14px; background: linear-gradient(90deg, #fffbe6, #fff); border: 1px solid #ffe58f; border-left: 3px solid #faad14; border-radius: 4px; font-size: 12px; color: #7c5a00; display: flex; align-items: center; gap: 6px; }
+.example-guide .close-guide { margin-left: auto; cursor: pointer; color: #b98a00; padding: 0 4px; font-size: 14px; }
+.example-cards { max-width: 860px; margin: 0 auto 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.example-card { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.example-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-1px); }
+.example-card-title { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.example-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+.input-panel { max-width: 860px; margin: 0 auto; background: #fff; border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+.selected-template-bar { display: none; align-items: center; gap: 8px; margin-bottom: 8px; padding: 6px 10px; background: var(--primary-lighter); border: 1px solid var(--primary-light); border-radius: 4px; font-size: 12px; }
+.selected-template-bar.show { display: flex; }
+.selected-template-bar .template-tag-name { color: var(--primary); font-weight: 600; }
+.selected-template-bar .template-remove { margin-left: auto; cursor: pointer; color: var(--text-secondary); font-size: 14px; }
+.selected-template-bar .template-remove:hover { color: var(--danger); }
+.input-textarea { width: 100%; min-height: 90px; border: none; outline: none; resize: none; font-family: inherit; font-size: 14px; color: var(--text-primary); line-height: 1.6; padding: 4px; }
+.input-textarea::placeholder { color: var(--text-placeholder); }
+.uploaded-files { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+.uploaded-file { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--primary-lighter); border: 1px solid var(--primary-light); border-radius: 4px; color: var(--primary); font-size: 12px; }
+.uploaded-file .file-remove { cursor: pointer; color: var(--text-secondary); font-size: 14px; line-height: 1; }
+.uploaded-file .file-remove:hover { color: var(--danger); }
+.input-toolbar { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+.toolbar-left { display: flex; gap: 6px; }
+.toolbar-btn { background: transparent; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; color: var(--text-regular); font-size: 12px; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
+.toolbar-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lighter); }
+.btn-parse { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
+.btn-parse:hover { background: var(--primary-hover); }
+.btn-parse:disabled { background: #a0bee5; cursor: not-allowed; }
+
+/* 表单 */
+.form-panel { max-width: 860px; margin: 20px auto 0; background: #fff; border-radius: 10px; border: 1px solid var(--border-light); overflow: hidden; display: none; }
+.form-panel.show { display: block; animation: fadeInUp 0.4s ease; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.form-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: var(--primary-lighter); }
+.form-header-title { font-size: 14px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+.form-header-tag { display: inline-block; background: var(--success); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: normal; }
+.form-body { padding: 20px; }
+.form-row { margin-bottom: 18px; }
+.form-label { display: flex; align-items: center; font-size: 13px; color: var(--text-regular); margin-bottom: 6px; font-weight: 500; }
+.form-label .required { color: var(--danger); margin-right: 4px; font-family: 'SimSun', serif; }
+.form-label .field-hint { font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 8px; }
+.form-label .ai-suggest { margin-left: auto; color: var(--primary); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 3px; font-weight: normal; }
+.form-label .ai-suggest:hover { text-decoration: underline; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 13px; color: var(--text-primary); transition: border-color 0.2s; background: #fff; outline: none; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+.form-input.error, .form-select.error, .form-textarea.error { border-color: var(--danger); }
+.form-textarea { resize: vertical; min-height: 60px; line-height: 1.6; }
+.form-error { color: var(--danger); font-size: 12px; margin-top: 4px; display: none; }
+.form-error.show { display: block; }
+.form-select-wrap { position: relative; }
+.form-select { appearance: none; -webkit-appearance: none; padding-right: 30px; cursor: pointer; }
+.form-select-wrap::after { content: "▾"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; font-size: 12px; }
+
+.keyword-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; min-height: 38px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+.keyword-tag { background: var(--primary-lighter); color: var(--primary); padding: 3px 10px; border-radius: 12px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; }
+.keyword-tag .kw-remove { cursor: pointer; font-size: 14px; line-height: 1; color: var(--text-secondary); }
+.keyword-tag .kw-remove:hover { color: var(--danger); }
+.keyword-add-input { border: none; outline: none; padding: 3px 6px; font-size: 12px; flex: 1; min-width: 100px; background: transparent; }
+
+/* 模板 tab */
+.template-mode-tabs { display: flex; gap: 0; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.template-mode-tab { flex: 1; padding: 8px 10px; text-align: center; font-size: 12px; color: var(--text-regular); background: #fff; cursor: pointer; transition: all 0.15s; border-right: 1px solid var(--border); }
+.template-mode-tab:last-child { border-right: none; }
+.template-mode-tab.active { background: var(--primary); color: #fff; font-weight: 500; }
+.template-mode-tab:hover:not(.active) { background: var(--primary-lighter); color: var(--primary); }
+.template-mode-content { display: none; }
+.template-mode-content.show { display: block; animation: fadeInUp 0.25s ease; }
+.auto-match-panel { padding: 10px; background: #fafcff; border: 1px solid var(--border-light); border-radius: 6px; }
+.auto-match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); }
+.auto-match-filters { display: flex; gap: 8px; margin-bottom: 10px; }
+.auto-match-filters select { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: #fff; cursor: pointer; }
+.match-result-list { display: flex; flex-direction: column; gap: 6px; }
+.match-result-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #fff; border: 1px solid var(--border-light); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+.match-result-item:hover, .match-result-item.selected { border-color: var(--primary); background: var(--primary-lighter); }
+.match-result-info { flex: 1; }
+.match-result-name { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+.match-result-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; display: flex; gap: 8px; }
+.match-result-score { background: var(--success); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px; }
+.match-result-score.medium { background: var(--warning); }
+.match-result-score.low { background: var(--info); }
+.manual-select-btn { width: 100%; padding: 10px; background: #fff; border: 1px dashed var(--border); color: var(--text-regular); border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.manual-select-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lighter); }
+
+/* 【核心修改1】重点方面 + 工作条目融合模块 */
+.category-panel { border: 1px solid var(--border); border-radius: 6px; background: #fff; overflow: hidden; }
+.category-panel-header { padding: 10px 12px; background: linear-gradient(90deg, #f5faff, #fff); border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); }
+.category-panel-header .cp-actions { display: flex; gap: 12px; align-items: center; }
+.category-panel-header .cp-actions span { color: var(--primary); cursor: pointer; font-weight: 500; }
+.category-panel-header .cp-actions span:hover { text-decoration: underline; }
+
+.category-group { border-bottom: 1px solid var(--border-light); }
+.category-group:last-child { border-bottom: none; }
+.category-group-header {
+  padding: 10px 12px;
+  background: #fafcff;
+  display: flex; align-items: center; gap: 8px;
+  border-left: 3px solid var(--primary);
+  cursor: pointer;
+  user-select: none;
+}
+.category-group.warning .category-group-header { border-left-color: var(--warning); background: #fffbf3; }
+.category-group.success .category-group-header { border-left-color: var(--success); background: #f5fbf5; }
+.category-group-collapse-icon { color: var(--text-secondary); font-size: 10px; transition: transform 0.2s; width: 12px; flex-shrink: 0; }
+.category-group.collapsed .category-group-collapse-icon { transform: rotate(-90deg); }
+.category-group-title { font-size: 13px; color: var(--text-primary); font-weight: 600; flex: 1; padding: 3px 6px; border: 1px dashed transparent; border-radius: 3px; cursor: text; }
+.category-group-title:hover { border-color: var(--primary-light); }
+.category-group-title[contenteditable="true"]:focus { border-color: var(--primary); background: #fff; outline: none; }
+.category-group-badge { background: var(--primary-lighter); color: var(--primary); padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: normal; flex-shrink: 0; }
+.category-group.warning .category-group-badge { background: #fef3e0; color: var(--warning); }
+.category-group.success .category-group-badge { background: #eef8ec; color: var(--success); }
+.category-group-dim { color: var(--text-secondary); font-size: 11px; flex-shrink: 0; }
+.category-group-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.category-group-actions button { background: transparent; border: none; cursor: pointer; color: var(--text-secondary); padding: 2px 6px; font-size: 12px; border-radius: 3px; }
+.category-group-actions button:hover { background: var(--primary-light); color: var(--primary); }
+
+.category-group-body { transition: max-height 0.3s ease; overflow: hidden; }
+.category-group.collapsed .category-group-body { max-height: 0 !important; }
+.category-work-item { padding: 10px 14px 10px 32px; border-top: 1px solid var(--border-light); display: flex; align-items: flex-start; gap: 10px; transition: background 0.15s; background: #fff; }
+.category-work-item:hover { background: var(--primary-lighter); }
+.category-work-item-check { margin-top: 3px; accent-color: var(--primary); }
+.category-work-item-content { flex: 1; }
+.category-work-item-title { font-size: 13px; color: var(--text-primary); font-weight: 500; margin-bottom: 4px; }
+.category-work-item-desc { font-size: 12px; color: var(--text-regular); line-height: 1.5; }
+.category-work-item-source { font-size: 11px; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.category-work-item-source .source-tag { background: #f0f6fd; color: var(--primary); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--primary-light); cursor: pointer; }
+.category-work-item-actions { display: flex; gap: 4px; }
+.category-work-item-actions button { background: transparent; border: none; cursor: pointer; color: var(--text-secondary); padding: 4px 6px; font-size: 12px; border-radius: 3px; transition: all 0.15s; }
+.category-work-item-actions button:hover { background: var(--primary-light); color: var(--primary); }
+.category-add-item { padding: 8px 14px 8px 32px; border-top: 1px dashed var(--border-light); font-size: 12px; color: var(--primary); cursor: pointer; background: #fafcff; text-align: left; }
+.category-add-item:hover { background: var(--primary-lighter); }
+.category-add-group { padding: 10px; text-align: center; color: var(--primary); cursor: pointer; font-size: 12px; background: #fafcff; border-top: 1px dashed var(--border); }
+.category-add-group:hover { background: var(--primary-lighter); }
+
+/* 未归类区（新添条目临时区） */
+.uncategorized-notice { padding: 8px 12px; background: #fef3e0; border-left: 3px solid var(--warning); font-size: 12px; color: #7c5a00; margin-top: 8px; border-radius: 0 4px 4px 0; display: none; }
+.uncategorized-notice.show { display: block; }
+
+.radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 14px; padding: 8px 0; }
+.radio-item, .check-item { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; color: var(--text-regular); }
+.radio-item input, .check-item input { cursor: pointer; accent-color: var(--primary); }
+.length-custom-input { display: none; align-items: center; gap: 6px; margin-left: 10px; font-size: 12px; color: var(--text-secondary); }
+.length-custom-input.show { display: inline-flex; }
+.length-custom-input input { width: 90px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; }
+.length-custom-input input:focus { border-color: var(--primary); }
+
+.ai-suggest-card { margin-top: 8px; padding: 10px 12px; background: linear-gradient(90deg, #f5faff, #fff); border: 1px solid var(--primary-light); border-left: 3px solid var(--primary); border-radius: 4px; font-size: 12px; color: var(--text-regular); display: none; }
+.ai-suggest-card.show { display: block; animation: fadeInUp 0.3s ease; }
+.ai-suggest-card .suggest-header { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.ai-suggest-card .suggest-content { color: var(--text-regular); line-height: 1.6; margin-bottom: 8px; }
+.ai-suggest-card .suggest-actions { display: flex; gap: 6px; }
+.ai-suggest-card .suggest-actions button { padding: 3px 10px; border-radius: 3px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: #fff; color: var(--text-regular); transition: all 0.15s; }
+.ai-suggest-card .suggest-actions button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.ai-suggest-card .suggest-actions button:hover { border-color: var(--primary); color: var(--primary); }
+.ai-suggest-card .suggest-actions button.primary:hover { background: var(--primary-hover); color: #fff; }
+
+.form-footer { padding: 14px 20px; background: #fafcff; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+.form-footer-hint { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+.form-footer-btns { display: flex; gap: 8px; }
+.btn-default { background: #fff; border: 1px solid var(--border); padding: 8px 16px; border-radius: 4px; color: var(--text-regular); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.btn-default:hover { border-color: var(--primary); color: var(--primary); }
+.btn-primary { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-danger { background: var(--danger); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: opacity 0.2s; }
+.btn-danger:hover { opacity: 0.9; }
+
+/* 预览区 */
+.preview-header { padding: 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: #fafcff; flex-shrink: 0; }
+.preview-header-left { display: flex; align-items: center; gap: 10px; }
+.preview-tabs { display: flex; gap: 4px; background: #eef2f7; padding: 3px; border-radius: 6px; }
+.preview-tab { padding: 4px 12px; font-size: 12px; color: var(--text-regular); cursor: pointer; border-radius: 4px; transition: all 0.15s; }
+.preview-tab.active { background: #fff; color: var(--primary); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.preview-header-actions { display: flex; gap: 6px; align-items: center; }
+.icon-btn { background: transparent; border: 1px solid var(--border); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; color: var(--text-regular); display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.2s; }
+.icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+.preview-header-btn { background: #fff; border: 1px solid var(--border); padding: 5px 12px; border-radius: 4px; color: var(--text-regular); font-size: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+.preview-header-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.wordcount-bar { padding: 8px 20px; background: #fff; border-bottom: 1px solid var(--border-light); display: none; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); flex-shrink: 0; }
+.wordcount-bar.show { display: flex; }
+.wordcount-bar .wc-main { color: var(--primary); font-weight: 600; font-size: 13px; }
+.wordcount-bar .wc-target { padding: 2px 8px; background: var(--primary-lighter); color: var(--primary); border-radius: 10px; font-size: 11px; }
+.wordcount-bar .wc-status { display: inline-flex; align-items: center; gap: 4px; }
+.wordcount-bar .wc-status.ok { color: var(--success); }
+.wordcount-bar .wc-status.short { color: var(--warning); }
+.wordcount-bar .wc-status.over { color: var(--danger); }
+
+.preview-body { flex: 1; overflow-y: auto; padding: 24px 32px; background: #fff; }
+.outline-doc { max-width: 800px; margin: 0 auto; }
+.outline-title { font-size: 20px; font-weight: 600; color: var(--text-primary); text-align: center; margin-bottom: 24px; padding: 8px 12px; border: 1px dashed transparent; border-radius: 4px; cursor: text; }
+.outline-title:hover { border-color: var(--primary-light); background: var(--primary-lighter); }
+.outline-title[contenteditable="true"]:focus { border-color: var(--primary); background: #fff; outline: none; }
+.outline-section { margin-bottom: 18px; padding: 12px 14px; background: #fafcff; border-left: 3px solid var(--primary); border-radius: 0 6px 6px 0; position: relative; }
+.outline-section:hover .outline-section-actions { opacity: 1; }
+.outline-section-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; padding: 4px 6px; border: 1px dashed transparent; border-radius: 3px; cursor: text; }
+.outline-section-title:hover { border-color: var(--primary-light); }
+.outline-section-title[contenteditable="true"]:focus { border-color: var(--primary); background: #fff; outline: none; }
+.outline-section-items { padding-left: 12px; }
+.outline-section-item { font-size: 13px; color: var(--text-regular); line-height: 1.7; padding: 4px 6px; border: 1px dashed transparent; border-radius: 3px; cursor: text; display: flex; align-items: flex-start; gap: 6px; }
+.outline-section-item:hover { border-color: var(--primary-light); }
+.outline-section-item[contenteditable="true"]:focus { border-color: var(--primary); background: #fff; outline: none; }
+.outline-section-item::before { content: "•"; color: var(--primary); font-weight: bold; flex-shrink: 0; }
+.outline-section-actions { position: absolute; right: 8px; top: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+.outline-section-actions button { background: #fff; border: 1px solid var(--border); padding: 3px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; color: var(--text-regular); }
+.outline-section-actions button:hover { border-color: var(--primary); color: var(--primary); }
+.outline-add-btn { width: 100%; padding: 10px; background: #fff; border: 1px dashed var(--border); color: var(--text-regular); border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.outline-add-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lighter); }
+
+.preview-footer { padding: 12px 20px; border-top: 1px solid var(--border-light); background: #fafcff; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.preview-footer-hint { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+.preview-footer-btns { display: flex; gap: 8px; }
+
+.final-doc { max-width: 800px; margin: 0 auto; font-family: "SimSun", "Songti SC", serif; line-height: 1.9; color: var(--text-primary); }
+.final-doc h1 { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 24px; letter-spacing: 2px; }
+.final-doc h2 { font-size: 16px; font-weight: 700; margin: 20px 0 12px; }
+.final-doc p { font-size: 15px; text-indent: 2em; margin-bottom: 12px; }
+.final-doc .source-cite { display: inline-block; color: var(--primary); font-size: 11px; font-family: "Microsoft YaHei", sans-serif; background: var(--primary-lighter); padding: 1px 6px; border-radius: 3px; margin-left: 4px; cursor: pointer; text-indent: 0; vertical-align: super; border: 1px solid var(--primary-light); }
+.final-doc .source-cite:hover { background: var(--primary); color: #fff; }
+
+.generating-indicator { display: none; position: sticky; bottom: 12px; margin: 20px auto 0; max-width: 320px; padding: 8px 14px; background: rgba(26,92,191,0.95); color: #fff; border-radius: 20px; font-size: 13px; text-align: center; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(26,92,191,0.3); }
+.generating-indicator.show { display: flex; }
+.generating-indicator .stop-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; cursor: pointer; }
+.generating-indicator .stop-btn:hover { background: rgba(255,255,255,0.3); }
+.typing-dots { display: inline-flex; gap: 2px; }
+.typing-dots span { width: 4px; height: 4px; background: #fff; border-radius: 50%; animation: typing 1.4s ease-in-out infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+.modal-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.2s ease; }
+.modal-mask.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: #fff; border-radius: 8px; min-width: 400px; max-width: 90%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.25s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.modal-close { background: transparent; border: none; cursor: pointer; color: var(--text-secondary); font-size: 18px; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+.modal-close:hover { background: var(--bg-page); color: var(--text-primary); }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; font-size: 13px; color: var(--text-regular); line-height: 1.7; }
+.modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-light); background: #fafcff; display: flex; justify-content: flex-end; gap: 8px; }
+.success-icon { width: 48px; height: 48px; background: var(--success); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
+.warning-icon { width: 48px; height: 48px; background: var(--warning); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
+.source-detail-item { padding: 10px 12px; background: #fafcff; border-left: 3px solid var(--primary); border-radius: 0 4px 4px 0; margin-bottom: 10px; }
+.source-detail-file { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.source-detail-text { font-size: 13px; color: var(--text-regular); line-height: 1.6; }
+.source-highlight { background: #fff8d3; padding: 0 2px; }
+
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background: rgba(0,0,0,0.75); color: #fff; border-radius: 4px; font-size: 13px; z-index: 2000; display: flex; align-items: center; gap: 6px; animation: toastIn 0.3s ease; }
+@keyframes toastIn { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.info { background: var(--primary); }
+
+.template-picker { display: flex; height: 500px; }
+.template-picker-list { width: 260px; overflow-y: auto; border-right: 1px solid var(--border-light); padding: 8px; }
+.template-picker-item { padding: 10px 12px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-regular); }
+.template-picker-item:hover { background: var(--primary-lighter); }
+.template-picker-item.active { background: var(--primary-lighter); color: var(--primary); font-weight: 500; }
+.template-picker-item .tpl-icon { color: var(--primary); opacity: 0.7; }
+.template-picker-preview { flex: 1; padding: 20px 24px; overflow-y: auto; background: #fff; }
+.template-preview-title { font-size: 16px; font-weight: 600; color: var(--text-primary); padding-bottom: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+.template-preview-title .tpl-meta { font-size: 12px; color: var(--text-secondary); font-weight: normal; }
+.template-preview-body { font-family: "SimSun", "Songti SC", serif; color: var(--text-regular); font-size: 13px; line-height: 1.9; }
+.template-preview-body h3 { text-align: center; font-size: 18px; margin-bottom: 16px; color: var(--text-primary); letter-spacing: 1px; }
+.template-preview-body h4 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: var(--text-primary); }
+.template-preview-body p { text-indent: 2em; font-size: 13px; margin-bottom: 8px; }
+.template-preview-body .placeholder { color: var(--primary); background: var(--primary-lighter); padding: 0 4px; border-radius: 3px; }
+
+.upload-requirements { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.upload-req-item { padding: 10px 12px; background: #fafcff; border: 1px solid var(--border-light); border-radius: 6px; display: flex; align-items: flex-start; gap: 8px; }
+.upload-req-icon { color: var(--primary); font-size: 16px; flex-shrink: 0; }
+.upload-req-info { flex: 1; }
+.upload-req-title { font-size: 13px; color: var(--text-primary); font-weight: 500; margin-bottom: 2px; }
+.upload-req-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+.upload-area { border: 2px dashed var(--border); border-radius: 6px; padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.2s; color: var(--text-regular); background: #fafcff; margin: 12px 0; }
+.upload-area:hover, .upload-area.dragover { border-color: var(--primary); background: var(--primary-lighter); color: var(--primary); }
+.upload-icon { font-size: 32px; margin-bottom: 8px; color: var(--primary); }
+.upload-text { font-size: 14px; margin-bottom: 4px; }
+.upload-hint { font-size: 12px; color: var(--text-secondary); }
+.upload-tips { padding: 10px 12px; background: #fffbe6; border-left: 3px solid #faad14; border-radius: 4px; font-size: 12px; color: #7c5a00; line-height: 1.6; }
+
+.loading-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column; gap: 12px; }
+.loading-mask.show { display: flex; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: var(--primary); font-size: 13px; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #dcdfe6; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c0c4cc; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ========== V4 新增样式 ========== */
+/* 历史记录筛选 */
+.history-filters { padding: 0 8px 8px; display: flex; flex-direction: column; gap: 6px; }
+.history-search-input, .history-date-input { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; font-family: inherit; color: var(--text-primary); background: #fff; }
+.history-search-input:focus, .history-date-input:focus { border-color: var(--primary); }
+.history-item .item-info { flex: 1; min-width: 0; }
+.history-item .item-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 3px; font-size: 11px; color: var(--text-secondary); align-items: center; }
+.history-item .meta-type { color: var(--primary); font-weight: 500; }
+.history-item .meta-status { padding: 0 6px; border-radius: 8px; font-size: 10px; line-height: 1.6; }
+.history-item .meta-status.success { background: #eef8ec; color: var(--success); }
+.history-item .meta-status.warning { background: #fef3e0; color: var(--warning); }
+.history-item .meta-status.info { background: var(--primary-lighter); color: var(--primary); }
+.history-empty { text-align: center; color: var(--text-placeholder); font-size: 12px; padding: 16px 8px; }
+
+/* 模板只读展示 */
+.template-readonly-bar { padding: 10px 12px; background: #fafcff; border: 1px solid var(--border-light); border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; line-height: 1.5; }
+.template-readonly-bar .tpl-ro-icon { color: var(--primary); font-size: 15px; }
+.template-readonly-bar .tpl-ro-name { color: var(--text-primary); font-weight: 600; }
+.template-readonly-bar .tpl-ro-lock { margin-left: auto; font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+.template-readonly-bar .tpl-ro-empty { color: #7c5a00; font-size: 12px; }
+
+/* 自动保存提示 */
+.auto-save-hint { font-size: 12px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.3s; }
+.auto-save-hint.show { opacity: 1; }
+.auto-save-hint.saved { color: var(--success); }
+.form-footer-hint .save-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- 侧边栏 -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">政</div>
+        <span class="sidebar-title-text">智能办公平台</span>
+      </div>
+    </div>
+    <div class="sidebar-toolbar">
+      <button class="btn-new" onclick="startNewSummary()" title="新建工作总结">
+        <span style="font-size:16px;line-height:1">+</span>
+        <span class="btn-new-text">新建工作总结</span>
+      </button>
+    </div>
+    <div class="sidebar-body">
+      <div class="history-title">历史生成记录</div>
+      <div class="history-filters">
+        <input type="text" id="historySearch" class="history-search-input" placeholder="🔍 搜索关键词..." oninput="filterHistory()">
+        <input type="date" id="historyDate" class="history-date-input" onchange="filterHistory()" title="按时间筛选">
+      </div>
+      <div id="historyList"></div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="footer-user-info">
+        <div class="user-avatar">王</div>
+        <span>王主任</span>
+      </div>
+      <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="折叠侧边栏">
+        <span id="collapseIcon">«</span>
+      </button>
+    </div>
+    <!-- 折叠时的浮动展开按钮 -->
+    <div class="sidebar-float-toggle" onclick="toggleSidebar()" title="展开侧边栏">»</div>
+  </aside>
+
+  <!-- 主内容 -->
+  <main class="main">
+    <div class="main-header">
+      <div class="main-title">
+        <div class="main-title-icon">🖋</div>
+        <div class="main-title-text">
+          <h1>工作总结智能生成智能体</h1>
+          <p>基于原始素材智能生成季度/半年/年度/专项工作总结，全程数据可溯源</p>
+        </div>
+      </div>
+      <div class="main-header-actions">
+        <button class="btn-header" onclick="showModal('helpModal')">
+          <span>❓</span><span>使用帮助</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="content-area" id="contentArea">
+      <div class="workspace-left">
+        <div class="workspace-scroll">
+          <div class="welcome-panel" id="welcomePanel">
+            <div class="welcome-title">👋 您好，请上传素材开始生成工作总结</div>
+            <div class="welcome-desc">支持上传周报、月报、专项报告等文档，或直接用自然语言描述工作情况；<br>系统将自动解析并生成规范的政务工作总结。</div>
+          </div>
+
+          <div class="example-guide" id="exampleGuide">
+            <span style="font-size:14px">💡</span>
+            <span>第一次使用不知如何填写？您可以点击下方示例试试，一键填入常见场景描述。</span>
+            <span class="close-guide" onclick="closeGuide()">✕</span>
+          </div>
+
+          <div class="example-cards" id="exampleCards">
+            <div class="example-card" onclick="applyExample(1)">
+              <div class="example-card-title">💡 季度工作总结</div>
+              <div class="example-card-desc">帮我生成我科室2026年二季度工作总结，重点体现营商环境、政务服务两大主线。</div>
+            </div>
+            <div class="example-card" onclick="applyExample(2)">
+              <div class="example-card-title">💡 专项工作汇报</div>
+              <div class="example-card-desc">基于附件资料，撰写数字政务改革专项工作汇报，篇幅约2000字。</div>
+            </div>
+            <div class="example-card" onclick="applyExample(3)">
+              <div class="example-card-title">💡 半年度总结</div>
+              <div class="example-card-desc">整合各处室周月报，形成2026年上半年综合工作总结，突出成效亮点。</div>
+            </div>
+          </div>
+
+          <div class="input-panel">
+            <div class="selected-template-bar" id="selectedTemplateBar">
+              <span>📋</span><span>已应用模板：</span>
+              <span class="template-tag-name" id="selectedTemplateName">季度综合工作总结</span>
+              <span style="color:var(--text-secondary);font-size:11px">(将影响生成结构，不与您输入的内容冲突)</span>
+              <span class="template-remove" onclick="clearSelectedTemplate()">✕</span>
+            </div>
+            <textarea id="userInput" class="input-textarea" placeholder="请描述本次要生成的工作总结（如：请帮我生成2026年二季度工作总结，重点体现营商环境、政务服务改革方面的成效），或上传相关工作文档..."></textarea>
+            <div class="uploaded-files" id="uploadedFiles"></div>
+            <div class="input-toolbar">
+              <div class="toolbar-left">
+                <button class="toolbar-btn" onclick="showUploadModal()"><span>📎</span><span>上传素材</span></button>
+                <button class="toolbar-btn" onclick="showTemplatePickerModal()"><span>📋</span><span>选择模板</span></button>
+                <button class="toolbar-btn" onclick="clearInput()"><span>🗑</span><span>清空</span></button>
+              </div>
+              <button class="btn-parse" id="parseBtn" onclick="parseInput()"><span>✨</span><span>智能解析</span></button>
+            </div>
+            <input type="file" id="fileInput" multiple accept=".doc,.docx,.pdf,.ppt,.pptx,.xlsx" style="display:none" onchange="handleFileSelect(event)">
+          </div>
+
+          <!-- 解析结果表单 -->
+          <div class="form-panel" id="formPanel">
+            <div class="form-header">
+              <div class="form-header-title">
+                <span>📝 智能解析结果</span>
+                <span class="form-header-tag">已完成解析</span>
+              </div>
+              <div>
+                <button class="toolbar-btn" onclick="reParseInput()"><span>🔄</span><span>重新解析</span></button>
+              </div>
+            </div>
+            <div class="form-body">
+              <!-- 总结类型 -->
+              <div class="form-row">
+                <div class="form-label">
+                  <span class="required">*</span><span>总结类型</span>
+                  <span class="field-hint">决定生成文稿的语体、内容模块与结构框架</span>
+                </div>
+                <div class="form-select-wrap">
+                  <select id="fieldType" class="form-select" onchange="onTypeChange()">
+                    <option value="">请选择总结类型</option>
+                    <option value="quarterly">季度工作总结</option>
+                    <option value="halfyear">半年工作总结</option>
+                    <option value="annual">年度工作总结</option>
+                    <option value="special">专项工作小结</option>
+                    <option value="topic">专题工作汇报</option>
+                    <option value="review">工作复盘报告</option>
+                  </select>
+                </div>
+                <div class="form-error" id="err-fieldType">请选择总结类型</div>
+              </div>
+
+              <!-- 报告周期 -->
+              <div class="form-row">
+                <div class="form-label">
+                  <span class="required">*</span><span>报告周期</span>
+                  <span class="field-hint">用于生成规范标题及正文时间描述</span>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input type="date" id="fieldStart" class="form-input" style="flex:1" value="2026-04-01" onchange="validateDateRange()">
+                  <span style="color:var(--text-secondary)">至</span>
+                  <input type="date" id="fieldEnd" class="form-input" style="flex:1" value="2026-06-30" onchange="validateDateRange()">
+                </div>
+                <div class="form-error" id="err-dateRange">结束日期不得早于起始日期</div>
+              </div>
+
+              <!-- 标题 -->
+              <div class="form-row">
+                <div class="form-label">
+                  <span class="required">*</span><span>总结标题</span>
+                  <span class="ai-suggest" onclick="toggleSuggest('titleSuggest')"><span>✨</span><span>AI 优化建议</span></span>
+                </div>
+                <input type="text" id="fieldTitle" class="form-input" placeholder="请输入或调整总结标题" value="XX局2026年第二季度综合工作总结" onblur="validateField('fieldTitle')">
+                <div class="form-error" id="err-fieldTitle">标题不能为空</div>
+                <div class="ai-suggest-card" id="titleSuggest">
+                  <div class="suggest-header"><span>💡</span>标题优化建议</div>
+                  <div class="suggest-content">建议调整为「XX局2026年第二季度工作总结报告」，更符合政务公文规范化命名要求。</div>
+                  <div class="suggest-actions">
+                    <button class="primary" onclick="applySuggest('fieldTitle','XX局2026年第二季度工作总结报告','titleSuggest')">✓ 采纳建议</button>
+                    <button onclick="hideSuggest('titleSuggest')">忽略</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 关键词 -->
+              <div class="form-row">
+                <div class="form-label">
+                  <span>核心关键词</span>
+                  <span class="field-hint">系统自动识别的高频业务主题</span>
+                  <span class="ai-suggest" onclick="toggleSuggest('kwSuggest')"><span>✨</span><span>补充建议</span></span>
+                </div>
+                <div class="keyword-tags" id="keywordTags" onclick="focusKwInput()">
+                  <span class="keyword-tag">营商环境优化<span class="kw-remove" onclick="removeKeyword(event,this)">×</span></span>
+                  <span class="keyword-tag">政务服务改革<span class="kw-remove" onclick="removeKeyword(event,this)">×</span></span>
+                  <span class="keyword-tag">数字政务建设<span class="kw-remove" onclick="removeKeyword(event,this)">×</span></span>
+                  <span class="keyword-tag">干部队伍建设<span class="kw-remove" onclick="removeKeyword(event,this)">×</span></span>
+                  <input type="text" class="keyword-add-input" id="kwInput" placeholder="+ 输入后回车添加" onkeydown="addKeyword(event)">
+                </div>
+                <div class="ai-suggest-card" id="kwSuggest">
+                  <div class="suggest-header"><span>💡</span>可补充的关键词</div>
+                  <div class="suggest-content">检测到文档中还多次出现「基层治理」「作风建设」「督查考核」，是否补充？</div>
+                  <div class="suggest-actions">
+                    <button class="primary" onclick="applyKwSuggest()">✓ 一键补充</button>
+                    <button onclick="hideSuggest('kwSuggest')">忽略</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 总结模板（只读展示：模板需在解析前选择） -->
+              <div class="form-row">
+                <div class="form-label"><span>总结模板</span><span class="field-hint">模板需在解析前通过上方"选择模板"按钮选定，此处仅展示</span></div>
+                <div class="template-readonly-bar" id="templateReadonlyBar">
+                  <span class="tpl-ro-empty">⚠ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>
+                </div>
+              </div>
+
+              <!-- 【核心修改1】重点方面 + 工作条目 融合模块 -->
+              <div class="form-row">
+                <div class="form-label">
+                  <span class="required">*</span>
+                  <span>重点方面归类与工作条目</span>
+                  <span class="field-hint">按业务逻辑智能归类，每个重点方面下涵盖相关工作条目</span>
+                  <span class="ai-suggest" onclick="toggleSuggest('itemSuggest')"><span>✨</span><span>补充建议</span></span>
+                </div>
+                <div class="category-panel">
+                  <div class="category-panel-header">
+                    <span>共 <strong id="groupCount" style="color:var(--primary)">4</strong> 个重点方面 · <strong id="itemTotalCount" style="color:var(--primary)">5</strong> 项工作条目 · 已勾选 <strong id="itemCheckedCount" style="color:var(--success)">5</strong> 项</span>
+                    <div class="cp-actions">
+                      <span onclick="reClassify()">🔄 重新归类</span>
+                      <span id="toggleAllGroupsBtn" onclick="toggleAllGroups()">⊟ 全部收起</span>
+                    </div>
+                  </div>
+                  <div id="categoryList"></div>
+                  <div class="category-add-group" onclick="addCategoryGroup()">+ 添加重点方面</div>
+                </div>
+                <div class="uncategorized-notice" id="uncatNotice">
+                  ⚠ 有 <strong id="uncatCount">0</strong> 项条目暂未归类，可拖动或编辑到合适的重点方面下。
+                </div>
+                <div class="ai-suggest-card" id="itemSuggest">
+                  <div class="suggest-header"><span>💡</span>补充建议</div>
+                  <div class="suggest-content">检测到文档中还提及「基层治理创新试点」「12345 热线办理提质增效」相关内容，是否补充？</div>
+                  <div class="suggest-actions">
+                    <button class="primary" onclick="applyItemSuggest()">✓ 一键补充</button>
+                    <button onclick="hideSuggest('itemSuggest')">忽略</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 生成要求 -->
+              <div class="form-row">
+                <div class="form-label"><span>生成要求</span></div>
+                <div>
+                  <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">篇幅长度</div>
+                  <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="length" value="short" onchange="onLengthChange()"> 简短（约1000字）</label>
+                    <label class="radio-item"><input type="radio" name="length" value="medium" checked onchange="onLengthChange()"> 标准（约2000字）</label>
+                    <label class="radio-item"><input type="radio" name="length" value="long" onchange="onLengthChange()"> 详实（约3000字）</label>
+                    <label class="radio-item"><input type="radio" name="length" value="custom" onchange="onLengthChange()"> 自定义</label>
+                    <div class="length-custom-input" id="lengthCustom">
+                      <input type="number" id="customLength" min="500" max="10000" step="100" value="2500" placeholder="500-10000">
+                      <span>字</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:8px">
+                  <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">
+                    内容模块 <span style="margin-left:6px;color:var(--primary)">（根据总结类型自适应，可微调）</span>
+                  </div>
+                  <div class="check-group" id="moduleGroup"></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-footer">
+              <div class="form-footer-hint"><span class="save-dot"></span><span id="formAutoSaveHint">系统已自动保存</span></div>
+              <div class="form-footer-btns">
+                <button class="btn-primary" onclick="generateOutline()"><span>⚡</span><span>智能生成大纲</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧预览 -->
+      <div class="workspace-right" id="workspaceRight">
+        <div class="preview-header">
+          <div class="preview-header-left">
+            <div class="preview-tabs">
+              <div class="preview-tab active" id="tabOutline" onclick="switchTab('outline')">📑 大纲结构</div>
+              <div class="preview-tab" id="tabFinal" onclick="switchTab('final')">📄 总结正文</div>
+            </div>
+          </div>
+          <div class="preview-header-actions">
+            <div id="topActionsOutline" style="display:flex;gap:6px;align-items:center">
+              <button class="icon-btn" onclick="toggleExpand()" title="展开/收起">⇔</button>
+              <button class="preview-header-btn" onclick="backToEdit()"><span>◀</span><span>返回修改</span></button>
+            </div>
+            <div id="topActionsFinal" style="display:none;gap:6px;align-items:center">
+              <button class="preview-header-btn" onclick="switchTab('outline')"><span>◀</span><span>返回大纲</span></button>
+              <button class="preview-header-btn" onclick="doPrint()"><span>🖨</span><span>打印</span></button>
+              <button class="preview-header-btn" onclick="showModal('exportModal')"><span>📥</span><span>导出</span></button>
+              <button class="icon-btn" onclick="toggleExpand()" title="展开/收起">⇔</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wordcount-bar" id="wordcountBar">
+          <div>
+            <span>📊 文稿字数：</span>
+            <span class="wc-main" id="wcCurrent">0</span>
+            <span style="margin:0 6px">字</span>
+            <span class="wc-target" id="wcTarget">目标 2000 字</span>
+            <span id="wcStatus" style="margin-left:8px"></span>
+          </div>
+          <div style="color:var(--text-secondary)">
+            <span id="wcProgress">等待生成</span>
+          </div>
+        </div>
+
+        <div class="preview-body" id="previewBody">
+          <div id="outlineView" class="outline-doc">
+            <div class="outline-title" contenteditable="true">XX局2026年第二季度综合工作总结</div>
+            <div id="outlineSections"></div>
+            <button class="outline-add-btn" onclick="addSection()">+ 添加章节</button>
+          </div>
+          <div id="finalView" style="display:none">
+            <div class="final-doc" id="finalDoc"></div>
+          </div>
+        </div>
+
+        <div class="preview-footer">
+          <div class="preview-footer-hint">
+            <span>💾</span>
+            <span id="footerHintText">大纲可直接编辑，确认后生成正式总结</span>
+            <span class="auto-save-hint" id="outlineAutoSaveHint">✓ 已自动保存</span>
+          </div>
+          <div class="preview-footer-btns" id="outlineFooterBtns">
+            <button class="btn-primary" onclick="confirmGenerate()"><span>📝</span><span>确认生成工作总结</span></button>
+          </div>
+          <div class="preview-footer-btns" id="finalFooterBtns" style="display:none">
+            <span class="auto-save-hint" id="finalAutoSaveHint">✓ 已自动保存</span>
+          </div>
+        </div>
+
+        <div class="generating-indicator" id="genIndicator">
+          <span>正在生成</span>
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+          <button class="stop-btn" onclick="stopGeneration()">■ 停止生成</button>
+        </div>
+        <div class="loading-mask" id="loadingMask">
+          <div class="spinner"></div>
+          <div class="loading-text" id="loadingText">正在生成大纲...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 弹窗 ============ -->
+<div class="modal-mask" id="editItemModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">编辑工作条目</div>
+      <button class="modal-close" onclick="hideModal('editItemModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-label"><span class="required">*</span>条目标题</div>
+        <input type="text" class="form-input" id="editItemTitle">
+      </div>
+      <div class="form-row">
+        <div class="form-label"><span class="required">*</span>具体描述</div>
+        <textarea class="form-textarea" id="editItemDesc" rows="4"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-label"><span>所属重点方面</span></div>
+        <div class="form-select-wrap">
+          <select class="form-select" id="editItemGroup"></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-default" onclick="hideModal('editItemModal')">取消</button>
+      <button class="btn-primary" onclick="saveEditedItem()">确定</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="sourceModal">
+  <div class="modal" style="min-width:520px">
+    <div class="modal-header">
+      <div class="modal-title">📌 信息来源溯源</div>
+      <button class="modal-close" onclick="hideModal('sourceModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">该内容严格基于以下原始素材片段生成。</div>
+      <div id="sourceDetailList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="hideModal('sourceModal')">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="templatePickerModal">
+  <div class="modal" style="min-width:800px;max-width:900px">
+    <div class="modal-header">
+      <div class="modal-title">📋 选择总结模板</div>
+      <button class="modal-close" onclick="hideModal('templatePickerModal')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <div class="template-picker">
+        <div class="template-picker-list" id="templatePickerList"></div>
+        <div class="template-picker-preview" id="templatePickerPreview"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span style="margin-right:auto;font-size:12px;color:var(--text-secondary)">已选择：<strong id="pickerSelectedName" style="color:var(--primary)">—</strong></span>
+      <button class="btn-default" onclick="hideModal('templatePickerModal')">取消</button>
+      <button class="btn-primary" onclick="applyPickerTemplate()">应用该模板</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="uploadModal">
+  <div class="modal" style="min-width:560px">
+    <div class="modal-header">
+      <div class="modal-title">📎 上传工作素材</div>
+      <button class="modal-close" onclick="hideModal('uploadModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:13px;color:var(--text-primary);font-weight:600;margin-bottom:10px">📌 上传要求与规范</div>
+      <div class="upload-requirements">
+        <div class="upload-req-item"><span class="upload-req-icon">📄</span><div class="upload-req-info"><div class="upload-req-title">支持格式</div><div class="upload-req-desc">DOC、DOCX、PDF、PPT、PPTX、XLSX</div></div></div>
+        <div class="upload-req-item"><span class="upload-req-icon">📦</span><div class="upload-req-info"><div class="upload-req-title">大小限制</div><div class="upload-req-desc">单文件不超过 20 MB</div></div></div>
+        <div class="upload-req-item"><span class="upload-req-icon">🗂</span><div class="upload-req-info"><div class="upload-req-title">数量限制</div><div class="upload-req-desc">单次最多上传 10 个文件</div></div></div>
+        <div class="upload-req-item"><span class="upload-req-icon">📚</span><div class="upload-req-info"><div class="upload-req-title">推荐素材</div><div class="upload-req-desc">周报/月报/专项报告/业务台账</div></div></div>
+      </div>
+      <div class="upload-area" onclick="triggerFileInput()">
+        <div class="upload-icon">☁</div>
+        <div class="upload-text">点击选择文件或拖拽文件到此处</div>
+        <div class="upload-hint">支持批量上传</div>
+      </div>
+      <div class="upload-tips"><strong>⚠ 涉密提示：</strong>请勿上传涉密文件；素材仅本次会话使用。</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-default" onclick="hideModal('uploadModal')">取消</button>
+      <button class="btn-primary" onclick="hideModal('uploadModal')">完成</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="stopModal">
+  <div class="modal" style="min-width:360px">
+    <div class="modal-body" style="text-align:center;padding:30px 20px">
+      <div class="warning-icon">!</div>
+      <div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px">确认停止生成？</div>
+      <div style="color:var(--text-secondary);font-size:13px">当前已生成的内容将保留。</div>
+    </div>
+    <div class="modal-footer" style="justify-content:center">
+      <button class="btn-default" onclick="hideModal('stopModal')">继续生成</button>
+      <button class="btn-danger" onclick="confirmStop()">确认停止</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="backEditModal">
+  <div class="modal" style="min-width:380px">
+    <div class="modal-body" style="text-align:center;padding:30px 20px">
+      <div class="warning-icon">!</div>
+      <div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px">确认返回修改？</div>
+      <div style="color:var(--text-secondary);font-size:13px;line-height:1.6">返回后当前大纲将不会保留，需要重新生成。是否继续？</div>
+    </div>
+    <div class="modal-footer" style="justify-content:center">
+      <button class="btn-default" onclick="hideModal('backEditModal')">取消</button>
+      <button class="btn-primary" onclick="confirmBackToEdit()">确认返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="exportModal">
+  <div class="modal" style="min-width:400px">
+    <div class="modal-header">
+      <div class="modal-title">导出工作总结</div>
+      <button class="modal-close" onclick="hideModal('exportModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-label">选择导出格式</div>
+        <div class="radio-group" style="flex-direction:column;gap:10px">
+          <label class="radio-item"><input type="radio" name="exportFormat" value="docx" checked> 📄 DOCX 格式</label>
+          <label class="radio-item"><input type="radio" name="exportFormat" value="pdf"> 📕 PDF 格式</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="check-item"><input type="checkbox" id="exportWithSource"> 附带信息溯源报告</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-default" onclick="hideModal('exportModal')">取消</button>
+      <button class="btn-primary" onclick="doExport()">立即导出</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="helpModal">
+  <div class="modal" style="min-width:520px">
+    <div class="modal-header">
+      <div class="modal-title">使用说明</div>
+      <button class="modal-close" onclick="hideModal('helpModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom:10px"><strong>1. 模板选择</strong>：请在"智能解析"前点击"选择模板"按钮完成模板选定；解析后模板仅作展示，不可修改，也不支持 AI 推荐。</p>
+      <p style="margin-bottom:10px"><strong>2. 素材上传</strong>：支持 DOC/DOCX/PDF/PPT/PPTX/XLSX，单次最多上传 10 个文件。</p>
+      <p style="margin-bottom:10px"><strong>3. 智能解析</strong>：自动提取工作事项、成果、问题，按重点方面归类展示。</p>
+      <p style="margin-bottom:10px"><strong>4. 重点归类</strong>：工作条目按业务逻辑归入重点方面，支持展开/收起一键切换、编辑、增删。</p>
+      <p style="margin-bottom:10px"><strong>5. 自动保存</strong>：表单、大纲、正文全程系统自动保存，无需手动保存草稿。</p>
+      <p style="margin-bottom:10px"><strong>6. 大纲与正文</strong>：大纲可编辑；正文按目标字数流式生成，可停止。"返回修改"会清空当前大纲，需重新生成。</p>
+      <p style="margin-bottom:10px"><strong>7. 导出与打印</strong>：导出仅支持 DOCX/PDF；打印为独立按钮，可单独使用；可勾选附带信息溯源报告。</p>
+      <p style="margin-bottom:10px"><strong>8. 历史记录</strong>：左侧支持按关键词、时间筛选，每条记录显示总结类型、时间、状态。</p>
+      <p style="color:var(--warning)"><strong>⚠ 特别提示</strong>：系统严格基于素材生成，绝不引入外部信息，全程可溯源。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="hideModal('helpModal')">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ 全局状态 ============ */
+const state = {
+  sidebarCollapsed: false,
+  isRightOpen: false, isRightExpanded: false,
+  currentTab: 'outline',
+  isGenerating: false, generationTimer: null,
+  editingItemId: null,
+  uploadedFiles: [],
+  selectedTemplate: null,
+  templateMode: 'auto',
+  pickerSelected: null,
+  targetWordCount: 2000,
+  currentType: 'quarterly',
+  // 【核心修改1】归类数据结构：groups 包含 items
+  categoryGroups: [
+    {
+      id: 'g1', title: '一、深化政务服务改革',
+      dim: '业务领域', style: '',
+      collapsed: false,
+      items: [
+        { id: 'i1', title: '深化"一网通办"改革', desc: '推动 213 项高频事项实现全流程电子化办理，办件量同比增长 45.6%，群众满意度达 98.2%。', sources: ['政务服务处4月月报.docx', '二季度业务台账.xlsx'], checked: true }
+      ]
+    },
+    {
+      id: 'g2', title: '二、优化营商环境',
+      dim: '业务领域', style: '',
+      collapsed: false,
+      items: [
+        { id: 'i2', title: '优化营商环境专项攻坚', desc: '落实企业开办"一日办结"，办理时限压缩至0.5个工作日；新增市场主体1,872户，同比增长12.3%。', sources: ['营商环境专项报告.pdf'], checked: true }
+      ]
+    },
+    {
+      id: 'g3', title: '三、推进数字政务建设',
+      dim: '工作性质', style: '',
+      collapsed: false,
+      items: [
+        { id: 'i3', title: '推进数字政务建设', desc: '政务云平台完成升级扩容，接入部门系统 32 个，数据共享调用量突破 1,200 万次。', sources: ['信息化建设周报.docx'], checked: true }
+      ]
+    },
+    {
+      id: 'g4', title: '四、加强内部管理与问题反思',
+      dim: '管理层级', style: 'warning',
+      collapsed: false,
+      items: [
+        { id: 'i4', title: '加强干部队伍建设', desc: '开展政治理论学习 24 次，组织业务培训 8 期，覆盖干部 320 人次，队伍履职能力持续提升。', sources: ['机关党建工作台账.docx'], checked: true },
+        { id: 'i5', title: '存在问题与不足', desc: '跨部门数据壁垒尚未完全打通；基层窗口服务能力有待提升；督查考核机制需进一步细化。', sources: ['二季度业务台账.xlsx'], checked: true }
+      ]
+    }
+  ]
+};
+
+/* ============ 历史记录数据 ============ */
+const typeLabels = { quarterly: '季度总结', halfyear: '半年总结', annual: '年度总结', special: '专项小结', topic: '专题汇报', review: '复盘报告' };
+let historyData = [
+  { id: 'h1', title: '2026年二季度综合工作总结', type: 'quarterly', time: '2026-07-15 14:30', status: '已完成' },
+  { id: 'h2', title: '数字政务专项工作汇报', type: 'special', time: '2026-07-10 09:12', status: '已完成' },
+  { id: 'h3', title: '2025年度党建工作总结', type: 'annual', time: '2025-12-28 16:45', status: '已完成' },
+  { id: 'h4', title: '上半年综合治理工作汇报', type: 'halfyear', time: '2026-07-01 10:20', status: '草稿' }
+];
+let activeHistoryId = null;
+
+/* ============ 模板库 ============ */
+const templateLib = [
+  { key: 'quarterly-general', name: '季度综合工作总结', time: 'quarterly', domain: 'general', score: 96 },
+  { key: 'annual-general', name: '年度综合工作总结', time: 'annual', domain: 'general', score: 82 },
+  { key: 'halfyear-general', name: '半年综合工作总结', time: 'halfyear', domain: 'general', score: 78 },
+  { key: 'special-policy', name: '政务服务专项工作汇报', time: 'special', domain: 'policy', score: 91 },
+  { key: 'special-business', name: '营商环境专项工作汇报', time: 'special', domain: 'business', score: 88 },
+  { key: 'special-digital', name: '数字政务专项工作汇报', time: 'special', domain: 'digital', score: 85 },
+  { key: 'annual-party', name: '党建年度工作总结', time: 'annual', domain: 'party', score: 68 },
+  { key: 'review-project', name: '重点项目工作复盘报告', time: 'special', domain: 'general', score: 60 }
+];
+const templateContent = {
+  'quarterly-general': { meta: '适用：科室季度综合总结·约2000字', body: `<h3>XX 20XX年第X季度工作总结</h3><h4>一、主要工作开展情况</h4><p>本季度，我单位围绕<span class="placeholder">{核心主题}</span>扎实推进各项工作……</p><h4>二、主要成效亮点</h4><h4>三、存在问题和不足</h4><h4>四、下一步工作安排</h4>` },
+  'annual-general': { meta: '适用：单位年度总结·约4000字', body: `<h3>XX 20XX年度工作总结</h3><h4>一、年度重点工作回顾</h4><h4>二、突出成绩与亮点</h4><h4>三、存在问题与短板分析</h4><h4>四、20XX年工作思路</h4>` },
+  'halfyear-general': { meta: '适用：单位半年综合总结·约3000字', body: `<h3>XX 20XX年上半年工作总结</h3><h4>一、上半年主要工作</h4><h4>二、亮点做法</h4><h4>三、下半年工作打算</h4>` },
+  'special-policy': { meta: '适用：政务服务专项汇报', body: `<h3>关于XX政务服务专项工作汇报</h3><h4>一、总体情况</h4><h4>二、主要做法及成效</h4><h4>三、存在困难和问题</h4><h4>四、下步工作建议</h4>` },
+  'special-business': { meta: '适用：营商环境专项汇报', body: `<h3>关于XX优化营商环境专项汇报</h3><h4>一、工作背景与总体思路</h4><h4>二、主要举措</h4><h4>三、取得成效</h4><h4>四、存在不足及下一步安排</h4>` },
+  'special-digital': { meta: '适用：数字政务专项汇报', body: `<h3>关于推进数字政务建设专项汇报</h3><h4>一、建设进展</h4><h4>二、成效与创新点</h4><h4>三、下阶段工作重点</h4>` },
+  'annual-party': { meta: '适用：机关党建年度总结', body: `<h3>XX 20XX年度党建工作总结</h3><h4>一、加强政治建设</h4><h4>二、强化组织建设</h4><h4>三、深化作风建设</h4><h4>四、存在问题及下步打算</h4>` },
+  'review-project': { meta: '适用：项目/专项复盘', body: `<h3>关于XX项目复盘报告</h3><h4>一、项目基本情况</h4><h4>二、复盘发现</h4><h4>三、经验总结</h4><h4>四、改进措施</h4>` }
+};
+
+/* 【核心修改3】内容模块映射 - 严格按总结类型区分 */
+const moduleMap = {
+  quarterly: [
+    { name: '本季度工作开展情况', checked: true },
+    { name: '主要成效与亮点', checked: true },
+    { name: '存在问题与不足', checked: true },
+    { name: '下一步工作安排', checked: true },
+    { name: '意见建议', checked: false }
+  ],
+  halfyear: [
+    { name: '上半年工作回顾', checked: true },
+    { name: '主要成效与亮点', checked: true },
+    { name: '经验做法总结', checked: true },
+    { name: '存在问题与短板', checked: true },
+    { name: '下半年工作打算', checked: true }
+  ],
+  annual: [
+    { name: '年度工作总体情况', checked: true },
+    { name: '年度重点工作回顾', checked: true },
+    { name: '突出成绩与亮点', checked: true },
+    { name: '经验做法总结', checked: true },
+    { name: '存在问题与短板', checked: true },
+    { name: '下年度工作思路', checked: true }
+  ],
+  special: [
+    { name: '专项工作背景', checked: true },
+    { name: '主要做法与举措', checked: true },
+    { name: '取得成效', checked: true },
+    { name: '存在困难与不足', checked: true },
+    { name: '下步工作建议', checked: true }
+  ],
+  topic: [
+    { name: '总体情况', checked: true },
+    { name: '主要做法', checked: true },
+    { name: '成效与经验', checked: true },
+    { name: '意见建议', checked: true }
+  ],
+  review: [
+    { name: '项目基本情况', checked: true },
+    { name: '复盘发现（成绩）', checked: true },
+    { name: '复盘发现（不足）', checked: true },
+    { name: '经验教训总结', checked: true },
+    { name: '改进措施', checked: true }
+  ]
+};
+
+/* 【核心修改4】按目标字数生成对应体量的正文段落 */
+/* 每类总结的段落生成器：根据 targetWords 动态扩展 */
+function buildParagraphsForType(type, targetWords, title) {
+  // 基础段落片段（可复用）
+  const S = {
+    intro_quarterly: `2026年第二季度，我局深入学习贯彻上级决策部署，紧扣年度目标任务，聚焦营商环境优化、政务服务改革、数字政务建设等重点领域，扎实推进各项工作，圆满完成阶段性目标。现将主要工作情况汇报如下。`,
+    intro_halfyear: `2026年上半年，我局坚持以服务大局、优化服务、提升质效为主线，全面落实年度重点任务部署，各项工作稳步推进、成效明显。上半年工作情况汇报如下。`,
+    intro_annual: `2026年，我局在上级党委的坚强领导下，深入贯彻落实各项决策部署，紧扣年度目标任务，聚焦重点难点，攻坚克难、务实创新，圆满完成年度各项工作任务。现将全年工作情况总结如下。`,
+    intro_special: `根据上级部署要求，我局扎实推进XX专项工作，围绕核心目标持续攻坚，取得阶段性成效。现将专项工作情况汇报如下。`,
+    intro_topic: `按照上级要求，现就XX专题工作情况汇报如下。`,
+    intro_review: `按照工作要求，我们对XX项目实施情况进行了系统复盘，全面梳理成绩与不足，深入总结经验教训。现将复盘情况报告如下。`,
+
+    section1: `深入推进"一网通办"改革，推动213项高频事项实现全流程电子化办理，办件量同比增长45.6%，群众满意度达98.2%。优化窗口服务流程，健全帮办代办机制，实现高频事项"一次不用跑"。创新推行"综合窗口"改革，将原有分散的部门窗口整合为"一窗受理、集成服务"模式，办事群众平均等候时间从25分钟压缩至8分钟，办事效率显著提升，群众获得感、满意度明显增强。`,
+    section2: `落实企业开办"一日办结"制度，办理时限压缩至0.5个工作日。二季度新增市场主体1,872户，同比增长12.3%。持续开展"局长走流程""政策进企业"等活动，帮助企业解决实际困难76件。深化"证照分离"改革，涉企经营许可事项实行清单化管理，累计压减审批环节42个、办理时限63%。建立涉企政策"免申即享"直达机制，累计为符合条件的1,236家市场主体兑现优惠政策资金2,850万元，切实降低企业制度性交易成本。`,
+    section3: `完成政务云平台升级扩容，接入部门系统32个，数据共享调用量突破1,200万次。上线"皖事通"移动端应用27个，推动更多服务事项掌上办、指尖办，群众和企业办事更加便利高效。深入实施政务数据"聚通用"专项行动，打通人社、公积金、不动产等重点业务系统数据壁垒，累计归集数据12类共计3.8亿条，形成主题库5个、专题库12个，为跨部门业务协同和精准化服务提供了有力支撑。`,
+    section4: `扎实开展政治理论学习24次，组织业务培训8期，覆盖干部320人次。深化"三亮三比"活动，严格执行中央八项规定精神，机关干部履职能力和作风纪律持续向好。健全干部考核评价机制，将日常考勤、业务办理质量、群众满意度等纳入综合考核体系，激励干部担当作为。开展"最美窗口人""服务标兵"等评选活动，营造比学赶超、争先创优的良好氛围，进一步提振了机关干部干事创业的精气神。`,
+    problem: `工作中仍存在一些短板：一是跨部门数据壁垒尚未完全打通，制约服务集成度进一步提升；二是基层窗口服务能力有待加强，个别环节办事群众体验感仍需改善；三是督查考核机制需进一步细化，闭环管理和结果运用有待强化；四是干部专业化能力与新时代政务服务发展要求相比仍有差距，需加大培训力度。`,
+    plan: `下一阶段，我局将继续对标先进、聚焦短板：一是深化"一件事一次办"改革，持续拓展跨部门集成服务事项，年内新增集成服务事项30项以上；二是加快数据要素市场化配置改革试点，进一步打破数据壁垒，推动数据资源高效流转；三是健全常态化督查考核机制，以严实作风推动各项工作再上新台阶；四是加大干部培训和实践锻炼力度，打造一支政治过硬、业务精通、作风优良的政务服务铁军。`,
+    experience: `工作中我们深刻体会到：一是必须坚持党的全面领导，把党的领导贯穿工作全过程；二是必须坚持以人民为中心，把群众满意度作为衡量工作的根本标尺；三是必须坚持问题导向、目标导向，聚焦重点难点持续用力；四是必须坚持改革创新，用新思路新举措破解发展中的难题。`,
+    suggestion: `建议：一是上级层面加大对基层政务服务改革的政策支持和资源倾斜；二是加强跨区域、跨部门协同联动机制建设；三是完善数据共享的顶层设计和标准规范；四是加大干部教育培训投入，提升基层履职能力。`
+  };
+
+  // 按类型选择段落集合
+  let intro = S['intro_' + type] || S.intro_quarterly;
+  const sections = [];
+
+  if (type === 'quarterly') {
+    sections.push({ h: '一、深化政务服务改革，提升群众办事体验', body: S.section1, src: ['政务服务处4月月报.docx', '二季度业务台账.xlsx'] });
+    sections.push({ h: '二、优化营商环境，激发市场主体活力', body: S.section2, src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '三、加快数字政务建设，夯实智慧服务底座', body: S.section3, src: ['信息化建设周报.docx'] });
+    sections.push({ h: '四、加强队伍建设，锻造过硬机关铁军', body: S.section4, src: ['机关党建工作台账.docx'] });
+    sections.push({ h: '五、存在的问题和不足', body: S.problem, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '六、下一步工作安排', body: S.plan, src: ['二季度业务台账.xlsx'] });
+  } else if (type === 'halfyear') {
+    sections.push({ h: '一、上半年主要工作回顾', body: S.section1, src: ['政务服务处4月月报.docx'] });
+    sections.push({ h: '二、优化营商环境成效', body: S.section2, src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '三、数字政务建设进展', body: S.section3, src: ['信息化建设周报.docx'] });
+    sections.push({ h: '四、经验做法总结', body: S.experience, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '五、存在问题与短板', body: S.problem, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '六、下半年工作打算', body: S.plan, src: ['二季度业务台账.xlsx'] });
+  } else if (type === 'annual') {
+    sections.push({ h: '一、年度工作总体情况', body: S.section1, src: ['政务服务处4月月报.docx'] });
+    sections.push({ h: '二、优化营商环境重点突破', body: S.section2, src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '三、数字政务建设成效', body: S.section3, src: ['信息化建设周报.docx'] });
+    sections.push({ h: '四、队伍建设与作风建设', body: S.section4, src: ['机关党建工作台账.docx'] });
+    sections.push({ h: '五、主要经验做法', body: S.experience, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '六、存在问题与短板', body: S.problem, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '七、下年度工作思路', body: S.plan, src: ['二季度业务台账.xlsx'] });
+  } else if (type === 'special') {
+    sections.push({ h: '一、专项工作背景', body: S.section2.slice(0, 200), src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '二、主要做法与举措', body: S.section2, src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '三、取得的主要成效', body: S.section3, src: ['信息化建设周报.docx'] });
+    sections.push({ h: '四、存在困难和问题', body: S.problem, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '五、下步工作建议', body: S.plan, src: ['二季度业务台账.xlsx'] });
+  } else if (type === 'topic') {
+    sections.push({ h: '一、总体情况', body: S.section1, src: ['政务服务处4月月报.docx'] });
+    sections.push({ h: '二、主要做法', body: S.section2, src: ['营商环境专项报告.pdf'] });
+    sections.push({ h: '三、成效与经验', body: S.experience, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '四、意见建议', body: S.suggestion, src: ['二季度业务台账.xlsx'] });
+  } else if (type === 'review') {
+    sections.push({ h: '一、项目基本情况', body: S.section1.slice(0, 250), src: ['政务服务处4月月报.docx'] });
+    sections.push({ h: '二、复盘发现——成绩与亮点', body: S.section3, src: ['信息化建设周报.docx'] });
+    sections.push({ h: '三、复盘发现——不足与短板', body: S.problem, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '四、经验教训总结', body: S.experience, src: ['二季度业务台账.xlsx'] });
+    sections.push({ h: '五、改进措施', body: S.plan, src: ['二季度业务台账.xlsx'] });
+  }
+
+  // 【核心修改4】按目标字数调整每段内容长度
+  const introChars = countChinese(intro);
+  const totalBaseChars = sections.reduce((sum, s) => sum + countChinese(s.body), 0) + introChars + countChinese(title);
+
+  // 计算缩放因子：目标字数 / 基础字数
+  // 若目标偏低，需要截断；若目标偏高，需要扩展
+  const ratio = targetWords / totalBaseChars;
+
+  const paragraphs = [{ type: 'h1', text: title }];
+
+  // 处理intro
+  intro = adjustText(intro, ratio);
+  paragraphs.push({ type: 'p', text: intro, sources: ['政务服务处4月月报.docx'] });
+
+  // 处理各section
+  sections.forEach(s => {
+    paragraphs.push({ type: 'h2', text: s.h });
+    const adjusted = adjustText(s.body, ratio);
+    paragraphs.push({ type: 'p', text: adjusted, sources: s.src });
+  });
+
+  return paragraphs;
+}
+
+/* 中文字符计数 */
+function countChinese(text) {
+  return (text || '').replace(/\s+/g, '').length;
+}
+
+/* 按比例调整文本长度：截断 或 扩展 */
+function adjustText(text, ratio) {
+  if (Math.abs(ratio - 1) < 0.05) return text; // 差异<5% 保持原样
+  if (ratio < 1) {
+    // 截断：按句号切分，保留前N句
+    const sentences = text.split(/(?<=[。；])/);
+    const targetLen = Math.floor(countChinese(text) * ratio);
+    let acc = '', accLen = 0;
+    for (const s of sentences) {
+      const sLen = countChinese(s);
+      if (accLen + sLen > targetLen && acc.length > 0) break;
+      acc += s;
+      accLen += sLen;
+    }
+    // 保底至少保留一句
+    if (!acc) acc = sentences[0] || text;
+    return acc;
+  } else {
+    // 扩展：重复关键描述 + 补充过渡句
+    const extra = ['同时，相关工作机制不断健全，制度体系日益完善。', '这些成绩的取得，为下一阶段工作奠定了坚实基础。', '实践中形成了一批可复制、可推广的经验做法。', '整体工作呈现出稳中有进、进中提质的良好态势。'];
+    let out = text;
+    let currentLen = countChinese(out);
+    const targetLen = Math.floor(currentLen * ratio);
+    let i = 0;
+    while (currentLen < targetLen && i < extra.length * 3) {
+      out += extra[i % extra.length];
+      currentLen = countChinese(out);
+      i++;
+    }
+    return out;
+  }
+}
+
+/* ============ Toast ============ */
+function showToast(msg, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 2200);
+}
+
+function showModal(id) { document.getElementById(id).classList.add('show'); }
+function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-mask').forEach(mask => {
+  mask.addEventListener('click', e => { if (e.target === mask) mask.classList.remove('show'); });
+});
+
+/* 【核心修改2】侧边栏折叠 */
+function toggleSidebar() {
+  state.sidebarCollapsed = !state.sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', state.sidebarCollapsed);
+  document.getElementById('collapseIcon').textContent = state.sidebarCollapsed ? '»' : '«';
+}
+
+/* 历史记录 */
+function renderHistoryList() {
+  const kw = (document.getElementById('historySearch').value || '').trim().toLowerCase();
+  const date = document.getElementById('historyDate').value;
+  let list = historyData.slice();
+  if (kw) list = list.filter(h => h.title.toLowerCase().includes(kw) || (typeLabels[h.type] || '').toLowerCase().includes(kw));
+  if (date) list = list.filter(h => h.time.startsWith(date));
+  const container = document.getElementById('historyList');
+  if (list.length === 0) {
+    container.innerHTML = '<div class="history-empty">无匹配记录</div>';
+    return;
+  }
+  container.innerHTML = list.map(h => {
+    const statusCls = h.status === '已完成' ? 'success' : h.status === '草稿' ? 'warning' : 'info';
+    const active = activeHistoryId === h.id ? ' active' : '';
+    return `
+    <div class="history-item${active}" onclick="loadHistory(this,'${h.id}')">
+      <span class="item-icon">📄</span>
+      <div class="item-info">
+        <span class="item-title">${h.title}</span>
+        <div class="item-meta">
+          <span class="meta-type">${typeLabels[h.type] || '-'}</span>
+          <span class="meta-time">${h.time}</span>
+          <span class="meta-status ${statusCls}">${h.status}</span>
+        </div>
+      </div>
+      <span class="item-delete" onclick="deleteHistory(event,this,'${h.id}')">✕</span>
+    </div>`;
+  }).join('');
+}
+function filterHistory() { renderHistoryList(); }
+function loadHistory(el, id) {
+  const h = historyData.find(x => x.id === id);
+  if (!h) return;
+  activeHistoryId = id;
+  renderHistoryList();
+  showToast('已加载：' + h.title, 'info');
+  document.getElementById('formPanel').classList.add('show');
+  document.getElementById('welcomePanel').style.display = 'none';
+  document.getElementById('exampleGuide').style.display = 'none';
+  document.getElementById('exampleCards').style.display = 'none';
+  document.getElementById('fieldType').value = h.type;
+  state.currentType = h.type;
+  document.getElementById('fieldTitle').value = h.title;
+  renderModuleGroup(h.type);
+  renderCategoryList();
+  updateTemplateReadonly();
+  openPreview();
+  renderOutline();
+  switchTab('final');
+  confirmGenerate();
+}
+function deleteHistory(e, el, id) {
+  e.stopPropagation();
+  if (!confirm('确认删除该历史记录？')) return;
+  historyData = historyData.filter(x => x.id !== id);
+  if (activeHistoryId === id) activeHistoryId = null;
+  renderHistoryList();
+  showToast('已删除', 'success');
+}
+
+function startNewSummary() {
+  activeHistoryId = null;
+  renderHistoryList();
+  document.getElementById('userInput').value = '';
+  document.getElementById('uploadedFiles').innerHTML = '';
+  state.uploadedFiles = [];
+  clearSelectedTemplate();
+  document.getElementById('formPanel').classList.remove('show');
+  document.getElementById('welcomePanel').style.display = 'block';
+  document.getElementById('exampleGuide').style.display = 'flex';
+  document.getElementById('exampleCards').style.display = 'grid';
+  closePreview();
+  showToast('已开启新的工作总结', 'info');
+}
+
+function closeGuide() { document.getElementById('exampleGuide').style.display = 'none'; }
+function applyExample(idx) {
+  const examples = {
+    1: '请帮我生成我科室2026年二季度工作总结，重点体现营商环境优化、政务服务改革两大主线，篇幅约2000字。',
+    2: '基于上传的附件资料，撰写数字政务改革专项工作汇报，突出数据共享、平台建设成效，篇幅约2000字。',
+    3: '整合各处室周报、月报，形成2026年上半年综合工作总结，重点突出成效亮点及下一步安排。'
+  };
+  document.getElementById('userInput').value = examples[idx];
+  document.getElementById('userInput').focus();
+}
+
+function showUploadModal() { showModal('uploadModal'); }
+function triggerFileInput() { document.getElementById('fileInput').click(); }
+const MAX_UPLOAD = 10;
+function addFiles(files) {
+  const remaining = MAX_UPLOAD - state.uploadedFiles.length;
+  if (remaining <= 0) { showToast('已达上传上限 10 个文件', 'error'); return 0; }
+  const toAdd = files.slice(0, remaining);
+  toAdd.forEach(f => { state.uploadedFiles.push(f.name); renderUploadedFile(f.name); });
+  if (files.length > remaining) showToast(`已达上限，仅添加前 ${remaining} 个文件`, 'warning');
+  return toAdd.length;
+}
+function handleFileSelect(e) {
+  const files = Array.from(e.target.files);
+  e.target.value = '';
+  const added = addFiles(files);
+  if (added > 0) { showToast(`已添加 ${added} 个文件`, 'success'); hideModal('uploadModal'); }
+}
+function renderUploadedFile(name) {
+  const div = document.createElement('span');
+  div.className = 'uploaded-file';
+  div.innerHTML = `<span>📎</span><span>${name}</span><span class="file-remove" onclick="removeUploadedFile(this,'${name}')">×</span>`;
+  document.getElementById('uploadedFiles').appendChild(div);
+}
+function removeUploadedFile(el, name) {
+  state.uploadedFiles = state.uploadedFiles.filter(f => f !== name);
+  el.parentNode.remove();
+}
+
+/* 模板选择弹窗 */
+function showTemplatePickerModal() {
+  renderTemplatePickerList();
+  if (!state.pickerSelected) state.pickerSelected = templateLib[0].key;
+  selectPickerTemplate(state.pickerSelected);
+  showModal('templatePickerModal');
+}
+function renderTemplatePickerList() {
+  const list = document.getElementById('templatePickerList');
+  list.innerHTML = templateLib.map(t => `
+    <div class="template-picker-item" data-key="${t.key}" onclick="selectPickerTemplate('${t.key}')">
+      <span class="tpl-icon">📋</span><span>${t.name}</span>
+    </div>`).join('');
+}
+function selectPickerTemplate(key) {
+  state.pickerSelected = key;
+  document.querySelectorAll('.template-picker-item').forEach(el => el.classList.toggle('active', el.dataset.key === key));
+  const tpl = templateLib.find(t => t.key === key);
+  const content = templateContent[key] || { meta: '', body: '<p>暂无预览</p>' };
+  document.getElementById('templatePickerPreview').innerHTML = `
+    <div class="template-preview-title"><span>${tpl.name}</span><span class="tpl-meta">${content.meta}</span></div>
+    <div class="template-preview-body">${content.body}</div>`;
+  document.getElementById('pickerSelectedName').textContent = tpl.name;
+}
+function applyPickerTemplate() {
+  if (!state.pickerSelected) return;
+  const tpl = templateLib.find(t => t.key === state.pickerSelected);
+  state.selectedTemplate = tpl;
+  document.getElementById('selectedTemplateName').textContent = tpl.name;
+  document.getElementById('selectedTemplateBar').classList.add('show');
+  updateTemplateReadonly();
+  hideModal('templatePickerModal');
+  showToast(`已应用「${tpl.name}」`, 'success');
+}
+function clearSelectedTemplate() {
+  state.selectedTemplate = null;
+  document.getElementById('selectedTemplateBar').classList.remove('show');
+  updateTemplateReadonly();
+}
+/* 模板只读展示更新 */
+function updateTemplateReadonly() {
+  const bar = document.getElementById('templateReadonlyBar');
+  if (!bar) return;
+  if (state.selectedTemplate) {
+    bar.innerHTML = `<span class="tpl-ro-icon">📋</span><span class="tpl-ro-name">${state.selectedTemplate.name}</span><span class="tpl-ro-lock">🔒 已锁定（如需更换请返回重新选择）</span>`;
+  } else {
+    bar.innerHTML = `<span class="tpl-ro-empty">⚠ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>`;
+  }
+}
+
+function previewInPicker(key) { state.pickerSelected = key; showTemplatePickerModal(); }
+
+function clearInput() {
+  if (!document.getElementById('userInput').value && state.uploadedFiles.length === 0 && !state.selectedTemplate) return;
+  document.getElementById('userInput').value = '';
+  document.getElementById('uploadedFiles').innerHTML = '';
+  state.uploadedFiles = [];
+  clearSelectedTemplate();
+  showToast('已清空', 'info');
+}
+
+function parseInput() {
+  const input = document.getElementById('userInput').value.trim();
+  if (!input && state.uploadedFiles.length === 0) { showToast('请先输入描述或上传素材', 'error'); return; }
+  const btn = document.getElementById('parseBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span><span>解析中...</span>';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<span>✨</span><span>智能解析</span>';
+    document.getElementById('formPanel').classList.add('show');
+    document.getElementById('welcomePanel').style.display = 'none';
+    document.getElementById('exampleGuide').style.display = 'none';
+    document.getElementById('exampleCards').style.display = 'none';
+    document.getElementById('fieldType').value = 'quarterly';
+    state.currentType = 'quarterly';
+    renderModuleGroup('quarterly');
+    renderCategoryList();
+    updateTemplateReadonly();
+    showToast('解析完成，识别 5 项工作条目、4 个重点方面', 'success');
+    setTimeout(() => document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }, 1500);
+}
+function reParseInput() { showToast('正在重新解析...', 'info'); setTimeout(() => showToast('解析已更新', 'success'), 1000); }
+
+/* 【核心修改3】总结类型切换 - 严格自适应内容模块 */
+function onTypeChange() {
+  validateField('fieldType');
+  const type = document.getElementById('fieldType').value;
+  state.currentType = type || 'quarterly';
+  renderModuleGroup(state.currentType);
+}
+function renderModuleGroup(type) {
+  const modules = moduleMap[type] || moduleMap.quarterly;
+  document.getElementById('moduleGroup').innerHTML = modules.map(m => `
+    <label class="check-item"><input type="checkbox" ${m.checked ? 'checked' : ''}> ${m.name}</label>
+  `).join('');
+}
+
+function onLengthChange() {
+  const val = document.querySelector('input[name="length"]:checked').value;
+  document.getElementById('lengthCustom').classList.toggle('show', val === 'custom');
+  const map = { short: 1000, medium: 2000, long: 3000 };
+  if (val === 'custom') state.targetWordCount = parseInt(document.getElementById('customLength').value) || 2500;
+  else state.targetWordCount = map[val];
+  document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
+}
+/* 自动保存：表单、大纲、正文全程系统自动保存 */
+let autoSaveTimer = null;
+function autoSave() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(showAutoSaveHint, 600);
+}
+function showAutoSaveHint() {
+  ['formAutoSaveHint', 'outlineAutoSaveHint', 'finalAutoSaveHint'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('show', 'saved');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show', 'saved'), 1600);
+  });
+}
+document.addEventListener('input', e => {
+  if (e.target.id === 'customLength') {
+    state.targetWordCount = parseInt(e.target.value) || 2500;
+    document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
+  }
+  if (e.target.closest('#formPanel') || e.target.closest('#previewBody') || e.target.id === 'userInput' || e.target.closest('.input-panel')) autoSave();
+});
+document.addEventListener('change', e => {
+  if (e.target.closest('#formPanel') || e.target.closest('#previewBody') || e.target.closest('.history-filters')) autoSave();
+});
+
+function validateField(id) {
+  const el = document.getElementById(id);
+  const err = document.getElementById('err-' + id);
+  if (!el.value || !el.value.trim()) { el.classList.add('error'); if (err) err.classList.add('show'); return false; }
+  el.classList.remove('error'); if (err) err.classList.remove('show'); return true;
+}
+function validateDateRange() {
+  const start = document.getElementById('fieldStart').value;
+  const end = document.getElementById('fieldEnd').value;
+  const err = document.getElementById('err-dateRange');
+  if (start && end && start > end) { err.classList.add('show'); return false; }
+  err.classList.remove('show'); return true;
+}
+
+function toggleSuggest(id) { document.getElementById(id).classList.toggle('show'); }
+function hideSuggest(id) { document.getElementById(id).classList.remove('show'); }
+function applySuggest(fieldId, val, suggestId) {
+  document.getElementById(fieldId).value = val;
+  hideSuggest(suggestId);
+  showToast('已采纳建议', 'success');
+}
+function applyKwSuggest() {
+  ['基层治理', '作风建设', '督查考核'].forEach(kw => addKeywordText(kw));
+  hideSuggest('kwSuggest');
+  showToast('已补充 3 个关键词', 'success');
+}
+function applyItemSuggest() {
+  const g = state.categoryGroups.find(g => g.id === 'g1');
+  if (g) {
+    g.items.push({ id: 'i' + (Date.now() % 100000), title: '12345 热线办理提质增效', desc: '季度共受理群众诉求 3,562 件，办结率 99.1%，群众满意度较上季度提升 2.3 个百分点。', sources: ['12345热线季度分析.pdf'], checked: true });
+  }
+  renderCategoryList();
+  hideSuggest('itemSuggest');
+  showToast('已补充工作条目', 'success');
+}
+
+function focusKwInput() { document.getElementById('kwInput').focus(); }
+function addKeyword(e) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const val = e.target.value.trim();
+  if (val) { addKeywordText(val); e.target.value = ''; }
+}
+function addKeywordText(text) {
+  const span = document.createElement('span');
+  span.className = 'keyword-tag';
+  span.innerHTML = `${text}<span class="kw-remove" onclick="removeKeyword(event,this)">×</span>`;
+  const input = document.getElementById('kwInput');
+  input.parentNode.insertBefore(span, input);
+}
+function removeKeyword(e, el) { e.stopPropagation(); el.parentNode.remove(); }
+
+/* 【核心修改1】渲染融合的重点方面+工作条目 */
+function renderCategoryList() {
+  const container = document.getElementById('categoryList');
+  container.innerHTML = state.categoryGroups.map(g => `
+    <div class="category-group ${g.style} ${g.collapsed ? 'collapsed' : ''}" data-gid="${g.id}">
+      <div class="category-group-header" onclick="toggleGroupCollapse('${g.id}',event)">
+        <span class="category-group-collapse-icon">▼</span>
+        <span class="category-group-title" contenteditable="true" onclick="event.stopPropagation()" onblur="updateGroupTitle('${g.id}',this)">${g.title}</span>
+        <span class="category-group-badge">${g.items.length} 项工作</span>
+        <span class="category-group-dim">维度：${g.dim}</span>
+        <div class="category-group-actions" onclick="event.stopPropagation()">
+          <button title="添加条目" onclick="addWorkItem('${g.id}')">+ 添加条目</button>
+          <button title="删除方面" onclick="deleteGroup('${g.id}')">✕</button>
+        </div>
+      </div>
+      <div class="category-group-body">
+        ${g.items.map(item => `
+          <div class="category-work-item" data-iid="${item.id}">
+            <input type="checkbox" class="category-work-item-check" ${item.checked ? 'checked' : ''} onchange="onItemCheckChange('${item.id}',this.checked)">
+            <div class="category-work-item-content">
+              <div class="category-work-item-title">${escapeHtml(item.title)}</div>
+              <div class="category-work-item-desc">${escapeHtml(item.desc)}</div>
+              <div class="category-work-item-source">
+                <span>来源：</span>
+                ${item.sources.map(s => `<span class="source-tag" onclick="showSourceDetail('${s}')">📄 ${s}</span>`).join('')}
+              </div>
+            </div>
+            <div class="category-work-item-actions">
+              <button title="编辑" onclick="editWorkItem('${item.id}')">✎</button>
+              <button title="删除" onclick="deleteWorkItem('${item.id}')">✕</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  updateCategoryCounts();
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function updateCategoryCounts() {
+  const groups = state.categoryGroups.length;
+  const total = state.categoryGroups.reduce((sum, g) => sum + g.items.length, 0);
+  const checked = state.categoryGroups.reduce((sum, g) => sum + g.items.filter(i => i.checked).length, 0);
+  document.getElementById('groupCount').textContent = groups;
+  document.getElementById('itemTotalCount').textContent = total;
+  document.getElementById('itemCheckedCount').textContent = checked;
+  // 更新"全部展开/全部收起"切换按钮文案
+  const btn = document.getElementById('toggleAllGroupsBtn');
+  if (btn) {
+    const anyExpanded = state.categoryGroups.some(g => !g.collapsed);
+    btn.textContent = anyExpanded ? '⊟ 全部收起' : '⊞ 全部展开';
+  }
+}
+function toggleGroupCollapse(gid) {
+  const g = state.categoryGroups.find(g => g.id === gid);
+  if (g) { g.collapsed = !g.collapsed; renderCategoryList(); }
+}
+function toggleAllGroups() {
+  // 合并切换：若存在展开的分组则全部收起，否则全部展开
+  const anyExpanded = state.categoryGroups.some(g => !g.collapsed);
+  state.categoryGroups.forEach(g => g.collapsed = anyExpanded);
+  renderCategoryList();
+}
+function updateGroupTitle(gid, el) {
+  const g = state.categoryGroups.find(g => g.id === gid);
+  if (g) g.title = el.textContent.trim();
+}
+function deleteGroup(gid) {
+  const g = state.categoryGroups.find(g => g.id === gid);
+  if (!g) return;
+  if (g.items.length > 0 && !confirm(`该重点方面下包含 ${g.items.length} 项工作条目，删除后条目也将被移除，确认？`)) return;
+  state.categoryGroups = state.categoryGroups.filter(g => g.id !== gid);
+  renderCategoryList();
+  autoSave();
+  showToast('已删除', 'info');
+}
+function addCategoryGroup() {
+  const id = 'g' + (Date.now() % 100000);
+  const nextIndex = state.categoryGroups.length + 1;
+  state.categoryGroups.push({ id, title: `${['一','二','三','四','五','六','七','八','九','十'][nextIndex-1] || nextIndex}、新的重点方面`, dim: '业务领域', style: '', collapsed: false, items: [] });
+  renderCategoryList();
+  autoSave();
+  showToast('已添加重点方面，请编辑标题', 'success');
+}
+function addWorkItem(gid) {
+  const g = state.categoryGroups.find(g => g.id === gid);
+  if (!g) return;
+  const id = 'i' + (Date.now() % 100000);
+  g.items.push({ id, title: '新增工作条目', desc: '请点击编辑填写具体内容', sources: ['✎ 手动添加'], checked: true });
+  renderCategoryList();
+  showToast('已添加，请点击编辑', 'success');
+  // 直接进入编辑
+  setTimeout(() => editWorkItem(id), 100);
+}
+function findItem(iid) {
+  for (const g of state.categoryGroups) {
+    const item = g.items.find(i => i.id === iid);
+    if (item) return { item, group: g };
+  }
+  return null;
+}
+function editWorkItem(iid) {
+  const found = findItem(iid);
+  if (!found) return;
+  state.editingItemId = iid;
+  document.getElementById('editItemTitle').value = found.item.title;
+  document.getElementById('editItemDesc').value = found.item.desc;
+  document.getElementById('editItemGroup').innerHTML = state.categoryGroups.map(g =>
+    `<option value="${g.id}" ${g.id === found.group.id ? 'selected' : ''}>${g.title}</option>`
+  ).join('');
+  showModal('editItemModal');
+}
+function saveEditedItem() {
+  const title = document.getElementById('editItemTitle').value.trim();
+  const desc = document.getElementById('editItemDesc').value.trim();
+  const newGid = document.getElementById('editItemGroup').value;
+  if (!title || !desc) { showToast('标题和描述不能为空', 'error'); return; }
+  const found = findItem(state.editingItemId);
+  if (!found) return;
+  found.item.title = title;
+  found.item.desc = desc;
+  if (newGid !== found.group.id) {
+    // 移动条目到新的组
+    found.group.items = found.group.items.filter(i => i.id !== state.editingItemId);
+    const newGroup = state.categoryGroups.find(g => g.id === newGid);
+    if (newGroup) newGroup.items.push(found.item);
+  }
+  renderCategoryList();
+  hideModal('editItemModal');
+  autoSave();
+  showToast('修改成功', 'success');
+}
+function deleteWorkItem(iid) {
+  if (!confirm('确认删除该工作条目？')) return;
+  state.categoryGroups.forEach(g => g.items = g.items.filter(i => i.id !== iid));
+  renderCategoryList();
+  autoSave();
+  showToast('已删除', 'info');
+}
+function onItemCheckChange(iid, checked) {
+  const found = findItem(iid);
+  if (found) { found.item.checked = checked; updateCategoryCounts(); }
+}
+function reClassify() { showToast('正在按业务逻辑重新归类...', 'info'); setTimeout(() => showToast('归类已更新', 'success'), 800); }
+
+function resetForm() {
+  if (!confirm('确认重置？')) return;
+  document.getElementById('formPanel').classList.remove('show');
+  document.getElementById('welcomePanel').style.display = 'block';
+  document.getElementById('exampleGuide').style.display = 'flex';
+  document.getElementById('exampleCards').style.display = 'grid';
+  showToast('已重置', 'info');
+}
+function saveDraft() { showToast('表单草稿已保存', 'success'); }
+function saveOutlineDraft() { showToast('大纲草稿已保存', 'success'); }
+function saveFinalDraft() { showToast('总结草稿已保存', 'success'); }
+
+/* 大纲生成：基于当前的 categoryGroups 生成大纲结构 */
+function generateOutline() {
+  const typeOk = validateField('fieldType');
+  const titleOk = validateField('fieldTitle');
+  const dateOk = validateDateRange();
+  const checked = state.categoryGroups.reduce((sum, g) => sum + g.items.filter(i => i.checked).length, 0);
+  if (!typeOk || !titleOk || !dateOk) { showToast('请完善必填项', 'error'); return; }
+  if (checked === 0) { showToast('请至少勾选一项工作条目', 'error'); return; }
+
+  openPreview();
+  switchTab('outline');
+  renderOutline();
+  const mask = document.getElementById('loadingMask');
+  document.getElementById('loadingText').textContent = '正在智能生成大纲...';
+  mask.classList.add('show');
+  setTimeout(() => {
+    mask.classList.remove('show');
+    document.querySelector('.outline-title').textContent = document.getElementById('fieldTitle').value;
+    showToast('大纲生成完成', 'success');
+  }, 1200);
+}
+
+function renderOutline() {
+  const container = document.getElementById('outlineSections');
+  document.querySelector('.outline-title').textContent = document.getElementById('fieldTitle').value || 'XX工作总结';
+  // 基于当前归类结构生成大纲
+  const validGroups = state.categoryGroups.filter(g => g.items.some(i => i.checked));
+  container.innerHTML = validGroups.map(g => {
+    const style = g.style === 'warning' ? 'style="border-left-color:var(--warning);background:#fefaf5"' :
+                  g.style === 'success' ? 'style="border-left-color:var(--success);background:#f5fbf5"' : '';
+    return `
+      <div class="outline-section" ${style}>
+        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
+        <div class="outline-section-title" contenteditable="true">${escapeHtml(g.title.replace(/^[一二三四五六七八九十]+、/, ''))}</div>
+        <div class="outline-section-items">
+          ${g.items.filter(i => i.checked).map(item => `
+            <div class="outline-section-item" contenteditable="true">${escapeHtml(item.title)}：${escapeHtml(item.desc.slice(0, 80))}${item.desc.length > 80 ? '...' : ''}</div>
+          `).join('')}
+        </div>
+      </div>`;
+  }).join('');
+  // 添加固定的"存在问题""下一步"段落（若类型需要）
+  const type = state.currentType;
+  const modules = moduleMap[type] || moduleMap.quarterly;
+  const problemModule = modules.find(m => m.checked && (m.name.includes('问题') || m.name.includes('不足') || m.name.includes('短板')));
+  const planModule = modules.find(m => m.checked && (m.name.includes('下') || m.name.includes('打算') || m.name.includes('思路') || m.name.includes('改进') || m.name.includes('建议')));
+  let extra = '';
+  if (problemModule && !validGroups.some(g => g.title.includes('问题') || g.title.includes('不足'))) {
+    extra += `
+      <div class="outline-section" style="border-left-color:var(--warning);background:#fefaf5">
+        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
+        <div class="outline-section-title" contenteditable="true">${problemModule.name}</div>
+        <div class="outline-section-items">
+          <div class="outline-section-item" contenteditable="true">跨部门数据壁垒尚未完全打通</div>
+          <div class="outline-section-item" contenteditable="true">基层窗口服务能力有待提升</div>
+        </div>
+      </div>`;
+  }
+  if (planModule) {
+    extra += `
+      <div class="outline-section" style="border-left-color:var(--success);background:#f5fbf5">
+        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
+        <div class="outline-section-title" contenteditable="true">${planModule.name}</div>
+        <div class="outline-section-items">
+          <div class="outline-section-item" contenteditable="true">深化重点领域改革</div>
+          <div class="outline-section-item" contenteditable="true">健全常态化机制</div>
+        </div>
+      </div>`;
+  }
+  container.insertAdjacentHTML('beforeend', extra);
+}
+
+function regenerateOutline() {
+  const mask = document.getElementById('loadingMask');
+  document.getElementById('loadingText').textContent = '正在重新生成大纲...';
+  mask.classList.add('show');
+  setTimeout(() => { renderOutline(); mask.classList.remove('show'); showToast('大纲已重新生成', 'success'); }, 1000);
+}
+
+function openPreview() {
+  state.isRightOpen = true;
+  document.getElementById('workspaceRight').classList.add('open');
+  document.getElementById('contentArea').classList.add('split');
+}
+function closePreview() {
+  state.isRightOpen = false; state.isRightExpanded = false;
+  document.getElementById('workspaceRight').classList.remove('open', 'expanded');
+  document.getElementById('contentArea').classList.remove('split', 'expanded-right');
+}
+/* 返回修改：清空当前大纲（不保留），需重新生成 */
+function backToEdit() { showModal('backEditModal'); }
+function confirmBackToEdit() {
+  hideModal('backEditModal');
+  document.getElementById('outlineSections').innerHTML = '';
+  closePreview();
+  showToast('已返回修改，当前大纲需重新生成', 'info');
+}
+function toggleExpand() {
+  state.isRightExpanded = !state.isRightExpanded;
+  document.getElementById('workspaceRight').classList.toggle('expanded', state.isRightExpanded);
+  document.getElementById('contentArea').classList.toggle('expanded-right', state.isRightExpanded);
+}
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.getElementById('tabOutline').classList.toggle('active', tab === 'outline');
+  document.getElementById('tabFinal').classList.toggle('active', tab === 'final');
+  document.getElementById('outlineView').style.display = tab === 'outline' ? 'block' : 'none';
+  document.getElementById('finalView').style.display = tab === 'final' ? 'block' : 'none';
+  document.getElementById('outlineFooterBtns').style.display = tab === 'outline' ? 'flex' : 'none';
+  document.getElementById('finalFooterBtns').style.display = tab === 'final' ? 'flex' : 'none';
+  document.getElementById('topActionsOutline').style.display = tab === 'outline' ? 'flex' : 'none';
+  document.getElementById('topActionsFinal').style.display = tab === 'final' ? 'flex' : 'none';
+  document.getElementById('wordcountBar').classList.toggle('show', tab === 'final');
+  document.getElementById('footerHintText').textContent = tab === 'outline' ? '大纲可直接编辑，确认后生成正式总结' : '每处内容均可点击查看溯源';
+  if (tab === 'final') updateWordCount();
+}
+
+function deleteSection(btn) {
+  if (!confirm('确认删除该章节？')) return;
+  btn.closest('.outline-section').remove();
+  showToast('章节已删除', 'info');
+}
+function addSection() {
+  const html = `
+    <div class="outline-section">
+      <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
+      <div class="outline-section-title" contenteditable="true">新章节标题</div>
+      <div class="outline-section-items">
+        <div class="outline-section-item" contenteditable="true">要点内容</div>
+      </div>
+    </div>`;
+  document.getElementById('outlineSections').insertAdjacentHTML('beforeend', html);
+}
+
+/* 【核心修改4】按目标字数生成正文 */
+function confirmGenerate() {
+  switchTab('final');
+  document.getElementById('finalDoc').innerHTML = '';
+  state.isGenerating = true;
+  document.getElementById('genIndicator').classList.add('show');
+
+  const title = document.querySelector('.outline-title')?.textContent || document.getElementById('fieldTitle').value || 'XX工作总结';
+  const type = state.currentType || 'quarterly';
+  const paragraphs = buildParagraphsForType(type, state.targetWordCount, title);
+
+  document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
+
+  let idx = 0;
+  const doc = document.getElementById('finalDoc');
+
+  function writeNext() {
+    if (!state.isGenerating || idx >= paragraphs.length) {
+      state.isGenerating = false;
+      document.getElementById('genIndicator').classList.remove('show');
+      if (idx >= paragraphs.length) { showToast('工作总结生成完成', 'success'); autoSave(); }
+      updateWordCount();
+      return;
+    }
+    const p = paragraphs[idx];
+    const el = document.createElement(p.type);
+    let content = escapeHtml(p.text);
+    if (p.sources) {
+      const sourceCites = p.sources.map(s => `<span class="source-cite" data-file="${s}" onclick="showSourceDetail('${s}')" title="点击查看来源">来源</span>`).join('');
+      content += sourceCites;
+    }
+    el.innerHTML = content;
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.35s';
+    doc.appendChild(el);
+    requestAnimationFrame(() => el.style.opacity = '1');
+    document.getElementById('previewBody').scrollTop = document.getElementById('previewBody').scrollHeight;
+    idx++;
+    updateWordCount(Math.round(idx / paragraphs.length * 100));
+    state.generationTimer = setTimeout(writeNext, 450);
+  }
+  writeNext();
+}
+
+/* 【核心修改4】字数统计：精确 + 目标对比反馈 */
+function updateWordCount(progress) {
+  const doc = document.getElementById('finalDoc');
+  // 克隆后移除来源角标，避免"来源"二字计入
+  const clone = doc.cloneNode(true);
+  clone.querySelectorAll('.source-cite').forEach(e => e.remove());
+  const text = clone.innerText || '';
+  // 只计算中文字符 + 数字 + 常见标点
+  const cleanText = text.replace(/\s+/g, '');
+  const count = countChinese(cleanText);
+  document.getElementById('wcCurrent').textContent = count.toLocaleString();
+
+  const target = state.targetWordCount;
+  const diff = count - target;
+  const percent = target > 0 ? (count / target * 100) : 0;
+  const status = document.getElementById('wcStatus');
+  if (state.isGenerating) {
+    status.textContent = '';
+    document.getElementById('wcProgress').textContent = `生成进度：${progress || 0}%`;
+  } else if (count === 0) {
+    status.textContent = '';
+    document.getElementById('wcProgress').textContent = '等待生成';
+  } else {
+    // 与目标差异 ±10% 视为达标
+    const tolerance = Math.max(50, target * 0.1);
+    if (Math.abs(diff) <= tolerance) {
+      status.innerHTML = '<span class="wc-status ok">✓ 已达目标</span>';
+    } else if (diff < 0) {
+      status.innerHTML = `<span class="wc-status short">⚠ 少 ${-diff} 字</span>`;
+    } else {
+      status.innerHTML = `<span class="wc-status over">⚠ 超 ${diff} 字</span>`;
+    }
+    document.getElementById('wcProgress').textContent = `完成度 ${Math.round(percent)}%`;
+  }
+}
+
+function stopGeneration() { showModal('stopModal'); }
+function confirmStop() {
+  state.isGenerating = false;
+  if (state.generationTimer) clearTimeout(state.generationTimer);
+  document.getElementById('genIndicator').classList.remove('show');
+  hideModal('stopModal');
+  updateWordCount();
+  showToast('已停止生成', 'info');
+}
+
+function showSourceDetail(fileName) {
+  const map = {
+    '政务服务处4月月报.docx': [{ text: '本月推动<span class="source-highlight">213项高频事项实现全流程电子化办理</span>。' }, { text: '<span class="source-highlight">满意度达98.2%</span>。' }],
+    '二季度业务台账.xlsx': [{ text: '<span class="source-highlight">同比增长45.6%</span>。' }, { text: '跨部门数据共享仍存在瓶颈。' }],
+    '营商环境专项报告.pdf': [{ text: '企业开办<span class="source-highlight">"一日办结"</span>制度全面落地。' }, { text: '<span class="source-highlight">新增市场主体1,872户,同比增长12.3%</span>。' }],
+    '信息化建设周报.docx': [{ text: '<span class="source-highlight">接入部门系统32个</span>。' }, { text: '<span class="source-highlight">数据共享调用量突破1,200万次</span>。' }],
+    '机关党建工作台账.docx': [{ text: '开展<span class="source-highlight">政治理论学习24次</span>。' }, { text: '培训覆盖<span class="source-highlight">干部320人次</span>。' }],
+    '12345热线季度分析.pdf': [{ text: '<span class="source-highlight">3,562件,办结率99.1%</span>。' }]
+  };
+  const items = map[fileName] || [{ text: '原文片段未加载...' }];
+  const html = items.map(item => `
+    <div class="source-detail-item">
+      <div class="source-detail-file"><span>📄</span><span>${fileName}</span></div>
+      <div class="source-detail-text">${item.text}</div>
+    </div>`).join('');
+  document.getElementById('sourceDetailList').innerHTML = html;
+  showModal('sourceModal');
+}
+
+/* 导出：仅 DOCX / PDF */
+function doExport() {
+  const fmt = document.querySelector('input[name="exportFormat"]:checked').value;
+  const withSource = document.getElementById('exportWithSource').checked;
+  const title = document.querySelector('#finalDoc h1')?.textContent || '工作总结';
+  const fileName = title.replace(/[\/\\?*:"<>|]/g, '') || '工作总结';
+  hideModal('exportModal');
+  if (fmt === 'docx') {
+    downloadBlob(buildWordHtml(withSource, title), `${fileName}.doc`, 'application/msword');
+    showToast(withSource ? 'DOCX（含溯源报告）已导出' : 'DOCX 已导出', 'success');
+    return;
+  }
+  if (fmt === 'pdf') {
+    doPrint('pdf', withSource);
+    showToast('请在打印对话框中选择"另存为 PDF"', 'info');
+    return;
+  }
+}
+
+/* 构建信息溯源报告 HTML（仅 withSource 时使用） */
+function buildSourceReportHtml() {
+  const cites = Array.from(document.querySelectorAll('#finalDoc .source-cite'));
+  const files = [];
+  cites.forEach(c => {
+    const f = c.getAttribute('data-file') || c.textContent || '来源素材';
+    if (f && !files.includes(f)) files.push(f);
+  });
+  if (!files.length) return '';
+  let html = '<h2 style="page-break-before:always">附：信息溯源报告</h2>';
+  html += '<p>本总结严格基于以下原始素材生成，各段落来源已在正文中以"来源"角标标注，可点击查看原文片段：</p>';
+  files.forEach((f, i) => { html += `<p style="text-indent:0">${i + 1}. ${escapeHtml(f)}</p>`; });
+  return html;
+}
+
+function buildWordHtml(withSource, title) {
+  const doc = document.getElementById('finalDoc');
+  let bodyHtml = '';
+  Array.from(doc.children).forEach(el => {
+    const clone = el.cloneNode(true);
+    if (!withSource) clone.querySelectorAll('.source-cite').forEach(s => s.remove());
+    bodyHtml += clone.outerHTML;
+  });
+  const sourceCss = withSource
+    ? '.source-cite { color:#1a5cbf; font-size:9pt; font-family:"Microsoft YaHei"; vertical-align:super; }'
+    : '.source-cite { display:none; }';
+  const reportHtml = withSource ? buildSourceReportHtml() : '';
+  return `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>${title}</title>
+<style>
+  body { font-family: "SimSun","宋体",serif; font-size:12pt; line-height:1.9; }
+  h1 { text-align:center; font-size:22pt; font-weight:bold; margin:12pt 0 24pt; letter-spacing:2pt; }
+  h2 { font-size:14pt; font-weight:bold; margin:18pt 0 12pt; }
+  p { text-indent:2em; font-size:12pt; margin:0 0 12pt; text-align:justify; }
+  ${sourceCss}
+</style></head><body>${bodyHtml}${reportHtml}</body></html>`;
+}
+function downloadBlob(content, filename, mime) {
+  const blob = new Blob(['﻿' + content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+/* 打印：独立按钮调用 doPrint()（不含溯源）；导出 PDF 调用 doPrint('pdf', withSource) */
+function doPrint(mode, withSource) {
+  const title = document.querySelector('#finalDoc h1')?.textContent || '工作总结';
+  const doc = document.getElementById('finalDoc');
+  let bodyHtml = '';
+  Array.from(doc.children).forEach(el => {
+    const clone = el.cloneNode(true);
+    if (!withSource) clone.querySelectorAll('.source-cite').forEach(s => s.remove());
+    bodyHtml += clone.outerHTML;
+  });
+  const reportHtml = withSource ? buildSourceReportHtml() : '';
+  const citeCss = withSource ? '.source-cite{color:#1a5cbf;font-size:9pt;}' : '.source-cite{display:none;}';
+  const w = window.open('', '_blank', 'width=800,height=900');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
+<style>body{font-family:"SimSun",serif;margin:2.5cm 3cm;} h1{text-align:center;font-size:22pt;} h2{font-size:14pt;margin:18pt 0 10pt;} p{text-indent:2em;font-size:12pt;line-height:1.9;margin-bottom:12pt;} ${citeCss}</style>
+</head><body>${bodyHtml}${reportHtml}</body></html>`);
+  w.document.close();
+  setTimeout(() => { w.focus(); w.print(); }, 300);
+}
+
+/* 拖拽上传 */
+(function initDragUpload() {
+  const panel = document.querySelector('.input-panel');
+  ['dragover', 'dragenter'].forEach(evt => panel.addEventListener(evt, e => { e.preventDefault(); panel.style.borderColor = 'var(--primary)'; }));
+  ['dragleave', 'drop'].forEach(evt => panel.addEventListener(evt, e => { e.preventDefault(); panel.style.borderColor = ''; }));
+  panel.addEventListener('drop', e => {
+    const files = Array.from(e.dataTransfer.files);
+    const added = addFiles(files);
+    if (added > 0) showToast(`已添加 ${added} 个文件`, 'success');
+  });
+})();
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (document.activeElement === document.getElementById('userInput')) { parseInput(); e.preventDefault(); }
+  }
+  if (e.key === 'Escape') { document.querySelectorAll('.modal-mask.show').forEach(m => m.classList.remove('show')); }
+});
+
+/* 初始化 */
+window.addEventListener('load', () => {
+  document.getElementById('userInput').focus();
+  renderModuleGroup('quarterly');
+  renderCategoryList();
+  updateTemplateReadonly();
+  renderHistoryList();
+  document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
+});
+</script>
+<script src="handoff-context.js"></script>
+</body>
+</html>

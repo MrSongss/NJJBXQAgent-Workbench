@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文本智能润色 · 智能润色系统 - 江北新区政务AI智能体</title>
+  <style>
+    :root {
+      --bg: #eef2f9;
+      --panel: #ffffff;
+      --line: #e2e8f3;
+      --line-soft: #eef1f7;
+      --text: #1b2436;
+      --muted: #75809a;
+      --primary: #2455e6;
+      --primary-dark: #1740b8;
+      --primary-soft: #eef4ff;
+      --cyan: #0b8fa8;
+      --green: #10876a;
+      --green-soft: #e8f7f1;
+      --red: #e0342a;
+      --red-soft: #fdecea;
+      --orange: #d07a00;
+      --orange-soft: #fff4e0;
+      --purple: #6a52d6;
+      --purple-soft: #efecfd;
+      --shadow: 0 16px 42px rgba(21, 32, 58, 0.09);
+      --shadow-sm: 0 8px 20px rgba(21, 32, 58, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1280px;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 78% -4%, rgba(36, 85, 230, 0.10), transparent 30%),
+        linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { border: 0; background: none; color: inherit; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .app { display: grid; grid-template-columns: 208px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
+    .topbar { grid-column: 1 / -1; grid-row: 1; }
+
+    /* ============ Left menu (global) ============ */
+    .leftnav { grid-column: 1; grid-row: 2; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px; background: rgba(255, 255, 255, 0.82); border-right: 1px solid var(--line); backdrop-filter: blur(8px); }
+    .leftnav .nav-cap { margin: 4px 8px 6px; color: #97a2b8; font-size: 11px; font-weight: 800; letter-spacing: .6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 13px; border-radius: 11px; color: #46536e; font-weight: 600; transition: .16s; text-align: left; white-space: nowrap; }
+    .nav-item .ic { width: 20px; text-align: center; font-size: 16px; }
+    .nav-item:hover { color: var(--primary); background: #fff; }
+    .nav-item.active { color: #fff; background: var(--primary); box-shadow: 0 8px 16px rgba(36, 85, 230, 0.22); }
+
+    /* ============ Top bar ============ */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px 0 20px;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      z-index: 5;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #16336f; white-space: nowrap; }
+    .brand-mark {
+      width: 32px; height: 32px; display: grid; place-items: center;
+      border-radius: 9px; color: #fff; font-size: 12px; font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      box-shadow: 0 8px 18px rgba(36, 85, 230, 0.28);
+    }
+    .brand small { display: block; font-size: 11px; font-weight: 600; color: #7d8aa6; margin-top: 1px; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .safe-mode { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 11px; border-radius: 9px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; }
+
+    /* ============ Generic controls ============ */
+    .btn, .icon-btn, .primary-btn, .danger-btn, .ghost-btn {
+      height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      border-radius: 9px; border: 1px solid var(--line); background: #fff; color: #3a4761;
+      transition: .16s; white-space: nowrap; font-weight: 600;
+    }
+    .btn { padding: 0 12px; }
+    .icon-btn { width: 34px; }
+    .primary-btn { padding: 0 15px; border-color: var(--primary); color: #fff; background: var(--primary); box-shadow: 0 8px 16px rgba(36, 85, 230, 0.2); }
+    .ghost-btn { padding: 0 12px; background: #f6f8fd; }
+    .danger-btn { padding: 0 12px; border-color: #f6ccc7; color: var(--red); background: #fff7f6; }
+    .btn:hover, .icon-btn:hover, .ghost-btn:hover { color: var(--primary); border-color: rgba(36, 85, 230, 0.4); background: var(--primary-soft); }
+    .primary-btn:hover { background: var(--primary-dark); }
+    .danger-btn:hover { background: #fdece9; }
+    .btn.sm, .mini-btn { height: 30px; padding: 0 10px; font-size: 13px; }
+    .mini-btn { border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #4a5568; }
+    .mini-btn:hover { color: var(--primary); border-color: rgba(36, 85, 230, 0.36); background: var(--primary-soft); }
+    .select { height: 34px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #3c4658; padding: 0 10px; outline: none; }
+    .select:focus { border-color: rgba(36, 85, 230, 0.5); }
+
+    /* mode segmented control */
+    .mode-seg { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: #f6f8fd; }
+    .mode-seg button { height: 28px; padding: 0 13px; border-radius: 8px; color: #55617d; font-weight: 700; font-size: 13px; transition: .16s; display: inline-flex; align-items: center; gap: 5px; }
+    .mode-seg button:hover { color: var(--primary); }
+    .mode-seg button.on { color: #fff; background: var(--primary); box-shadow: 0 6px 14px rgba(36,85,230,.24); }
+    .mode-seg button .lv { font-size: 11px; opacity: .8; }
+
+    /* ============ Views ============ */
+    .view { display: none; min-height: 0; height: 100%; grid-column: 2; grid-row: 2; }
+    .view.active { display: block; }
+    #view-editor.active { display: grid; grid-template-columns: 1fr 408px; }
+    .page-scroll { height: 100%; overflow: auto; padding: 22px 26px 40px; }
+    .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .page-title { font-size: 21px; font-weight: 800; color: #16233f; }
+    .page-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
+
+    /* ============ Editor: center ============ */
+    .tool-main { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto auto 1fr 32px; background: #eaf0f8; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 16px; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .toolbar-left, .toolbar-right, .tool-group { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .hint { color: #8b95a7; font-size: 13px; }
+
+    /* workflow stepper (from swimlane) */
+    .flowbar { display: flex; align-items: center; gap: 0; padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .flow-step { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .flow-node { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 12px; font-weight: 700; cursor: pointer; transition: .16s; border: 1px solid transparent; }
+    .flow-node .n { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; background: #cfd8ea; color: #fff; font-size: 10px; }
+    .flow-node:hover { background: var(--primary-soft); color: var(--primary); }
+    .flow-node.done { background: var(--green-soft); color: var(--green); }
+    .flow-node.done .n { background: var(--green); }
+    .flow-node.current { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .flow-node.current .n { background: rgba(255,255,255,0.35); }
+    .flow-arrow { width: 18px; height: 1px; background: #d5deee; margin: 0 2px; position: relative; flex: none; }
+    .flow-arrow::after { content: "›"; position: absolute; right: -3px; top: -10px; color: #b6c1d8; }
+
+    .workspace { min-height: 0; overflow: auto; padding: 20px 24px 36px; }
+    .doc-wrap { width: 800px; min-height: 1040px; margin: 0 auto; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow); position: relative; }
+    .page-tools { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px 0; background: #fff; }
+    .page-tools .hint { color: #9aa4b8; font-size: 12px; }
+    .doc-page { min-height: 980px; padding: 46px 64px 66px; outline: none; line-height: 2; color: #1f2937; font-family: "FangSong", "仿宋", "SimSun", serif; font-size: 18px; }
+    .doc-page h1 { margin: 0 0 26px; text-align: center; font-family: "SimHei", "黑体", sans-serif; font-size: 25px; line-height: 1.55; font-weight: 700; }
+    .doc-page p { margin: 0 0 8px; text-indent: 2em; }
+    .doc-page .no-indent { text-indent: 0; }
+    .doc-page .right { text-align: right; text-indent: 0; }
+
+    /* polish marks — colored by bucket */
+    .mark { border-radius: 2px; cursor: pointer; padding: 0 1px; border-bottom: 2px solid currentColor; transition: background .15s; }
+    .mark-base { color: var(--primary); background: #eef4ff; }
+    .mark-term { color: var(--purple); background: var(--purple-soft); }
+    .mark-logic { color: var(--cyan); background: #e2f5f8; }
+    .mark-redun { color: var(--orange); background: #fff6e6; }
+    .mark-style { color: var(--red); background: #fdefec; }
+    .mark.resolved { color: #34a06f !important; background: #eaf8f1 !important; border-bottom: 1px solid #9fdcc0; }
+    .mark.ignored { color: #9aa4b8 !important; background: transparent !important; border-bottom: 1px dashed #c3cbdb; }
+    /* 未润色态：隐藏建议标注，显示为普通正文 */
+    .doc-page.raw .mark { color: inherit !important; background: none !important; border-bottom: 0 !important; padding: 0 !important; cursor: text; }
+    .anchor { color: inherit; background: transparent; border: 0; padding: 0; cursor: text; }
+    .result-stale { display: none; margin: 10px 16px 0; padding: 10px 12px; border: 1px solid #f0cf79; border-radius: 9px; background: #fff8e6; color: #855b00; font-size: 12.5px; line-height: 1.6; }
+    .result-stale.show { display: block; }
+    .standard-strip { padding: 10px 16px; border-bottom: 1px solid var(--line-soft); background: #f5f8ff; color: #52617b; font-size: 12px; line-height: 1.6; }
+    .standard-strip b { color: var(--primary); }
+    .doc-type-live { height: 27px; min-width: 104px; border: 1px solid #c8d3e6; border-radius: 7px; background: #fff; color: #34425c; padding: 0 7px; font-size: 12px; outline: none; }
+    .doc-type-live:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(36,85,230,.1); }
+    .basis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #d8e0ec; color: #66738a; font-size: 11.5px; }
+    .basis-grid b { color: #394760; }
+
+    .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-top: 1px solid var(--line); background: #fff; color: #7b8496; font-size: 12px; }
+
+    /* ============ Editor: right polish panel ============ */
+    .rightbar { min-height: 0; overflow: hidden; background: #fff; border-left: 1px solid var(--line); display: flex; flex-direction: column; }
+    .pf-results { min-height: 0; flex: 1; display: none; flex-direction: column; }
+    .pf-results.show { display: flex; }
+    .pf-results.is-stale .pf-c-ops { opacity: .45; pointer-events: none; }
+    .pf-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line-soft); }
+    .pf-head-top { display: flex; align-items: center; justify-content: space-between; }
+    .pf-count { font-size: 17px; font-weight: 800; }
+    .pf-count b { color: var(--primary); }
+    .pf-links { display: flex; gap: 12px; color: #6a7690; font-size: 13px; }
+    .pf-links a { display: inline-flex; align-items: center; gap: 4px; }
+    .pf-links a:hover { color: var(--primary); }
+    .pf-cats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin-top: 12px; }
+    .pf-cat { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #47536c; cursor: pointer; user-select: none; }
+    .pf-cat .cbx { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #c4cde0; display: grid; place-items: center; color: #fff; font-size: 11px; transition: .15s; }
+    .pf-cat.on .cbx { background: var(--primary); border-color: var(--primary); }
+    .pf-cat .cnt { margin-left: auto; font-weight: 800; color: #2a3550; }
+    .pf-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
+    .pf-actions .primary-btn, .pf-actions .btn { height: 36px; flex: 1; }
+    .pf-progress { padding: 10px 16px; border-bottom: 1px solid var(--line-soft); display: none; }
+    .pf-progress.show { display: block; }
+    .pf-bar { height: 8px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
+    .pf-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--cyan)); transition: width .2s; }
+    .pf-progress .lbl { display: flex; justify-content: space-between; font-size: 12px; color: #6a7690; margin-bottom: 6px; }
+    .pf-list { min-height: 0; overflow: auto; padding: 12px; display: grid; gap: 10px; align-content: start; }
+
+    /* mode banner + anchor strip */
+    .mode-banner { display: flex; align-items: center; gap: 8px; padding: 9px 12px; margin: 0; border-bottom: 1px solid var(--line-soft); background: var(--primary-soft); color: #2a3f7a; font-size: 12.5px; line-height: 1.5; }
+    .mode-banner b { color: var(--primary); }
+    .anchor-strip { display: flex; align-items: flex-start; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line-soft); background: var(--orange-soft); color: #8a5e00; font-size: 12.5px; line-height: 1.55; }
+    .anchor-strip .as-ic { flex: none; }
+
+    /* empty / pre states */
+    .pf-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 26px; text-align: center; }
+    .pf-empty.hide { display: none; }
+    .pf-empty .eic { width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; font-size: 26px; background: var(--primary-soft); color: var(--primary); }
+    .pf-empty .et { font-size: 15px; font-weight: 800; color: #33405c; }
+    .pf-empty .es { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 250px; }
+    .pf-empty .primary-btn { height: 44px; padding: 0 32px; margin-top: 6px; font-size: 15px; }
+    .doc-empty { min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 48px 20px 40px; }
+    .doc-empty .eic { width: 74px; height: 74px; border-radius: 18px; display: grid; place-items: center; font-size: 34px; background: var(--primary-soft); color: var(--primary); }
+    .doc-empty .et { font-size: 18px; font-weight: 800; color: #33405c; }
+    .doc-empty .es { font-size: 13px; color: var(--muted); line-height: 1.75; max-width: 330px; }
+    .doc-empty .primary-btn { height: 44px; padding: 0 30px; margin-top: 8px; }
+
+    .pf-card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 11px 12px; background: #fbfcff; transition: .16s; }
+    .pf-card:hover, .pf-card.active { border-color: rgba(36, 85, 230, 0.4); box-shadow: var(--shadow-sm); }
+    .pf-card.resolved { opacity: .6; }
+    .pf-card.risk { border-color: #f2cf9a; background: #fffbf3; }
+    .pf-c-head { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+    .pf-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+    .pf-dot.base { background: var(--primary); } .pf-dot.term { background: var(--purple); } .pf-dot.logic { background: var(--cyan); } .pf-dot.redun { background: var(--orange); } .pf-dot.style { background: var(--red); }
+    .pf-cat-name { font-size: 13px; font-weight: 700; color: #33405c; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pf-risk-tag { flex: none; display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 700; background: var(--orange-soft); color: var(--orange); }
+    .pf-c-ops { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6a7690; flex: none; }
+    .pf-c-ops a:hover { color: var(--primary); }
+    .pf-c-ops a.rep { color: var(--primary); font-weight: 700; }
+    .pf-line { display: flex; align-items: flex-start; gap: 7px; margin-top: 6px; font-size: 13.5px; line-height: 1.6; }
+    .pf-badge { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 700; margin-top: 1px; }
+    .pf-badge.orig { background: var(--red-soft); color: var(--red); }
+    .pf-badge.sugg { background: var(--green-soft); color: var(--green); }
+    .pf-txt { color: #37425c; word-break: break-all; }
+    .pf-txt .del { color: var(--red); text-decoration: line-through; text-decoration-color: rgba(224,52,42,.5); }
+    .pf-txt .ins { color: var(--green); font-weight: 700; }
+    .pf-model { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; margin-left: 6px; border-radius: 5px; font-size: 11px; font-weight: 700; background: var(--purple-soft); color: var(--purple); vertical-align: middle; }
+    .pf-note { margin-top: 8px; padding: 7px 9px; border-radius: 8px; background: #f3f7ff; color: #4a597a; font-size: 12.5px; line-height: 1.55; display: none; }
+    .pf-note.show { display: block; }
+    .pf-note .bs { display: block; margin-top: 4px; color: #6a7690; }
+    .pf-note .bs b { color: #33405c; }
+    .empty { padding: 40px 16px; text-align: center; color: #9aa4b8; font-size: 13px; }
+
+    /* ============ Cards / generic ============ */
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line-soft); }
+    .card-title { font-weight: 800; font-size: 15px; }
+    .card-body { padding: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* KPI */
+    .kpi { padding: 16px 18px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+    .kpi .k-label { color: var(--muted); font-size: 13px; }
+    .kpi .k-value { font-size: 28px; font-weight: 900; margin: 6px 0 3px; color: #1b2947; }
+    .kpi .k-delta { font-size: 12px; font-weight: 700; }
+    .kpi .k-delta.up { color: var(--green); } .kpi .k-delta.down { color: var(--red); }
+    .kpi .k-ico { position: absolute; right: 14px; top: 14px; width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; }
+
+    /* Tables */
+    .tbl-wrap { overflow: auto; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    table.tbl th { text-align: left; padding: 11px 12px; color: #6a7690; font-weight: 700; background: #f7f9fd; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; }
+    table.tbl td { padding: 11px 12px; border-bottom: 1px solid var(--line-soft); color: #37425c; }
+    table.tbl tr:hover td { background: #fafbff; }
+    .tag { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .tag.high { color: #b42318; background: var(--red-soft); }
+    .tag.mid { color: #9a5b00; background: var(--orange-soft); }
+    .tag.low { color: #1747b6; background: var(--primary-soft); }
+    .tag.done { color: var(--green); background: var(--green-soft); }
+    .tag.wait { color: var(--orange); background: var(--orange-soft); }
+    .tag.doing { color: var(--primary); background: var(--primary-soft); }
+    .row-act a { color: var(--primary); font-weight: 700; margin-right: 12px; }
+    .row-act a:hover { text-decoration: underline; }
+    .row-act a.danger { color: var(--red); }
+
+    /* lib sub nav */
+    .rule-layout { display: grid; grid-template-columns: 210px 1fr; gap: 16px; }
+    .rule-nav { display: grid; gap: 4px; align-content: start; }
+    .rule-nav button { text-align: left; padding: 11px 12px; border-radius: 10px; color: #46536e; font-weight: 700; transition: .16s; display: flex; align-items: center; justify-content: space-between; }
+    .rule-nav button:hover { background: #fff; color: var(--primary); }
+    .rule-nav button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
+    .rule-nav button .badge { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: #eef2fb; color: #6b7690; }
+    .rule-nav button.active .badge { background: rgba(255,255,255,0.24); color: #fff; }
+    .toolbar-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .note-strip { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; background: var(--orange-soft); color: #9a6a00; font-size: 13px; margin-bottom: 12px; }
+
+    /* settings */
+    .set-group { padding: 18px 4px; border-bottom: 1px solid var(--line-soft); }
+    .set-group:last-child { border-bottom: 0; }
+    .set-label { font-weight: 800; margin-bottom: 12px; color: #1f2b45; }
+    .radio-row, .check-grid { display: flex; flex-wrap: wrap; gap: 12px 26px; }
+    .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .opt { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #46536e; font-size: 14px; user-select: none; }
+    .opt .rd { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #c4cde0; display: grid; place-items: center; transition: .15s; }
+    .opt .rd::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); transform: scale(0); transition: .15s; }
+    .opt.on .rd { border-color: var(--primary); } .opt.on .rd::after { transform: scale(1); }
+    .opt .cbx { width: 18px; height: 18px; border-radius: 5px; border: 2px solid #c4cde0; display: grid; place-items: center; color: #fff; font-size: 12px; transition: .15s; }
+    .opt.on .cbx { background: var(--primary); border-color: var(--primary); }
+    .toggle { width: 40px; height: 23px; padding: 2px; border-radius: 999px; background: #d3dbea; transition: .16s; flex: none; }
+    .toggle::after { content: ""; display: block; width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(21,32,58,.2); transition: .16s; }
+    .toggle.on { background: var(--primary); } .toggle.on::after { transform: translateX(17px); }
+    .check-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; color: #46536e; font-size: 14px; border-bottom: 1px dashed var(--line-soft); }
+    /* 维度管理 */
+    .dim-row { padding: 10px 0; border-bottom: 1px dashed var(--line-soft); }
+    .dim-row:last-child { border-bottom: 0; }
+    .dim-label { font-weight: 800; color: #33405c; font-size: 13px; margin-bottom: 7px; }
+    .dim-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .dim-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 6px 0 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 12.5px; font-weight: 700; }
+    .dim-chip i { cursor: pointer; opacity: .55; font-style: normal; font-size: 14px; }
+    .dim-chip i:hover { opacity: 1; color: var(--red); }
+    .dim-add { display: flex; gap: 7px; }
+    .dim-add .dim-input { flex: 1; height: 32px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; outline: none; }
+    .dim-add .dim-input:focus { border-color: var(--primary); }
+    .set-desc { font-size: 12.5px; color: var(--muted); margin: -6px 0 12px; line-height: 1.6; }
+
+    /* charts */
+    .bars { display: grid; gap: 12px; }
+    .bar-row { display: grid; grid-template-columns: 92px 1fr 44px; align-items: center; gap: 10px; font-size: 13px; }
+    .bar-track { height: 12px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; font-size: 13px; color: #55617d; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+    .donut-wrap { display: flex; align-items: center; gap: 22px; }
+    .donut { width: 150px; height: 150px; border-radius: 50%; position: relative; flex: none; }
+    .donut::before { content: ""; position: absolute; inset: 30px; border-radius: 50%; background: #fff; }
+    .donut .c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+    .donut .c b { font-size: 24px; color: #1b2947; } .donut .c span { font-size: 12px; color: var(--muted); }
+
+    /* modal */
+    .modal-mask { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(16, 24, 45, 0.4); backdrop-filter: blur(4px); }
+    .modal-mask.show { display: flex; }
+    .modal { width: min(600px, calc(100vw - 40px)); max-height: calc(100vh - 60px); display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28); }
+    .modal.wide { width: min(900px, calc(100vw - 40px)); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 18px; border-bottom: 1px solid var(--line); font-weight: 800; font-size: 15px; }
+    .modal-body { padding: 18px; color: #46536e; line-height: 1.75; overflow: auto; }
+    .modal-body .field { margin-bottom: 14px; }
+    .modal-body label { display: block; font-weight: 700; color: #33405c; margin-bottom: 6px; font-size: 13px; }
+    .modal-body label .req { color: var(--red); margin-left: 3px; }
+    .modal-body input[type=text], .modal-body textarea, .modal-body select {
+      width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: #fff;
+    }
+    .modal-body input:focus, .modal-body textarea:focus, .modal-body select:focus { border-color: rgba(36,85,230,.5); box-shadow: 0 0 0 3px rgba(36,85,230,.08); }
+    .modal-body textarea { min-height: 92px; resize: vertical; }
+    .modal-body .err { border-color: var(--red) !important; }
+    .field-err { color: var(--red); font-size: 12px; margin-top: 5px; display: none; }
+    .field-err.show { display: block; }
+    .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); }
+    .steps { display: flex; align-items: center; gap: 0; margin-bottom: 16px; }
+    .steps .s { display: flex; align-items: center; gap: 8px; }
+    .steps .dot { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #eef2f9; color: #8b95a7; font-weight: 800; font-size: 13px; transition: .2s; }
+    .steps .s.done .dot { background: var(--green); color: #fff; } .steps .s.active .dot { background: var(--primary); color: #fff; }
+    .steps .s .t { font-size: 13px; color: #6a7690; font-weight: 700; } .steps .s.active .t { color: var(--primary); }
+    .steps .bar { width: 34px; height: 2px; background: #e2e8f3; margin: 0 8px; }
+    .parse-line { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 14px; color: #46536e; }
+    .parse-line .ic { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: #eef2f9; color: #8b95a7; flex: none; }
+    .parse-line.ok .ic { background: var(--green); color: #fff; }
+    .parse-line.warn .ic { background: var(--orange); color: #fff; }
+    .parse-line.lock .ic { background: #9a6a00; color: #fff; }
+
+    .diff-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .diff-tbl th { text-align: left; padding: 8px 10px; background: #f7f9fd; color: #6a7690; border-bottom: 1px solid var(--line); position: sticky; top: 0; }
+    .diff-tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+    .diff-tbl .d-del { color: var(--red); text-decoration: line-through; text-decoration-color: rgba(224,52,42,.5); }
+    .diff-tbl .d-ins { color: var(--green); font-weight: 700; }
+    .diff-tbl .d-cat { white-space: nowrap; color: #55617d; }
+
+    /* selection floating bar (划词润色) */
+    .sel-bar { position: fixed; z-index: 55; display: none; gap: 6px; padding: 5px; border-radius: 10px; background: #1b2333; box-shadow: 0 10px 26px rgba(15,23,42,.3); }
+    .sel-bar button { height: 30px; padding: 0 12px; border-radius: 7px; background: var(--primary); color: #fff; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
+    .sel-bar button:hover { background: var(--primary-dark); }
+    .sel-bar::after { content: ""; position: absolute; left: 18px; bottom: -6px; width: 12px; height: 12px; background: #1b2333; transform: rotate(45deg); }
+
+    /* export preview tabs */
+    .exp-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 14px; flex-wrap: wrap; }
+    .exp-tab { height: 34px; padding: 0 14px; border-radius: 9px 9px 0 0; color: #55617d; font-weight: 700; font-size: 13px; border: 1px solid transparent; border-bottom: 0; }
+    .exp-tab:hover { color: var(--primary); background: var(--primary-soft); }
+    .exp-tab.on { color: var(--primary); background: #fff; border-color: var(--line); box-shadow: 0 -2px 0 var(--primary) inset; }
+    .exp-panel { max-height: calc(100vh - 260px); overflow: auto; }
+    .exp-doc { border: 1px solid var(--line); border-radius: 8px; padding: 24px 32px; font-family: "FangSong", "仿宋", "SimSun", serif; line-height: 2; color: #1f2937; background: #fff; }
+    .exp-doc h1 { text-align: center; font-family: "SimHei", "黑体", sans-serif; font-size: 20px; margin: 0 0 18px; font-weight: 700; }
+    .exp-doc p { margin: 0 0 6px; text-indent: 2em; }
+    .exp-doc .no-indent { text-indent: 0; }
+    .exp-doc .right { text-align: right; text-indent: 0; }
+
+    .toast { position: fixed; right: 24px; top: 70px; z-index: 60; display: none; max-width: 380px; padding: 12px 15px; border-radius: 11px; color: #fff; background: rgba(23, 32, 51, 0.95); box-shadow: 0 16px 36px rgba(23, 32, 51, 0.22); font-size: 14px; }
+    .toast.show { display: block; animation: slideIn .2s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    .hidden-input { display: none; }
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-thumb { background: #cfd8e8; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b7c2d8; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- ===================== TOP BAR ===================== -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">政AI</span>
+        <span>文本智能润色<small>江北新区政务AI智能体 · 智能润色系统</small></span>
+      </div>
+      <div class="top-actions">
+        <span class="safe-mode" title="使用本地化模型处理，文稿不调用外部大模型">🛡 本地模型 · 文稿不出域</span>
+        <span class="hint">规则与权限由智能体工作台统一配置</span>
+      </div>
+    </header>
+
+    <!-- ===================== LEFT MENU (global) ===================== -->
+    <aside class="leftnav">
+      <div class="nav-cap">功能菜单</div>
+      <button class="nav-item active" data-view="editor"><span class="ic">✍</span>智能润色</button>
+      <button class="nav-item" data-view="history"><span class="ic">🕑</span>历史记录</button>
+    </aside>
+
+    <!-- ===================== VIEW: 智能润色 ===================== -->
+    <div class="view active" id="view-editor">
+      <main class="tool-main">
+        <section class="toolbar">
+          <div class="toolbar-left">
+            <button class="primary-btn" data-action="newTask">＋ 新建润色任务</button>
+            <span class="hint" style="margin-left:4px;">统一润色：格式规范、政务用语、表达优化与逻辑建议</span>
+          </div>
+          <div class="toolbar-right">
+            <span class="hint" id="taskMeta">未载入文稿</span>
+          </div>
+        </section>
+
+        <!-- workflow stepper from swimlane -->
+        <section class="flowbar" id="flowbar">
+          <div class="flow-step"><button class="flow-node current" data-flow="1" title="上传DOC、DOCX、PDF文件或粘贴正文"><span class="n">1</span>上传文稿</button></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><button class="flow-node" data-flow="2" title="智能体解析文档结构，识别标题/正文/表格"><span class="n">2</span>结构解析</button></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><button class="flow-node" data-flow="3" title="校验格式规范并校正语病、标点、错别字与冗余"><span class="n">3</span>规范校正</button></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><button class="flow-node" data-flow="4" title="识别政务用语与表达问题，逻辑问题仅提供建议"><span class="n">4</span>用语逻辑</button></div>
+          <div class="flow-arrow"></div>
+          <div class="flow-step"><button class="flow-node" data-flow="5" title="用户按需采纳或忽略后，输出润色稿、修改痕迹与修改说明"><span class="n">5</span>结果处理</button></div>
+        </section>
+
+        <section class="workspace">
+          <div class="doc-wrap">
+            <div class="page-tools">
+              <span class="hint" id="docHint">请新建润色任务载入文稿</span>
+              <div style="display:flex;gap:8px;">
+                <button class="mini-btn" data-action="zoomOut">A-</button>
+                <button class="mini-btn" data-action="zoomIn">A+</button>
+                <button class="mini-btn" data-action="locateFirst">定位首个建议</button>
+              </div>
+            </div>
+            <article class="doc-page" id="docPage">
+              <div class="doc-empty">
+                <div class="eic">📄</div>
+                <div class="et">暂无待润色文稿</div>
+                <div class="es">点击「新建润色任务」上传文档或粘贴文本，系统将自动识别文种并开始统一润色。</div>
+                <button class="primary-btn" data-action="newTask">＋ 新建润色任务</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <footer class="statusbar">
+          <span id="statusText">请新建润色任务并载入待润色文稿</span>
+          <span id="statusMeta">尚未载入文稿</span>
+        </footer>
+      </main>
+
+      <aside class="rightbar">
+        <div class="pf-empty" id="pfEmpty">
+          <div class="eic" id="pfEmptyIc">🗂</div>
+          <div class="et" id="pfEmptyTitle">暂无润色结果</div>
+          <div class="es" id="pfEmptySub">请先新建润色任务并载入文稿，载入后可在此发起智能润色。</div>
+          <button class="primary-btn" data-action="polish" id="startPolishBtn" style="display:none;">重新润色</button>
+        </div>
+        <div class="pf-results" id="pfResults">
+          <div class="pf-head">
+            <div class="pf-head-top">
+              <div class="pf-count">共识别 <b id="pfTotal">0</b> 个可优化项</div>
+            </div>
+            <div class="pf-cats" id="pfCats">
+              <label class="pf-cat on" data-bucket="base"><span class="cbx">✓</span>格式与基础规范<span class="cnt" id="cnt-base">0</span></label>
+              <label class="pf-cat on" data-bucket="term"><span class="cbx">✓</span>政务用语<span class="cnt" id="cnt-term">0</span></label>
+              <label class="pf-cat on" data-bucket="redun"><span class="cbx">✓</span>冗余压缩<span class="cnt" id="cnt-redun">0</span></label>
+              <label class="pf-cat on" data-bucket="style"><span class="cbx">✓</span>风格统一<span class="cnt" id="cnt-style">0</span></label>
+              <label class="pf-cat on" data-bucket="logic"><span class="cbx">✓</span>逻辑结构<span class="cnt" id="cnt-logic">0</span></label>
+            </div>
+          </div>
+          <div class="mode-banner" id="modeBanner"><b>统一润色</b>　·　识别格式、用语与表达问题，由用户选择是否采纳；逻辑问题只给建议。</div>
+          <div class="standard-strip"><b>规则依据：</b>中国国家规范 → 江苏省规范 → 南京市规范 → 江北新区内部规则；每条修改说明展示规则名称、编号、来源文件和版本。</div>
+          <div class="result-stale" id="resultStale">正文已发生变化，当前润色结果已失效。请重新润色后再处理优化项、查看结果或导出。</div>
+          <div class="pf-actions">
+            <button class="primary-btn" data-action="polish" id="repolishBtn">重新润色</button>
+            <button class="btn" data-action="applyAll">全部采纳</button>
+            <button class="btn" data-action="ignoreAll">全部忽略</button>
+            <button class="btn" data-action="compare">修订对比</button>
+            <button class="btn" data-action="export" title="导出润色稿">导出 Word / PDF</button>
+          </div>
+          <div class="pf-progress" id="pfProgress">
+            <div class="lbl"><span id="pfProgLbl">正在进行智能润色…</span><span id="pfProgPct">0%</span></div>
+            <div class="pf-bar"><i id="pfProgBar"></i></div>
+          </div>
+          <div class="pf-list" id="pfList"></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===================== VIEW: 术语风格库 ===================== -->
+    <div class="view" id="view-lib">
+      <div class="page-scroll">
+        <div class="page-head">
+          <div>
+            <div class="page-title">术语风格库管理</div>
+            <div class="page-sub">维护润色所依据的政务术语、部门口径、禁用表述、风格样例与优秀范文，支撑用语统一与风格匹配</div>
+          </div>
+          <div class="toolbar-inline">
+            <button class="btn" data-action="importRule">⬆ 导入词条</button>
+            <button class="btn" data-action="exportRule">⬇ 导出词条</button>
+            <button class="btn" data-action="downloadSample">下载示例</button>
+            <button class="primary-btn" data-action="addRule">＋ 添加词条</button>
+          </div>
+        </div>
+        <div class="rule-layout">
+          <nav class="rule-nav" id="ruleNav"></nav>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title" id="ruleCatTitle">政务术语库</div>
+              <div class="toolbar-inline">
+                <div class="search" style="position:relative;width:220px;"><input id="ruleSearch" class="select" style="width:100%;" type="text" placeholder="⌕ 搜索词条 / 规则"></div>
+                <button class="danger-btn sm" data-action="batchDelRule">批量删除</button>
+              </div>
+            </div>
+            <div class="card-body" style="padding-top:12px;">
+              <div class="note-strip" id="ruleNote">⚠ 术语库用于识别口语化、旧称与不规范表述并给出官方标准术语替换建议。</div>
+              <div class="tbl-wrap">
+                <table class="tbl" id="ruleTable"></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VIEW: 润色设置 ===================== -->
+    <div class="view" id="view-settings">
+      <div class="page-scroll">
+        <div class="page-head">
+          <div>
+            <div class="page-title">润色设置</div>
+            <div class="page-sub">配置润色模式、润色项、事实保护策略与大模型能力，设置将应用于后续所有智能润色任务</div>
+          </div>
+          <div class="toolbar-inline">
+            <button class="btn" data-action="resetSettings">恢复默认</button>
+            <button class="primary-btn" data-action="saveSettings">保存设置</button>
+          </div>
+        </div>
+        <div class="grid-2" style="align-items:start;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">核心润色策略</div></div>
+            <div class="card-body">
+              <div class="set-group">
+                <div class="set-label">默认润色模式</div>
+                <div class="set-desc">轻度＝仅基础规范与术语替换；标准＝含风格与冗余优化；深度＝允许调整段落逻辑与结构（保留事实锚点）。</div>
+                <div class="radio-row" data-radio="mode">
+                  <span class="opt" data-val="轻度润色"><span class="rd"></span>轻度润色</span>
+                  <span class="opt on" data-val="标准润色"><span class="rd"></span>标准润色</span>
+                  <span class="opt" data-val="深度改写"><span class="rd"></span>深度改写</span>
+                </div>
+              </div>
+              <div class="set-group">
+                <div class="set-label">润色项</div>
+                <div class="check-grid" data-check="options">
+                  <span class="opt on" data-val="语病标点"><span class="cbx">✓</span>语病与标点</span>
+                  <span class="opt on" data-val="错别字"><span class="cbx">✓</span>错别字</span>
+                  <span class="opt on" data-val="政务术语"><span class="cbx">✓</span>政务术语统一</span>
+                  <span class="opt on" data-val="口语化"><span class="cbx">✓</span>口语化/旧称</span>
+                  <span class="opt on" data-val="冗余压缩"><span class="cbx">✓</span>冗余压缩</span>
+                  <span class="opt on" data-val="情绪化"><span class="cbx">✓</span>情绪化/夸张</span>
+                  <span class="opt on" data-val="逻辑衔接"><span class="cbx">✓</span>逻辑衔接</span>
+                  <span class="opt" data-val="标题层级"><span class="cbx">✓</span>标题层级</span>
+                  <span class="opt on" data-val="数字格式"><span class="cbx">✓</span>数字/日期格式</span>
+                </div>
+              </div>
+              <div class="set-group">
+                <div class="set-label">改写幅度策略</div>
+                <div class="radio-row" data-radio="strength">
+                  <span class="opt on" data-val="保守"><span class="rd"></span>保守（优先小幅修改，保留原句式）</span>
+                  <span class="opt" data-val="充分"><span class="rd"></span>充分（允许整句重写以提升表达）</span>
+                </div>
+              </div>
+              <div class="set-group">
+                <div class="set-label">大模型润色</div>
+                <div class="radio-row" data-radio="llm">
+                  <span class="opt on" data-val="使用"><span class="rd"></span>使用（语义级改写，逻辑衔接与风格增强）</span>
+                  <span class="opt" data-val="禁用"><span class="rd"></span>禁用（仅规则级校正）</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:16px;align-content:start;">
+            <div class="card">
+              <div class="card-head"><div class="card-title">事实保护与安全</div></div>
+              <div class="card-body" style="padding:6px 16px 12px;">
+                <div class="check-item"><span>事实锚点锁定（数字/日期/专名/政策依据不自动改）</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item"><span>责任主体与机构名称保护</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item"><span>高风险改动需人工确认</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item"><span>安全模式（文稿不出域、本地化处理）</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item" style="border-bottom:0;"><span>润色留痕（记录每条建议采纳/忽略动作）</span><button class="toggle on" data-action="toggle"></button></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div class="card-title">输出与场景</div></div>
+              <div class="card-body" style="padding:6px 16px 12px;">
+                <div class="check-item"><span>输出修改痕迹（Word 修订模式）</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item"><span>输出修改说明（修改原因及依据）</span><button class="toggle on" data-action="toggle"></button></div>
+                <div class="check-item"><span>目标场景</span>
+                  <select class="select" style="height:30px;"><option>通用公文</option><option>汇报稿</option><option>请示报告</option><option>会议材料</option><option>宣传通稿</option></select>
+                </div>
+                <div class="check-item" style="border-bottom:0;"><span>默认密级</span>
+                  <select class="select" style="height:30px;"><option>非涉密</option><option>内部</option><option>秘密</option></select>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div class="card-title">维度管理（文种 / 模板场景 / 润色模式）</div><span class="tag blue">仅管理员可维护</span></div>
+              <div class="card-body" id="dimMgr"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VIEW: 历史记录 ===================== -->
+    <div class="view" id="view-history">
+      <div class="page-scroll">
+        <div class="page-head">
+          <div>
+            <div class="page-title">历史润色记录</div>
+            <div class="page-sub">历史记录长期保存，可回看修改说明、下载润色稿或发起再次润色</div>
+          </div>
+          <div class="toolbar-inline">
+            <button class="btn" data-action="exportHistory">⬇ 导出台账</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-body" style="padding:14px 16px;">
+            <div class="toolbar-inline">
+              <select class="select" id="hFilterType"><option>全部文种</option><option>行政通知</option><option>请示</option><option>报告</option><option>会议纪要</option><option>工作总结</option></select>
+              <select class="select" id="hFilterMode"><option>全部</option><option>统一润色</option></select>
+              <select class="select" id="hFilterRange"><option>近7天</option><option>近30天</option><option>近90天</option><option>全部</option></select>
+              <div style="position:relative;width:240px;"><input id="hSearch" class="select" style="width:100%;" type="text" placeholder="⌕ 搜索文档名称 / 经办人"></div>
+              <button class="btn" data-action="historyFilter">筛选</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">润色任务台账 <span style="color:var(--muted);font-weight:600;font-size:13px;">（共 <span id="hCount">8</span> 条）</span></div></div>
+          <div class="tbl-wrap"><table class="tbl" id="historyTable"></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VIEW: 统计报表 ===================== -->
+    <div class="view" id="view-stats">
+      <div class="page-scroll">
+        <div class="page-head">
+          <div>
+            <div class="page-title">统计报表</div>
+            <div class="page-sub">智能润色运行概况 · 统计周期：2026-04-01 至 2026-07-09</div>
+          </div>
+          <div class="toolbar-inline">
+            <select class="select" id="statRange"><option>本季度</option><option>本月</option><option>本年</option></select>
+            <button class="btn" data-action="exportStat">⬇ 导出报表</button>
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:16px;">
+          <div class="kpi"><div class="k-ico" style="background:var(--primary-soft);color:var(--primary);">📄</div><div class="k-label">累计润色文稿</div><div class="k-value">1,046</div><div class="k-delta up">▲ 14.2% 环比</div></div>
+          <div class="kpi"><div class="k-ico" style="background:var(--cyan);color:#fff;">✍</div><div class="k-label">累计润色建议</div><div class="k-value">11,528</div><div class="k-delta up">▲ 9.7% 环比</div></div>
+          <div class="kpi"><div class="k-ico" style="background:var(--green-soft);color:var(--green);">✓</div><div class="k-label">建议采纳率</div><div class="k-value">83.1%</div><div class="k-delta up">▲ 4.5% 环比</div></div>
+          <div class="kpi"><div class="k-ico" style="background:var(--orange-soft);color:var(--orange);">⏱</div><div class="k-label">平均润色时长</div><div class="k-value">38<span style="font-size:15px;">秒/篇</span></div><div class="k-delta down">▼ 18% 更快</div></div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;align-items:start;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">润色建议类型分布</div><span style="color:var(--muted);font-size:12px;">近90天</span></div>
+            <div class="card-body"><div class="bars" id="statBars"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">润色模式占比</div><span style="color:var(--muted);font-size:12px;">按任务数</span></div>
+            <div class="card-body">
+              <div class="donut-wrap">
+                <div class="donut" id="statDonut">
+                  <div class="c"><div><b>1,046</b><br><span>任务总数</span></div></div>
+                </div>
+                <div class="legend" style="flex-direction:column;gap:10px;">
+                  <div><i style="background:var(--primary);"></i>轻度润色　262 篇（25%）</div>
+                  <div><i style="background:var(--cyan);"></i>标准润色　595 篇（57%）</div>
+                  <div><i style="background:var(--purple);"></i>深度改写　189 篇（18%）</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="align-items:start;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">月度润色量趋势</div><span style="color:var(--muted);font-size:12px;">篇 / 月</span></div>
+            <div class="card-body"><div id="statTrend"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">高频润色项 Top 6</div><span style="color:var(--muted);font-size:12px;">出现次数</span></div>
+            <div class="card-body"><div class="bars" id="statTop"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== shared UI ===================== -->
+  <input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf">
+  <div class="toast" id="toast"></div>
+  <!-- 划词润色 悬浮操作条 -->
+  <div class="sel-bar" id="selBar"><button data-action="polishSelection">✨ 润色选中段落</button></div>
+  <div class="modal-mask" id="modalMask">
+    <div class="modal" id="modalBox">
+      <div class="modal-head"><span id="modalTitle">提示</span><button class="icon-btn" id="modalClose">×</button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot" id="modalFoot">
+        <button class="btn" id="modalCancel">取消</button>
+        <button class="primary-btn" id="modalOk">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+    const $ = (s, r) => (r || document).querySelector(s);
+    const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+    const toast = $("#toast"), modalMask = $("#modalMask"), modalBox = $("#modalBox");
+    const modalTitle = $("#modalTitle"), modalBody = $("#modalBody"), modalFoot = $("#modalFoot"), modalOk = $("#modalOk");
+    let toastTimer = null, zoom = 1;
+    // 划词润色状态 + 手动润色留痕
+    let selRange = null, selText = "", manualEdits = [], originalDocHtml = "";
+
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      toast.textContent = msg; toast.classList.add("show");
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+    function openModal(title, body, onOk, opts) {
+      opts = opts || {};
+      hideSelBar();
+      modalTitle.textContent = title;
+      modalBody.innerHTML = body;
+      modalFoot.style.display = opts.hideFooter ? "none" : "flex";
+      modalOk.textContent = opts.okText || "确认";
+      modalBox.classList.toggle("wide", !!opts.wide);
+      modalOk.onclick = onOk || closeModal;
+      modalMask.classList.add("show");
+    }
+    function closeModal() { modalMask.classList.remove("show"); }
+    function setStatus(t) { $("#statusText").textContent = t; }
+
+    /* ---------------- data ----------------
+       bucket: base 基础校正 / term 政务用语 / redun 冗余压缩 / style 风格统一 / logic 逻辑结构
+       统一润色模式：所有基础、用语、风格和逻辑检查均启用；逻辑类只输出建议
+    */
+    const MODE_LEVEL = { "标准": 2 };
+    const MODE_NAME = { "标准": "统一润色" };
+    const MODE_DESC = {
+      "轻度": "仅做基础规范校正与政务术语替换，不改动句式、风格与结构，适合成熟稿件的临门一脚。",
+      "标准": "在基础规范之上统一政务用语、压缩冗余并优化表达；逻辑问题只给出建议，不自动调整段落结构。"
+    };
+
+    const issues = [
+      { id: "1", bucket: "base", minMode: 1, risk: false, cat: "语病：成分冗余", del: "为了进一步的加强", ins: "为进一步加强", llm: false,
+        note: "“为了……的”结构叠加，助词冗余。规范表达删去多余的“了”“的”，使语气更紧凑正式。", basis: "《党政机关公文处理工作条例》行文简明扼要要求。" },
+      { id: "2", bucket: "term", minMode: 1, risk: false, cat: "政务用语：旧称/不规范", del: "一把手", ins: "主要负责同志", llm: true,
+        note: "“一把手”为口头俗称，正式公文中对单位负责人应使用“主要负责同志”。", basis: "术语库·部门口径：负责人规范称谓。" },
+      { id: "3", bucket: "term", minMode: 1, risk: false, cat: "政务用语：口语化", del: "搞好", ins: "做好", llm: false,
+        note: "“搞好”偏口语，公文中宜用“做好”，表达更庄重规范。", basis: "术语库·禁用口语词 → 标准替换。" },
+      { id: "4", bucket: "base", minMode: 1, risk: false, cat: "标点：句末缺句号", del: "逾期未报的将进行通报", ins: "逾期未报的，将予以通报。", llm: false,
+        note: "该句为完整陈述句，句中应有停顿逗号、句末应加句号；“进行通报”宜精简为“予以通报”。", basis: "《标点符号用法》GB/T 15834—2011。" },
+      { id: "5", bucket: "style", minMode: 2, risk: false, cat: "风格：主观情绪化表达", del: "我们非常高兴地看到各领域都取得了不错的成绩", ins: "上半年各领域工作取得积极进展", llm: true,
+        note: "“非常高兴地看到”“不错的成绩”带主观情绪且口语化，改为客观中性表述，符合政务文书严肃性。", basis: "风格库·政务严肃性规则：避免情绪化/口语化用语。" },
+      { id: "6", bucket: "style", minMode: 2, risk: false, cat: "风格：夸张修辞", del: "全力以赴打赢这场攻坚战，以优异成绩迎接考核", ins: "扎实推进各项攻坚任务，确保工作取得实效", llm: true,
+        note: "“打赢这场攻坚战”“优异成绩迎接考核”属宣传化、口号化表述，改为务实客观表达。", basis: "风格库·夸张修辞识别 → 中性替代。" },
+      { id: "7", bucket: "redun", minMode: 2, risk: false, cat: "冗余：表述重复", del: "安排专人负责材料的收集、整理和汇总工作", ins: "安排专人做好材料收集整理", llm: true,
+        note: "“收集、整理和汇总”语义重叠，“工作”为冗余尾词，压缩后表意不变且更简洁。", basis: "冗余压缩规则：去除同义并列与冗余尾词。" },
+      { id: "8", bucket: "term", minMode: 1, risk: false, cat: "术语不统一：一词多形", del: "数字政府建设／数字化政府建设", ins: "统一为“数字政府建设”", llm: false,
+        note: "同一文稿中“数字政府”与“数字化政府”混用，依术语库标准称谓统一为“数字政府”。", basis: "术语库·标准称谓：数字政府。" },
+      { id: "9", bucket: "logic", minMode: 2, risk: false, cat: "逻辑衔接：段落过渡缺失", tip: "第二段（报送内容）与第三段（报送要求）之间由内容直接跳转到要求，缺少过渡。", ins: "建议在两段之间增加过渡句：“为确保报送质量，现就有关要求明确如下。”", llm: true,
+        note: "相邻段落存在逻辑跳跃，补充过渡句可增强篇章连贯性；本条只提供建议，不自动改写。", basis: "大模型逻辑衔接分析：相邻段落关系断裂。" },
+      { id: "10", bucket: "logic", minMode: 2, risk: false, cat: "结构优化：要点提炼", tip: "“报送要求”段落将时间、责任人、质量要求混合表述，层次不清。", ins: "建议拆分为“①责任分工 ②质量要求 ③报送时限”三个要点分条列示。", llm: true,
+        note: "长段落包含多个并列要求，分条列示更符合公文层次规范；本条只提供建议，不自动改写。", basis: "范文库·通知类要求段落结构范式。" },
+      { id: "11", bucket: "base", minMode: 2, risk: false, cat: "疑似语病：主体指代不清", del: "确保上报数据真实准确", ins: "确保各单位上报数据真实、准确", llm: true,
+        note: "补充责任主体“各单位”使指代更明确，涉及金额、日期、机构和责任主体的内容可提出优化建议，由用户决定是否采纳。", basis: "行文规范：责任主体表述明确。" },
+      { id: "12", bucket: "base", minMode: 2, risk: false, cat: "格式规范：成文日期", del: "2026年7月9日", ins: "二〇二六年七月九日", llm: false,
+        note: "成文日期按当前匹配的公文格式规则统一为中文日期写法。", basis: "公文格式规则：成文日期书写规范。" }
+    ];
+
+    // 事实字段仅作为识别提示，不再锁定；系统提出建议，由用户决定是否采纳
+    const anchors = [
+      { txt: "3200万元", type: "金额" },
+      { txt: "2026年7月20日", type: "日期" },
+      { txt: "新区办公室", type: "责任单位" }
+    ];
+
+    const ruleCats = [
+      { key: "term", name: "政务术语库", icon: "术", note: "⚠ 术语库用于识别口语化、旧称与不规范表述并给出官方标准术语替换建议。",
+        cols: ["序号", "标准术语", "常见非标准写法", "适用场景", "操作"],
+        rows: [["1", "主要负责同志", "一把手/头儿", "通用", ""], ["2", "数字政府建设", "数字化政府建设", "通用", ""], ["3", "放管服改革", "简政放权改革", "营商环境", ""], ["4", "做好", "搞好/弄好", "通用", ""]] },
+      { key: "dept", name: "部门口径库", icon: "口", note: "ℹ 部门口径库沉淀各委办局惯用表述与固定句式，用于统一表达习惯。",
+        cols: ["序号", "口径表述", "所属部门", "备注", "操作"],
+        rows: [["1", "推动高质量发展走在前列", "发改条线", "常用总纲句", ""], ["2", "打造一流营商环境", "营商办", "宣传口径", ""], ["3", "推进政务服务一网通办", "政务办", "专有表述", ""]] },
+      { key: "ban", name: "禁用表述库", icon: "禁", note: "⚠ 禁用表述命中后将标记为“风格统一/情绪化”，请谨慎维护，避免影响正常表达。",
+        cols: ["序号", "禁用表述", "风险类别", "建议替代", "操作"],
+        rows: [["1", "打赢这场攻坚战", "夸张修辞", "扎实推进攻坚任务", ""], ["2", "非常高兴地看到", "情绪化表达", "各项工作取得进展", ""], ["3", "史上最强/最牛", "网络流行语", "删除或改为客观表述", ""], ["4", "一定/必须万无一失", "绝对化用语", "尽力保障", ""]] },
+      { key: "style", name: "风格样例库", icon: "范", note: "ℹ 风格样例库收录脱敏后的领导风格稿与优秀范文，用于风格匹配（样例入库须脱敏）。",
+        cols: ["序号", "样例名称", "适用场景", "正式程度", "操作"],
+        rows: [["1", "领导汇报稿风格样例A", "汇报稿", "高", ""], ["2", "通知类简明风格样例", "行政通知", "中", ""], ["3", "会议材料稳健风格样例", "会议材料", "高", ""]] },
+      { key: "correct", name: "错别字/校正库", icon: "校", note: "⚠ 校正库用于自动识别并提示替换，格式为「错误词 → 正确词」。",
+        cols: ["序号", "错误写法", "正确写法", "操作"],
+        rows: [["1", "台帐", "台账", ""], ["2", "截止目前", "截至目前", ""], ["3", "做出批复", "作出批复", ""], ["4", "进行通报", "予以通报", ""]] },
+      { key: "sample", name: "优秀范文库", icon: "文", note: "ℹ 范文库定义各文种结构范式与要点组织方式，用于逻辑结构与要点提炼建议。",
+        cols: ["序号", "范文文种", "结构范式", "更新时间", "操作"],
+        rows: [["1", "行政通知范文", "缘由·内容·要求·时限", "2026-06-20", ""], ["2", "工作总结范文", "总体·成效·问题·打算", "2026-06-15", ""], ["3", "请示范文", "缘由·事项·请求·结语", "2026-06-10", ""]] }
+    ];
+
+    const history = [
+      ["关于报送2026年上半年重点工作进展情况的通知", "行政通知", "统一润色", "非涉密", "2026-07-09 10:12", 11, 11, "已完成", "done"],
+      ["新区管委会2026年上半年工作总结", "工作总结", "统一润色", "内部", "2026-07-08 15:30", 24, 24, "已完成", "done"],
+      ["关于申请数字政府专项经费的请示", "请示", "统一润色", "内部", "2026-07-08 09:40", 8, 8, "已完成", "done"],
+      ["优化营商环境专项行动汇报材料", "报告", "统一润色", "非涉密", "2026-07-07 14:05", 19, 19, "已完成", "done"],
+      ["新区重点项目调度会会议纪要", "会议纪要", "统一润色", "内部", "2026-07-06 11:20", 6, 6, "已完成", "done"],
+      ["关于开展政务公开自查的通知", "行政通知", "统一润色", "非涉密", "2026-07-04 16:48", 10, 10, "已完成", "done"],
+      ["2026年信息化建设工作要点", "报告", "统一润色", "内部", "2026-07-03 10:33", 21, 21, "已完成", "done"],
+      ["关于印发数据管理办法的通知", "行政通知", "统一润色", "秘密", "2026-07-02 08:55", 5, 5, "已完成", "done"]
+    ];
+
+    // 维度配置（可在「润色设置-维度管理」维护，仅系统/部门管理员可编辑）
+    let DOC_TYPES = ["行政通知", "请示", "报告", "工作总结", "会议纪要", "情况说明", "函", "批复", "决定", "通报"];
+    let SCENES = ["通用公文", "汇报稿", "请示报告", "会议材料", "宣传通稿"];
+    let POLISH_MODES = ["统一润色"];
+    let roleState = "user"; // user | dept | system
+    function isAdminRole() { return roleState === "system" || roleState === "dept"; }
+    const state = { view: "editor", mode: "标准", ruleCat: "term", activeCats: new Set(["base","term","redun","style","logic"]), docLoaded: false, polished: false, stale: false, docType: "行政通知", detectedIssueIds: [] };
+    const RULE_META = {
+      base: { name: "公文基础文字与格式规范", id: "CN-GW-BASE-001", source: "中国国家现行公文及语言文字规范", version: "现行有效版" },
+      term: { name: "政务术语统一规则", id: "JS-NJ-JB-TERM-001", source: "江苏省、南京市及江北新区政务术语库", version: "工作台当前发布版" },
+      redun: { name: "政务文稿简明表达规则", id: "NJ-TEXT-REDUN-001", source: "南京市政务文稿表达规范", version: "工作台当前发布版" },
+      style: { name: "政务文书严肃性与风格规则", id: "JB-STYLE-001", source: "江北新区内部文稿规则库", version: "工作台当前发布版" },
+      logic: { name: "篇章逻辑与结构建议规则", id: "JB-LOGIC-001", source: "江北新区范文与逻辑规则库", version: "工作台当前发布版" }
+    };
+
+    const SAMPLE_DOC = `
+      <h1>关于报送2026年上半年重点工作进展情况的通知</h1>
+      <p class="no-indent">各街道办事处、新区各有关部门：</p>
+      <p><span class="mark mark-base" data-issue-id="1">为了进一步的加强</span>对重点工作的统筹调度，及时掌握各项任务推进情况，现将有关事项通知如下：</p>
+      <p>一、报送内容。各单位要围绕年度目标任务，认真总结上半年工作，<span class="mark mark-style" data-issue-id="5">我们非常高兴地看到各领域都取得了不错的成绩</span>，同时也要正视存在的问题和短板。围绕<span class="mark mark-term" data-issue-id="8">数字政府建设／数字化政府建设</span>等重点领域，梳理形成进展清单。</p>
+      <p>二、报送要求。各单位<span class="mark mark-term" data-issue-id="2">一把手</span>要亲自抓、负总责，<span class="mark mark-redun" data-issue-id="7">安排专人负责材料的收集、整理和汇总工作</span>，切实<span class="mark mark-term" data-issue-id="3">搞好</span>数据核对，<span class="mark mark-base" data-issue-id="11">确保上报数据真实准确</span>。本次专项经费安排<span class="anchor" data-anchor="金额">3200万元</span>，务必专款专用。</p>
+      <p>三、时间安排。请各单位于<span class="anchor" data-anchor="日期">2026年7月20日</span>前，将书面材料报送至<span class="anchor" data-anchor="单位">新区办公室</span>，<span class="mark mark-base" data-issue-id="4">逾期未报的将进行通报</span></p>
+      <p>四、其他事项。各单位务必高度重视，<span class="mark mark-style" data-issue-id="6">全力以赴打赢这场攻坚战，以优异成绩迎接考核</span>。</p>
+      <p class="right">新区办公室</p>
+      <p class="right"><span class="mark mark-base" data-issue-id="12">2026年7月9日</span></p>`;
+
+    /* ---------------- helpers ---------------- */
+    function activeIssues() {
+      if (state.polished && state.detectedIssueIds.length) return issues.filter(it => state.detectedIssueIds.includes(it.id));
+      const lv = MODE_LEVEL[state.mode];
+      const doc = $("#docPage");
+      const text = doc ? doc.innerText : "";
+      const paragraphCount = doc ? doc.querySelectorAll("p").length : 0;
+      return issues.filter(it => {
+        if (it.minMode > lv) return false;
+        if (it.del !== undefined) return text.includes(it.del);
+        return paragraphCount >= 3;
+      });
+    }
+
+    /* ---------------- render: polish issue cards ---------------- */
+    function updateCatCounts() {
+      const buckets = { base: 0, term: 0, redun: 0, style: 0, logic: 0 };
+      activeIssues().forEach(it => { buckets[it.bucket]++; });
+      Object.keys(buckets).forEach(b => { const el = $("#cnt-" + b); if (el) el.textContent = buckets[b]; });
+      const total = activeIssues().length;
+      $("#pfTotal").textContent = total;
+    }
+    function issueCard(it) {
+      const model = it.llm ? '<span class="pf-model">本地模型</span>' : "";
+      const stat = it.resolved ? "resolved" : "";
+      const body = it.del !== undefined
+        ? `<div class="pf-line"><span class="pf-badge orig">原文</span><span class="pf-txt"><span class="del">${it.del}</span></span></div>
+           <div class="pf-line"><span class="pf-badge sugg">润色</span><span class="pf-txt"><span class="ins">${it.ins}</span>${model}</span></div>`
+        : `<div class="pf-line"><span class="pf-badge orig">提示</span><span class="pf-txt">${it.tip || ""}</span></div>
+           <div class="pf-line"><span class="pf-badge sugg">建议</span><span class="pf-txt"><span class="ins">${it.ins}</span>${model}</span></div>`;
+      const rule = RULE_META[it.bucket] || RULE_META.base;
+      const statusTag = it.resolved
+        ? `<span class="tag ${it.ignored ? "mid" : "done"}">${it.ignored ? "已忽略" : (it.bucket === "logic" ? "已采纳建议" : "已采纳")}</span>`
+        : (it.bucket === "logic" ? '<span class="tag low">仅建议</span>' : "");
+      const ops = it.resolved ? "" : `<span class="pf-c-ops"><a data-action="ignore" data-issue-id="${it.id}">忽略</a><span style="color:#d3dbea;">|</span><a class="rep" data-action="accept" data-issue-id="${it.id}">${it.bucket === "logic" ? "采纳建议" : "采纳优化"}</a></span>`;
+      const noteBlock = `<div class="pf-note" data-note="${it.id}">${it.note || ""}<span class="bs"><b>判断说明：</b>${it.basis || "—"}</span>
+        <div class="basis-grid"><span><b>规则名称：</b>${rule.name}</span><span><b>规则编号：</b>${rule.id}</span><span><b>来源文件：</b>${rule.source}</span><span><b>版本：</b>${rule.version}</span></div></div>`;
+      return `<article class="pf-card ${stat}" data-issue-id="${it.id}" data-bucket="${it.bucket}">
+        <div class="pf-c-head">
+          <span class="pf-dot ${it.bucket}"></span>
+          <span class="pf-cat-name">${it.cat}</span>
+          ${ops}
+          ${statusTag ? `<span style="${ops ? "" : "margin-left:auto"}">${statusTag}</span>` : ""}
+        </div>
+        ${body}
+        ${noteBlock}
+        <div style="margin-top:7px;"><a style="color:var(--primary);font-size:12.5px;font-weight:700;" data-action="basis" data-issue-id="${it.id}">查看修改说明 ›</a></div>
+      </article>`;
+    }
+    function renderIssues() {
+      const list = activeIssues().filter(it => state.activeCats.has(it.bucket));
+      $("#pfList").innerHTML = list.length ? list.map(issueCard).join("")
+        : `<div class="empty">${activeIssues().length ? "当前筛选条件下暂无润色项" : "未发现需要润色的问题，已保留原稿，可直接导出 Word 或 PDF。"}</div>`;
+      updateCatCounts();
+    }
+
+    /* ---------------- render: lib rules ---------------- */
+    function renderRuleNav() {
+      $("#ruleNav").innerHTML = ruleCats.map(c =>
+        `<button data-rule-cat="${c.key}" class="${c.key === state.ruleCat ? "active" : ""}">
+          <span>${c.icon} ${c.name}</span><span class="badge">${c.rows.length}</span></button>`).join("");
+    }
+    function renderRuleTable() {
+      const c = ruleCats.find(x => x.key === state.ruleCat);
+      $("#ruleCatTitle").textContent = c.name;
+      $("#ruleNote").innerHTML = c.note;
+      const head = "<thead><tr><th style='width:36px;'><input type='checkbox' data-action='checkAllRule'></th>" +
+        c.cols.map((col, i) => `<th${i === c.cols.length - 1 ? " style='width:120px;'" : ""}>${col}</th>`).join("") + "</tr></thead>";
+      const bodyRows = c.rows.map((r, ri) => {
+        const cells = r.slice(0, c.cols.length - 1).map(v => `<td>${v}</td>`).join("");
+        return `<tr><td><input type='checkbox' class='rule-row-chk'></td>${cells}
+          <td class="row-act"><a data-action="editRule" data-ri="${ri}">编辑</a><a class="danger" data-action="delRule" data-ri="${ri}">删除</a></td></tr>`;
+      }).join("");
+      $("#ruleTable").innerHTML = head + "<tbody>" + bodyRows + "</tbody>";
+    }
+
+    /* ---------------- render: history ---------------- */
+    function renderHistory(rows) {
+      rows = rows || history;
+      $("#hCount").textContent = rows.length;
+      const head = "<thead><tr><th>文档名称</th><th>文种</th><th>润色方式</th><th>密级</th><th>润色时间</th><th>优化项</th><th>已采纳</th><th>状态</th><th style='width:170px;'>操作</th></tr></thead>";
+      const body = rows.map(r => `<tr>
+        <td style="font-weight:700;color:#28324c;">${r[0]}</td><td>${r[1]}</td>
+        <td><span class="tag ${r[2] === "深度改写" ? "doing" : r[2] === "标准润色" ? "low" : "done"}">${r[2]}</span></td>
+        <td><span class="tag ${r[3] === "非涉密" ? "low" : "mid"}">${r[3]}</span></td>
+        <td>${r[4]}</td><td><b style="color:var(--primary);">${r[5]}</b></td><td>${r[6]}/${r[5]}</td>
+        <td><span class="tag ${r[8]}">${r[7]}</span></td>
+        <td class="row-act"><a data-action="viewReport" data-doc="${r[0]}">修改说明</a><a data-action="downloadReport" data-doc="${r[0]}">润色稿</a><a data-action="recheckHistory" data-doc="${r[0]}">二次润色</a></td>
+      </tr>`).join("");
+      $("#historyTable").innerHTML = head + "<tbody>" + body + "</tbody>";
+    }
+
+    /* ---------------- render: stats ---------------- */
+    function renderStats() {
+      const typeData = [
+        { n: "基础校正", v: 3260, c: "#2455e6" }, { n: "政务用语", v: 2540, c: "#6a52d6" },
+        { n: "冗余压缩", v: 1980, c: "#d07a00" }, { n: "风格统一", v: 1720, c: "#e0342a" },
+        { n: "逻辑结构", v: 1348, c: "#0b8fa8" }, { n: "数字格式", v: 680, c: "#10876a" }
+      ];
+      const max = Math.max.apply(null, typeData.map(d => d.v));
+      $("#statBars").innerHTML = typeData.map(d =>
+        `<div class="bar-row"><span>${d.n}</span><div class="bar-track"><div class="bar-fill" style="width:${(d.v / max * 100).toFixed(0)}%;background:${d.c};"></div></div><span style="text-align:right;font-weight:700;">${d.v}</span></div>`).join("");
+
+      $("#statDonut").style.background = "conic-gradient(var(--primary) 0 25%, var(--cyan) 25% 82%, var(--purple) 82% 100%)";
+
+      const top = [["搞好 / 抓好", 512], ["一把手", 438], ["夸张修辞", 396], ["数字政府口径", 331], ["冗余尾词", 287], ["截止 / 截至", 254]];
+      const tmax = top[0][1];
+      $("#statTop").innerHTML = top.map((t) =>
+        `<div class="bar-row"><span>${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${(t[1] / tmax * 100).toFixed(0)}%;background:linear-gradient(90deg,#2455e6,#0b8fa8);"></div></div><span style="text-align:right;font-weight:700;">${t[1]}</span></div>`).join("");
+
+      const vals = [142, 168, 196, 224, 268, 305, 336];
+      const labels = ["1月", "2月", "3月", "4月", "5月", "6月", "7月"];
+      const W = 460, H = 180, pad = 28, vmax = 360;
+      const pts = vals.map((v, i) => {
+        const x = pad + i * ((W - pad * 2) / (vals.length - 1));
+        const y = H - pad - (v / vmax) * (H - pad * 2);
+        return [x, y];
+      });
+      const line = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+      const area = `${pad},${H - pad} ` + line + ` ${W - pad},${H - pad}`;
+      const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#2455e6"/>`).join("");
+      const lab = labels.map((l, i) => `<text x="${pts[i][0].toFixed(1)}" y="${H - 8}" font-size="11" fill="#8b95a7" text-anchor="middle">${l}</text>`).join("");
+      const vlab = pts.map((p, i) => `<text x="${p[0].toFixed(1)}" y="${(p[1] - 8).toFixed(1)}" font-size="10" fill="#55617d" text-anchor="middle">${vals[i]}</text>`).join("");
+      $("#statTrend").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
+        <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(36,85,230,.22)"/><stop offset="1" stop-color="rgba(36,85,230,0)"/></linearGradient></defs>
+        <polygon points="${area}" fill="url(#ga)"/><polyline points="${line}" fill="none" stroke="#2455e6" stroke-width="2.5"/>${dots}${lab}${vlab}
+      </svg>`;
+    }
+
+    /* ---------------- view switching ---------------- */
+    function switchView(v) {
+      state.view = v;
+      hideSelBar();
+      $$(".view").forEach(el => el.classList.toggle("active", el.id === "view-" + v));
+      $$(".nav-item").forEach(t => t.classList.toggle("active", t.dataset.view === v));
+      if (v === "stats") renderStats();
+      if (v === "history") renderHistory();
+      if (v === "lib") { renderRuleNav(); renderRuleTable(); }
+      if (v === "settings") renderDimMgr();
+    }
+    // 维度管理：文种 / 模板场景 / 润色模式（仅管理员可编辑）
+    function renderDimMgr() {
+      const box = $("#dimMgr"); if (!box) return;
+      if (!isAdminRole()) { box.innerHTML = `<div class="cfg-readonly">文种、模板场景与润色模式由系统/部门管理员统一维护，如需调整请联系管理员。</div>`; return; }
+      const row = (arr, key, label) => `<div class="dim-row"><div class="dim-label">${label}</div>
+        <div class="dim-chips">${arr.map((val, i) => `<span class="dim-chip">${val}<i data-dim-del="${key}" data-idx="${i}" title="删除">×</i></span>`).join("") || '<span style="color:var(--muted);font-size:12.5px">暂无</span>'}</div>
+        <div class="dim-add"><input class="dim-input" id="dimIn-${key}" placeholder="新增${label}后回车或点添加"><button class="mini-btn" data-dim-add="${key}">添加</button></div></div>`;
+      box.innerHTML = row(DOC_TYPES, "doctypes", "文种") + row(SCENES, "scenes", "模板场景") + row(POLISH_MODES, "modes", "润色模式");
+    }
+    function dimAdd(key) {
+      const inp = $("#dimIn-" + key); if (!inp) return;
+      const v = (inp.value || "").trim(); if (!v) { showToast("请输入内容"); return; }
+      const arr = key === "doctypes" ? DOC_TYPES : key === "scenes" ? SCENES : POLISH_MODES;
+      if (arr.includes(v)) { showToast("已存在，勿重复添加"); return; }
+      arr.push(v); inp.value = ""; renderDimMgr(); showToast("已添加");
+    }
+    function dimDel(key, idx) {
+      const arr = key === "doctypes" ? DOC_TYPES : key === "scenes" ? SCENES : POLISH_MODES;
+      arr.splice(idx, 1); renderDimMgr(); showToast("已删除");
+    }
+
+    /* ---------------- polish actions ---------------- */
+    function doAccept(id) {
+      const it = issues.find(x => x.id === id);
+      if (!it || it.resolved) return;
+      const mark = $(`.mark[data-issue-id="${id}"]`);
+      if (mark && it.ins && it.del !== undefined) {
+        // 用润色后文本替换（截取 ins 中引号内容或直接使用）
+        mark.textContent = it.ins.replace(/^统一为“|”$/g, "");
+        mark.classList.remove("ignored");
+        mark.classList.add("resolved");
+      }
+      it.resolved = true; it.ignored = false;
+      renderIssues();
+      setStatus(`建议「${it.cat}」已采纳`);
+    }
+    function acceptIssue(id) {
+      const it = issues.find(x => x.id === id);
+      if (!it || it.resolved) return;
+      if (it.risk) {
+        openModal("高风险改动确认", `
+          <div style="padding:10px 12px;border-radius:10px;background:var(--orange-soft);color:#8a5e00;margin-bottom:14px;line-height:1.7;">
+            ⚠ 该建议可能涉及<b>事实 / 责任主体表述</b>，按事实保护策略需人工确认后方可采纳。
+          </div>
+          <div style="line-height:1.9;">
+            <div><span style="color:var(--red);font-weight:700;">原文：</span>${it.del}</div>
+            <div><span style="color:var(--green);font-weight:700;">润色：</span>${it.ins}</div>
+            <div style="margin-top:10px;color:#4a597a;font-size:13px;"><b>修改说明：</b>${it.note}</div>
+            <div style="color:#6a7690;font-size:13px;"><b>依据：</b>${it.basis}</div>
+          </div>`, () => { closeModal(); doAccept(id); setFlow(5); showToast("高风险改动已人工确认并采纳"); }, { okText: "确认采纳" });
+        return;
+      }
+      doAccept(id);
+    }
+    function ignoreIssue(id) {
+      const it = issues.find(x => x.id === id);
+      if (!it || it.resolved) return;
+      it.resolved = true; it.ignored = true;
+      const mark = $(`.mark[data-issue-id="${id}"]`);
+      if (mark) { mark.classList.remove("resolved"); mark.classList.add("ignored"); }
+      renderIssues();
+      setStatus(`建议「${it.cat}」已忽略`);
+    }
+    function locateIssue(id) {
+      const mark = $(`.mark[data-issue-id="${id}"]`);
+      $$(".pf-card").forEach(c => c.classList.toggle("active", c.dataset.issueId === id));
+      if (mark) {
+        mark.scrollIntoView({ behavior: "smooth", block: "center" });
+        const orig = mark.style.boxShadow;
+        mark.style.boxShadow = "0 0 0 4px rgba(36,85,230,.28)";
+        setTimeout(() => mark.style.boxShadow = orig, 1300);
+        showToast("已定位到文稿建议位置");
+      } else {
+        showToast("该建议为结构性建议，无正文定位点");
+      }
+    }
+    function openIssueDetail(id) {
+      const it = issues.find(x => x.id === id);
+      if (!it) return;
+      locateIssue(id);
+      const rule = RULE_META[it.bucket] || RULE_META.base;
+      const comparison = it.del !== undefined
+        ? `<div style="display:grid;gap:8px;">
+            <div style="padding:10px 12px;border-radius:9px;background:#fff3f1;color:#9f2d26;"><b>待优化文字：</b>${it.del}</div>
+            <div style="padding:10px 12px;border-radius:9px;background:#eefaf3;color:#18724c;"><b>优化建议：</b>${it.ins}</div>
+          </div>`
+        : `<div style="display:grid;gap:8px;">
+            <div style="padding:10px 12px;border-radius:9px;background:#f6f8fc;color:#45526b;"><b>问题说明：</b>${it.tip || "—"}</div>
+            <div style="padding:10px 12px;border-radius:9px;background:#eefaf3;color:#18724c;"><b>优化建议：</b>${it.ins}</div>
+          </div>`;
+      const status = it.resolved ? `<div style="margin-bottom:12px;padding:8px 10px;border-radius:8px;background:${it.ignored ? "#f3f5f8" : "#eefaf3"};color:${it.ignored ? "#667085" : "#18724c"};font-weight:700;">${it.ignored ? "该优化项已忽略" : (it.bucket === "logic" ? "该逻辑建议已采纳" : "该优化项已采纳")}</div>` : "";
+      const ignoreBtn = it.resolved ? "" : `<button class="btn" type="button" data-action="ignoreDetail" data-issue-id="${it.id}" style="margin-top:12px;">忽略此项</button>`;
+      const body = `${status}${comparison}
+        <div style="margin-top:14px;color:#43516b;line-height:1.75;"><b>修改说明：</b>${it.note || "—"}</div>
+        <div class="basis-grid" style="margin-top:12px;"><span><b>规则名称：</b>${rule.name}</span><span><b>规则编号：</b>${rule.id}</span><span><b>来源文件：</b>${rule.source}</span><span><b>版本：</b>${rule.version}</span></div>
+        ${ignoreBtn}`;
+      if (it.resolved) openModal("优化建议与修改说明", body, null, { wide: true, hideFooter: true });
+      else openModal("优化建议与修改说明", body, () => {
+        closeModal();
+        acceptIssue(it.id);
+        showToast(it.bucket === "logic" ? "已采纳逻辑建议" : "已采纳该优化项");
+      }, { wide: true, okText: it.bucket === "logic" ? "采纳建议" : "采纳优化" });
+    }
+
+    /* ---------------- editor state: empty → loaded → done ---------------- */
+    function updateEditorState() {
+      const empty = $("#pfEmpty"), results = $("#pfResults");
+      if (!state.docLoaded) {
+        $("#pfEmptyIc").textContent = "🗂";
+        $("#pfEmptyTitle").textContent = "暂无润色结果";
+        $("#pfEmptySub").textContent = "请先新建润色任务并载入文稿，载入后可在此发起智能润色。";
+        $("#startPolishBtn").style.display = "none";
+        empty.classList.remove("hide"); results.classList.remove("show");
+      } else if (!state.polished) {
+        $("#pfEmptyIc").textContent = "✦";
+        $("#pfEmptyTitle").textContent = "文稿已载入";
+        $("#pfEmptySub").textContent = "正在按统一规则进行格式规范校正、政务用语优化和逻辑分析…";
+        $("#startPolishBtn").style.display = "none";
+        empty.classList.remove("hide"); results.classList.remove("show");
+      } else {
+        empty.classList.add("hide"); results.classList.add("show");
+        $("#startPolishBtn").style.display = "inline-flex";
+      }
+    }
+    function loadDocument(html, meta) {
+      const dp = $("#docPage");
+      dp.innerHTML = html;
+      originalDocHtml = html;
+      dp.setAttribute("contenteditable", "true");
+      state.docLoaded = true;
+      state.polished = false;
+      state.stale = false;
+      state.detectedIssueIds = [];
+      issues.forEach(it => { it.resolved = false; it.ignored = false; });
+      manualEdits = []; hideSelBar();
+      polishedModes.clear(); // 原文变更 → 清空模式缓存
+      state.activeCats = new Set(["base","term","redun","style","logic"]);
+      $$(".pf-cat").forEach(c => c.classList.add("on"));
+      // 载入后先展示未润色原文，润色完成后显示修改标注
+      dp.classList.add("raw");
+      setFlow(2);
+      $("#docHint").textContent = "文稿已解析 · 可直接编辑";
+      $("#taskMeta").textContent = (meta && meta.name) ? meta.name : "关于报送2026年上半年重点工作进展情况的通知";
+      const plainText = dp.innerText.trim();
+      $("#statusMeta").textContent = `字数 ${plainText.length} · 当前页 1/1 · 自动保存已开启`;
+      setStatus("文稿已载入，自动开始智能润色…");
+      updateEditorState();
+    }
+    function markResultStale(reason) {
+      if (!state.docLoaded || !state.polished || state.stale) return;
+      state.stale = true;
+      const banner = $("#resultStale"); if (banner) banner.classList.add("show");
+      const results = $("#pfResults"); if (results) results.classList.add("is-stale");
+      ["export", "compare", "applyAll", "ignoreAll"].forEach(action => {
+        const btn = $(`[data-action="${action}"]`); if (btn) btn.disabled = true;
+      });
+      setStatus(`${reason || "正文已修改"}，当前润色结果已失效，请重新润色`);
+      showToast("当前结果已失效，请重新润色");
+    }
+    function runPolish() {
+      if (!state.docLoaded) { showToast("请先新建润色任务并载入文稿"); return; }
+      if (state.stale) originalDocHtml = currentDraftHtml();
+      state.polished = false;
+      state.stale = false;
+      state.detectedIssueIds = [];
+      const banner = $("#resultStale"); if (banner) banner.classList.remove("show");
+      const results = $("#pfResults"); if (results) results.classList.remove("is-stale");
+      ["export", "compare", "applyAll", "ignoreAll"].forEach(action => {
+        const btn = $(`[data-action="${action}"]`); if (btn) btn.disabled = false;
+      });
+      $("#pfEmpty").classList.add("hide");
+      $("#pfResults").classList.add("show");
+      $("#pfList").innerHTML = "";
+      $("#pfTotal").textContent = "…";
+      const prog = $("#pfProgress"), bar = $("#pfProgBar"), pct = $("#pfProgPct"), lbl = $("#pfProgLbl");
+      prog.classList.add("show"); bar.style.width = "0%";
+      const stages = [
+        [16, "匹配中国、江苏省、南京市、江北新区四级规则…"],
+        [38, "格式规范与基础校正：版式、语病、标点、错别字…"],
+        [60, "政务用语与冗余压缩优化…"],
+        [82, "本地模型进行语义、风格与逻辑分析…"],
+        [100, "生成可优化项与修改说明…"]
+      ];
+      let i = 0;
+      setFlow(3);
+      const t = setInterval(() => {
+        if (i >= stages.length) {
+          clearInterval(t);
+          setTimeout(() => { prog.classList.remove("show"); setFlow(5); }, 400);
+          const detected = activeIssues();
+          state.detectedIssueIds = detected.map(it => it.id);
+          state.polished = true;
+          $("#docPage").classList.remove("raw");
+          polishedModes.add(state.mode);
+          renderIssues();
+          updateEditorState();
+          const logicN = detected.filter(x => x.bucket === "logic").length;
+          setStatus(detected.length ? `智能润色完成，识别 ${detected.length} 个可优化项（含 ${logicN} 条逻辑建议），请按需采纳或忽略` : "智能润色完成，未发现需要优化的问题，可直接导出原稿");
+          showToast(detected.length ? "已识别可优化项，请按需采纳或忽略" : "未发现需要润色的问题，可直接导出原稿");
+          return;
+        }
+        bar.style.width = stages[i][0] + "%"; pct.textContent = stages[i][0] + "%"; lbl.textContent = stages[i][1];
+        i++;
+      }, 460);
+    }
+    function setFlow(n) {
+      $$(".flow-node").forEach(node => {
+        const f = +node.dataset.flow;
+        node.classList.toggle("done", f < n);
+        node.classList.toggle("current", f === n);
+      });
+    }
+
+    /* ---------------- mode switch（B+缓存：切模式按需重生成，已缓存则即时切） ---------------- */
+    const polishedModes = new Set(); // 已润色过的模式（同原文缓存）
+    function setMode(m) {
+      state.mode = "标准";
+      const banner = $("#modeBanner");
+      if (banner) banner.innerHTML = "<b>统一润色</b>　·　识别格式、用语与表达问题，由用户选择是否采纳；逻辑问题只给建议。";
+    }
+
+    /* ---------------- new task flow（上传/粘贴 → 自动识别文种 → 统一润色） ---------------- */
+    let pendingTaskFile = null;
+    function newTaskFlow() {
+      pendingTaskFile = null;
+      openModal("新建润色任务", `
+        <div class="field">
+          <label>待润色文稿<span class="req">*</span></label>
+          <div class="toolbar-inline">
+            <button class="btn" id="srcLocal" type="button">📁 上传文件（DOC / DOCX / PDF）</button>
+            <button class="btn" id="srcPaste" type="button">📋 粘贴正文</button>
+          </div>
+          <div id="taskFileBox" style="margin-top:10px;display:none;"></div>
+          <div class="field" id="pasteWrap" style="display:none;margin-top:10px;"><label>粘贴正文</label><textarea id="pasteText" placeholder="粘贴正文内容…"></textarea></div>
+        </div>
+        <div style="padding:10px 12px;border-radius:9px;background:var(--primary-soft);color:#3a5794;font-size:12.5px;line-height:1.7;margin-top:8px;">系统将自动识别文种并匹配中国、江苏省、南京市和江北新区四级规则。金额、日期、机构和责任主体相关内容会列入可优化项，由用户决定是否采纳。</div>
+        <div style="margin-top:10px;color:var(--muted);font-size:12px;line-height:1.7;">解析失败时保留原文件并支持重试或改用粘贴正文；本地模型超时不会创建重复任务，可继续重试。</div>
+      `, () => confirmNewTask(), { okText: "解析并开始润色" });
+      setTimeout(() => {
+        $("#srcLocal") && ($("#srcLocal").onclick = () => $("#fileInput").click());
+        $("#srcPaste") && ($("#srcPaste").onclick = () => { $("#pasteWrap").style.display = "block"; $("#taskFileBox").style.display = "none"; pendingTaskFile = null; setTimeout(() => $("#pasteText").focus(), 0); });
+      }, 0);
+    }
+    // 上传文件后：弹框内展示文件名（可删除重传），暂不载入正文
+    function showPendingFile(name) {
+      pendingTaskFile = name;
+      $("#pasteWrap").style.display = "none";
+      if ($("#pasteText")) $("#pasteText").value = "";
+      $("#taskFileBox").style.display = "block";
+      $("#taskFileBox").innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;">
+        <span><b>📄 ${name}</b><br><small style="color:var(--muted);">已选择，点击「解析并开始润色」载入</small></span>
+        <button class="mini-btn" id="clearPendingFile">移除</button></div>`;
+      $("#clearPendingFile").onclick = () => { pendingTaskFile = null; $("#taskFileBox").style.display = "none"; $("#taskFileBox").innerHTML = ""; };
+    }
+    function confirmNewTask() {
+      const pasted = $("#pasteText") ? ($("#pasteText").value || "").trim() : "";
+      let html = "", name = "";
+      if (pendingTaskFile) { html = SAMPLE_DOC; name = pendingTaskFile.replace(/\.[^.]+$/, ""); }
+      else if (pasted) { html = pastedDocumentHtml(pasted); name = pasted.split(/\n+/)[0].slice(0, 30) || "待润色政务文稿"; }
+      else { showToast("请先上传文件或粘贴正文"); return; }
+      closeModal();
+      startParse(html, name);
+    }
+    function pastedDocumentHtml(text) {
+      const escText = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+      const parts = text.split(/\n+/).filter(Boolean);
+      let html = `<h1>${escText(parts.shift() || "待润色政务文稿")}</h1>` + parts.map(p => `<p>${escText(p)}</p>`).join("");
+      issues.filter(it => it.del !== undefined).forEach(it => {
+        const raw = escText(it.del);
+        if (html.includes(raw)) html = html.replace(raw, `<span class="mark mark-${it.bucket}" data-issue-id="${it.id}">${raw}</span>`);
+      });
+      return html;
+    }
+    function inferDocType(text, name) {
+      const value = `${name || ""}\n${text || ""}`;
+      if (/请示/.test(value)) return "请示";
+      if (/报告|汇报/.test(value)) return "报告";
+      if (/总结|小结/.test(value)) return "工作总结";
+      if (/会议纪要|纪要/.test(value)) return "会议纪要";
+      if (/情况说明|说明/.test(value)) return "情况说明";
+      if (/批复/.test(value)) return "批复";
+      if (/决定|决议/.test(value)) return "决定";
+      if (/函/.test(value)) return "函";
+      if (/通报/.test(value)) return "通报";
+      return "行政通知";
+    }
+    function startParse(html, name) {
+      setFlow(2);
+      state.docType = inferDocType((html || "").replace(/<[^>]+>/g, " "), name);
+      openModal("文档解析与文种识别", `<div id="parseLines"></div><div style="height:7px;border-radius:999px;background:#eef2f9;overflow:hidden;margin-top:12px;"><i id="parseBar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width .25s;"></i></div>`, null, { hideFooter: true });
+      const parsedChars = (html || "").replace(/<[^>]+>/g, "").replace(/\s+/g, "").length;
+      const lines = [
+        [`解析文本内容（${parsedChars} 字，1 页）`, "ok"],
+        ["识别文档结构：标题·主送·正文·落款（完整）", "ok"],
+        ["匹配中国、江苏省、南京市、江北新区四级规则", "ok"],
+        ["金额、日期、机构与责任主体：生成可选优化建议", "ok"],
+        ["加载本地术语库 / 风格库 / 范文库", "ok"]
+      ];
+      const box = $("#parseLines"), bar = $("#parseBar");
+      let i = 0;
+      const t = setInterval(() => {
+        if (i >= lines.length) { clearInterval(t); if (bar) bar.style.width = "100%"; setTimeout(() => finishParse(html, name), 500); return; }
+        const [txt, st] = lines[i];
+        const div = document.createElement("div");
+        div.className = "parse-line " + st;
+        div.innerHTML = `<span class="ic">${st === "ok" ? "✓" : st === "lock" ? "🔒" : "!"}</span><span>${txt}</span>`;
+        box.appendChild(div);
+        if (bar) bar.style.width = Math.round((i + 1) / lines.length * 100) + "%";
+        i++;
+      }, 320);
+    }
+    // 解析完成 → 载入文稿 → 自动开始润色（无需手动点「开始润色」）
+    function finishParse(html, name) {
+      closeModal();
+      loadDocument(html, { name: name });
+      setFlow(2);
+      setStatus("解析完成，自动开始智能润色…");
+      showToast("解析完成，自动开始润色");
+      setTimeout(() => runPolish(), 500);
+    }
+
+    /* ---------------- lib actions ---------------- */
+    function addRuleModal() {
+      const c = ruleCats.find(x => x.key === state.ruleCat);
+      const fields = c.cols.slice(1, c.cols.length - 1).map((col, i) =>
+        `<div class="field"><label>${col}<span class="req">*</span></label><input type="text" id="rf-${i}" placeholder="请输入${col}"><div class="field-err" id="rfe-${i}">${col}不能为空</div></div>`).join("");
+      openModal("添加词条 · " + c.name, fields, () => {
+        const vals = c.cols.slice(1, c.cols.length - 1).map((col, i) => ($("#rf-" + i).value || "").trim());
+        let ok = true;
+        vals.forEach((v, i) => { const bad = !v; if ($("#rfe-" + i)) $("#rfe-" + i).classList.toggle("show", bad); if ($("#rf-" + i)) $("#rf-" + i).classList.toggle("err", bad); if (bad) ok = false; });
+        if (!ok) { showToast("请完整填写词条信息"); return; }
+        c.rows.push([String(c.rows.length + 1)].concat(vals).concat([""]));
+        renderRuleNav(); renderRuleTable(); closeModal(); showToast("词条已添加");
+      });
+    }
+    function editRuleModal(ri) {
+      const c = ruleCats.find(x => x.key === state.ruleCat);
+      const row = c.rows[ri];
+      const fields = c.cols.slice(1, c.cols.length - 1).map((col, i) =>
+        `<div class="field"><label>${col}</label><input type="text" id="rf-${i}" value="${row[i + 1] || ""}"></div>`).join("");
+      openModal("编辑词条 · " + c.name, fields, () => {
+        c.cols.slice(1, c.cols.length - 1).forEach((col, i) => { row[i + 1] = ($("#rf-" + i).value || "").trim(); });
+        renderRuleTable(); closeModal(); showToast("词条已更新");
+      });
+    }
+
+    /* ---------------- outputs: 修改说明 / 修订对比 ---------------- */
+    function changeNoteHtml(docName) {
+      const done = activeIssues();
+      return `<div style="line-height:1.9;">
+        <div style="font-weight:800;font-size:16px;color:#1b2947;margin-bottom:8px;">《${docName || "关于报送2026年上半年重点工作进展情况的通知"}》润色修改说明</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">润色时间：2026-07-09 10:12 · 经办人：新区办公室 · 文种：${state.docType} · 润色方式：统一润色 · 引擎：本地政务润色模型</div>
+        <div class="grid-3" style="margin-bottom:14px;">
+          <div class="kpi" style="box-shadow:none;"><div class="k-label">润色与建议</div><div class="k-value" style="font-size:22px;">${done.length}</div></div>
+          <div class="kpi" style="box-shadow:none;"><div class="k-label">已采纳</div><div class="k-value" style="font-size:22px;color:var(--green);">${done.filter(x=>x.resolved && !x.ignored).length}</div></div>
+          <div class="kpi" style="box-shadow:none;"><div class="k-label">已忽略</div><div class="k-value" style="font-size:22px;color:var(--muted);">${done.filter(x=>x.ignored).length}</div></div>
+        </div>
+        <table class="diff-tbl"><thead><tr><th style="width:40px;">序号</th><th style="width:120px;">润色类型</th><th>原文</th><th>润色后</th><th style="width:34%;">修改原因及依据</th></tr></thead><tbody>
+        ${done.map((it, i) => { const rule = RULE_META[it.bucket] || RULE_META.base; return `<tr>
+          <td>${i + 1}</td>
+          <td class="d-cat">${it.cat}</td>
+          <td class="d-del">${it.del !== undefined ? it.del : (it.tip || "")}</td>
+          <td class="d-ins">${it.ins}</td>
+          <td style="color:#55617d;font-size:12.5px;">${it.note}<br><span style="color:#8892a8;">${rule.name}｜${rule.id}<br>来源：${rule.source}<br>版本：${rule.version}</span></td>
+        </tr>`; }).join("")}
+        </tbody></table>
+        <div style="margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--primary-soft);color:#3a5794;font-size:12.5px;">依据层级：中国国家规范、江苏省规范、南京市规范、江北新区内部规则；金额、日期、机构和责任主体相关建议由用户决定是否采纳。</div>
+        <div style="margin-top:10px;color:#4a597a;font-size:13px;">说明：逻辑类问题只给建议，不自动调整段落结构；其他优化项仅在用户采纳后写入润色稿。</div>
+      </div>`;
+    }
+    function compareModal() {
+      const done = activeIssues().filter(it => it.del !== undefined && it.resolved && !it.ignored).concat(manualEdits);
+      openModal("修订对比 · 修改痕迹", `
+        <div style="margin-bottom:12px;color:var(--muted);font-size:13px;">以下为本次润色的逐条修改痕迹（原文 → 润色后），共 ${done.length} 处；逻辑建议不自动写入正文。</div>
+        <table class="diff-tbl"><thead><tr><th style="width:44px;">序号</th><th style="width:130px;">类型</th><th>原文</th><th>润色后</th></tr></thead><tbody>
+        ${done.map((it, i) => `<tr><td>${i+1}</td><td class="d-cat">${it.cat}</td><td class="d-del">${it.del}</td><td class="d-ins">${cleanIns(it.ins)}</td></tr>`).join("")}
+        </tbody></table>`, null, { wide: true, hideFooter: true });
+    }
+
+    /* ---------------- 划词润色（手动选段润色） ---------------- */
+    function cleanIns(s) { return (s || "").replace(/^统一为“|”$/g, "").replace(/^建议[^：]*：/, ""); }
+    function hideSelBar() { const b = $("#selBar"); if (b) b.style.display = "none"; }
+
+    // 检测正文选区，弹出悬浮「润色选中段落」操作条
+    function onDocSelect() {
+      if (!state.docLoaded) { hideSelBar(); return; }
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) { hideSelBar(); return; }
+      const range = sel.getRangeAt(0);
+      const dp = $("#docPage");
+      if (!dp.contains(range.commonAncestorContainer)) { hideSelBar(); return; }
+      const text = sel.toString().trim();
+      if (text.length < 2) { hideSelBar(); return; }
+      selRange = range.cloneRange();
+      selText = text;
+      const rect = range.getBoundingClientRect();
+      const bar = $("#selBar");
+      bar.style.display = "flex";
+      const bw = bar.offsetWidth || 160, bh = bar.offsetHeight || 40;
+      let left = Math.max(12, Math.min(rect.left, window.innerWidth - bw - 12));
+      let top = rect.top - bh - 10;
+      if (top < 62) top = rect.bottom + 10;
+      bar.style.left = left + "px"; bar.style.top = top + "px";
+    }
+
+    // 模拟润色：规则替换 + 标点规范；返回润色文本与修改说明
+    function fakePolish(text, variant) {
+      const rules = [
+        [/一把手/g, "主要负责同志", "旧称规范化"],
+        [/(搞好|弄好|搞定)/g, "做好", "口语转书面语"],
+        [/老百姓/g, "群众", "口语转书面语"],
+        [/为了(进一步)?的?/g, "为进一步", "删除冗余助词"],
+        [/非常高兴地看到/g, "", "去除主观情绪化表达"],
+        [/不错的成绩|良好的成绩/g, "积极进展", "客观中性替代"],
+        [/全力以赴打[赢好][^，。；]*?攻坚战/g, "扎实推进攻坚任务", "夸张修辞改为务实表述"],
+        [/以优异成绩迎接[^，。；]*/g, "确保工作取得实效", "口号化表述改为务实表述"],
+        [/进行通报/g, "予以通报", "精简动词短语"],
+        [/截[止至](目前|现在)/g, "截至$1", "规范用字"],
+        [/数字化政府/g, "数字政府", "术语统一"],
+        [/收集、整理和汇总/g, "收集整理", "压缩同义并列"],
+        [/等等/g, "等", "删除赘余"]
+      ];
+      let out = text.trim(), reasons = [];
+      rules.forEach(([re, rep, why]) => { if (re.test(out)) { out = out.replace(re, rep); reasons.push(why); } });
+      // 标点与空格规范
+      const before = out;
+      out = out.replace(/，{2,}/g, "，").replace(/,/g, "，").replace(/;/g, "；").replace(/\s{2,}/g, "");
+      if (out !== before) reasons.push("标点与空格规范");
+      // 句末补句号
+      if (out && /[^，。；：！？、)）]$/.test(out)) { out = out + "。"; reasons.push("补充句末标点"); }
+      out = out.trim();
+      if (out === text.trim()) {
+        // 无命中时做一版轻度重述，保证「深度改写」也有产出
+        out = variant ? ("经研究，" + text.trim()) : text.trim().replace(/^/, "");
+        out = text.trim();
+        reasons = ["文本已较规范，仅保留原意作规范化确认"];
+      }
+      return { text: out, note: Array.from(new Set(reasons)).join("；") };
+    }
+
+    function polishSelectionFlow() {
+      if (!state.docLoaded) { showToast("请先载入文稿后再使用划词润色"); return; }
+      // 若悬浮条已丢失选区，尝试从当前选区兜底
+      if (!selText) {
+        const sel = window.getSelection();
+        if (sel && !sel.isCollapsed && sel.rangeCount && $("#docPage").contains(sel.getRangeAt(0).commonAncestorContainer)) {
+          selText = sel.toString().trim(); selRange = sel.getRangeAt(0).cloneRange();
+        }
+      }
+      if (!selText) { showToast("请先在文稿中用鼠标选择要润色的文字"); return; }
+      const anchorHit = anchors.filter(a => selText.indexOf(a.txt) >= 0);
+      const res = fakePolish(selText, false);
+      const ancNote = anchorHit.length
+        ? `<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--orange-soft);color:#8a5e00;font-size:12.5px;">🔒 选区包含事实锚点（${anchorHit.map(a => a.txt).join("、")}），请在润色时保持不变。</div>` : "";
+      openModal("润色选中段落 · 确认采纳", `
+        <div style="margin-bottom:12px;color:var(--muted);font-size:13px;">已选中 <b>${selText.length}</b> 字，系统按当前「${MODE_NAME[state.mode]}」模式给出润色结果，可编辑后确认是否采纳替换。</div>
+        <div class="field"><label>原文</label>
+          <div style="padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfcff;color:#37425c;line-height:1.75;">${selText}</div></div>
+        <div class="field"><label>润色建议 <span class="pf-model" style="margin-left:4px;">大模型</span> <a data-regen="1" style="float:right;color:var(--primary);font-weight:700;font-size:12.5px;">↻ 换一版</a></label>
+          <textarea id="selPolished">${res.text}</textarea></div>
+        <div style="padding:9px 11px;border-radius:9px;background:var(--primary-soft);color:#2a3f7a;font-size:12.5px;line-height:1.6;"><b>修改说明：</b><span id="selNote">${res.note}</span></div>
+        ${ancNote}`, () => {
+          const v = ($("#selPolished").value || "").trim();
+          if (!v) { showToast("润色内容不能为空"); return; }
+          applySelectionPolish(v);
+          closeModal();
+          setStatus("已采纳手动划词润色（累计 " + manualEdits.length + " 处）");
+          showToast("已用润色内容替换选中段落");
+        }, { okText: "采纳并替换" });
+      // 「换一版」重新生成
+      setTimeout(() => {
+        const regen = $("[data-regen]");
+        if (regen) regen.onclick = () => {
+          const r = fakePolish(selText, true);
+          const box = $("#selPolished"); if (box) box.value = r.text;
+          const nt = $("#selNote"); if (nt) nt.textContent = r.note;
+          showToast("已生成新版本润色建议");
+        };
+      }, 0);
+    }
+
+    function applySelectionPolish(newText) {
+      if (selRange) {
+        try {
+          selRange.deleteContents();
+          const span = document.createElement("span");
+          span.className = "mark resolved";
+          span.textContent = newText;
+          selRange.insertNode(span);
+        } catch (e) { /* 跨块选区兜底：忽略 */ }
+      }
+      manualEdits.push({ del: selText, ins: newText, cat: "手动划词润色", note: "用户在文稿中划选内容并发起智能润色，经人工确认后替换。", basis: "用户手动确认 · " + MODE_NAME[state.mode], llm: true, risk: false, manual: true });
+      hideSelBar();
+      const s = window.getSelection && window.getSelection(); if (s) s.removeAllRanges();
+      selText = ""; selRange = null;
+      setFlow(4);
+    }
+
+    /* ---------------- 导出预览：润色后文稿 / 修改痕迹 / 修改说明清单 / 修改前后对照表 ---------------- */
+    // 润色后文稿：以当前正文为准（已采纳建议已替换、事实锚点保留），拆除高亮标记转为纯文本
+    function currentDraftHtml() {
+      const dp = $("#docPage").cloneNode(true);
+      $$("span", dp).forEach(s => s.replaceWith(document.createTextNode(s.textContent)));
+      return dp.innerHTML;
+    }
+    // 修改痕迹：基于原文，逐处标注「删除线原文 + 绿色润色」，模拟 Word 修订模式
+    function trackChangesHtml() {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = originalDocHtml || SAMPLE_DOC;
+      $$(".mark", tmp).forEach(m => {
+        const it = issues.find(x => x.id === m.dataset.issueId);
+        if (!it) return;
+        if (it.ignored || !it.resolved) { m.replaceWith(document.createTextNode(it.del)); return; }
+        const frag = document.createDocumentFragment();
+        const del = document.createElement("span"); del.className = "d-del"; del.textContent = it.del;
+        const ins = document.createElement("span"); ins.className = "d-ins"; ins.textContent = cleanIns(it.ins);
+        frag.appendChild(del); frag.appendChild(document.createTextNode(" ")); frag.appendChild(ins);
+        m.replaceWith(frag);
+      });
+      $$(".anchor", tmp).forEach(a => a.replaceWith(document.createTextNode(a.textContent)));
+      return tmp.innerHTML;
+    }
+    function exportChanges() {
+      // 全部润色建议（按当前模式）+ 手动划词润色
+      return activeIssues().filter(it => it.del !== undefined && it.resolved && !it.ignored).concat(manualEdits);
+    }
+    function noteListHtml(changes) {
+      return `<table class="diff-tbl"><thead><tr><th style="width:40px;">序号</th><th style="width:130px;">润色类型</th><th>原文</th><th>润色后</th><th style="width:32%;">修改原因及依据</th></tr></thead><tbody>
+        ${changes.map((it, i) => { const rule = RULE_META[it.bucket] || RULE_META.base; return `<tr><td>${i + 1}</td>
+          <td class="d-cat">${it.cat}</td>
+          <td class="d-del">${it.del}</td><td class="d-ins">${cleanIns(it.ins)}</td>
+          <td style="color:#55617d;font-size:12.5px;">${it.note || "—"}<br><span style="color:#8892a8;">${rule.name}｜${rule.id}<br>来源：${rule.source}<br>版本：${rule.version}</span></td></tr>`; }).join("")}
+        </tbody></table>`;
+    }
+    function diffTableHtml(changes) {
+      return `<table class="diff-tbl"><thead><tr><th style="width:44px;">序号</th><th style="width:130px;">类型</th><th style="width:44%;">修改前（原文）</th><th style="width:44%;">修改后（润色）</th></tr></thead><tbody>
+        ${changes.map((it, i) => `<tr><td>${i + 1}</td><td class="d-cat">${it.cat}</td><td class="d-del">${it.del}</td><td class="d-ins">${cleanIns(it.ins)}</td></tr>`).join("")}
+        </tbody></table>`;
+    }
+    function renderExpTab(key) {
+      const panel = $("#expPanel"); if (!panel) return;
+      $$("#expTabs .exp-tab").forEach(b => b.classList.toggle("on", b.dataset.exp === key));
+      const changes = exportChanges();
+      if (key === "doc") {
+        panel.innerHTML = `<div class="exp-doc">${currentDraftHtml()}</div>
+          <div style="margin-top:10px;color:var(--muted);font-size:12.5px;">※ 已采纳的优化项已写入文稿，未处理或已忽略的内容保持原文；逻辑类问题只提供建议。</div>`;
+      } else if (key === "track") {
+        panel.innerHTML = `<div style="margin-bottom:10px;color:var(--muted);font-size:12.5px;"><span class="d-del">删除线</span> 为原文，<span class="d-ins">绿色</span> 为润色内容；Word导出无需使用原生修订模式。</div>
+          <div class="exp-doc">${trackChangesHtml()}</div>`;
+      } else if (key === "note") {
+        panel.innerHTML = `<div style="margin-bottom:10px;color:var(--muted);font-size:12.5px;">共 ${changes.length} 处修改，逐条列明修改原因及依据（对应招标「修改说明」要求）。</div>${noteListHtml(changes)}`;
+      } else {
+        panel.innerHTML = `<div style="margin-bottom:10px;color:var(--muted);font-size:12.5px;">修改前后逐条对照，共 ${changes.length} 处。</div>${diffTableHtml(changes)}`;
+      }
+    }
+    function exportModal() {
+      if (!state.docLoaded) { showToast("请先载入文稿后再导出"); return; }
+      if (state.stale) { showToast("正文已修改，请重新润色后再导出"); return; }
+      const body = `
+        <div class="exp-tabs" id="expTabs">
+          <button class="exp-tab on" data-exp="doc">润色后文稿</button>
+          <button class="exp-tab" data-exp="track">修改痕迹</button>
+          <button class="exp-tab" data-exp="note">修改说明清单</button>
+          <button class="exp-tab" data-exp="diff">修改前后对照表</button>
+        </div>
+        <div class="exp-panel" id="expPanel"></div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="color:#33405c;font-weight:700;font-size:13px;">导出格式</span>
+          <select id="expFmt" class="select" style="min-width:190px;"><option>Word（.docx）</option><option>PDF（.pdf）</option><option>Word + PDF 打包</option></select>
+          <span style="margin-left:auto;color:var(--muted);font-size:12.5px;">📌 导出后自动写入长期保存的历史记录</span>
+        </div>`;
+      openModal("导出润色成果 · 预览", body, () => {
+        const fmt = $("#expFmt") ? $("#expFmt").value : "Word";
+        closeModal(); setFlow(5);
+        showToast("已导出润色后文稿、修改痕迹与修改说明（" + fmt + "）");
+        setStatus("润色成果已导出并写入历史记录");
+      }, { wide: true, okText: "确认导出" });
+      renderExpTab("doc");
+    }
+
+    /* ---------------- global click delegation ---------------- */
+    document.body.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-action],[data-view],[data-view-jump],[data-rule-cat],[data-flow],[data-mode],[data-exp],.pf-cat");
+      if (!t) return;
+
+      if (t.dataset.exp) { renderExpTab(t.dataset.exp); return; }
+      if (t.dataset.mode) { setMode(t.dataset.mode); return; }
+      if (t.dataset.view) { switchView(t.dataset.view); return; }
+      if (t.dataset.viewJump) {
+        switchView(t.dataset.viewJump);
+        showToast("已进入" + ({ lib: "术语风格库", settings: "润色设置" }[t.dataset.viewJump] || t.dataset.viewJump));
+        return;
+      }
+      if (t.dataset.ruleCat && t.closest("#ruleNav")) {
+        state.ruleCat = t.dataset.ruleCat; renderRuleNav(); renderRuleTable(); return;
+      }
+      if (t.classList.contains("pf-cat")) {
+        const b = t.dataset.bucket;
+        if (state.activeCats.has(b)) state.activeCats.delete(b); else state.activeCats.add(b);
+        t.classList.toggle("on", state.activeCats.has(b));
+        renderIssues(); return;
+      }
+      if (t.dataset.flow) { showToast(t.getAttribute("title") || ""); return; }
+
+      const a = t.dataset.action;
+      if (!a) return;
+      if (state.stale && ["applyAll", "ignoreAll", "accept", "ignore", "ignoreDetail", "compare", "export"].includes(a)) {
+        showToast("正文已修改，当前结果已失效，请先重新润色");
+        return;
+      }
+      switch (a) {
+        case "newTask": newTaskFlow(); break;
+        case "paste": pasteFlow(); break;
+        case "polish": runPolish(); break;
+        case "applyAll": {
+          const pending = activeIssues().filter(it => !it.resolved);
+          pending.forEach(it => doAccept(it.id));
+          setStatus(`已采纳全部可优化项，共 ${pending.length} 项`);
+          showToast(pending.length ? "已全部采纳" : "当前没有待处理的优化项");
+          setFlow(5);
+          break;
+        }
+        case "ignoreAll":
+          const pending = activeIssues().filter(it => !it.resolved);
+          pending.forEach(it => ignoreIssue(it.id));
+          setStatus(`已忽略全部剩余可优化项，共 ${pending.length} 项`);
+          showToast(pending.length ? "已全部忽略" : "当前没有待处理的优化项");
+          break;
+        case "accept": acceptIssue(t.dataset.issueId); break;
+        case "ignore": ignoreIssue(t.dataset.issueId); break;
+        case "ignoreDetail": closeModal(); ignoreIssue(t.dataset.issueId); showToast("已忽略该优化项"); break;
+        case "basis": {
+          const note = $(`.pf-note[data-note="${t.dataset.issueId}"]`);
+          if (note) { note.classList.toggle("show"); t.textContent = note.classList.contains("show") ? "收起修改说明 ‹" : "查看修改说明 ›"; }
+          break;
+        }
+        case "compare": compareModal(); break;
+        case "polishSelection": polishSelectionFlow(); break;
+        case "export": exportModal(); break;
+        case "locate": case "locateFirst": locateIssue(t.dataset.issueId || (activeIssues()[0] && activeIssues()[0].id)); break;
+        case "zoomIn": zoom = Math.min(1.25, zoom + 0.06); applyZoom(); break;
+        case "zoomOut": zoom = Math.max(0.85, zoom - 0.06); applyZoom(); break;
+        // lib
+        case "addRule": addRuleModal(); break;
+        case "editRule": editRuleModal(+t.dataset.ri); break;
+        case "delRule": {
+          const c = ruleCats.find(x => x.key === state.ruleCat);
+          openModal("删除词条", `确认删除「${c.rows[+t.dataset.ri][1]}」？删除后智能润色将不再依据该词条。`, () => {
+            c.rows.splice(+t.dataset.ri, 1); renderRuleNav(); renderRuleTable(); closeModal(); showToast("词条已删除");
+          });
+          break;
+        }
+        case "checkAllRule": { const on = t.checked; $$(".rule-row-chk").forEach(cb => cb.checked = on); break; }
+        case "batchDelRule": {
+          const c = ruleCats.find(x => x.key === state.ruleCat);
+          const idx = $$(".rule-row-chk").map((cb, i) => cb.checked ? i : -1).filter(i => i >= 0);
+          if (!idx.length) { showToast("请先勾选要删除的词条"); break; }
+          openModal("批量删除", `确认删除选中的 ${idx.length} 条词条？`, () => {
+            c.rows = c.rows.filter((_, i) => idx.indexOf(i) < 0);
+            renderRuleNav(); renderRuleTable(); closeModal(); showToast("已删除 " + idx.length + " 条");
+          });
+          break;
+        }
+        case "importRule": openModal("导入词条", `<div class="field"><label>选择文件（支持 .xlsx / .csv / .txt）</label><button class="btn" type="button" onclick="document.getElementById('fileInput').click()">📁 选择文件</button></div><div style="color:var(--muted);font-size:13px;">导入格式请参考「下载示例」，重复词条将自动去重。</div>`, () => { closeModal(); showToast("词条导入成功（示例：新增 15 条）"); }); break;
+        case "exportRule": showToast("当前词库已导出为 Excel"); break;
+        case "downloadSample": showToast("示例词条模板已下载"); break;
+        // settings
+        case "saveSettings": showToast("润色设置已保存并生效"); break;
+        case "resetSettings": openModal("恢复默认", "确认将所有润色设置恢复为系统默认值？", () => { closeModal(); showToast("已恢复默认设置"); }); break;
+        case "toggle": t.classList.toggle("on"); showToast("设置项已更新"); break;
+        // history
+        case "historyFilter": {
+          const type = $("#hFilterType").value, mode = $("#hFilterMode").value, kw = ($("#hSearch").value || "").trim();
+          const rows = history.filter(r =>
+            (type === "全部文种" || r[1] === type) &&
+            (mode === "全部" || r[2] === mode) &&
+            (!kw || r[0].indexOf(kw) >= 0));
+          renderHistory(rows); showToast("已筛选，共 " + rows.length + " 条");
+          break;
+        }
+        case "viewReport": openModal("润色修改说明", changeNoteHtml(t.dataset.doc), null, { wide: true, hideFooter: true }); break;
+        case "downloadReport": showToast("《" + t.dataset.doc + "》润色稿已下载"); break;
+        case "recheckHistory": switchView("editor"); showToast("已发起二次润色：" + t.dataset.doc); break;
+        case "exportHistory": showToast("润色台账已导出为 Excel"); break;
+        case "exportStat": showToast("统计报表已导出（PDF）"); break;
+        // top
+        case "message": openModal("消息通知", `<div style="display:grid;gap:10px;">
+          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">📌 「优化营商环境专项行动汇报材料」有 4 条高风险改动待您确认</div>
+          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">📚 禁用表述库新增 3 条（含 2 条夸张修辞）</div>
+          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">✓ 「关于申请数字政府专项经费的请示」润色已完成</div>
+        </div>`, null, { hideFooter: true }); break;
+        case "profile": openModal("账号信息", `当前账号：<b>新区办公室 · 材料经办人</b><br>所属机构：南京江北新区管理委员会办公室<br>角色权限：文稿润色、建议采纳、高风险确认、导出留痕、术语风格库维护<br><br><button class="btn" type="button" onclick="document.getElementById('modalMask').classList.remove('show')">退出登录</button>`, null, { hideFooter: true }); break;
+      }
+    });
+
+    function applyZoom() {
+      const w = $(".doc-wrap");
+      w.style.transform = `scale(${zoom})`; w.style.transformOrigin = "top center";
+      showToast("缩放：" + Math.round(zoom * 100) + "%");
+    }
+
+    // settings radios / checks (含导出弹窗内的多选)
+    document.body.addEventListener("click", (e) => {
+      const opt = e.target.closest(".opt");
+      if (!opt) return;
+      const group = opt.closest("[data-radio]");
+      if (group) { $$(".opt", group).forEach(o => o.classList.remove("on")); opt.classList.add("on"); }
+      else if (opt.closest("[data-check]")) { opt.classList.toggle("on"); }
+    });
+    // 维度管理：添加 / 删除
+    document.body.addEventListener("click", (e) => {
+      const add = e.target.closest("[data-dim-add]"); if (add) { dimAdd(add.dataset.dimAdd); return; }
+      const del = e.target.closest("[data-dim-del]"); if (del) { dimDel(del.dataset.dimDel, +del.dataset.idx); return; }
+    });
+    // 维度管理：输入框回车添加
+    document.body.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { const inp = e.target.closest(".dim-input"); if (inp) { e.preventDefault(); dimAdd(inp.id.replace("dimIn-", "")); } }
+    });
+    // 角色切换：重渲维度管理（权限可见性）
+    const roleSwitch = $("#roleSwitch");
+    if (roleSwitch) roleSwitch.addEventListener("change", (e) => {
+      roleState = e.target.value;
+      if (state.view === "settings") renderDimMgr();
+    });
+    // doc marks / anchors click
+    $("#docPage").addEventListener("click", (e) => {
+      // 正在划选文字时不触发定位，交给划词润色
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed && sel.toString().trim().length >= 2) return;
+      const m = e.target.closest(".mark");
+      if (m && state.stale) { showToast("正文已修改，当前结果已失效，请先重新润色"); return; }
+      if (m) openIssueDetail(m.dataset.issueId);
+    });
+    $("#docPage").addEventListener("input", () => {
+      const text = $("#docPage").innerText.trim();
+      $("#statusMeta").textContent = `字数 ${text.length} · 当前页 1/1 · 自动保存已开启`;
+      markResultStale("正文已修改");
+    });
+    // 正文支持直接编辑；本页面不提供单独的划词润色入口
+    $("#docPage").addEventListener("mousedown", hideSelBar);
+    const _ws = $(".workspace"); if (_ws) _ws.addEventListener("scroll", hideSelBar);
+    document.addEventListener("mousedown", (e) => { if (!e.target.closest("#selBar") && !e.target.closest("#docPage")) hideSelBar(); });
+    // polish card click -> locate
+    $("#pfList").addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;
+      const card = e.target.closest(".pf-card"); if (card) locateIssue(card.dataset.issueId);
+    });
+
+    // file input
+    $("#fileInput").addEventListener("change", function () {
+      if (!this.files.length) return;
+      const nm = this.files[0].name;
+      // 新建任务弹框内：展示文件名（可删除重传），点「下一步」才载入解析
+      if (modalMask.classList.contains("show") && $("#taskFileBox")) {
+        showPendingFile(nm);
+      } else {
+        // 弹框外直接上传：载入并自动润色
+        closeModal();
+        startParse(SAMPLE_DOC, nm.replace(/\.[^.]+$/, ""));
+      }
+      this.value = "";
+    });
+
+    // lib search
+    $("#ruleSearch") && $("#ruleSearch").addEventListener("keydown", e => { if (e.key === "Enter") showToast("术语风格库搜索：" + (e.target.value || "全部")); });
+
+    // modal controls
+    $("#modalClose").onclick = closeModal;
+    $("#modalCancel").onclick = closeModal;
+    modalMask.addEventListener("click", e => { if (e.target === modalMask) closeModal(); });
+    window.addEventListener("message", e => {
+      const data = e.data || {};
+      if (data.type !== "JBAI_WORKBENCH_CONTEXT" || !data.payload || !data.payload.text) return;
+      newTaskFlow();
+      setTimeout(() => {
+        const wrap = $("#pasteWrap"), box = $("#taskFileBox"), input = $("#pasteText");
+        if (wrap) wrap.style.display = "block";
+        if (box) box.style.display = "none";
+        if (input) { input.value = String(data.payload.text); input.focus(); }
+        showToast("已带入会话生成正文，请确认后开始文本润色");
+      }, 0);
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+      if (e.ctrlKey && e.key.toLowerCase() === "s") { e.preventDefault(); setStatus("文稿已保存"); showToast("保存成功"); }
+    });
+
+    // initial render
+    setFlow(1);
+    setMode("标准");
+    updateEditorState();
+    renderRuleNav();
+    renderRuleTable();
+  })();
+  </script>
+</body>
+</html>

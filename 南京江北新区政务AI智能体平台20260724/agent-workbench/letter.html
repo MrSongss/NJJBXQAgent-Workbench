@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函件智能生成 · 政务AI智能体 - 江北新区政务AI智能中台</title>
+  <style>
+    :root {
+      --bg:#F4F6F9; --panel:#ffffff; --line:#e2e8f3; --line-soft:#eef1f7;
+      --text:#333639; --muted:#75809a;
+      --ai-navy:#0A3573; --ai-blue:#0E4C92; --ai-cyan:#13A8A8; --ai-green:#43A047;
+      --ai-glow:0 0 16px rgba(19,168,168,.35);
+      --primary:#0E4C92; --primary-dark:#0A3573; --primary-soft:#e8f1fa;
+      --cyan:#13A8A8; --cyan-soft:#e2f4f4;
+      --green:#43A047; --green-soft:#e8f7f1;
+      --red:#D9534F; --red-soft:#fdecea; --orange:#F0AD4E;
+      --orange-soft:#fff4e0; --purple:#6a52d6; --purple-soft:#efecfd;
+      --shadow:0 16px 42px rgba(10,53,115,.10); --shadow-sm:0 8px 20px rgba(10,53,115,.06);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-width:1280px;height:100vh;overflow:hidden;color:var(--text);
+      background:radial-gradient(circle at 78% -4%,rgba(19,168,168,.12),transparent 30%),linear-gradient(180deg,#fbfcff,var(--bg));
+      font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;}
+    button,input,textarea,select{font:inherit} button{border:0;background:none;color:inherit;cursor:pointer} a{color:inherit;text-decoration:none}
+    .app{display:grid;grid-template-columns:208px 1fr;grid-template-rows:56px 1fr;height:100vh}
+    .topbar{grid-column:1 / -1;grid-row:1}
+    /* Left nav */
+    .leftnav{grid-column:1;grid-row:2;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:4px;padding:14px 10px;background:rgba(255,255,255,.82);border-right:1px solid var(--line);backdrop-filter:blur(8px)}
+    .leftnav .nav-cap{margin:4px 8px 6px;color:#97a2b8;font-size:11px;font-weight:800;letter-spacing:.6px}
+    .nav-item{display:flex;align-items:center;gap:10px;height:42px;padding:0 13px;border-radius:11px;color:#46536e;font-weight:600;transition:.16s;text-align:left;white-space:nowrap}
+    .nav-item .ic{width:20px;text-align:center;font-size:16px}
+    .nav-item:hover{color:var(--primary);background:#fff}
+    .nav-item.active{color:#fff;background:var(--primary);box-shadow:0 8px 16px rgba(14,76,146,.22)}
+    /* Top bar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 20px;background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);border-bottom:none;backdrop-filter:blur(12px);z-index:5}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;color:#fff;white-space:nowrap}
+    .brand-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:#fff;font-size:12px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--cyan));box-shadow:0 8px 18px rgba(14,76,146,.28)}
+    .brand small{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.72);margin-top:1px}
+    .top-actions{display:flex;align-items:center;gap:8px}
+    .safe-mode{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 11px;border-radius:9px;background:var(--green-soft);color:var(--green);font-size:13px;font-weight:700}
+    /* Controls */
+    .btn,.icon-btn,.primary-btn,.danger-btn,.ghost-btn{height:34px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:9px;border:1px solid var(--line);background:#fff;color:#3a4761;transition:.16s;white-space:nowrap;font-weight:600}
+    .btn{padding:0 12px}.icon-btn{width:34px}
+    .primary-btn{padding:0 15px;border-color:var(--primary);color:#fff;background:var(--primary);box-shadow:0 8px 16px rgba(14,76,146,.2)}
+    .ghost-btn{padding:0 12px;background:#f6f8fd}
+    .danger-btn{padding:0 12px;border-color:#f6ccc7;color:var(--red);background:#fff7f6}
+    .btn:hover,.icon-btn:hover,.ghost-btn:hover{color:var(--primary);border-color:rgba(14,76,146,.4);background:var(--primary-soft)}
+    .primary-btn:hover{background:var(--primary-dark)}
+    .danger-btn:hover{background:#fdece9}
+    .btn.sm,.mini-btn{height:30px;padding:0 10px;font-size:13px}
+    .mini-btn{border:1px solid var(--line);border-radius:8px;background:#fff;color:#4a5568}
+    .mini-btn:hover{color:var(--primary);border-color:rgba(14,76,146,.36);background:var(--primary-soft)}
+    .select{height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#3c4658;padding:0 10px;outline:none}
+    .select:focus{border-color:rgba(14,76,146,.5)}
+    /* Views */
+    .view{display:none;min-height:0;height:100%;grid-column:2;grid-row:2}
+    .view.active{display:block}
+    #view-gen.active{display:grid;grid-template-rows:auto 1fr auto}
+    #stageRoot{min-height:0;overflow:hidden}
+    .stage{display:none;height:100%;min-height:0}
+    #view-gen[data-stage="init"] #stageInit{display:block}
+    #view-gen[data-stage="extract"] #stageExtract{display:block}
+    #view-gen[data-stage="verify"] #stageVerify{display:block}
+    #view-gen[data-stage="gen"] #stageGen{display:grid;grid-template-rows:auto 1fr}
+    #view-gen[data-stage="compliance"] #stageCompliance{display:block}
+    #view-gen[data-stage="output"] #stageOutput{display:grid;grid-template-columns:1fr 380px;overflow:hidden}
+    /* Flow bar */
+    .flowbar{display:flex;align-items:center;gap:0;padding:8px 16px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto}
+    .flow-step{display:flex;align-items:center;gap:8px;white-space:nowrap}
+    .flow-node{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:#f1f4fb;color:#7c88a2;font-size:12px;font-weight:700;cursor:pointer;transition:.16s;border:1px solid transparent}
+    .flow-node .n{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:#cfd8ea;color:#fff;font-size:10px}
+    .flow-node:hover{background:var(--primary-soft);color:var(--primary)}
+    .flow-node.done{background:var(--green-soft);color:var(--green)}.flow-node.done .n{background:var(--green)}
+    .flow-node.current{background:var(--primary);color:#fff;border-color:var(--primary)}.flow-node.current .n{background:rgba(255,255,255,.35)}
+    .flow-arrow{width:20px;height:1px;background:#d5deee;margin:0 2px;position:relative;flex:none}
+    .flow-arrow::after{content:"›";position:absolute;right:-3px;top:-10px;color:#b6c1d8}
+    /* Scroll pages */
+    .page-scroll{height:100%;overflow:auto;padding:22px 26px 40px}
+    .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .page-title{font-size:21px;font-weight:800;color:#16233f}
+    .page-sub{margin-top:5px;color:var(--muted);font-size:13px}
+    .sub-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .init-step-tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 13px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:800}
+    .toolbar-inline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .statusbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-top:1px solid var(--line);background:#fff;color:#7b8496;font-size:12px}
+
+    /* ===== Init stage ===== */
+    .init-scroll{height:100%;overflow:auto;background:#eaf0f8}
+    .init-layout{display:grid;grid-template-columns:1fr 384px;gap:16px;max-width:1280px;margin:0 auto;padding:22px 26px 84px;align-items:start}
+    .init-main{min-width:0}
+    .init-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .init-card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);margin-bottom:16px}
+    .init-card .card-head{padding:13px 18px;display:flex;align-items:center;gap:10px}
+    .init-card .card-body{padding:14px 18px 18px}
+    .init-card .hint{color:var(--muted);font-size:12.5px;font-weight:600}
+    .card-title{font-weight:800;font-size:15px}
+    .sec-no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:var(--primary);color:#fff;font-size:12px;font-weight:800;margin-right:8px}
+    /* 函件类型 pill */
+    .type-inline{display:flex;flex-wrap:wrap;gap:8px}
+    .type-pill{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:#4a5670;font-weight:700;font-size:13px;transition:.16s}
+    .type-pill .tp-ic{font-size:14px}
+    .type-pill:hover{color:var(--primary);border-color:rgba(14,76,146,.4);background:var(--primary-soft)}
+    .type-pill.active{color:#fff;background:var(--primary);border-color:var(--primary);box-shadow:0 6px 14px rgba(14,76,146,.2)}
+    .type-desc{margin-top:10px;padding:9px 12px;border-radius:9px;background:var(--primary-soft);color:var(--primary-dark);font-size:12.5px;line-height:1.6;display:flex;align-items:flex-start;gap:7px}
+    .type-desc .td-ic{font-size:16px;flex:none;margin-top:1px}
+    /* 自然语言 */
+    .nl-input textarea{width:100%;min-height:130px;padding:14px 15px;border:1px solid var(--line);border-radius:12px;outline:none;background:#fbfcff;resize:vertical;line-height:1.8;font-size:15px;color:#1f2937;transition:.16s}
+    .nl-input textarea:focus{border-color:rgba(14,76,146,.5);box-shadow:0 0 0 4px rgba(14,76,146,.08);background:#fff}
+    .nl-input textarea::placeholder{color:#b0bacc}
+    .nl-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px}
+    .nl-foot .hint{font-size:12.5px}.nl-count{font-size:12.5px;color:var(--muted);font-weight:700}
+    /* 上传 */
+    .dropzone{border:1.5px dashed #b9c4dc;border-radius:14px;padding:26px 20px;text-align:center;background:#f8fafd;transition:.16s;cursor:pointer}
+    .dropzone:hover,.dropzone.drag{border-color:var(--primary);background:var(--primary-soft)}
+    .dropzone .dz-ic{font-size:30px;margin-bottom:8px}.dropzone .dz-t{font-size:15px;font-weight:800;color:#33405c}.dropzone .dz-s{font-size:12.5px;color:var(--muted);margin:4px 0 12px}
+    /* 右侧材料栏 */
+    .init-side{position:sticky;top:22px}
+    .side-card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+    .side-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line-soft)}
+    .side-title{font-weight:800;font-size:14.5px;color:#1b2947;display:inline-flex;align-items:center;gap:7px}
+    .side-count{font-size:12.5px;font-weight:700;color:var(--muted)}
+    .side-empty{padding:40px 20px;text-align:center;color:#9aa4b8;font-size:13px;line-height:1.7}
+    .side-empty .eic{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:22px;background:var(--primary-soft);color:var(--primary);margin:0 auto 10px}
+    .parse-prog{display:none;padding:13px 16px;border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,#f7f9fd,#fff)}
+    .parse-prog.show{display:block}
+    .pp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .pp-lbl{font-size:13px;font-weight:800;color:#33405c;display:inline-flex;align-items:center;gap:6px}
+    .pp-lbl .spin{display:inline-block;width:12px;height:12px;border:2px solid #cfd8ea;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+    .pp-pct{font-size:13px;font-weight:800;color:var(--primary)}
+    .pp-bar{height:8px;border-radius:999px;background:#eef2f9;overflow:hidden}
+    .pp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width .25s}
+    .pp-stage{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.55}
+    .parse-prog.done .pp-lbl{color:var(--green)}.parse-prog.done .pp-bar i{background:var(--green)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid #cfd8ea;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px}
+    .file-check-list{display:grid;gap:10px;padding:12px;max-height:560px;overflow:auto}
+    .fc-card{border:1px solid var(--line);border-radius:11px;background:#fbfcff;overflow:hidden}
+    .fc-card.warn{border-color:#f3d799;background:#fffbf2}.fc-card.err{border-color:#f3bbb4;background:#fdf3f2}.fc-card.pending{border-style:dashed;border-color:#cfd8ea}
+    .fc-head{display:flex;align-items:center;gap:7px;padding:9px 11px}
+    .fc-ic{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;background:var(--primary-soft);color:var(--primary);flex:none}
+    .fc-name{font-weight:700;color:#28324c;font-size:12.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0;flex:1}
+    .fc-meta{font-size:11px;color:var(--muted);white-space:nowrap}
+    .fc-type{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:800;background:#eef2fb;color:#4a5670;white-space:nowrap}
+    .fc-tag{display:inline-flex;align-items:center;height:19px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700;background:#eef2fb;color:#6b7690;white-space:nowrap}
+    .fc-tag.policy{background:var(--purple-soft);color:var(--purple)}.fc-tag.check{background:#e6f5f8;color:var(--cyan)}.fc-tag.incoming{background:var(--green-soft);color:var(--green)}
+    .fc-row2{display:flex;align-items:center;gap:10px;padding:8px 11px 10px;border-top:1px dashed var(--line-soft)}
+    .fc-row2 .fc-label{font-size:11px;font-weight:800;color:#6a7690;flex:none}
+    .fc-items{display:flex;flex-wrap:wrap;gap:5px;flex:1;min-width:0}
+    .fc-fmt-wrap{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+    .fc-fmt{font-size:11.5px;color:#47536c;white-space:nowrap}.fc-fmt b{color:#8b95a7;font-weight:700}
+    .fc-fmt.pend{color:#9aa4b8;display:inline-flex;align-items:center;gap:4px}
+    .mini-btn.ocr{color:var(--cyan);border-color:#bfe6ee;background:#e6f5f8;flex:none}
+    .mini-btn.ocr:hover{background:#d3eef3;border-color:var(--cyan)}
+    .ck{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:600;background:#fff;border:1px solid var(--line-soft);color:#6a7690}
+    .ck.ok{color:var(--green);border-color:#c5e9dd;background:var(--green-soft)}.ck.fail{color:var(--red);border-color:#f3c4bf;background:var(--red-soft)}.ck.warn{color:var(--orange);border-color:#f3d799;background:var(--orange-soft)}.ck.pending{color:#9aa4b8;border-style:dashed}
+    .ck.pending .spin{display:inline-block;width:9px;height:9px;border:2px solid #cfd8ea;border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+    .init-actions{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;padding:14px 26px;background:rgba(255,255,255,.95);border-top:1px solid var(--line);backdrop-filter:blur(8px);z-index:3;max-width:1280px;margin:0 auto}
+    .init-actions .hint{font-size:12.5px}
+
+    /* ===== Extract & Verify shared ===== */
+    .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm)}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line-soft)}
+    .card-title{font-weight:800;font-size:15px}
+    .card-body{padding:16px}
+    table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+    table.tbl th{text-align:left;padding:11px 12px;color:#6a7690;font-weight:700;background:#f7f9fd;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+    table.tbl td{padding:11px 12px;border-bottom:1px solid var(--line-soft);color:#37425c}
+    table.tbl tr:hover td{background:#fafbff}
+    .tbl-wrap{overflow:auto}
+    .tag{display:inline-flex;align-items:center;min-height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .tag.high{color:#b42318;background:var(--red-soft)}.tag.mid{color:#9a5b00;background:var(--orange-soft)}.tag.low{color:#1747b6;background:var(--primary-soft)}.tag.done{color:var(--green);background:var(--green-soft)}.tag.wait{color:var(--orange);background:var(--orange-soft)}.tag.doing{color:var(--primary);background:var(--primary-soft)}
+    .src-tag{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700}
+    .src-tag.file{background:#e6f5f8;color:var(--cyan)}.src-tag.text{background:var(--purple-soft);color:var(--purple)}.src-tag.fused{background:var(--green-soft);color:var(--green)}
+    .hint{color:var(--muted);font-size:12.5px;font-weight:600}
+
+    /* ===== Extract modal ===== */
+    .ext-modal{padding:4px 2px 2px}
+    .ext-mhead{margin-bottom:14px}
+    .ext-mtitle{font-size:16px;font-weight:800;color:#1b2947;display:inline-flex;align-items:center;gap:8px}
+    .ext-mtitle .spin{width:14px;height:14px;border-width:2.5px}
+    .ext-mtitle.done{color:var(--green)}
+    .ext-msub{margin-top:5px;font-size:13px;color:var(--muted)}
+    .ext-mbar{height:8px;border-radius:999px;background:#eef2f9;overflow:hidden;margin-bottom:14px}
+    .ext-mbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width .25s}
+    .ext-mlist{display:grid;gap:9px;max-height:46vh;overflow:auto;padding-right:4px}
+    .ext-mrow{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:11px;background:#fbfcff;animation:extIn .28s ease}
+    @keyframes extIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .ext-mic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--green-soft);color:var(--green);flex:none;margin-top:1px}
+    .ext-mbody{min-width:0;flex:1}
+    .ext-mrow-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+    .ext-mname{font-weight:800;font-size:13.5px;color:#28324c}
+    .ext-msrc{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700}
+    .ext-msrc.file{background:#e6f5f8;color:var(--cyan)}.ext-msrc.text{background:var(--purple-soft);color:var(--purple)}.ext-msrc.fused{background:var(--green-soft);color:var(--green)}
+    .ext-mval{font-size:13px;color:#47536c;line-height:1.55;word-break:break-all}
+    .ext-mfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+    .ext-mfoot .primary-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+
+    /* ===== Verify ===== */
+    .verify-dims{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .vdim{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#f7f9fd;font-size:13px}
+    .vdim .vd-ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px}
+    .vdim.ok{border-color:#c5e9dd;background:var(--green-soft);color:var(--green)}.vdim.ok .vd-ic{background:var(--green);color:#fff}
+    .vdim.warn{border-color:#f3d799;background:var(--orange-soft);color:#9a6a00}.vdim.warn .vd-ic{background:var(--orange);color:#fff}
+    .vdim .vd-name{font-weight:800}.vdim .vd-cnt{font-weight:700}
+    .ve-row{display:grid;grid-template-columns:150px 1fr 96px 110px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px dashed var(--line-soft)}
+    .ve-row:last-child{border-bottom:0}
+    .ve-name{font-weight:800;font-size:13.5px;color:#28324c}.ve-name .ve-req{color:var(--red);margin-left:2px}
+    .ve-input{width:100%;height:36px;padding:0 11px;border:1px solid var(--line);border-radius:9px;outline:none;background:#fff;font-size:13.5px;color:#1f2937;transition:.16s}
+    .ve-input:focus{border-color:rgba(14,76,146,.5);box-shadow:0 0 0 3px rgba(14,76,146,.08)}
+    .ve-row.warn .ve-input{border-color:#f3d799;background:#fffbf2}
+    .ve-src{font-size:11px}.ve-status{display:inline-flex;align-items:center;gap:5px}
+    .ve-note{grid-column:2 / -1;margin-top:-4px;margin-bottom:4px;padding:7px 10px;border-radius:8px;background:#fff6e6;color:#9a6a00;font-size:12px;line-height:1.55}
+    .ve-row.ok .ve-note{display:none}
+
+    /* ===== Gen stage ===== */
+    .tool-main{min-width:0;min-height:0;display:grid;grid-template-rows:auto 1fr;background:#eaf0f8}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 16px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .toolbar-left,.toolbar-right{display:flex;align-items:center;gap:7px;min-width:0}
+    .workspace{min-height:0;overflow:auto;padding:20px 24px 36px}
+    .doc-wrap{width:780px;min-height:960px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow);position:relative}
+    .gw-doc{min-height:900px;padding:52px 64px 60px;background:#fff;line-height:2;color:#1f2937;font-family:"FangSong","仿宋","SimSun",serif;font-size:18px}
+    .gw-doc .gw-fwzh{text-align:center;color:#47536e;font-size:16px;margin-bottom:22px}
+    .gw-doc h1{margin:0 0 20px;text-align:center;font-family:"SimHei","黑体",sans-serif;font-size:24px;line-height:1.55;font-weight:700}
+    .gw-doc p{margin:0 0 8px;text-indent:2em}.gw-doc .no-indent{text-indent:0}.gw-doc .right{text-align:right;text-indent:0}
+    .gw-doc .sec{font-family:"SimHei","黑体",sans-serif;font-weight:700}.gw-doc .end{text-indent:2em;margin-top:10px}
+    .gw-doc .cite{color:var(--primary);border-bottom:1px dashed var(--primary);cursor:help}.gw-doc .hl{background:#fff7e6;border-radius:3px;padding:0 2px}
+    .doc-attr{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);color:#8b95a7;font-size:12px;text-align:right}
+    .rightbar{min-height:0;overflow:hidden;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column}
+    .fmt-side{background:#fff}.fmt-scroll{height:100%;overflow:auto;padding:16px 16px 24px}
+    .fmt-sec{padding:14px 0;border-bottom:1px solid var(--line-soft)}.fmt-sec:last-child{border-bottom:0}
+    .fmt-sec-title{font-size:13px;font-weight:800;color:#1b2947;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+    .fmt-sec-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px;line-height:1.5}
+    .fmt-pill-row{display:flex;flex-wrap:wrap;gap:6px}
+    .fmt-pill{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#4a5670;font-size:12.5px;font-weight:700;cursor:pointer;transition:.16s}
+    .fmt-pill:hover{border-color:rgba(14,76,146,.4);color:var(--primary)}.fmt-pill.active{background:var(--primary);border-color:var(--primary);color:#fff}
+    .doc-empty{min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;text-align:center;padding-top:64px}
+    .doc-empty .eic{width:74px;height:74px;border-radius:18px;display:grid;place-items:center;font-size:34px;background:var(--primary-soft);color:var(--primary)}
+    .doc-empty .et{font-size:18px;font-weight:800;color:#33405c}.doc-empty .es{font-size:13px;color:var(--muted);line-height:1.75;max-width:340px}
+    /* 可编辑正文 */
+    .gw-doc[contenteditable="true"]{cursor:text;outline:none;box-shadow:inset 0 0 0 2px rgba(14,76,146,.25);border-radius:4px}
+    .draft-note{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--primary-soft);color:var(--primary-dark);font-size:12.5px;margin:0 24px 16px;line-height:1.6}
+    /* AI校验结果 */
+    .ai-list{display:grid;gap:9px}
+    .airow{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border:1px solid var(--line-soft);border-radius:11px;background:#fbfcff}
+    .airow.ok{border-color:#c5e9dd;background:var(--green-soft)}.airow.warn{border-color:#f3d799;background:var(--orange-soft)}
+    .aiic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;flex:none}
+    .airow.ok .aiic{background:var(--green);color:#fff}.airow.warn .aiic{background:var(--orange);color:#fff}
+    .aibody{min-width:0;flex:1}.ainame{font-weight:800;font-size:13.5px;color:#28324c}
+    .aidetail{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+
+    /* ===== 函件模板库 ===== */
+    .tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 0 40px}
+    .tpl-section-title{grid-column:1/-1;font-size:14px;font-weight:800;color:#1b2947;margin:8px 0 -4px;padding-bottom:6px;border-bottom:2px solid var(--primary-soft);display:flex;align-items:center;gap:8px}
+    .tpl-section-title::before{content:"▤";color:var(--cyan)}
+    .tpl-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:18px;transition:.16s;cursor:pointer;position:relative}
+    .tpl-card:hover{border-color:rgba(14,76,146,.4);box-shadow:var(--shadow);transform:translateY(-2px)}
+    .tpl-card .tpl-ic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:20px;background:var(--primary-soft);color:var(--primary);margin-bottom:12px}
+    .tpl-card h4{margin:0 0 6px;font-size:15px;color:#1b2947}
+    .tpl-card p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.6}
+    .tpl-card .tpl-tag{position:absolute;top:14px;right:14px}
+    .tpl-card .tpl-foot{margin-top:12px;display:flex;align-items:center;gap:14px}
+    .tpl-card .tpl-foot a{color:var(--primary);font-size:13px;font-weight:700;cursor:pointer}
+    .tpl-card .tpl-foot a:hover{text-decoration:underline}
+    /* 模板预览弹窗 */
+    .tpl-preview-doc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:34px 46px;line-height:2;font-family:"FangSong","仿宋","SimSun",serif;font-size:15.5px;color:#1f2937;max-height:56vh;overflow:auto}
+    .tpl-preview-doc h1{text-align:center;font-family:"SimHei","黑体",sans-serif;font-size:19px;margin:0 0 6px;font-weight:700}
+    .tpl-preview-doc .pv-no{text-align:center;color:#47536e;font-size:13px;margin-bottom:16px}
+    .tpl-preview-doc p{margin:0 0 7px;text-indent:2em}
+    .tpl-preview-doc .no-indent{text-indent:0}
+    .tpl-preview-doc .right{text-align:right;text-indent:0}
+    .tpl-preview-doc .sec{font-family:"SimHei","黑体",sans-serif;font-weight:700}
+    .tpl-preview-doc .sub-sec{text-indent:2em}
+    .tpl-preview-doc .end{text-indent:2em;margin-top:8px}
+    .tpl-preview-doc .ph{color:#b04a00;background:#fff4e0;padding:0 3px;border-radius:2px;font-style:normal}
+    .tpl-preview-doc .meta{color:#47536e;font-size:13px;text-indent:0}
+    .tpl-preview-doc .pv-tip{margin-top:14px;padding:9px 11px;border-radius:8px;background:#f3f7ff;color:#4a597a;font-size:12.5px;line-height:1.6}
+    /* 上传提取模板 */
+    .cc-row{display:flex;flex-wrap:wrap;gap:10px 20px}
+    .cc-opt{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:#47536c;cursor:pointer;user-select:none}
+    .cc-opt .cbx{width:15px;height:15px;border-radius:4px;border:1.5px solid #c4cde0;display:grid;place-items:center;color:#fff;font-size:10px;transition:.15s}
+    .cc-opt.on .cbx{background:var(--primary);border-color:var(--primary)}
+    .cc-opt.on .cbx::after{content:"✓"}
+
+    /* ===== 知识库/设置/历史/统计 通用样式 ===== */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .rule-layout{display:grid;grid-template-columns:210px 1fr;gap:16px}
+    .rule-nav{display:grid;gap:4px;align-content:start}
+    .rule-nav button{text-align:left;padding:11px 12px;border-radius:10px;color:#46536e;font-weight:700;transition:.16s;display:flex;align-items:center;justify-content:space-between}
+    .rule-nav button:hover{background:#fff;color:var(--primary)}
+    .rule-nav button.active{background:var(--primary);color:#fff;box-shadow:var(--shadow-sm)}
+    .rule-nav button .badge{font-size:12px;padding:1px 7px;border-radius:999px;background:#eef2fb;color:#6b7690}
+    .rule-nav button.active .badge{background:rgba(255,255,255,.24);color:#fff}
+
+    /* ===== 生成设置三级子菜单 ===== */
+    .set-sub-nav{display:flex;gap:10px;padding:16px 0 0;margin-bottom:0;flex-wrap:wrap}
+    .set-sub-tab{display:flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:#4a5670;font-weight:700;font-size:14px;transition:.16s}
+    .set-sub-tab .st-ic{font-size:16px}
+    .set-sub-tab .st-badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;background:#eef2fb;color:#6b7690}
+    .set-sub-tab:hover{border-color:rgba(14,76,146,.4);color:var(--primary);background:var(--primary-soft)}
+    .set-sub-tab.active{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(14,76,146,.2)}
+    .set-sub-tab.active .st-badge{background:rgba(255,255,255,.25);color:#fff}
+    .set-level-desc{margin:10px 0 16px;padding:0}
+    .set-level-desc .note-strip{margin-bottom:0}
+    .set-panel{display:none}
+    .set-panel.active{display:block}
+    .note-strip{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;background:var(--orange-soft);color:#9a6a00;font-size:13px;margin-bottom:12px}
+    .row-act a{color:var(--primary);font-weight:700;margin-right:12px}
+    .row-act a:hover{text-decoration:underline}
+    .row-act a.danger{color:var(--red)}
+    .search{display:inline-flex;align-items:center;gap:6px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+    .search span{color:var(--muted);font-size:14px}.search input{border:0;outline:none;background:transparent;height:32px;width:100%;color:var(--text)}
+    /* Settings */
+    .set-group{padding:18px 4px;border-bottom:1px solid var(--line-soft)}.set-group:last-child{border-bottom:0}
+    .set-label{font-weight:800;margin-bottom:12px;color:#1f2b45}
+    .radio-row{display:flex;flex-wrap:wrap;gap:12px 26px}
+    .opt{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#46536e;font-size:14px;user-select:none}
+    .opt .rd{width:18px;height:18px;border-radius:50%;border:2px solid #c4cde0;display:grid;place-items:center;transition:.15s}
+    .opt .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--primary);transform:scale(0);transition:.15s}
+    .opt.on .rd{border-color:var(--primary)}.opt.on .rd::after{transform:scale(1)}
+    .check-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;color:#46536e;font-size:14px;border-bottom:1px dashed var(--line-soft)}
+    .toggle{width:40px;height:23px;padding:2px;border-radius:999px;background:#d3dbea;transition:.16s;flex:none}
+    .toggle::after{content:"";display:block;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(21,32,58,.2);transition:.16s}
+    .toggle.on{background:var(--primary)}.toggle.on::after{transform:translateX(17px)}
+    .hidden-input{display:none}
+
+    /* ===== Compliance stage ===== */
+    .comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+    .comp-dim{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;text-align:center;transition:.2s}
+    .comp-dim h4{margin:0 0 4px;font-size:14px;display:flex;align-items:center;justify-content:center;gap:7px}
+    .comp-dim .cd-sub{color:var(--muted);font-size:12px;margin-bottom:12px;line-height:1.5}
+    .comp-ring{--v:0;width:90px;height:90px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:conic-gradient(var(--green) calc(var(--v)*1%),#e9eef7 0)}
+    .comp-ring i{width:66px;height:66px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:800;font-style:normal;font-size:22px;color:var(--text)}
+    .comp-dim .cd-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+    .comp-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm)}
+    .comp-issue{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:10px;background:#fff;display:flex;gap:12px;align-items:flex-start}
+    .comp-issue.high{border-color:#f3c9c6;background:#fff8f7}.comp-issue.mid{border-color:#f0dcbc;background:#fffaf1}.comp-issue.ok{border-color:#c7ead9;background:#f6fdf9}
+    .comp-issue .ci-ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;flex:none}
+    .comp-issue.high .ci-ic{background:var(--red);color:#fff}.comp-issue.mid .ci-ic{background:var(--orange);color:#fff}.comp-issue.ok .ci-ic{background:var(--green);color:#fff}
+    .comp-issue .ci-body{flex:1;min-width:0}.comp-issue .ci-title{font-weight:700;font-size:13.5px;color:#28324c}
+    .comp-issue .ci-detail{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.55}
+    .comp-issue .ci-acts{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+
+    /* ===== Output stage ===== */
+    .out-center{min-height:0;overflow:auto;display:flex;flex-direction:column;background:#eaf0f8}
+    .out-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 16px;background:#fff;border-bottom:1px solid var(--line)}
+    .out-toolbar-left,.out-toolbar-right{display:flex;align-items:center;gap:7px;min-width:0}
+    .out-preview{min-height:0;overflow:auto;padding:20px 24px 36px}
+    .out-rightbar{min-height:0;overflow:hidden;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column}
+    .fmt-scroll2{height:100%;overflow:auto;padding:16px 16px 24px}
+    .fmt-sec2{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+    .fmt-sec2:last-child{border-bottom:0}
+    .fmt-sec2-title{font-size:13px;font-weight:800;color:#1b2947;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+    .fmt-sec2-title .fmt-std{font-size:10.5px;font-weight:700;color:var(--cyan);background:#e6f5f8;padding:1px 6px;border-radius:5px}
+    .fmt-sec2-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px;line-height:1.5}
+    .fmt-icon-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .fmt-icon2{text-align:left;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;background:#fbfcff;cursor:pointer;transition:.16s;display:flex;align-items:center;gap:8px}
+    .fmt-icon2:hover{border-color:rgba(14,76,146,.4);background:#fff}
+    .fmt-icon2.active{border-color:var(--primary);background:var(--primary-soft);box-shadow:0 6px 14px rgba(14,76,146,.1)}
+    .fmt-icon2 .fi-pic{width:34px;height:26px;border-radius:4px;border:1.5px solid #c7cfdd;background:#fff;flex:none;position:relative;overflow:hidden}
+    .fmt-icon2 .fi-pic.red::before{content:"";position:absolute;top:4px;left:4px;right:4px;height:6px;background:#c0161b;border-radius:1px}
+    .fmt-icon2 .fi-pic.letter::before{content:"";position:absolute;top:5px;left:4px;right:4px;height:2px;background:#1b2947}
+    .fmt-icon2 .fi-pic.cmd::before{content:"";position:absolute;top:4px;left:4px;right:4px;height:6px;background:#c0161b;border-radius:1px}
+    .fmt-icon2 .fi-pic.min::before{content:"";position:absolute;top:5px;left:4px;right:4px;height:4px;background:#c0161b;opacity:.5}
+    .fmt-icon2 .fi-pic.seal-s::after{content:"";position:absolute;bottom:4px;right:4px;width:12px;height:12px;border:2px solid #c0161b;border-radius:50%}
+    .fmt-icon2 .fi-pic.seal-c::after{content:"";position:absolute;bottom:4px;right:-4px;width:12px;height:14px;border:2px solid #c0161b;background:linear-gradient(90deg,#c0161b 50%,transparent 50%)}
+    .fmt-icon2 .fi-pic.seal-e::after{content:"";position:absolute;bottom:4px;right:4px;width:12px;height:12px;border:2px dashed #0b8fa8;border-radius:50%}
+    .fmt-icon2 .fi-pic.seal-up::after{content:"⬆";position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:#9aa4b8}
+    .fmt-icon2 .fi-name{font-size:12.5px;font-weight:700;color:#33405c}
+    .fmt-pill-row2{display:flex;flex-wrap:wrap;gap:6px}
+    .fmt-pill2{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#4a5670;font-size:12.5px;font-weight:700;cursor:pointer;transition:.16s}
+    .fmt-pill2:hover{border-color:rgba(14,76,146,.4);color:var(--primary)}
+    .fmt-pill2.active{background:var(--primary);border-color:var(--primary);color:#fff}
+    .fmt-pill2.danger.active{background:var(--red);border-color:var(--red)}
+    .fmt-pill2.warn.active{background:var(--orange);border-color:var(--orange)}
+    .fmt-field2{margin-top:8px}
+    .fmt-field2 label{display:block;font-size:11.5px;font-weight:700;color:#6a7690;margin-bottom:4px}
+    .fmt-inline2{display:flex;align-items:center;gap:4px}
+    .fmt-input2{height:30px;border:1px solid var(--line);border-radius:8px;padding:0 9px;outline:none;background:#fff;font-size:13px;color:#1f2937;width:100%}
+    .fmt-input2:focus{border-color:rgba(14,76,146,.5)}
+    .fmt-bracket{font-size:14px;color:var(--muted);font-weight:700}
+    /* 公文版式 in-preview */
+    .gw-topmarks{display:flex;justify-content:space-between;min-height:22px;margin-bottom:6px}
+    .gw-secret-mark{color:var(--red);font-weight:700;font-family:"SimHei","黑体",sans-serif;font-size:15px}
+    .gw-urgency-mark{color:var(--red);font-weight:700;font-family:"SimHei","黑体",sans-serif;font-size:15px}
+    .gw-redhead{text-align:center;margin:6px 0 0}
+    .gw-redhead .gw-org{font-family:"SimSun","宋体",serif;font-size:34px;font-weight:700;color:#c0161b;letter-spacing:3px;line-height:1.4}
+    .gw-redline{height:4px;background:#c0161b;margin:10px 30px 0;border-radius:2px;box-shadow:0 2px 0 #c0161b}
+    .gw-letterhead{font-family:"SimSun","宋体",serif;font-size:22px;font-weight:700;color:#1b2947;margin-bottom:6px}
+    .gw-cmdhead{text-align:center;font-family:"SimSun","宋体",serif;font-size:30px;font-weight:700;color:#c0161b;margin:6px 0;letter-spacing:4px}
+    .gw-minhead{text-align:center;font-family:"SimSun","宋体",serif;font-size:28px;font-weight:700;color:#c0161b;margin:6px 0;letter-spacing:3px}
+    .gw-fwh{text-align:center;color:#c0161b;font-family:"FangSong","仿宋",serif;font-size:16px;margin:14px 0 22px}
+    .gw-seal-wrap{display:flex;justify-content:flex-end;padding:14px 40px 0}
+    .seal-out{width:110px;height:110px;border-radius:50%;border:4px solid #c0161b;display:grid;place-items:center;color:#c0161b;position:relative;opacity:.9}
+    .seal-out-inner{text-align:center;font-family:"SimSun","宋体",serif}
+    .seal-out-inner .so-org{font-size:13px;font-weight:700;line-height:1.3;padding:0 6px}
+    .seal-out-inner .so-star{font-size:18px;margin:2px 0}
+    .seal-out-inner .so-txt{font-size:11px;letter-spacing:1px}
+    .seal-out.cross{border-radius:0;width:130px;height:70px;clip-path:polygon(0 0,60% 0,60% 100%,0 100%)}
+    .seal-out.esign{border-style:dashed;border-color:#0b8fa8;color:#0b8fa8}
+    .seal-out.esign .so-org,.seal-out.esign .so-star,.seal-out.esign .so-txt{color:#0b8fa8}
+    .gw-banji{margin-top:26px;border-top:1px solid #1b2947;padding-top:8px;font-size:14px;color:#47536c}
+    .gw-banji-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #d8dee9}
+    .gw-banji-row:last-child{border-bottom:0}
+
+    /* ===== Modal ===== */
+    .modal-mask{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(16,24,45,.4);backdrop-filter:blur(4px)}
+    .modal-mask.show{display:flex}
+    .modal{width:min(620px,calc(100vw - 40px));max-height:calc(100vh - 60px);display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 30px 80px rgba(15,23,42,.28)}
+    .modal.wide{width:min(880px,calc(100vw - 40px))}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line);font-weight:800;font-size:15px}
+    .modal-body{padding:18px;color:#46536e;line-height:1.75;overflow:auto}
+    .modal-foot{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+    .toast{position:fixed;right:24px;top:70px;z-index:60;display:none;max-width:380px;padding:12px 15px;border-radius:11px;color:#fff;background:rgba(23,32,51,.95);box-shadow:0 16px 36px rgba(23,32,51,.22);font-size:14px}
+    .toast.show{display:block;animation:slideIn .2s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+    ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#cfd8e8;border-radius:999px}::-webkit-scrollbar-thumb:hover{background:#b7c2d8}
+    /* —— AI 视觉动效（江北新区智能体平台）—— */
+    @keyframes blink{50%{opacity:0}}
+    .typing-cursor::after{content:'▍';margin-left:2px;color:var(--ai-cyan);animation:blink 1s steps(1) infinite}
+    @keyframes dot-bounce{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
+    .thinking-dot{width:6px;height:6px;border-radius:50%;background:var(--ai-cyan);display:inline-block;animation:dot-bounce 1.2s infinite ease-in-out}
+    .thinking-dot:nth-child(2){animation-delay:.15s}.thinking-dot:nth-child(3){animation-delay:.3s}
+    .agent-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+    .agent-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(14,76,146,.15);border-color:var(--ai-cyan)}
+    .agent-avatar{background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));box-shadow:var(--ai-glow)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .bubble{animation:fadeUp .3s ease}
+    .ai-gradient-text{background:linear-gradient(90deg,#0E4C92,#13A8A8,#43A047);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .topbar .icon-btn{color:#fff;background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.22)}
+    .topbar .icon-btn:hover{background:rgba(255,255,255,.28);color:#fff;border-color:rgba(255,255,255,.4)}
+    .brand-mark{box-shadow:var(--ai-glow),0 8px 18px rgba(14,76,146,.28)}
+    .topbar .safe-mode{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.28)}
+    @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/naive-ui/dist/index.prod.js"></script>
+<script>
+const { createApp, ref, reactive, computed, nextTick, onMounted } = Vue;
+
+// ========== 全局数据常量（流程数据，保持不变） ==========
+const typeDescriptions = {
+  '商洽函':'<b>商洽函</b>：用于同级单位商洽工作、协调事务、请求协助或合作办理事项。一事一函，用语平级得体，按「背景—商洽事项—建议方案—恳请回复」结构组织。',
+  '询问函':'<b>询问函</b>：用于了解情况、征求意见或索取资料。列明依据与具体问题，明确回复时限与形式要求，按「依据—具体问题—要求」结构组织。',
+  '答复函':'<b>答复函</b>：用于回复对方的商洽、询问或来函。先引述来函字号及标题，再逐条明确答复，按「引据—答复内容—补充说明」结构组织。',
+  '请批函':'<b>请批函</b>：用于向主管部门请求批准事项。说明法规政策依据与可行性，附方案、预算等附件，按「依据—请示事项—可行性说明—附件」结构组织。',
+  '告知函':'<b>告知函</b>：用于告知对方事项，无需回复。简明扼要陈述需对方知晓的内容，按「依据—告知内容—注意事项」结构组织。',
+  '便函':'<b>便函</b>：用于非正式、内部或简单事务沟通。格式简化，可不编字号，用语灵活但保持正式礼貌。'
+};
+const nlSamples = {
+  '商洽函':'拟商请大数据管理局指定对接责任科室及联系人，配合完成政务服务数据共享接口联调，涉及企业开办、投资项目等共享字段，依据《江北新区政务数据管理办法（试行）》第十二条，请于2026年9月30日前予以支持并见复。',
+  '询问函':'拟就企业投资项目并联审批中审批时限的起算时点与中止情形计入口径，向行政审批局问询明确认定标准，涉及承诺件与容缺受理两类情形，请贵局在收函后10个工作日内予以答复。',
+  '答复函':'针对住房和城乡建设局《宁北建函〔2026〕18号》来函所询工程建设项目数据核验结果，我处已完成核验，现就核验口径与数据归集范围逐项答复，并附核验结果说明。',
+  '请批函':'拟向管委会办公室报批政务数据共享平台二期建设事项，涉及建设方案、资金测算与一期绩效评价，申请立项并安排年度预算。依据《江北新区数字政府建设三年行动计划》，二期建设资金约XXX万元。',
+  '告知函':'根据上级通知，自2026年起季度报表报送截止时间调整为每季度末月25日，请各区县统计局及时调整工作安排并通知到辖区内各填报单位。',
+  '便函':'请各单位于本周五下班前将上半年工作总结报送至办公室邮箱，内容包含重点工作进展、存在问题及下半年计划，字数控制在2000字以内。'
+};
+const SAMPLE_FILES = {
+  '商洽函':[
+    {name:'政务数据共享接口联调需求说明.docx',size:'86 KB',fmt:'DOCX',cat:'商洽需求材料',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['DOCX / Office Open XML','商洽需求材料','自动解析']},
+    {name:'共享字段范围与安全责任清单.pdf',size:'142 KB',fmt:'PDF',cat:'附件清单',catCls:'policy',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF 1.7 / 文字版','附件清单','自动解析']},
+    {name:'接口对接联系人表（扫描件）.pdf',size:'256 KB',fmt:'PDF',cat:'联系人材料',catCls:'check',final:'warn',secRes:['ok','ok','ok','ok','warn'],fmtRes:['PDF / 扫描版','联系人材料','OCR 降级解析']}
+  ],
+  '询问函':[
+    {name:'并联审批时限认定问题说明.docx',size:'72 KB',fmt:'DOCX',cat:'问询事项说明',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['DOCX / Word 2019','问询事项说明','自动解析']},
+    {name:'企业投资项目办件样本汇编.pdf',size:'188 KB',fmt:'PDF',cat:'佐证材料',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF 1.6 / 文字版','佐证材料','自动解析']}
+  ],
+  '答复函':[
+    {name:'宁北建函〔2026〕18号-来函原件.pdf',size:'96 KB',fmt:'PDF',cat:'来函原件',catCls:'incoming',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF / 版式文档','来函原件','自动解析']},
+    {name:'工程建设项目数据核验结果.docx',size:'118 KB',fmt:'DOCX',cat:'办理结果材料',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['DOCX / Word 2016','办理结果材料','自动解析']}
+  ],
+  '请批函':[
+    {name:'政务数据共享平台二期建设方案.docx',size:'324 KB',fmt:'DOCX',cat:'建设方案',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['DOCX / Word 2016','建设方案','自动解析']},
+    {name:'二期建设资金测算表.pdf',size:'168 KB',fmt:'PDF',cat:'资金测算材料',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF 1.7 / 含测算表','资金测算材料','自动解析']},
+    {name:'一期建设绩效评价报告.pdf',size:'204 KB',fmt:'PDF',cat:'绩效佐证材料',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF / 文字版','绩效佐证材料','自动解析']}
+  ],
+  '告知函':[
+    {name:'上级关于调整报表报送时间的通知.pdf',size:'64 KB',fmt:'PDF',cat:'政策依据',catCls:'policy',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['PDF / 文字版','政策依据','自动解析']}
+  ],
+  '便函':[
+    {name:'上半年工作总结报送要求.docx',size:'42 KB',fmt:'DOCX',cat:'内部通知',catCls:'',final:'ok',secRes:['ok','ok','ok','ok','ok'],fmtRes:['DOCX / Word 2019','内部通知','自动解析']}
+  ]
+};
+function getElements(type){
+  const common=[
+    {key:'docType',name:'函件类型',value:type||'商洽函',src:'fused',status:'ok',note:'依据交办描述自动判定文种。'},
+    {key:'fromOrg',name:'发文机关',value:'南京江北新区政务办公室',src:'file',status:'ok',note:'文件端提取规范全称，与机构名称库一致。'},
+    {key:'toOrg',name:'主送机关',value:'南京江北新区大数据管理局',src:'text',status:'ok',note:'由交办描述识别主送对象，已匹配机构规范全称。'},
+    {key:'title',name:'函件标题',value:'关于商洽政务服务数据共享接口联调事宜的函',src:'fused',status:'ok',note:'按「关于+事由+的函」结构规范化拟题。'},
+    {key:'matter',name:'事项名称',value:'政务服务数据共享接口联调',src:'fused',status:'ok',note:'双源事项表述一致，已规范化。'},
+    {key:'coreClaim',name:'核心诉求',value:'商请贵局指定对接责任科室及联系人，配合完成共享接口联调',src:'fused',status:'ok',note:'双源诉求一致。'},
+    {key:'basis',name:'办理依据',value:'《江北新区政务数据管理办法（试行）》第十二条',src:'fused',status:'ok',note:'已从政策依据库核验现行有效。'},
+    {key:'deadline',name:'时间节点',value:'2026年9月30日前',src:'text',status:'ok',note:'由交办描述提取时效要求，建议函中明确。'},
+    {key:'contact',name:'联系人',value:'政务办数据科 周×（025-8XXXXXXX）',src:'file',status:'ok',note:'由材料端提取。'},
+    {key:'fwzh',name:'发文字号',value:'宁北政办函〔2026〕45号',src:'fused',status:'ok',note:'按机关代字+年份+序号自动生成。'}
+  ];
+  const extra={
+    '商洽函':[{key:'closing',name:'结束语',value:'特此函商，请予支持并见复。',src:'fused',status:'ok',note:'按商洽函标准结束语匹配。'}],
+    '询问函':[
+      {key:'questions',name:'具体问题',value:'1.审批时限起算时点界定；2.中止情形计入口径；3.现行有效依据文号',src:'fused',status:'ok',note:'问题逐条列明，便于对方逐项答复。'},
+      {key:'replyDeadline',name:'回复时限',value:'收函后10个工作日内',src:'text',status:'ok',note:''},
+      {key:'closing',name:'结束语',value:'特此函询，盼予函复。',src:'fused',status:'ok',note:'按询问函标准结束语匹配。'}
+    ],
+    '答复函':[
+      {key:'incomingNo',name:'来函文号',value:'宁北建函〔2026〕18号',src:'file',status:'ok',note:'由来函原件提取，须在正文引述。'},
+      {key:'incomingTitle',name:'来函标题',value:'关于商请协助核验工程建设项目数据归集事宜的函',src:'file',status:'ok',note:'须在正文引述来函全称。'},
+      {key:'replyContent',name:'答复内容',value:'核验通过率98.6%，3条记录需补正；后续按规程按月归集',src:'fused',status:'ok',note:'逐项对应来函诉求答复。'},
+      {key:'closing',name:'结束语',value:'特此函复。',src:'fused',status:'ok',note:'按答复函标准结束语匹配。'}
+    ],
+    '请批函':[
+      {key:'approvalItem',name:'请示事项',value:'政务数据共享平台二期建设立项及资金安排',src:'fused',status:'ok',note:'事由明确。'},
+      {key:'feasibility',name:'可行性说明',value:'一期绩效评价结论良好，具备接续建设条件',src:'file',status:'ok',note:'由绩效佐证材料提取。'},
+      {key:'attachments',name:'附件清单',value:'建设方案、资金测算表、绩效评价报告',src:'file',status:'ok',note:'附件与正文一同报送。'},
+      {key:'closing',name:'结束语',value:'妥否，请批复。',src:'fused',status:'ok',note:'按请批函标准结束语匹配。'}
+    ],
+    '告知函':[
+      {key:'noticeContent',name:'告知内容',value:'自2026年起季度报表报送截止时间调整为每季度末月25日',src:'fused',status:'ok',note:'简明扼要，突出变更要点。'},
+      {key:'attention',name:'注意事项',value:'请各区县统计局及时调整工作安排并通知到辖区各填报单位',src:'fused',status:'ok',note:''},
+      {key:'closing',name:'结束语',value:'特此函告。',src:'fused',status:'ok',note:'按告知函标准结束语匹配。'}
+    ],
+    '便函':[
+      {key:'simpleMatter',name:'事项说明',value:'请各单位于本周五下班前将上半年工作总结报送至办公室邮箱',src:'text',status:'ok',note:'直接说明事项，用语简洁。'},
+      {key:'detail',name:'具体要求',value:'内容包括重点工作进展、存在问题及下半年计划，字数2000字以内',src:'text',status:'ok',note:''},
+      {key:'closing',name:'结束语',value:'谢谢支持，请查收。',src:'text',status:'ok',note:'非正式结语，保持礼貌即可。'}
+    ]
+  };
+  return (extra[type]||[]).concat(common);
+}
+const LETTER_TEMPLATES = [
+  {key:'consult',name:'商洽函',icon:'🤝',color:'#0E4C92',cat:'商洽函',scene:'同级单位商洽工作',desc:'用于同级单位商洽工作、协调事务、请求协助或合作办理事项。一事一函，用语平级得体，按「背景—商洽事项—建议方案—恳请回复」结构组织。',elements:['标题','发文字号','主送机关','背景引据','商洽事项','建议方案','恳请回复','结束语','落款','成文日期','联系人']},
+  {key:'inquiry',name:'询问函',icon:'❓',color:'#F0AD4E',cat:'询问函',scene:'业务咨询',desc:'用于了解情况、征求意见或索取资料。列明依据与具体问题，明确回复时限与形式要求，按「依据—具体问题—要求」结构组织。',elements:['标题','发文字号','主送机关','依据说明','具体问题','回复要求','结束语','落款','成文日期']},
+  {key:'reply',name:'答复函',icon:'📩',color:'#43A047',cat:'答复函',scene:'事项答复',desc:'用于回复对方的商洽、询问或来函。先引述来函字号及标题，再逐条明确答复（同意/不同意/部分同意），按「引据—答复内容—补充说明」结构组织。',elements:['标题','发文字号','主送机关','来函引述','答复内容','补充说明','结束语','落款','成文日期']},
+  {key:'approval',name:'请批函',icon:'📤',color:'#D9534F',cat:'请批函',scene:'报批协调',desc:'用于向主管部门请求批准事项。说明法规政策依据与可行性，附方案、预算等附件，按「依据—请示事项—可行性说明—附件」结构组织。',elements:['标题','发文字号','主送机关','依据法规','请示事项','可行性说明','附件清单','结束语','落款','成文日期']},
+  {key:'notice',name:'告知函',icon:'📢',color:'#6a52d6',cat:'告知函',scene:'事项告知',desc:'用于告知对方事项，无需回复。简明扼要陈述需对方知晓的内容（时间、地点、要求等），按「依据—告知内容—注意事项」结构组织。',elements:['标题','发文字号','主送机关','告知依据','告知内容','注意事项','结束语','落款','成文日期']},
+  {key:'memo',name:'便函',icon:'📝',color:'#13A8A8',cat:'便函',scene:'内部沟通',desc:'用于非正式、内部或简单事务沟通。格式简化，可不编字号，用语灵活但保持正式礼貌，适用于日常事务或平行单位间非正式沟通。',elements:['标题','主送机关','事项说明','具体要求','结束语','落款','日期']}
+];
+const TPL_PREVIEW_CONTENT = {
+  '商洽函':'<h1>关于商洽<span class="ph">[事项名称]</span>的函</h1><div class="pv-no"><span class="ph">[发文字号]</span>：XX函〔2026〕XX号</div><p class="no-indent"><span class="ph">[主送机关]</span>：</p><p>为推进<span class="ph">[工作背景]</span>，根据<span class="ph">[办理依据]</span>，我办拟就<span class="ph">[事项名称]</span>有关事宜与贵局商洽如下：</p><p class="sec">一、<span class="ph">[商洽事项一：需要对方协助、合作或办理的具体内容]</span>。</p><p class="sec">二、<span class="ph">[商洽事项二：建议方案，如时间、方式、条件等]</span>。</p><p class="sec">三、<span class="ph">[商洽事项三：其他需协调配合的工作要求]</span>。</p><p>恳请贵局于<span class="ph">[回复时限]</span>前予以研究并函复。</p><p class="end">特此函商，盼复。</p><p class="right"><span class="ph">[发文机关]</span></p><p class="right"><span class="ph">[成文日期]</span></p>',
+  '询问函':'<h1>关于询问<span class="ph">[事项名称]</span>的函</h1><div class="pv-no"><span class="ph">[发文字号]</span></div><p class="no-indent"><span class="ph">[主送机关]</span>：</p><p>根据<span class="ph">[工作部署/政策要求]</span>，现就<span class="ph">[事项名称]</span>有关问题，特向贵局咨询如下：</p><p class="sec">一、<span class="ph">[具体问题一]</span></p><p class="sec">二、<span class="ph">[具体问题二]</span></p><p class="sec">三、<span class="ph">[具体问题三]</span></p><p>请贵局于<span class="ph">[回复时限]</span>前予以书面答复。</p><p class="end">特此函询，盼予函复。</p><p class="right"><span class="ph">[发文机关]</span></p><p class="right"><span class="ph">[成文日期]</span></p>',
+  '答复函':'<h1>关于对<span class="ph">[来函标题]</span>的复函</h1><div class="pv-no"><span class="ph">[发文字号]</span></div><p class="no-indent"><span class="ph">[来函机关]</span>：</p><p>你单位《<span class="ph">[来函标题]</span>》（<span class="ph">[来函文号]</span>）收悉。经研究，现函复如下：</p><p class="sec">一、<span class="ph">[答复事项一：同意/不同意/部分同意，说明理由或替代方案]</span></p><p class="sec">二、<span class="ph">[答复事项二]</span></p><p class="sec">三、<span class="ph">[补充说明或后续安排]</span></p><p class="end">特此函复。</p><p class="right"><span class="ph">[发文机关]</span></p><p class="right"><span class="ph">[成文日期]</span></p>',
+  '请批函':'<h1>关于请求批准<span class="ph">[事项名称]</span>的函</h1><div class="pv-no"><span class="ph">[发文字号]</span></div><p class="no-indent"><span class="ph">[主管部门]</span>：</p><p>为<span class="ph">[工作目的]</span>，根据<span class="ph">[法规或政策依据]</span>，现将<span class="ph">[请示事项]</span>有关事宜报请如下：</p><p class="sec">一、<span class="ph">[待批准事项概述：项目立项/资金申请/人事调整等]</span></p><p class="sec">二、<span class="ph">[可行性说明：必要性、合规性及预期效果]</span></p><p class="sec">三、<span class="ph">[附件说明：方案、预算、依据文件等]</span></p><p>以上请示，如无不妥，请予批准。</p><p class="end">妥否，请函复。</p><p class="right"><span class="ph">[发文机关]</span></p><p class="right"><span class="ph">[成文日期]</span></p>',
+  '告知函':'<h1>关于<span class="ph">[事项名称]</span>的告知函</h1><div class="pv-no"><span class="ph">[发文字号]</span></div><p class="no-indent"><span class="ph">[收函机关]</span>：</p><p>根据<span class="ph">[政策变动/会议决定/工作安排]</span>，现将<span class="ph">[告知事项]</span>函告如下：</p><p class="sec">一、<span class="ph">[告知内容一：事项详情]</span></p><p class="sec">二、<span class="ph">[告知内容二：涉及的时间、地点、要求等]</span></p><p class="sec">三、<span class="ph">[注意事项：提醒对方配合或关注的事项]</span></p><p>请据此做好相关工作。</p><p class="end">特此函告。</p><p class="right"><span class="ph">[发文机关]</span></p><p class="right"><span class="ph">[成文日期]</span></p>',
+  '便函':'<h1>关于<span class="ph">[事项]</span>的便函</h1><p class="no-indent"><span class="ph">[收函单位/部门]</span>：</p><p><span class="ph">[直接说明事项，如会议通知、资料索取、工作提醒等]</span></p><p class="sec">一、<span class="ph">[具体要求一]</span></p><p class="sec">二、<span class="ph">[具体要求二]</span></p><p><span class="ph">[其他补充说明]</span></p><p class="end"><span class="ph">[结束语，如"谢谢支持""请查收"等]</span></p><p class="right"><span class="ph">[发文单位/部门]</span></p><p class="right"><span class="ph">[日期]</span></p>'
+};
+const KB_DATA = {
+  policy:{name:'政策依据库',icon:'📖',note:'ℹ 用于核验函件引用的政策法规名称、文号与时效，确保引用准确合规。',cols:['序号','文件名称','文号','时效'],rows:[['1','党政机关公文处理工作条例','中办发〔2012〕14号','现行有效'],['2','党政机关公文格式','GB/T 9704—2012','现行有效'],['3','江北新区政务数据管理办法（试行）','江北管〔2025〕18号','现行有效'],['4','江北新区数字政府建设三年行动计划','宁新区管发〔2025〕3号','现行有效'],['5','江北新区专项资金管理办法','宁新区财〔2024〕21号','现行有效']]},
+  history:{name:'历史函件库',icon:'🗂',note:'ℹ 同类事项历史函件文稿与优秀范例，用于生成参考与范例召回。',cols:['序号','函件标题','文种','归档时间'],rows:[['1','关于商洽政务服务数据共享接口联调事宜的函','商洽函','2026-07-13'],['2','关于对工程建设项目数据核验事宜的复函','答复函','2026-07-12'],['3','关于请求批准平台二期建设的函','请批函','2026-07-10'],['4','关于调整报表报送时间的告知函','告知函','2026-07-05']]},
+  expr:{name:'标准表述库',icon:'✍',note:'ℹ 政务公文规范表述、固定句式与官方口径，用于表述规范校验。',cols:['序号','标准表述','不规范表述','适用场景'],rows:[['1','特此函商，盼复。','请回复。','商洽函'],['2','特此函询，盼予函复。','快回复。','询问函'],['3','特此函复。','已回复。','答复函'],['4','妥否，请批复。','行不行？','请批函'],['5','原则同意','尽量同意/基本同意','通用'],['6','请予支持','帮帮忙','商洽函']]},
+  tone:{name:'用语规范库',icon:'📝',note:'ℹ 横向行文（平级）用语规范，忌用命令、请示口吻，统一协商性表述。',cols:['序号','忌用词','替换建议','原因'],rows:[['1','责成','商请','命令口吻，横向行文不宜'],['2','着即','请','下行文书用语'],['3','限于','请于','命令口吻'],['4','速将','请将','命令口吻'],['5','搞定','完成','口语化，非正式'],['6','马上','即','口语化，非正式']]}
+};
+const HISTORY_DATA = [
+  ['关于商洽政务服务数据共享接口联调事宜的函','商洽函','非涉密','2026-07-17 10:08','政务办',8,8,'已归档','done'],
+  ['关于答复工程建设项目数据核验结果的复函','答复函','内部','2026-07-16 15:40','政务办',6,6,'已归档','done'],
+  ['关于请求批准平台二期建设资金的函','请批函','非涉密','2026-07-15 09:22','政务办',9,9,'已归档','done'],
+  ['关于咨询并联审批时限认定标准的函','询问函','非涉密','2026-07-14 14:12','政务办',5,5,'已归档','done'],
+  ['关于调整报表报送时间的告知函','告知函','非涉密','2026-07-12 11:05','政务办',3,3,'已归档','done'],
+  ['关于报送上半年工作总结的便函','便函','非涉密','2026-07-10 16:30','办公室',2,2,'已归档','done'],
+  ['关于商洽联合举办公开日活动的函','商洽函','内部','2026-07-08 10:18','政务办',7,5,'待复核','wait'],
+  ['关于请求批准数据共享试点的函','请批函','秘密','2026-07-06 09:45','数据局',4,0,'生成中','doing']
+];
+const setLevelDescs = {
+  system:'🏛 <b>系统层级</b> · 面向系统管理员，可配置全局策略、安全规则、知识库与模型调度等全部参数。修改后将影响全局默认行为。',
+  bureau:'🏢 <b>局办层级</b> · 面向各局办管理员，可配置本部门常用文种、校验维度与安全策略。部分参数由系统层级限定范围，不可越权调整。',
+  personal:'👤 <b>个人层级</b> · 面向个人经办用户，可配置个人偏好与常用模板。核心策略、校验维度、安全规则由系统/局办统一管控。'
+};
+const LAYOUTS=[{k:'general',name:'通用格式',pic:'red'},{k:'letter',name:'信函格式',pic:'letter'},{k:'command',name:'命令(令)格式',pic:'cmd'},{k:'minutes',name:'纪要格式',pic:'min'}];
+const SEALS=[{k:'single',name:'单一印章',pic:'seal-s'},{k:'cross',name:'骑缝章',pic:'seal-c'},{k:'esign',name:'电子签章',pic:'seal-e'},{k:'upload',name:'上传公章',pic:'seal-up'}];
+const SECRETS=['非涉密','内部','秘密','机密'];
+const SECRET_TERMS=['—','10年','20年','30年','长期'];
+const URGS=[{k:'常规',cls:''},{k:'加急',cls:'warn'},{k:'特急',cls:'danger'},{k:'特提',cls:'danger'}];
+const NAV_ITEMS=[{ic:'📄',name:'智能生成'},{ic:'📑',name:'函件模板库'},{ic:'📚',name:'知识库管理'},{ic:'⚙',name:'生成设置'},{ic:'🕑',name:'历史记录'}];
+const SEC_LABELS=['类型白名单','大小限制','病毒扫描','敏感初筛','完整性'];
+const TYPES=['商洽函','询问函','答复函','请批函','告知函','便函'];
+const TYPE_ICONS={'商洽函':'🤝','询问函':'❓','答复函':'📩','请批函':'📤','告知函':'📢','便函':'📝'};
+
+const app = createApp({
+  setup(){
+    // —— 主题配置（江北新区：深海军蓝+青蓝+绿）——
+    const themeOverrides = { common:{
+      primaryColor:'#0E4C92', primaryColorHover:'#1377B5', primaryColorPressed:'#0A3573', primaryColorSuppl:'#13A8A8',
+      infoColor:'#13A8A8', infoColorHover:'#2BBDBD',
+      successColor:'#43A047', successColorHover:'#66BB6A',
+      warningColor:'#F0AD4E', errorColor:'#D9534F',
+      borderRadius:'10px'
+    }};
+
+    // —— 响应式状态（对应原 state，流程不变）——
+    const view = ref('gen');
+    const stage = ref('init');
+    const selectedType = ref('商洽函');
+    const files = reactive([]);
+    const extractedElems = ref(null);
+    const verifyElems = ref(null);
+    const verifyPassed = ref(false);
+    const generated = ref(false);
+    const docEdited = ref(false);
+    const editing = ref(false);
+    const compliance = ref(null);
+    const compliancePassed = ref(false);
+    const archived = ref(false);
+    const extractTableShown = ref(false);
+    const kbCat = ref('policy');
+    const activeSetLevel = ref('system');
+    const statusText = ref('就绪 · 请选择函件类型、录入交办描述并上传参考材料');
+    const nlText = ref('');
+    const userTemplates = reactive([]);
+    const finalDocRef = ref(null);
+    const outFmt = reactive({layout:'letter',seal:'single',secret:'非涉密',secretTerm:'—',urgency:'常规',
+      daiZi:'宁北政办函',year:'2026',seq:'45',
+      yinFa:'南京江北新区政务办公室',yinFaDate:'2026年7月17日',
+      fromOrg:'',date:'',signer:'',cc:'',pubAttr:'active',note:''});
+    const _extractElemsSet = ref(new Set());
+
+    // —— 弹窗 / 提示 ——
+    const modal = reactive({show:false,title:'',wide:false,hideFooter:false,okText:'确认',okHandler:null,html:'',progress:null});
+    const toast = reactive({show:false,msg:''});
+    let toastTimer=null;
+    function showToast(msg){clearTimeout(toastTimer);toast.msg=msg;toast.show=true;toastTimer=setTimeout(()=>toast.show=false,2200)}
+    function openModal(title,html,onOk,opts){
+      opts=opts||{};modal.title=title;modal.html=html;modal.progress=null;
+      modal.hideFooter=!!opts.hideFooter;modal.okText=opts.okText||'确认';
+      modal.wide=!!opts.wide;modal.okHandler=onOk||null;modal.show=true;
+    }
+    function closeModal(){modal.show=false}
+    function onModalOk(){if(typeof modal.okHandler==='function')modal.okHandler();else modal.show=false}
+
+    // —— 计算属性 ——
+    const typeDesc = computed(()=>typeDescriptions[selectedType.value]);
+    const statusMeta = computed(()=>'文种：'+selectedType.value+' · 密级：非涉密 · 当前页 1/1');
+    const parseProg = computed(()=>{
+      if(!files.length) return {show:false,done:false,pct:0,stage:'等待上传材料…'};
+      let total=0,done=0;
+      files.forEach(f=>{total+=f.secRes.length+f.fmtRes.length;f.secRes.forEach(s=>{if(s!=='pending')done++});f.fmtRes.forEach(s=>{if(!String(s).includes('…'))done++})});
+      const pct=total?Math.round(done/total*100):0;
+      const anySecPend=files.some(f=>f.secRes.some(s=>s==='pending'));
+      const anyFmtPend=files.some(f=>f.fmtRes.some(s=>String(s).includes('…')));
+      const stageTxt=pct>=100?'全部材料已完成安全校验与格式识别，可进入要素抽取':anySecPend?'当前阶段：安全校验（类型/大小/病毒/敏感内容）':anyFmtPend?'当前阶段：格式识别与材料分类':'当前阶段：要素预解析';
+      return {show:true,done:pct>=100,pct,stage:stageTxt};
+    });
+    const initReady = computed(()=>{
+      const has=files.length>0;
+      const allDone=has&&files.every(f=>f.final!=='pending');
+      return allDone?'✓ 已就绪，可进入要素抽取':has?'材料解析中…':'请选择函件类型并上传参考材料';
+    });
+    const extractRows = computed(()=>extractedElems.value||[]);
+    const extractSummary = computed(()=>{
+      const e=extractedElems.value||[];
+      if(!e.length||!extractTableShown.value) return '等待抽取…';
+      const okN=e.filter(x=>x.status==='ok').length, warnN=e.filter(x=>x.status==='warn').length;
+      return '共 '+e.length+' 项 · 通过 '+okN+' · 待确认 '+warnN;
+    });
+    const verifyDims = computed(()=>{
+      const e=verifyElems.value||[];
+      return [
+        {name:'准确性校验',cnt:e.filter(x=>['docType','fromOrg','toOrg','title','matter','coreClaim','basis','deadline','contact','fwzh','incomingNo','incomingTitle'].includes(x.key)&&x.status!=='ok').length},
+        {name:'内容合规校验',cnt:e.filter(x=>['closing','replyContent','approvalItem','feasibility','noticeContent','simpleMatter'].includes(x.key)&&x.status!=='ok').length},
+        {name:'语气得体校验',cnt:e.filter(x=>['closing','questions','detail','attention'].includes(x.key)&&x.status!=='ok').length}
+      ];
+    });
+    const verifySummary = computed(()=>{
+      const e=verifyElems.value||[];
+      if(!e.length) return '等待校验…';
+      const warnN=e.filter(x=>x.status==='warn').length;
+      return '共 '+e.length+' 项 · 通过 '+(e.length-warnN)+' · 待修正 '+warnN;
+    });
+    const kbCurrent = computed(()=>KB_DATA[kbCat.value]);
+    const setLevelDesc = computed(()=>setLevelDescs[activeSetLevel.value]);
+    const outDocHTML = computed(()=>buildOutDoc());
+
+    // —— 流程步骤条 ——
+    function setFlow(n){ /* 由 stage 计算，模板直接渲染 */ }
+    function flowClass(i){
+      const n=i+1, cur=stage.value;
+      const order={init:1,extract:2,verify:3,gen:4,compliance:5,output:6};
+      const curN=order[cur];
+      if(n<curN) return 'done';
+      if(n===curN) return 'current';
+      return '';
+    }
+    function setStatus(t){statusText.value=t}
+    function ensureOutFmt(){
+      const elems=verifyElems.value||extractedElems.value||getElements(selectedType.value);
+      const getV=k=>{const e=elems.find(x=>x.key===k);return e?e.value:''};
+      if(!outFmt.fromOrg)outFmt.fromOrg=getV('fromOrg');
+      if(!outFmt.date)outFmt.date='2026年7月17日';
+      if(!outFmt.yinFa)outFmt.yinFa=(outFmt.fromOrg||'南京江北新区政务办公室');
+    }
+    function setStage(s){
+      stage.value=s;
+      const map={init:'就绪 · 请选择函件类型、录入交办描述并上传参考材料',extract:'要素抽取：双源融合抽取核心要素',verify:'要素校验：可直接修改要素并重新校验',gen:'正文生成 · 可编辑预览，支持AI润色与结合修改重写',compliance:'合规校验：内容/格式/语气三维度校验',output:'成果输出配置 · 按 GB/T 9704—2012 版式渲染'};
+      setStatus(map[s]);
+      if(s==='output'){ ensureOutFmt(); }
+    }
+
+    // —— ① 函件类型选择 ——
+    function selectType(t){
+      selectedType.value=t;
+      files.splice(0,files.length);
+    }
+
+    // —— ② 自然语言 ——
+    function fillSample(){
+      nlText.value=nlSamples[selectedType.value]||'';
+      showToast('已填充【'+selectedType.value+'】场景示例');
+    }
+
+    // —— ③ 材料上传 ——
+    function onUpload(){
+      if(files.length>0) return;
+      uploadSamples();
+    }
+    function uploadSamples(){
+      const samples=SAMPLE_FILES[selectedType.value]||SAMPLE_FILES['商洽函'];
+      files.splice(0,files.length);
+      simulateUpload(samples);
+      showToast('已上传【'+selectedType.value+'】示例材料，正在逐份校验…');
+    }
+    function simulateUpload(templates){
+      templates.forEach((tmpl,fi)=>{
+        const f={name:tmpl.name,size:tmpl.size,fmt:tmpl.fmt,cat:tmpl.cat,catCls:tmpl.catCls||'',final:'pending',secRes:['pending','pending','pending','pending','pending'],fmtRes:['解析中…','识别中…','匹配中…']};
+        files.push(f);const idx=files.length-1;
+        tmpl.secRes.forEach((res,si)=>{setTimeout(()=>{if(files[idx]){files[idx].secRes[si]=res}},400+fi*1200+si*300)});
+        tmpl.fmtRes.forEach((res,fi2)=>{setTimeout(()=>{if(files[idx]){files[idx].fmtRes[fi2]=res}},400+fi*1200+tmpl.secRes.length*300+fi2*250)});
+        setTimeout(()=>{if(files[idx]){files[idx].final=tmpl.final}},400+fi*1200+tmpl.secRes.length*300+tmpl.fmtRes.length*250+200);
+      });
+    }
+    function removeFile(idx){files.splice(idx,1)}
+    function ocrFile(idx){const f=files[idx];if(f){f.final='ok';f.fmtRes[2]='OCR 文本化完成';showToast('OCR识别完成')}}
+    function ckCls(s){return s==='ok'?'ok':s==='warn'?'warn':s==='fail'?'fail':'pending'}
+    function ckTxt(s,label){if(s==='ok')return'✓ '+label;if(s==='warn')return'! '+label;if(s==='fail')return'✕ '+label;return'⏳ '+label}
+
+    // —— 下一步 → 要素抽取 ——
+    function goExtract(){
+      verifyElems.value=null;verifyPassed.value=false;generated.value=false;extractTableShown.value=false;
+      setStage('extract');
+      openExtractModal();
+    }
+    function srcLabel(src){return src==='file'?'文件端':src==='text'?'文本端':'融合采信'}
+
+    // —— 要素抽取弹窗（动态展示）——
+    function openExtractModal(){
+      const elems=extractedElems.value=getElements(selectedType.value);
+      const total=elems.length;
+      modal.show=true;modal.title='要素抽取 · 动态展示';modal.wide=true;modal.hideFooter=true;modal.html='';modal.okHandler=null;
+      modal.progress={sub:'基于参考材料（文件端）与交办描述（文本端）双源融合抽取，要素随函件类型「'+selectedType.value+'」动态调整',total,rows:[],barPct:0,done:false,nextLabel:'进入要素校验 ›',nextDisabled:true,onNext:function(){closeModal();setStage('verify');renderVerify();},stat:'已抽取 0 / '+total};
+      let i=0;
+      const t=setInterval(()=>{
+        const p=modal.progress;
+        if(i>=total){clearInterval(t);p.done=true;p.nextDisabled=false;p.stat='已抽取 '+total+' / '+total+' 项';extractTableShown.value=true;return}
+        const e=elems[i];
+        p.rows.push({name:e.name,src:e.src,value:e.value});
+        p.barPct=Math.round((i+1)/total*100);
+        p.stat='已抽取 '+(i+1)+' / '+total;
+        i++;
+      },240);
+    }
+    function reopenExtract(){
+      extractedElems.value=null;verifyElems.value=null;extractTableShown.value=false;
+      openExtractModal();
+    }
+    function goVerify(){setStage('verify');renderVerify()}
+
+    // —— 要素校验 ——
+    function renderVerify(){
+      if(!verifyElems.value) verifyElems.value=(extractedElems.value||getElements(selectedType.value)).map(e=>Object.assign({},e,{initValue:e.value}));
+    }
+    function recheckVerify(){
+      const elems=verifyElems.value||[];
+      const edited=elems.some(e=>e.initValue!==undefined && e.value!==e.initValue);
+      if(edited){elems.forEach(e=>{if(e.status==='warn'){e.status='ok';e.note='已修正，二次校验通过。'}});verifyPassed.value=true;showToast('校验通过，可点击「生成函件初稿」')}
+      else{showToast('仍有待修正要素，请修改标红项后重新校验')}
+    }
+    function genDraft(){
+      if(!verifyPassed.value){const elems=verifyElems.value||[];const warns=elems.filter(e=>e.status==='warn');if(warns.length){showToast('尚有 '+warns.length+' 项待修正，请修改后重新校验再生成初稿');return}}
+      generated.value=true;setStage('gen');nextTick(()=>renderGenDoc());showToast('函件初稿已生成');
+    }
+    function renderGenDoc(){
+      const elems=verifyElems.value||extractedElems.value||getElements(selectedType.value);
+      const doc=buildDocHTML(elems,selectedType.value);
+      if(finalDocRef.value){finalDocRef.value.innerHTML=doc;finalDocRef.value.setAttribute('contenteditable','false');}
+      editing.value=false;docEdited.value=false;
+    }
+    function editToggle(){
+      const doc=finalDocRef.value;if(!doc)return;
+      if(editing.value){doc.setAttribute('contenteditable','false');editing.value=false;docEdited.value=true;showToast('正文修改已保存，可进行 AI 润色或结合修改重写')}
+      else{doc.setAttribute('contenteditable','true');editing.value=true;doc.focus();showToast('可直接在正文中修改，完成后点击「完成编辑」')}
+    }
+
+    // —— AI 润色 ——
+    function polish(){
+      const steps=['识别正文结构与段落…','校核行文规范与公文格式…','优化句式衔接与逻辑递进…','统一政务用语风格（平级商洽/询问/答复）…','检查标点符号与排版…','生成润色后文稿…'];
+      modal.show=true;modal.title='AI 润色';modal.wide=true;modal.hideFooter=true;modal.html='';modal.okHandler=null;
+      modal.progress={sub:'校核行文规范、优化句式衔接、统一用语风格，保持政务公文严谨性',total:steps.length,rows:[],barPct:0,done:false,nextLabel:null,onDone:function(){applyPolish();showToast('AI 润色完成，可在预览区查看')},stat:''};
+      let i=0;
+      const t=setInterval(()=>{
+        const p=modal.progress;
+        if(i>=steps.length){clearInterval(t);p.done=true;p.barPct=100;p.rows.push({name:'已优化行文表述，保持政务公文严谨性与横向行文得体性'});setTimeout(()=>{closeModal();if(p.onDone)p.onDone()},700);return}
+        p.rows.push({name:steps[i]});p.barPct=Math.round((i+1)/steps.length*100);i++;
+      },380);
+    }
+    function applyPolish(){
+      const doc=finalDocRef.value;if(!doc)return;let html=doc.innerHTML;
+      html=html.replace(/请(?!予|贵|查|核|批|示|函)/g,'商请').replace(/要求/g,'商请').replace(/必须/g,'请').replace(/责成/g,'商请').replace(/尽快/g,'抓紧').replace(/搞好/g,'做好').replace(/弄/g,'办理').replace(/马上/g,'即').replace(/特此请示/g,'特此函商').replace(/请批示/g,'请批复').replace(/严格执行/g,'认真落实');
+      doc.innerHTML=html;docEdited.value=true;
+    }
+
+    // —— AI 结合修改重写 ——
+    function rewrite(){
+      if(!docEdited.value){showToast('尚未修改正文，建议先编辑后再重写，或直接使用 AI 润色')}
+      const stages=['识别用户修改内容与意图…','召回匹配的知识库依据与标准表述…','按修改意图重新组织正文结构…','逐段落生成：引据→事项→诉求→结束语…','大模型行文规范化与口径统一…','初稿校对：格式 / 要素 / 语气三维度核查…'];
+      modal.show=true;modal.title='结合修改重写';modal.wide=true;modal.hideFooter=true;modal.html='';modal.okHandler=null;
+      modal.progress={sub:'识别用户修改意图，结合原始要素与知识库，重新生成完整正文',total:stages.length,rows:[],barPct:0,done:false,nextLabel:null,onDone:function(){applyRewrite();showToast('结合修改重写完成')},stat:''};
+      let i=0;
+      const t=setInterval(()=>{
+        const p=modal.progress;
+        if(i>=stages.length){clearInterval(t);p.done=true;p.barPct=100;p.rows.push({name:'已基于编辑内容重新生成完整正文，可继续编辑或导出'});setTimeout(()=>{closeModal();if(p.onDone)p.onDone()},700);return}
+        p.rows.push({name:stages[i]});p.barPct=Math.round((i+1)/stages.length*100);i++;
+      },420);
+    }
+    function applyRewrite(){
+      const doc=finalDocRef.value;if(!doc)return;
+      const elems=verifyElems.value||extractedElems.value||getElements(selectedType.value);
+      let html=buildDocHTML(elems,selectedType.value);
+      html=html.replace(/商洽如下/g,'商洽如下（结合经办人修改意见调整）：');
+      doc.innerHTML=html;doc.setAttribute('contenteditable','false');editing.value=false;docEdited.value=false;
+    }
+
+    // —— AI 校验 ——
+    function aiCheck(){
+      const doc=finalDocRef.value;const text=doc?doc.textContent:'';
+      const has=kw=>text.indexOf(kw)>=0;
+      const badWords=['确保','一次性','万无一失','坚决杜绝','全部清零','责成','着即','限于','速将','即报'].filter(has);
+      const casualWords=['搞定','搞好','弄','马上','差不多','回头'].filter(has);
+      const checks=[
+        {name:'公文格式规范',ok:true,detail:'标题 / 主送 / 层级 / 落款 / 成文日期要素完整'},
+        {name:'标点符号',ok:true,detail:'句末标点使用规范，全角/半角统一'},
+        {name:'敏感涉密表述',ok:true,detail:'未检出敏感涉密或不宜公开内容'},
+        {name:'政策口径',ok:true,detail:'引用的政策依据名称与文号格式规范'},
+        {name:'绝对化用语',ok:!badWords.length,detail:badWords.length?'检出不适合横向行文的用语：'+badWords.join('、')+'，建议替换为过程性表述':'未检出绝对化或不规范用语'},
+        {name:'口语化表述',ok:!casualWords.length,detail:casualWords.length?'检出非正式口语化表述：'+casualWords.join('、')+'，建议替换为政务规范用语':'未检出非正式口语化表述'},
+        {name:'横向行文语气',ok:true,detail:'用语平级得体，未检出命令/请示口吻'},
+        {name:'逻辑自洽',ok:true,detail:'要素前后一致，引据→事项→诉求→结束语逻辑通顺'}
+      ];
+      const failN=checks.filter(c=>!c.ok).length;
+      const rows=checks.map(c=>'<div class="airow '+(c.ok?'ok':'warn')+'"><span class="aiic">'+(c.ok?'✓':'!')+'</span><div class="aibody"><div class="ainame">'+c.name+'</div><div class="aidetail">'+c.detail+'</div></div></div>').join('');
+      const footer=failN
+        ?'<div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end;"><button class="btn" onclick="window.__closeModal()">知道了</button><button class="primary-btn" onclick="window.__aiFix()">一键修正</button></div>'
+        :'<div style="margin-top:14px;text-align:right;"><button class="primary-btn" onclick="window.__closeModal()">确认</button></div>';
+      openModal('AI 内容校验','<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px 14px;border-radius:11px;background:'+(failN?'var(--orange-soft)':'var(--green-soft)')+';"><div style="font-size:24px;">'+(failN?'⚠':'✓')+'</div><div><div style="font-weight:800;color:'+(failN?'#9a6a00':'var(--green)')+';">'+(failN?'发现 '+failN+' 项待优化':'校验通过')+'</div><div style="font-size:12.5px;color:var(--muted);">针对当前预览区正文进行内容/格式/语气三维度校验</div></div></div><div class="ai-list">'+rows+'</div>'+(failN?'<div style="margin-top:10px;color:var(--muted);font-size:12.5px;">点击「一键修正」可对检出的不规范用语自动替换为政务规范表述。</div>':'')+footer,null,{wide:true,hideFooter:true});
+    }
+    function applyAiFix(){
+      const doc=finalDocRef.value;if(!doc)return;let html=doc.innerHTML;
+      html=html.replace(/确保/g,'推动').replace(/一次性/g,'集中').replace(/万无一失/g,'尽力保障').replace(/坚决杜绝/g,'切实防范').replace(/全部清零/g,'整改闭环').replace(/责成/g,'商请').replace(/着即/g,'请').replace(/限于/g,'请于').replace(/速将/g,'请将').replace(/即报/g,'函告').replace(/搞定/g,'完成').replace(/搞好/g,'做好').replace(/弄/g,'办理').replace(/差不多/g,'基本').replace(/回头/g,'后续');
+      doc.innerHTML=html;closeModal();docEdited.value=true;showToast('已自动修正不规范用语，请复核');
+    }
+
+    // —— 流程按钮 ——
+    function goCompliance(){setStage('compliance');doCompliance();showToast('请点击「一键合规校验」对正文进行全面检查')}
+    function backToVerify(){setStage('verify');renderVerify()}
+    function backToGen(){setStage('gen')}
+    function copyGen(){if(finalDocRef.value)navigator.clipboard.writeText(finalDocRef.value.textContent).then(()=>showToast('已复制全文到剪贴板'))}
+
+    // —— 合规校验 ——
+    function doCompliance(){
+      const doc=finalDocRef.value;const text=doc?doc.textContent:'';
+      const has=kw=>text.indexOf(kw)>=0;
+      const type=selectedType.value;
+      const contentIssues=[];
+      if(!has('关于')||!has('的函'))contentIssues.push({level:'high',dim:'content',label:'标题格式不规范',detail:'函件标题应包含"关于…的函/复函"文种标志，当前标题缺少完整文种结构。',act:'focus'});
+      if(type==='答复函'&&!has('收悉'))contentIssues.push({level:'high',dim:'content',label:'答复函缺少来函引述',detail:'答复函应在正文首段引述来函标题及文号（"……收悉"），再逐项答复。',act:'focus'});
+      if(type==='商洽函'&&!has('商洽'))contentIssues.push({level:'mid',dim:'content',label:'商洽函应体现商洽性质',detail:'正文中建议明确"商洽""商请"等协商性表述，确保与文种性质相符。',act:'focus'});
+      const hasClosing=has('特此函商')||has('特此函询')||has('特此函复')||has('特此函告')||has('妥否')||has('谢谢');
+      if(!hasClosing)contentIssues.push({level:'high',dim:'content',label:'缺少法定结束语',detail:'函件须在正文末尾使用法定结束语（如"特此函商""特此函复""妥否，请批复"等）。',act:'focus'});
+      if(hasClosing)contentIssues.push({level:'ok',dim:'content',label:'结束语符合文种要求',detail:'已检测到法定结束语，与当前函件类型匹配。',act:''});
+      contentIssues.push({level:'ok',dim:'content',label:'核心要素齐备',detail:'发文机关、主送机关、事项名称、核心诉求、落款等要素均已体现。',act:''});
+      const formatIssues=[];
+      const fwzhEl=text.match(/〔\d{4}〕\d+号/);
+      if(!fwzhEl&&type!=='便函')formatIssues.push({level:'high',dim:'format',label:'缺少发文字号',detail:'正式函件应标注发文字号（机关代字+年份+序号），便函可免编字号。',act:'auto'});
+      if(fwzhEl)formatIssues.push({level:'ok',dim:'format',label:'发文字号格式合规',detail:'发文字号格式为"机关代字〔2026〕XX号"，符合《党政机关公文格式》要求。',act:''});
+      if(!has('：'))formatIssues.push({level:'high',dim:'format',label:'主送机关缺冒号',detail:'主送机关后应使用全角冒号"："。',act:'auto'});
+      else formatIssues.push({level:'ok',dim:'format',label:'主送格式规范',detail:'主送机关顶格书写、使用全角冒号，格式合规。',act:''});
+      if(!has('2026')&&!has('二〇二六'))formatIssues.push({level:'mid',dim:'format',label:'成文日期',detail:'建议检查落款日期是否标注（应为汉字数字标注，如"二〇二六年七月十七日"）。',act:'focus'});
+      else formatIssues.push({level:'ok',dim:'format',label:'成文日期已标注',detail:'落款日期要素完整。',act:''});
+      formatIssues.push({level:'ok',dim:'format',label:'正文段首缩进',detail:'正文段落已按公文格式设置首行缩进。',act:''});
+      const toneIssues=[];
+      const badCmds=['责成','着即','限于','速将','即报','望即','特此请示','请批示'];
+      const foundBad=badCmds.filter(has);
+      if(foundBad.length)toneIssues.push({level:'mid',dim:'tone',label:'存在不适配横向行文的用语',detail:'检出命令/请示口吻词：'+foundBad.map(w=>'「'+w+'」').join('、')+'。横向行文（平级）宜用协商性用语。',act:'auto'});
+      else toneIssues.push({level:'ok',dim:'tone',label:'无命令/请示口吻',detail:'用语平级得体，未检测到不适配横向行文的命令或请示口吻表述。',act:''});
+      const casualWords=['搞定','搞好','弄','马上','差不多','回头','大概','基本'];
+      const foundCasual=casualWords.filter(has);
+      if(foundCasual.length)toneIssues.push({level:'mid',dim:'tone',label:'存在非正式口语化表述',detail:'检出：'+foundCasual.map(w=>'「'+w+'」').join('、')+'，建议替换为政务规范用语。',act:'auto'});
+      else toneIssues.push({level:'ok',dim:'tone',label:'无口语化表述',detail:'用语文书正式，符合政务公文规范。',act:''});
+      toneIssues.push({level:'ok',dim:'tone',label:'横向行文语气得体',detail:'正文未使用下行文命令口吻，符合平级单位间行文规范。',act:''});
+      const allIssues=[...contentIssues,...formatIssues,...toneIssues];
+      compliance.value={content:contentIssues,format:formatIssues,tone:toneIssues,all:allIssues};
+      compliancePassed.value=allIssues.filter(i=>i.level==='high').length===0;
+      return allIssues;
+    }
+    const compDimData = computed(()=>{
+      if(!compliance.value) return [];
+      const dimData=[
+        {key:'content',label:'内容合规',icon:'📋',desc:'要素完整·诉求明确·依据充分',issues:compliance.value.content},
+        {key:'format',label:'格式规范',icon:'📐',desc:'发文字号·主送格式·段落缩进',issues:compliance.value.format},
+        {key:'tone',label:'语气得体',icon:'✒️',desc:'平级用语·无命令/口语化',issues:compliance.value.tone}
+      ];
+      return dimData.map(d=>{
+        const total=d.issues.length,risk=d.issues.filter(i=>i.level==='high').length,mid=d.issues.filter(i=>i.level==='mid').length;
+        const score=Math.max(40,100-risk*25-mid*10);
+        return Object.assign({},d,{total,risk,mid,score});
+      });
+    });
+    const compSummary = computed(()=>{
+      if(!compliance.value) return '点击「一键合规校验」对当前正文进行全面合规检查';
+      const all=compliance.value.all;
+      const highN=all.filter(i=>i.level==='high').length,midN=all.filter(i=>i.level==='mid').length,okN=all.filter(i=>i.level==='ok').length;
+      return '校验完成 · 高风险 '+highN+' · 提示 '+midN+' · 合规 '+okN;
+    });
+    function dimTagCls(dim){return dim==='content'?'low':dim==='format'?'mid':'done'}
+    function autoFixCompIssue(label){
+      const doc=finalDocRef.value;if(!doc)return;let html=doc.innerHTML;
+      if(label==='缺少发文字号'){const elems=verifyElems.value||extractedElems.value||[];const fwzh=(elems.find(e=>e.key==='fwzh')||{}).value||'宁北政办函〔2026〕XX号';html='<div class="gw-fwzh">'+fwzh+'</div>'+html.replace(/<div class="gw-fwzh">[^<]*<\/div>/,'');}
+      if(label==='主送机关缺冒号')html=html.replace(/([^：:])(<\/p>)/,'$1：$2');
+      if(label==='存在不适配横向行文的用语'){html=html.replace(/责成/g,'商请').replace(/着即/g,'请').replace(/限于/g,'请于').replace(/速将/g,'请将').replace(/即报/g,'函告').replace(/望即/g,'请').replace(/特此请示/g,'特此函商').replace(/请批示/g,'请批复');}
+      if(label==='存在非正式口语化表述'){html=html.replace(/搞定/g,'完成').replace(/搞好/g,'做好').replace(/弄/g,'办理').replace(/差不多/g,'基本').replace(/回头/g,'后续').replace(/大概/g,'约').replace(/基本/g,'原则上');}
+      doc.innerHTML=html;doCompliance();showToast('已自动修复「'+label+'」');
+    }
+    function runComplianceBtn(){doCompliance();showToast(compliancePassed.value?'合规校验通过，可进入成果输出':'校验完成，请处理风险项后重新校验')}
+    function focusGenEdit(){setStage('gen');nextTick(()=>{if(finalDocRef.value){finalDocRef.value.setAttribute('contenteditable','true');editing.value=true;finalDocRef.value.focus()}})}
+    function goOutputFromComp(){setStage('output')}
+    function outBack(){setStage('compliance');doCompliance()}
+    function archive(){archived.value=true;setStatus('已归档 · 函件智能生成完成');showToast('函件已归档，可导出 Word/PDF')}
+    function copyOut(){const el=document.getElementById('finalOutDoc');if(el)navigator.clipboard.writeText(el.textContent).then(()=>showToast('已复制全文到剪贴板'))}
+
+    // —— 视图切换 ——
+    function navClick(idx){
+      if(idx===0)switchView('gen');
+      else if(idx===1)switchView('templates');
+      else if(idx===2)switchView('knowledge');
+      else if(idx===3)switchView('settings');
+      else if(idx===4)switchView('history');
+    }
+    function switchView(v){
+      view.value=v;
+      if(v==='gen')setStage(stage.value);
+    }
+
+    // —— 成果输出：版式配置 ——
+    function fmtClick(field,val){outFmt[field]=val}
+    function fmtInput(field,e){outFmt[field]=e.target.value}
+
+    // —— 函件模板库 ——
+    function tplTagCls(name){return{商洽函:'low',询问函:'mid',答复函:'done',请批函:'high',告知函:'low',便函:'doing'}[name]||'low'}
+    function previewLetterTpl(name){
+      const t=LETTER_TEMPLATES.find(x=>x.name===name);
+      const content=TPL_PREVIEW_CONTENT[name]||'<p>模板内容加载中…</p>';
+      openModal('模板预览 · '+name,'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;"><span class="tag low">'+name+'</span><span class="tag '+(name==='答复函'?'done':name==='请批函'?'high':name==='询问函'?'mid':'low')+'">'+t.cat+' · '+t.scene+'</span><span style="color:var(--muted);font-size:12.5px;">遵循《党政机关公文格式》GB/T 9704—2012 · 橙底占位符为待填充要素</span></div><div class="tpl-preview-doc">'+content+'</div><div style="margin-top:10px;padding:9px 11px;border-radius:8px;background:#f3f7ff;color:#4a597a;font-size:12.5px;line-height:1.6">📋 模板要素：'+t.elements.map(e=>'<span style="background:#e8f1fa;padding:1px 6px;border-radius:4px;margin:0 2px;">'+e+'</span>').join(' ')+'</div><div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end;"><button class="btn" onclick="window.__closeModal()">关闭</button><button class="primary-btn" onclick="window.__applyTpl(\''+name+'\')">套用此模板</button></div>',null,{wide:true,hideFooter:true});
+    }
+    function applyLetterTpl(name){
+      closeModal();
+      state_selectedType(name);
+      switchView('gen');setStage('init');
+      nlText.value=nlSamples[name]||'';
+      showToast('已套用【'+name+'】模板，返回任务发起页');
+    }
+    function state_selectedType(t){selectedType.value=t}
+    function previewUserTpl(name){
+      const t=userTemplates.find(x=>x.name===name);if(!t)return;
+      const idx=n=>['一、','二、','三、','四、','五、','六、','七、','八、'][n]||(n+1)+'、';
+      const body=t.elements.slice(0,6).map((e,i)=>'<p class="sec">'+idx(i)+'<span class="ph">['+e+']</span></p>').join('');
+      openModal('模板预览 · '+name,'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;"><span class="tag doing">我的模板</span><span style="color:var(--muted);font-size:12.5px;">来源：'+t.source+' · '+t.elements.length+' 项要素</span></div><div class="tpl-preview-doc"><h1>关于<span class="ph">[事项名称]</span>的函</h1><p class="no-indent"><span class="ph">[主送机关]</span>：</p><p><span class="ph">[引据段落]</span></p>'+body+'<p class="end"><span class="ph">[结束语]</span></p></div><div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end;"><button class="btn" onclick="window.__closeModal()">关闭</button><button class="primary-btn" onclick="window.__applyUserTpl(\''+name+'\')">套用此模板</button></div>',null,{wide:true,hideFooter:true});
+    }
+    function delUserTpl(name){const i=userTemplates.findIndex(x=>x.name===name);if(i>=0){userTemplates.splice(i,1);showToast('模板「'+name+'」已删除')}}
+    function applyUserTpl(name){closeModal();switchView('gen');setStage('init');showToast('已套用我的模板「'+name+'」，返回任务发起页')}
+    function tplImport(){showToast('导入模板（Demo 占位）')}
+    function tplUploadExtract(){openExtractTplModal('关于商洽数据共享接口联调事宜的函（示例）.docx')}
+    function openExtractTplModal(fileName){
+      const detected=['标题','发文字号','主送机关','引据','事项说明','诉求内容','建议方案','结束语','落款','成文日期'];
+      _extractElemsSet.value=new Set(detected);
+      const stages=['解析文件格式与版式…','识别文种与结构层级…','抽取要素节点…','归纳模板要素结构…','生成模板预览…'];
+      modal.show=true;modal.title='上传示例创建模板';modal.wide=true;modal.hideFooter=true;modal.html='';modal.okHandler=null;
+      modal.progress={sub:'文件：'+fileName+' · 系统将解析文种结构、抽取要素节点，归纳为可复用模板',total:stages.length,rows:[],barPct:0,done:false,nextLabel:null,onDone:function(){renderExtractTplForm(fileName,detected)},stat:''};
+      let i=0;
+      const t=setInterval(()=>{
+        const p=modal.progress;
+        if(i>=stages.length){clearInterval(t);p.done=true;p.barPct=100;setTimeout(()=>{if(p.onDone)p.onDone()},360);return}
+        p.rows.push({name:stages[i]});p.barPct=Math.round((i+1)/stages.length*100);i++;
+      },440);
+    }
+    function renderExtractTplForm(fileName,detected){
+      const opts=detected.map(e=>'<span class="cc-opt on" data-elem="'+e+'" onclick="window.__toggleElem(this)"><span class="cbx"></span>'+e+'</span>').join('');
+      modal.progress=null;modal.hideFooter=false;modal.okText='保存为新模板';modal.wide=true;
+      modal.title='确认模板结构与命名';
+      modal.html='<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:var(--green-soft);"><span style="font-size:18px;">✓</span><div><div style="font-weight:800;color:var(--green);">已从示例文件提取结构</div><div style="font-size:12.5px;color:var(--muted);">来源：'+fileName+' · 可调整要素并命名后保存为新模板</div></div></div><div class="field" style="margin-bottom:14px;"><label>模板名称（用户自定义命名）</label><input type="text" id="xtName" style="width:100%;height:40px;padding:0 13px;border:1px solid var(--line);border-radius:10px;outline:none;font-size:14px;" placeholder="如：政务数据共享商洽函模板" value="'+fileName.replace(/\.[^.]+$/,'').slice(0,12)+'模板"></div><div class="field" style="margin-bottom:14px;"><label>识别出的要素结构（点击可取消/勾选调整）</label><div class="cc-row">'+opts+'</div></div>';
+      modal.okHandler=function(){
+        const nm=(document.getElementById('xtName').value||'').trim();if(!nm){showToast('请输入模板名称');return}
+        if(userTemplates.some(t=>t.name===nm)){showToast('已存在同名模板，请改名');return}
+        const elems=Array.from(_extractElemsSet.value);if(!elems.length){showToast('请至少保留一项要素');return}
+        userTemplates.push({name:nm,elements:elems,source:'示例文件提取',created:'2026-07-17'});
+        closeModal();showToast('新模板「'+nm+'」已保存');
+      };
+    }
+    function toggleElemEl(el){
+      const v=el.dataset.elem;
+      if(el.classList.contains('on')){el.classList.remove('on');_extractElemsSet.value.delete(v)}
+      else{el.classList.add('on');_extractElemsSet.value.add(v)}
+    }
+    function tplAdd(){
+      openModal('新增模板','<div class="field" style="margin-bottom:14px;"><label>模板名称</label><input type="text" id="xtName" style="width:100%;height:40px;padding:0 13px;border:1px solid var(--line);border-radius:10px;outline:none;font-size:14px;" placeholder="如：专项资金商洽函模板"></div><div class="field"><label>要素结构（逗号分隔）</label><input type="text" id="xtElems" style="width:100%;height:40px;padding:0 13px;border:1px solid var(--line);border-radius:10px;outline:none;font-size:14px;" value="标题,发文字号,主送机关,引据,事项,诉求,建议,结束语,落款,日期"></div>',()=>{
+        const nm=(document.getElementById('xtName').value||'').trim();if(!nm){showToast('请输入模板名称');return}
+        const elems=(document.getElementById('xtElems').value||'').split(/[,，]/).map(s=>s.trim()).filter(Boolean);
+        if(!elems.length){showToast('请至少填写一项要素');return}
+        userTemplates.push({name:nm,elements:elems,source:'手动创建',created:'2026-07-17'});
+        closeModal();showToast('新模板「'+nm+'」已保存');
+      });
+    }
+
+    // —— 知识库管理 ——
+    function kbSelect(k){kbCat.value=k}
+    function kbAct(act){
+      if(act==='import')showToast('导入知识库条目（Demo 占位）');
+      if(act==='export')showToast('导出知识库（Demo 占位）');
+      if(act==='add'){const c=KB_DATA[kbCat.value];c.rows.push([String(c.rows.length+1),'新条目','—','现行有效']);showToast('添加知识库条目（Demo 占位）')}
+      if(act==='batchDel')showToast('批量删除（Demo 占位）');
+    }
+    function kbRowEdit(){showToast('编辑条目（Demo 占位）')}
+    function kbRowDel(ri){KB_DATA[kbCat.value].rows.splice(ri,1);showToast('已删除条目')}
+
+    // —— 生成设置 ——
+    const settingsState = reactive({
+      mode:'自然语言+附件', sysType:'商洽函', tone:'智能适配', conf:'查准', llm:'使用', model:'默认',
+      contentCheck:true,formatCheck:true,toneCheck:true,policyCheck:true,gbCheck:true,
+      safeMode:true,dualSource:true,audit:true,autoKb:true,secret:'非涉密',
+      kbPolicy:true,kbExpr:true,kbRel:true,
+      bureauType:'商洽函',bureauTone:'智能适配',bureauLlm:'使用',
+      bureauContent:true,bureauFormat:true,bureauToneCheck:true,bureauSafe:true,bureauSecret:'内部',
+      persType:'商洽函',persTone:'智能适配',persLlm:'使用',persSize:'标准',persZoom:'100%',
+      persTpl1:true,persTpl2:true,persTpl3:true,persNotify:true,persCheckNotify:true,persTplNotify:true
+    });
+    function switchSetLevel(level){activeSetLevel.value=level}
+    function setAct(act){
+      if(act==='reset')showToast('已恢复「'+{system:'系统',bureau:'局办',personal:'个人'}[activeSetLevel.value]+'层级」默认设置');
+      if(act==='save')showToast('已保存「'+{system:'系统',bureau:'局办',personal:'个人'}[activeSetLevel.value]+'层级」设置');
+    }
+
+    // —— 历史记录 ——
+    function histStatus(r){return r[7]}
+    function histStatusTxt(r){return r[7]==='done'?'已归档':r[7]==='wait'?'待复核':'生成中'}
+    function histStatusCls(r){return r[7]}
+    function histAct(act){if(act==='export')showToast('导出历史台账（Demo 占位）');if(act==='filter')showToast('已按条件筛选')}
+
+    // —— 正文构建（流程核心，保持不变）——
+    function buildDocHTML(elems,type){
+      const getV=key=>{const e=elems.find(x=>x.key===key);return e?e.value:''};
+      let doc='';
+      const fwzh=getV('fwzh');
+      if(fwzh)doc+='<div class="gw-fwzh">'+fwzh+'</div>';
+      doc+='<h1>'+getV('title')+'</h1>';
+      doc+='<p class="no-indent">'+getV('toOrg')+'：</p>';
+      if(type==='答复函'){
+        doc+='<p>你单位《'+getV('incomingTitle')+'》（'+getV('incomingNo')+'）收悉。经研究，现函复如下：</p>';
+        doc+='<p class="sec">'+getV('replyContent')+'</p>';
+      }else if(type==='商洽函'){
+        doc+='<p>为推进全区政务服务数据共享工作，根据<span class="cite">'+getV('basis')+'</span>，我办拟就'+getV('matter')+'有关事宜与贵局商洽如下：</p>';
+        doc+='<p class="sec">一、'+getV('coreClaim')+'。</p>';
+        doc+='<p class="sec">二、为保障工作进度，拟商请于<span class="hl">'+getV('deadline')+'</span>前完成联调测试。</p>';
+      }else if(type==='询问函'){
+        doc+='<p>我办在开展相关工作中，就'+getV('matter')+'存在疑问，根据'+getV('basis')+'，特向贵局咨询如下：</p>';
+        const qs=(getV('questions')||'').split(/[；;]/).filter(Boolean);
+        qs.forEach((q,i)=>doc+='<p class="sec">'+(i+1)+'、'+q.trim()+'；</p>');
+        doc+='<p>以上问题，请于<span class="hl">'+getV('replyDeadline')+'</span>前予以函复。</p>';
+      }else if(type==='请批函'){
+        doc+='<p>为保障全区政务数据共享平台建设连续推进，根据<span class="cite">'+getV('basis')+'</span>，现将'+getV('approvalItem')+'有关事宜报请协调如下：</p>';
+        doc+='<p class="sec">一、'+getV('coreClaim')+'，经测算需建设资金约XXX万元。</p>';
+        doc+='<p class="sec">二、'+getV('feasibility')+'，建议纳入本级财政预算。</p>';
+      }else if(type==='告知函'){
+        doc+='<p>根据上级通知要求，现将有关事项函告如下：</p>';
+        doc+='<p class="sec">'+getV('noticeContent')+'。</p>';
+        doc+='<p>'+getV('attention')+'。</p>';
+      }else if(type==='便函'){
+        doc+='<p>'+getV('simpleMatter')+'。</p>';
+        doc+='<p>'+getV('detail')+'。</p>';
+      }
+      doc+='<p class="end">'+getV('closing')+'</p>';
+      doc+='<p class="right">'+getV('fromOrg')+'</p><p class="right">2026年7月17日</p>';
+      const contact=getV('contact');
+      if(contact)doc+='<div class="doc-attr">联系人：'+contact+' · 生成方式：自然语言+附件 · 智能体版本 v2.0</div>';
+      return doc;
+    }
+
+    // —— 成果输出版式渲染（流程核心，保持不变）——
+    function buildOutDoc(){
+      const f=outFmt;
+      const elems=verifyElems.value||extractedElems.value||getElements(selectedType.value);
+      const getV=key=>{const e=elems.find(x=>x.key===key);return e?e.value:''};
+      const type=selectedType.value;
+      const secretMark=f.secret!=="非涉密"?'<span class="gw-secret-mark">'+f.secret+(f.secretTerm!=="—"?"·"+f.secretTerm:"")+'</span>':"<span></span>";
+      const urgMark=f.urgency!=="常规"?'<span class="gw-urgency-mark">'+f.urgency+'</span>':"<span></span>";
+      let header="";
+      if(f.layout==="general")header='<div class="gw-redhead"><div class="gw-org">'+(f.fromOrg||'南京江北新区政务办公室')+'</div><div class="gw-redline"></div></div>';
+      else if(f.layout==="letter")header='<div class="gw-letterhead">'+(f.fromOrg||'南京江北新区政务办公室')+'</div>';
+      else if(f.layout==="command")header='<div class="gw-cmdhead">'+(f.fromOrg||'南京江北新区政务办公室')+'令</div>';
+      else if(f.layout==="minutes")header='<div class="gw-minhead">'+(f.fromOrg||'南京江北新区政务办公室')+'会议纪要</div>';
+      const fwh='<div class="gw-fwh">'+f.daiZi+'〔'+f.year+'〕'+f.seq+'号</div>';
+      let body='';
+      const title=f.layout==="command"?'<h1>关于'+(getV('matter')||'有关事项')+'的命令</h1>':'<h1>'+(getV('title')||'函件标题')+'</h1>';
+      body+='<p class="no-indent">'+(getV('toOrg')||'主送机关')+'：</p>';
+      if(type==='答复函'){
+        body+='<p>你单位《'+(getV('incomingTitle')||'来函标题')+'》（'+(getV('incomingNo')||'来函文号')+'）收悉。经研究，现函复如下：</p>';
+        body+='<p class="sec">'+(getV('replyContent')||'答复内容')+'</p>';
+      }else if(type==='商洽函'){
+        body+='<p>为推进全区政务服务数据共享工作，根据<span class="cite">'+(getV('basis')||'依据')+'</span>，我办拟就'+(getV('matter')||'事项')+'有关事宜与贵局商洽如下：</p>';
+        body+='<p class="sec">一、'+(getV('coreClaim')||'核心诉求')+'。</p>';
+        body+='<p class="sec">二、为保障工作进度，拟商请于<span class="hl">'+(getV('deadline')||'时间节点')+'</span>前完成。</p>';
+      }else if(type==='询问函'){
+        body+='<p>我办在开展相关工作中，就'+(getV('matter')||'事项')+'存在疑问，根据'+(getV('basis')||'依据')+'，特向贵局咨询如下：</p>';
+        const qs=(getV('questions')||'').split(/[；;]/).filter(Boolean);
+        qs.forEach((q,i)=>body+='<p class="sec">'+(i+1)+'、'+q.trim()+'；</p>');
+        body+='<p>以上问题，请于<span class="hl">'+(getV('replyDeadline')||'回复时限')+'</span>前予以函复。</p>';
+      }else if(type==='请批函'){
+        body+='<p>为保障全区政务数据共享平台建设连续推进，根据<span class="cite">'+(getV('basis')||'依据')+'</span>，现将'+(getV('approvalItem')||'请示事项')+'有关事宜报请协调如下：</p>';
+        body+='<p class="sec">一、'+(getV('coreClaim')||'核心诉求')+'，经测算需建设资金约XXX万元。</p>';
+        body+='<p class="sec">二、'+(getV('feasibility')||'可行性说明')+'。</p>';
+      }else if(type==='告知函'){
+        body+='<p>根据上级通知要求，现将有关事项函告如下：</p>';
+        body+='<p class="sec">'+(getV('noticeContent')||'告知内容')+'。</p>';
+        body+='<p>'+(getV('attention')||'注意事项')+'。</p>';
+      }else if(type==='便函'){
+        body+='<p>'+(getV('simpleMatter')||'事项说明')+'。</p>';
+        body+='<p>'+(getV('detail')||'具体要求')+'。</p>';
+      }
+      body+='<p class="end">'+(getV('closing')||'结束语')+'</p>';
+      const sealOrg=f.fromOrg||'南京江北新区政务办公室';
+      let seal='';
+      if(f.seal!=="upload"){
+        const sealCls=f.seal==="cross"?"cross":f.seal==="esign"?"esign":"";
+        const sealLabel=f.seal==="cross"?"骑缝章":f.seal==="esign"?"电子签章":"公章";
+        seal='<div class="gw-seal-wrap"><div class="seal-out '+sealCls+'"><div class="seal-out-inner"><div class="so-org">'+sealOrg+'</div><div class="so-star">★</div><div class="so-txt">'+sealLabel+'</div></div></div></div>';
+      }
+      body+=seal;
+      body+='<p class="right" style="margin-top:6px;">'+(f.date||'2026年7月17日')+'</p>';
+      const banji='<div class="gw-banji"><div class="gw-banji-row"><span>印发机关：'+(f.yinFa||'')+'</span><span>印发日期：'+(f.yinFaDate||'')+'</span></div><div class="gw-banji-row"><span>'+(f.cc?'抄送：'+f.cc:'')+'</span><span>公开属性：'+(f.pubAttr==='active'?'主动公开':f.pubAttr==='inner'?'依申请公开':'不予公开')+'</span></div></div>';
+      return '<div class="gw-topmarks">'+secretMark+urgMark+'</div>'+header+fwh+title+body+banji;
+    }
+
+    onMounted(()=>{
+      window.__closeModal=closeModal;
+      window.__aiFix=applyAiFix;
+      window.__applyTpl=applyLetterTpl;
+      window.__applyUserTpl=applyUserTpl;
+      window.__toggleElem=toggleElemEl;
+    });
+
+    return {
+      themeOverrides,view,stage,selectedType,files,extractedElems,verifyElems,verifyPassed,generated,docEdited,editing,compliance,compliancePassed,archived,extractTableShown,kbCat,activeSetLevel,statusText,nlText,userTemplates,finalDocRef,outFmt,modal,toast,
+      NAV_ITEMS,LETTER_TEMPLATES,KB_DATA,HISTORY_DATA,LAYOUTS,SEALS,SECRETS,SECRET_TERMS,URGS,SEC_LABELS,TYPES,TYPE_ICONS,nlSamples,
+      typeDesc,statusMeta,parseProg,initReady,extractRows,extractSummary,verifyDims,verifySummary,kbCurrent,setLevelDesc,outDocHTML,compDimData,compSummary,settingsState,
+      showToast,openModal,closeModal,onModalOk,setStage,flowClass,selectType,fillSample,onUpload,uploadSamples,removeFile,ocrFile,ckCls,ckTxt,goExtract,srcLabel,reopenExtract,goVerify,renderVerify,recheckVerify,genDraft,editToggle,goCompliance,backToVerify,backToGen,copyGen,doCompliance,dimTagCls,autoFixCompIssue,runComplianceBtn,focusGenEdit,goOutputFromComp,outBack,archive,copyOut,navClick,switchView,fmtClick,fmtInput,tplTagCls,previewLetterTpl,applyLetterTpl,previewUserTpl,delUserTpl,applyUserTpl,tplImport,tplUploadExtract,tplAdd,kbSelect,kbAct,kbRowEdit,kbRowDel,switchSetLevel,setAct,histStatusTxt,histStatusCls,histAct,buildDocHTML
+    };
+  },
+  template: `
+  <n-config-provider :theme-overrides="themeOverrides">
+    <div class="app">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">政AI</span><span>函件智能生成<small>江北新区政务AI智能中台 · 横向行文函件专用智能体</small></span></div>
+        <div class="top-actions"><span class="safe-mode">🛡 安全模式 · 文稿不出域</span><n-button class="icon-btn" circle>政</n-button></div>
+      </header>
+
+      <!-- LEFT NAV -->
+      <aside class="leftnav">
+        <div class="nav-cap">功能菜单</div>
+        <button v-for="(nv,idx) in NAV_ITEMS" :key="'nav'+idx" class="nav-item" :class="{active:(view==='gen'&&idx===0)||(view==='templates'&&idx===1)||(view==='knowledge'&&idx===2)||(view==='settings'&&idx===3)||(view==='history'&&idx===4)}" @click="navClick(idx)"><span class="ic">{{nv.ic}}</span>{{nv.name}}</button>
+      </aside>
+
+      <!-- VIEW: 智能生成 -->
+      <div class="view" id="view-gen" :class="{active:view==='gen'}" :data-stage="stage">
+        <section class="flowbar">
+          <template v-for="(s,i) in ['任务发起','要素抽取','要素校验','正文生成','合规校验','归档输出']">
+            <div class="flow-step" :key="'fs'+i"><button class="flow-node" :class="flowClass(i)"><span class="n">{{i+1}}</span>{{s}}</button></div>
+            <div class="flow-arrow" v-if="i<5" :key="'fa'+i"></div>
+          </template>
+        </section>
+
+        <div id="stageRoot">
+          <!-- Stage: 任务发起 -->
+          <div class="stage" id="stageInit">
+            <div class="init-scroll">
+              <div class="init-layout">
+                <div class="init-main">
+                  <div class="init-head"><div><div class="page-title">任务发起</div><div class="page-sub">多模态统一任务入口 · 兼容正式来文、口头交办、混合指令三类场景</div></div><div class="init-step-tag">流程 1 / 6 · 任务发起</div></div>
+                  <div class="init-card"><div class="card-head"><div class="card-title"><span class="sec-no">1</span>函件类型选择</div><span class="hint">选择文种与场景，用于模板匹配与要素结构校验</span></div>
+                    <div class="card-body">
+                      <div class="type-inline">
+                        <button v-for="t in TYPES" :key="t" class="type-pill" :class="{active:selectedType===t}" @click="selectType(t)"><span class="tp-ic">{{TYPE_ICONS[t]}}</span>{{t}}</button>
+                      </div>
+                      <div class="type-desc"><span class="td-ic">💡</span><span v-html="typeDesc"></span></div>
+                    </div>
+                  </div>
+                  <div class="init-card"><div class="card-head"><div class="card-title"><span class="sec-no">2</span>交办描述（自然语言）</div><n-button size="small" @click="fillSample">📋 填充示例</n-button></div>
+                    <div class="card-body"><div class="nl-input"><n-input v-model:value="nlText" type="textarea" :rows="6" :placeholder="'请输入领导交办或业务描述，如：'+(nlSamples[selectedType]||'')" /><div class="nl-foot"><span class="hint">💡 无需上传附件即可生成函件；与附件配合可双源互补</span><span class="nl-count">{{nlText.length}} 字</span></div></div></div>
+                  </div>
+                  <div class="init-card"><div class="card-head"><div class="card-title"><span class="sec-no">3</span>参考材料上传</div><span class="hint">支持 DOC/DOCX/PDF/TXT/OFD · 可批量上传，解析结果见右侧</span></div>
+                    <div class="card-body">
+                      <n-upload :show-file-list="false" :custom-request="onUpload" multiple>
+                        <div class="dropzone"><div class="dz-ic">📁</div><div class="dz-t">点击或拖拽文件到此处上传</div><div class="dz-s">来函原件 · 需求说明 · 政策依据 · 佐证材料</div><n-button type="primary">选择文件</n-button></div>
+                      </n-upload>
+                      <div style="display:flex;gap:8px;margin-top:10px;"><n-button block @click="uploadSamples">⚡ 一键上传示例材料</n-button></div>
+                    </div>
+                  </div>
+                </div>
+                <aside class="init-side"><div class="side-card">
+                  <div class="side-head"><div class="side-title">📋 材料解析</div><span class="side-count">{{files.length}} 份</span></div>
+                  <div class="parse-prog" :class="{show:parseProg.show,done:parseProg.done}"><div class="pp-head"><span class="pp-lbl"><span v-if="!parseProg.done" class="spin"></span><template v-if="!parseProg.done">正在解析材料…</template><template v-else>✓ 材料解析完成</template></span><span class="pp-pct">{{parseProg.pct}}%</span></div><div class="pp-bar"><i :style="{width:parseProg.pct+'%'}"></i></div><div class="pp-stage">{{parseProg.stage}}</div></div>
+                  <div class="file-check-list">
+                    <div v-if="!files.length" class="side-empty"><div class="eic">📎</div>尚未上传材料<br><span style="font-size:12px;">上传后将自动执行安全校验与格式识别</span></div>
+                    <div v-for="(f,idx) in files" :key="idx" class="fc-card" :class="{warn:f.final==='warn',err:f.final==='err',pending:f.final==='pending'}">
+                      <div class="fc-head"><span class="fc-ic">📄</span><span class="fc-name">{{f.name}}</span><span class="fc-meta">{{f.size}}</span><span class="fc-type">{{f.fmt}}</span><span class="fc-tag" :class="f.catCls">{{f.cat}}</span>
+                        <n-tag v-if="f.final==='ok'" size="small" type="success">✓ 校验通过</n-tag>
+                        <n-tag v-else-if="f.final==='warn'" size="small" type="warning">待补录</n-tag>
+                        <n-tag v-else-if="f.final==='pending'" size="small" type="info"><span class="spin"></span> 解析中</n-tag>
+                        <n-tag v-else size="small" type="error">✕ 已拦截</n-tag>
+                        <button class="mini-btn" @click="removeFile(idx)">移除</button>
+                      </div>
+                      <div v-if="f.final==='pending' && f.secRes.some(s=>s==='pending')" class="fc-row2"><span class="fc-label">安全校验</span><div class="fc-items"><span v-for="(s,si) in f.secRes" :key="si" class="ck" :class="ckCls(s)" v-html="ckTxt(s,SEC_LABELS[si])"></span></div></div>
+                      <div v-else class="fc-row2"><div class="fc-fmt-wrap"><span v-for="(v,fi) in f.fmtRes" :key="fi" :class="String(v).includes('…')?'fc-fmt pend':'fc-fmt'"><template v-if="String(v).includes('…')"><span class="spin"></span>{{['格式','分类','策略'][fi]}}解析中</template><template v-else><b>{{['格式','分类','策略'][fi]}}：</b>{{v}}</template></span></div><button v-if="f.final==='warn'" class="mini-btn ocr" @click="ocrFile(idx)">🔍 OCR识别</button></div>
+                    </div>
+                  </div>
+                </div></aside>
+              </div>
+              <div class="init-actions"><n-button>取消</n-button><div style="flex:1;"></div><span class="hint">{{initReady}}</span><n-button type="primary" @click="goExtract">下一步：要素抽取 ›</n-button></div>
+            </div>
+          </div>
+
+          <!-- Stage: 要素抽取 -->
+          <div class="stage" id="stageExtract">
+            <div class="page-scroll">
+              <div class="sub-head"><div><div class="page-title">要素抽取</div><div class="page-sub">核心要素智能抽取与多源融合 · 文件端 + 文本端双源对齐 · 流程 2 / 6</div></div><div class="init-step-tag">流程 2 / 6 · 要素抽取</div></div>
+              <div class="card"><div class="card-head"><div class="card-title">已抽取要素（双源融合）</div><div class="toolbar-inline"><span class="hint" v-html="extractSummary"></span><n-button size="small" @click="reopenExtract">重新抽取</n-button><n-button type="primary" size="small" @click="goVerify">下一步：要素校验 ›</n-button></div></div>
+                <div class="card-body" style="padding:0;"><div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:50px;">序号</th><th style="width:130px;">要素</th><th>抽取内容</th><th style="width:96px;">来源</th><th style="width:96px;">状态</th></tr></thead><tbody>
+                  <tr v-if="!extractRows.length || !extractTableShown"><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">点击「重新抽取」按钮开始要素抽取</td></tr>
+                  <tr v-for="(e,i) in extractRows" v-else :key="e.key"><td>{{i+1}}</td><td style="font-weight:700;color:#28324c;">{{e.name}}</td><td style="color:#37425c;">{{e.value}}</td><td><span class="src-tag" :class="e.src">{{srcLabel(e.src)}}</span></td><td><n-tag v-if="e.status==='ok'" size="small" type="success">已通过</n-tag><n-tag v-else-if="e.status==='warn'" size="small" type="warning">待确认</n-tag><n-tag v-else size="small" type="error">异常</n-tag></td></tr>
+                </tbody></table></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage: 要素校验 -->
+          <div class="stage" id="stageVerify">
+            <div class="page-scroll">
+              <div class="sub-head"><div><div class="page-title">要素校验</div><div class="page-sub">多维度校验（准确性 / 内容合规 / 语气得体）· 支持直接修改并重新校验 · 流程 3 / 6</div></div><div class="init-step-tag">流程 3 / 6 · 要素校验</div></div>
+              <div class="card"><div class="card-head"><div class="card-title">要素校验与修正</div><div class="toolbar-inline"><span class="hint" v-html="verifySummary"></span><n-button size="small" @click="recheckVerify">重新校验</n-button><n-button type="primary" size="small" @click="genDraft">生成函件初稿</n-button></div></div>
+                <div class="card-body" style="padding:14px 16px 16px;">
+                  <div class="verify-dims">
+                    <div v-for="(d,i) in verifyDims" :key="i" class="vdim" :class="d.cnt?'warn':'ok'"><span class="vd-ic">{{d.cnt?'!':'✓'}}</span><span class="vd-name">{{d.name}}</span><span class="vd-cnt">{{d.cnt?'待修正 '+d.cnt:'通过'}}</span></div>
+                  </div>
+                  <div>
+                    <div v-for="e in (verifyElems||[])" :key="e.key" class="ve-row" :class="e.status!=='ok'?'warn':'ok'">
+                      <div class="ve-name">{{e.name}}<span v-if="e.status!=='ok'" class="ve-req">*</span></div>
+                      <n-input v-model:value="e.value" :disabled="e.key==='docType'" />
+                      <div class="ve-src"><span class="src-tag" :class="e.src">{{srcLabel(e.src)}}</span></div>
+                      <div class="ve-status"><n-tag v-if="e.status==='ok'" size="small" type="success">通过</n-tag><n-tag v-else size="small" type="warning">待修正</n-tag></div>
+                      <div v-if="e.note && e.status!=='ok'" class="ve-note">{{e.note}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Stage: 正文生成 -->
+          <div class="stage" id="stageGen">
+            <section class="toolbar">
+              <div class="toolbar-left">
+                <n-button size="small" @click="backToVerify">‹ 返回校验</n-button>
+                <n-tag type="success" size="small">✓ 校验通过</n-tag>
+              </div>
+              <div class="toolbar-right">
+                <n-button size="small" @click="editToggle">{{editing?'✓ 完成编辑':'✎ 编辑正文'}}</n-button>
+                <n-button size="small" @click="polish">🪄 AI 润色</n-button>
+                <n-button size="small" @click="rewrite">🔄 结合修改重写</n-button>
+                <n-button size="small" @click="aiCheck">🔍 AI 校验</n-button>
+                <n-button size="small" @click="copyGen">复制全文</n-button>
+                <n-button type="primary" size="small" @click="goCompliance">下一步：合规校验 ›</n-button>
+              </div>
+            </section>
+            <div class="draft-note">💡 预览内容支持直接点击修改；修改后可「AI 润色」优化行文表述，或「结合修改重写」基于编辑内容重新生成完整正文。</div>
+            <section class="workspace"><div class="doc-wrap"><article class="gw-doc" ref="finalDocRef"></article></div></section>
+          </div>
+
+          <!-- Stage: 合规校验 -->
+          <div class="stage" id="stageCompliance">
+            <div class="page-scroll">
+              <div class="sub-head"><div><div class="page-title">合规校验</div><div class="page-sub">内容 / 格式 / 语气三维度校验 · 风险定位跳转 · 一键优化修复 · 流程 5 / 6</div></div><div class="init-step-tag">流程 5 / 6 · 合规校验</div></div>
+              <div class="comp-actions">
+                <n-button size="small" @click="backToGen">‹ 返回初稿</n-button>
+                <n-button type="primary" size="small" @click="runComplianceBtn">🛡 一键合规校验</n-button>
+                <span class="hint" style="flex:1;" v-html="compSummary"></span>
+                <n-button v-if="compliancePassed" type="primary" size="small" @click="goOutputFromComp">下一步：成果输出 ›</n-button>
+              </div>
+              <div class="comp-grid">
+                <div v-for="d in compDimData" :key="d.key" class="comp-dim">
+                  <h4>{{d.icon}} {{d.label}}</h4>
+                  <div class="cd-sub">{{d.desc}}</div>
+                  <div class="comp-ring" :style="{'--v':d.score}"><i>{{d.score}}</i></div>
+                  <div class="cd-tags">
+                    <n-tag v-if="d.risk" size="small" type="error">风险 {{d.risk}}</n-tag>
+                    <n-tag v-if="d.mid" size="small" type="warning">提示 {{d.mid}}</n-tag>
+                    <n-tag v-if="!d.risk && !d.mid" size="small" type="success">✓ 通过</n-tag>
+                  </div>
+                </div>
+              </div>
+              <div class="card" v-if="compliance">
+                <div class="card-head"><div class="card-title">校验明细</div><span class="hint">共 {{compliance.all.length}} 项</span></div>
+                <div class="card-body">
+                  <div v-for="(iss,i) in compliance.all" :key="i" class="comp-issue" :class="iss.level">
+                    <div class="ci-ic">{{iss.level==='high'?'⛔':iss.level==='mid'?'⚠':'✓'}}</div>
+                    <div class="ci-body">
+                      <div class="ci-title"><n-tag size="tiny" :type="iss.dim==='content'?'info':iss.dim==='format'?'warning':'success'" style="margin-right:6px">{{iss.dim==='content'?'内容合规':iss.dim==='format'?'格式规范':'语气得体'}}</n-tag>{{iss.label}}</div>
+                      <div class="ci-detail">{{iss.detail}}</div>
+                      <div class="ci-acts" v-if="iss.act">
+                        <button v-if="iss.act==='auto'" class="mini-btn" @click="autoFixCompIssue(iss.label)">🔧 一键修复</button>
+                        <button v-if="iss.act==='focus'" class="mini-btn" @click="focusGenEdit">定位修改</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage: 成果输出 -->
+          <div class="stage" id="stageOutput">
+            <div class="out-center">
+              <section class="out-toolbar">
+                <div class="out-toolbar-left">
+                  <n-button size="small" @click="outBack">‹ 返回合规校验</n-button>
+                  <n-tag type="success" size="small">✓ 合规校验通过</n-tag>
+                  <span class="hint" style="color:#8b95a7;font-size:13px;">最终函件文稿 · 按所选版式渲染</span>
+                </div>
+                <div class="out-toolbar-right">
+                  <n-button size="small" @click="copyOut">复制全文</n-button>
+                  <n-button size="small" @click="showToast('导出 Word（Demo 占位，实际将导出符合 GB/T 9704 版式的公文）')">⬇ 导出 Word</n-button>
+                  <n-button size="small" @click="showToast('导出 PDF（Demo 占位，实际将导出符合 GB/T 9704 版式的公文）')">⬇ 导出 PDF</n-button>
+                  <n-button type="primary" size="small" @click="archive">📦 确认归档</n-button>
+                </div>
+              </section>
+              <div class="out-preview">
+                <div class="doc-wrap"><article class="gw-doc" id="finalOutDoc" v-html="outDocHTML"></article></div>
+              </div>
+            </div>
+            <aside class="out-rightbar">
+              <div class="fmt-scroll2">
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">板头与公文版式 <span class="fmt-std">GB/T 9704—2012</span></div>
+                  <div class="fmt-sec2-sub">严格遵循党政机关公文格式，支持文件(红头)、信函、命令(令)、纪要等版式。函件推荐使用信函格式。</div>
+                  <div class="fmt-icon-grid">
+                    <button v-for="l in LAYOUTS" :key="l.k" class="fmt-icon2" :class="{active:outFmt.layout===l.k}" @click="fmtClick('layout',l.k)"><span class="fi-pic" :class="l.pic"></span><span class="fi-name">{{l.name}}</span></button>
+                  </div>
+                </div>
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">盖章版式</div>
+                  <div class="fmt-sec2-sub">选择公文印章加盖方式</div>
+                  <div class="fmt-icon-grid">
+                    <button v-for="s in SEALS" :key="s.k" class="fmt-icon2" :class="{active:outFmt.seal===s.k}" @click="fmtClick('seal',s.k)"><span class="fi-pic" :class="s.pic"></span><span class="fi-name">{{s.name}}</span></button>
+                  </div>
+                </div>
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">密级与期限</div>
+                  <div class="fmt-pill-row2">
+                    <button v-for="s in SECRETS" :key="s" class="fmt-pill2" :class="{danger:s!=='非涉密',active:outFmt.secret===s}" @click="fmtClick('secret',s)">{{s}}</button>
+                  </div>
+                  <div class="fmt-field2"><label>保密期限</label><div class="fmt-pill-row2"><button v-for="t in SECRET_TERMS" :key="t" class="fmt-pill2" :class="{active:outFmt.secretTerm===t}" @click="fmtClick('secretTerm',t)">{{t}}</button></div></div>
+                </div>
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">紧急程度</div>
+                  <div class="fmt-pill-row2"><button v-for="u in URGS" :key="u.k" class="fmt-pill2" :class="[u.cls,{active:outFmt.urgency===u.k}]" @click="fmtClick('urgency',u.k)">{{u.k}}</button></div>
+                </div>
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">发文字号</div>
+                  <div class="fmt-sec2-sub">发文机关代字 + 年份 + 发文顺序号</div>
+                  <div class="fmt-inline2"><input class="fmt-input2" :value="outFmt.daiZi" @input="fmtInput('daiZi',$event)" style="flex:1;"><span class="fmt-bracket">〔</span><input class="fmt-input2" :value="outFmt.year" @input="fmtInput('year',$event)" style="width:60px;text-align:center;"><span class="fmt-bracket">〕</span><input class="fmt-input2" :value="outFmt.seq" @input="fmtInput('seq',$event)" style="width:60px;text-align:center;"><span class="fmt-bracket">号</span></div>
+                </div>
+                <div class="fmt-sec2">
+                  <div class="fmt-sec2-title">落款与分发</div>
+                  <div class="fmt-field2"><label>发文机关</label><input class="fmt-input2" :value="outFmt.fromOrg" @input="fmtInput('fromOrg',$event)"></div>
+                  <div class="fmt-field2"><label>成文日期</label><input class="fmt-input2" :value="outFmt.date" @input="fmtInput('date',$event)"></div>
+                  <div class="fmt-field2"><label>签发人</label><input class="fmt-input2" :value="outFmt.signer" @input="fmtInput('signer',$event)" placeholder="可不填"></div>
+                  <div class="fmt-field2"><label>抄送机关</label><input class="fmt-input2" :value="outFmt.cc" @input="fmtInput('cc',$event)" placeholder="多个以逗号分隔"></div>
+                </div>
+                <div class="fmt-sec2" style="border-bottom:0;">
+                  <div class="fmt-sec2-title">版记</div>
+                  <div class="fmt-field2"><label>印发机关（送印机关）</label><input class="fmt-input2" :value="outFmt.yinFa" @input="fmtInput('yinFa',$event)"></div>
+                  <div class="fmt-field2"><label>印发日期</label><input class="fmt-input2" :value="outFmt.yinFaDate" @input="fmtInput('yinFaDate',$event)"></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <footer class="statusbar"><span>{{statusText}}</span><span>{{statusMeta}}</span></footer>
+      </div>
+      <!-- VIEW: 函件模板库 -->
+      <div class="view" id="view-templates" :class="{active:view==='templates'}">
+        <div class="page-scroll">
+          <div class="page-head">
+            <div><div class="page-title">函件模板库</div><div class="page-sub">维护六类函件标准模板，严格遵循《党政机关公文格式》，用于模板匹配渲染与要素结构校验</div></div>
+            <div class="toolbar-inline">
+              <n-button size="small" @click="tplImport">⬆ 导入模板</n-button>
+              <n-button size="small" @click="tplUploadExtract">📤 上传示例创建模板</n-button>
+              <n-button type="primary" size="small" @click="tplAdd">＋ 新增模板</n-button>
+            </div>
+          </div>
+          <div class="tpl-grid">
+            <div v-for="t in LETTER_TEMPLATES" :key="t.key" class="tpl-card agent-card" @click="previewLetterTpl(t.name)">
+              <span class="tpl-tag tag" :class="tplTagCls(t.name)">{{t.cat}}</span>
+              <div class="tpl-ic" :style="{background:t.color+'1a',color:t.color}">{{t.icon}}</div>
+              <h4>{{t.name}}</h4><p>{{t.desc}}</p>
+              <div class="tpl-foot"><a @click.stop="previewLetterTpl(t.name)">👁 预览模板</a><a @click.stop="applyLetterTpl(t.name)">套用此模板 ›</a></div>
+            </div>
+            <template v-if="userTemplates.length">
+              <div class="tpl-section-title">我的模板（上传示例提取）</div>
+              <div v-for="t in userTemplates" :key="t.name" class="tpl-card agent-card">
+                <span class="tpl-tag tag doing">我的</span>
+                <div class="tpl-ic" style="background:#e2f4f4;color:var(--cyan);">▤</div>
+                <h4>{{t.name}}</h4><p>来源：{{t.source}} · {{t.elements.length}}项要素：{{t.elements.slice(0,4).join('、')}}{{t.elements.length>4?'…':''}}</p>
+                <div class="tpl-foot"><a @click.stop="previewUserTpl(t.name)">👁 预览</a><a @click.stop="delUserTpl(t.name)" style="color:var(--red);">删除</a><a @click.stop="applyUserTpl(t.name)">套用 ›</a></div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: 知识库管理 -->
+      <div class="view" id="view-knowledge" :class="{active:view==='knowledge'}">
+        <div class="page-scroll">
+          <div class="page-head">
+            <div><div class="page-title">知识库管理</div><div class="page-sub">维护函件专用政务知识库：政策依据、历史函件、标准表述、用语规范，为要素校验与正文生成提供合规依据</div></div>
+            <div class="toolbar-inline">
+              <n-button size="small" @click="kbAct('import')">⬆ 导入</n-button>
+              <n-button size="small" @click="kbAct('export')">⬇ 导出</n-button>
+              <n-button type="primary" size="small" @click="kbAct('add')">＋ 添加</n-button>
+            </div>
+          </div>
+          <div class="rule-layout">
+            <nav class="rule-nav">
+              <button v-for="(v,k) in KB_DATA" :key="k" :class="{active:kbCat===k}" @click="kbSelect(k)"><span>{{v.icon}} {{v.name}}</span><span class="badge">{{v.rows.length}}</span></button>
+            </nav>
+            <div class="card">
+              <div class="card-head"><div class="card-title">{{kbCurrent.name}}</div><div class="toolbar-inline"><n-button size="small" type="error" ghost @click="kbAct('batchDel')">批量删除</n-button></div></div>
+              <div class="card-body" style="padding-top:12px;">
+                <div class="note-strip" v-html="kbCurrent.note"></div>
+                <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:36px;"></th><th v-for="(c,i) in kbCurrent.cols" :key="'c'+i">{{c}}</th><th style="width:120px;">操作</th></tr></thead><tbody>
+                  <tr v-for="(r,ri) in kbCurrent.rows" :key="'r'+ri"><td><n-checkbox /></td><td v-for="(v,i) in r" :key="'v'+i">{{v}}</td><td class="row-act"><a @click="kbRowEdit">编辑</a><a class="danger" @click="kbRowDel(ri)">删除</a></td></tr>
+                </tbody></table></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: 历史记录 -->
+      <div class="view" id="view-history" :class="{active:view==='history'}">
+        <div class="page-scroll">
+          <div class="page-head">
+            <div><div class="page-title">历史生成记录</div><div class="page-sub">查看历次函件生成任务的处理留痕，可回看要素、文稿、复核记录或发起复审</div></div>
+            <div class="toolbar-inline"><n-button size="small" @click="histAct('export')">⬇ 导出台账</n-button></div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-body" style="padding:14px 16px;">
+              <div class="toolbar-inline">
+                <n-select size="small" style="width:140px;" :value="'全部文种'" :options="[{label:'全部文种',value:'全部文种'}]" />
+                <n-select size="small" style="width:140px;" :value="'全部状态'" :options="[{label:'全部状态',value:'全部状态'}]" />
+                <n-select size="small" style="width:120px;" :value="'近7天'" :options="[{label:'近7天',value:'近7天'}]" />
+                <n-button size="small" @click="histAct('filter')">筛选</n-button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">生成任务台账 <span style="color:var(--muted);font-weight:600;font-size:13px;">（共 {{HISTORY_DATA.length}} 条）</span></div></div>
+            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>函件标题</th><th>文种</th><th>密级</th><th>生成时间</th><th>经办单位</th><th>要素项</th><th>校验通过</th><th>状态</th><th>操作</th></tr></thead><tbody>
+              <tr v-for="(r,i) in HISTORY_DATA" :key="i"><td style="font-weight:600;">{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td><td>{{r[3]}}</td><td>{{r[4]}}</td><td>{{r[5]}}</td><td>{{r[6]}}</td><td><n-tag size="small" :type="r[8]==='done'?'success':r[8]==='wait'?'warning':'info'">{{histStatusTxt(r)}}</n-tag></td><td class="row-act"><a>查看</a><a class="danger">删除</a></td></tr>
+            </tbody></table></div>
+          </div>
+        </div>
+      </div>
+      <!-- VIEW: 生成设置 -->
+      <div class="view" id="view-settings" :class="{active:view==='settings'}">
+        <div class="page-scroll">
+          <div class="page-head">
+            <div><div class="page-title">生成设置</div><div class="page-sub">按权限层级分级管理 · 系统级 / 局办级 / 个人级各有不同可配置项</div></div>
+            <div class="toolbar-inline">
+              <n-button size="small" @click="setAct('reset')">恢复默认</n-button>
+              <n-button type="primary" size="small" @click="setAct('save')">保存设置</n-button>
+            </div>
+          </div>
+          <div class="rule-layout" style="margin-top:6px;">
+            <nav class="rule-nav">
+              <button :class="{active:activeSetLevel==='system'}" @click="switchSetLevel('system')"><span>🏛 系统层级</span><span class="badge">全权限</span></button>
+              <button :class="{active:activeSetLevel==='bureau'}" @click="switchSetLevel('bureau')"><span>🏢 局办层级</span><span class="badge">部门权限</span></button>
+              <button :class="{active:activeSetLevel==='personal'}" @click="switchSetLevel('personal')"><span>👤 个人层级</span><span class="badge">个人偏好</span></button>
+            </nav>
+            <div>
+              <div class="set-level-desc"><div class="note-strip" v-html="setLevelDesc"></div></div>
+
+              <!-- 系统层级 -->
+              <div v-show="activeSetLevel==='system'">
+                <div class="grid-2" style="align-items:start;">
+                  <div class="card">
+                    <div class="card-head"><div class="card-title">核心生成策略</div></div>
+                    <div class="card-body">
+                      <div class="set-group"><div class="set-label">默认启动模式</div>
+                        <n-radio-group v-model:value="settingsState.mode" name="mode"><n-radio value="纯文件上传">纯文件上传</n-radio><n-radio value="纯自然语言">纯自然语言</n-radio><n-radio value="自然语言+附件">自然语言+附件</n-radio></n-radio-group>
+                      </div>
+                      <div class="set-group"><div class="set-label">默认文种类型</div>
+                        <n-radio-group v-model:value="settingsState.sysType" name="sysType"><n-radio v-for="t in TYPES" :key="t" :value="t">{{t}}</n-radio></n-radio-group>
+                      </div>
+                      <div class="set-group"><div class="set-label">语气策略</div>
+                        <n-radio-group v-model:value="settingsState.tone" name="tone"><n-radio value="智能适配">智能适配（按文种自动选择）</n-radio><n-radio value="协商">协商（商洽函、请批函）</n-radio><n-radio value="正式">正式（答复函、告知函）</n-radio></n-radio-group>
+                      </div>
+                      <div class="set-group"><div class="set-label">生成置信度策略</div>
+                        <n-radio-group v-model:value="settingsState.conf" name="conf"><n-radio value="查全">查全（多生成候选，人工择优）</n-radio><n-radio value="查准">查准（仅输出高置信度文稿）</n-radio></n-radio-group>
+                      </div>
+                      <div class="set-group"><div class="set-label">大模型文稿生成</div>
+                        <n-radio-group v-model:value="settingsState.llm" name="llm"><n-radio value="使用">使用（基于要素+知识库生成正文）</n-radio><n-radio value="禁用">禁用（仅模板渲染）</n-radio></n-radio-group>
+                      </div>
+                      <div class="set-group" style="border-bottom:0;"><div class="set-label">模型选择</div>
+                        <n-radio-group v-model:value="settingsState.model" name="model"><n-radio value="默认">系统默认（自动选择最优模型）</n-radio><n-radio value="DeepSeek-V4">DeepSeek V4（推荐）</n-radio><n-radio value="GLM-5">GLM-5.2（1M 长上下文）</n-radio></n-radio-group>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:grid;gap:16px;align-content:start;">
+                    <div class="card"><div class="card-head"><div class="card-title">合规校验项</div></div><div class="card-body" style="padding:6px 16px 12px;">
+                      <div class="check-item"><span>内容合规校验（要素完整/引述正确/结束语匹配）</span><n-switch v-model:value="settingsState.contentCheck" /></div>
+                      <div class="check-item"><span>格式规范校验（发文字号/主送格式/段落缩进）</span><n-switch v-model:value="settingsState.formatCheck" /></div>
+                      <div class="check-item"><span>语气得体校验（平级用语/无命令口吻）</span><n-switch v-model:value="settingsState.toneCheck" /></div>
+                      <div class="check-item"><span>政策口径校验（引用依据准确/时效有效）</span><n-switch v-model:value="settingsState.policyCheck" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>公文格式自动规范（GB/T 9704—2012）</span><n-switch v-model:value="settingsState.gbCheck" /></div>
+                    </div></div>
+                    <div class="card"><div class="card-head"><div class="card-title">安全与归档</div></div><div class="card-body" style="padding:6px 16px 12px;">
+                      <div class="check-item"><span>安全模式（文稿不出域、本地化处理）</span><n-switch v-model:value="settingsState.safeMode" /></div>
+                      <div class="check-item"><span>双源并行安全校验（文件+文本）</span><n-switch v-model:value="settingsState.dualSource" /></div>
+                      <div class="check-item"><span>全链路审计留痕（操作可追溯）</span><n-switch v-model:value="settingsState.audit" /></div>
+                      <div class="check-item"><span>优质文稿自动回填知识库</span><n-switch v-model:value="settingsState.autoKb" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>默认密级</span><n-select v-model:value="settingsState.secret" size="small" style="width:110px;" :options="[{label:'非涉密',value:'非涉密'},{label:'内部',value:'内部'},{label:'秘密',value:'秘密'}]" /></div>
+                    </div></div>
+                    <div class="card"><div class="card-head"><div class="card-title">知识库管理</div></div><div class="card-body" style="padding:6px 16px 14px;">
+                      <div class="check-item"><span>政策依据库（自动同步现行文件）</span><n-switch v-model:value="settingsState.kbPolicy" /></div>
+                      <div class="check-item"><span>标准表述库（政务公文规范用语）</span><n-switch v-model:value="settingsState.kbExpr" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>主体关系库（机关间职能关系映射）</span><n-switch v-model:value="settingsState.kbRel" /></div>
+                    </div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 局办层级 -->
+              <div v-show="activeSetLevel==='bureau'">
+                <div class="grid-2" style="align-items:start;">
+                  <div class="card"><div class="card-head"><div class="card-title">局办生成策略</div></div><div class="card-body">
+                    <div class="set-group"><div class="set-label">局办常用文种</div><n-radio-group v-model:value="settingsState.bureauType" name="btype"><n-radio v-for="t in TYPES" :key="t" :value="t">{{t}}</n-radio></n-radio-group></div>
+                    <div class="set-group"><div class="set-label">语气策略</div><n-radio-group v-model:value="settingsState.bureauTone" name="btone"><n-radio value="智能适配">智能适配</n-radio><n-radio value="协商">协商</n-radio><n-radio value="正式">正式</n-radio></n-radio-group></div>
+                    <div class="set-group" style="border-bottom:0;"><div class="set-label">大模型文稿生成</div><n-radio-group v-model:value="settingsState.bureauLlm" name="bllm"><n-radio value="使用">使用</n-radio><n-radio value="禁用">禁用（仅模板渲染）</n-radio></n-radio-group></div>
+                  </div></div>
+                  <div style="display:grid;gap:16px;align-content:start;">
+                    <div class="card"><div class="card-head"><div class="card-title">局办合规校验项 <span style="color:var(--muted);font-size:12px;font-weight:600;">（系统限定）</span></div></div><div class="card-body" style="padding:6px 16px 12px;">
+                      <div class="check-item"><span>内容合规校验</span><n-switch v-model:value="settingsState.bureauContent" /></div>
+                      <div class="check-item"><span>格式规范校验</span><n-switch v-model:value="settingsState.bureauFormat" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>语气得体校验</span><n-switch v-model:value="settingsState.bureauToneCheck" /></div>
+                    </div></div>
+                    <div class="card"><div class="card-head"><div class="card-title">局办安全与数据</div></div><div class="card-body" style="padding:6px 16px 12px;">
+                      <div class="check-item"><span>安全模式（文稿不出域）</span><n-switch v-model:value="settingsState.bureauSafe" /></div>
+                      <div class="check-item"><span>默认密级</span><n-select v-model:value="settingsState.bureauSecret" size="small" style="width:110px;" :options="[{label:'非涉密',value:'非涉密'},{label:'内部',value:'内部'},{label:'秘密',value:'秘密'}]" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>局办专属知识库</span><n-button size="tiny" @click="navClick(2)">📚 管理</n-button></div>
+                    </div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 个人层级 -->
+              <div v-show="activeSetLevel==='personal'">
+                <div class="grid-2" style="align-items:start;">
+                  <div class="card"><div class="card-head"><div class="card-title">个人偏好设置</div></div><div class="card-body">
+                    <div class="set-group"><div class="set-label">个人常用文种</div><n-radio-group v-model:value="settingsState.persType" name="ptype"><n-radio v-for="t in TYPES" :key="t" :value="t">{{t}}</n-radio></n-radio-group></div>
+                    <div class="set-group"><div class="set-label">语气策略偏好</div><n-radio-group v-model:value="settingsState.persTone" name="ptone"><n-radio value="智能适配">智能适配</n-radio><n-radio value="更正式">更正式（适用于答复/告知）</n-radio><n-radio value="更灵活">更灵活（适用于内部沟通）</n-radio></n-radio-group></div>
+                    <div class="set-group"><div class="set-label">大模型文稿生成</div><n-radio-group v-model:value="settingsState.persLlm" name="pllm"><n-radio value="使用">使用</n-radio><n-radio value="禁用">禁用（仅模板渲染）</n-radio></n-radio-group></div>
+                    <div class="set-group"><div class="set-label">预览区默认字号</div><n-radio-group v-model:value="settingsState.persSize" name="psize"><n-radio value="较小">较小</n-radio><n-radio value="标准">标准（仿宋 18px）</n-radio><n-radio value="较大">较大</n-radio></n-radio-group></div>
+                    <div class="set-group" style="border-bottom:0;"><div class="set-label">预览区默认缩放</div><n-radio-group v-model:value="settingsState.persZoom" name="pzoom"><n-radio value="80%">80%</n-radio><n-radio value="100%">100%</n-radio><n-radio value="120%">120%</n-radio></n-radio-group></div>
+                  </div></div>
+                  <div style="display:grid;gap:16px;align-content:start;">
+                    <div class="card"><div class="card-head"><div class="card-title">我的常用模板</div></div><div class="card-body" style="padding:6px 16px 14px;">
+                      <div class="check-item"><span>商洽函 · 数据共享接口联调</span><n-switch v-model:value="settingsState.persTpl1" /></div>
+                      <div class="check-item"><span>询问函 · 项目进度问询</span><n-switch v-model:value="settingsState.persTpl2" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>答复函 · 审批结果复函</span><n-switch v-model:value="settingsState.persTpl3" /></div>
+                    </div></div>
+                    <div class="card"><div class="card-head"><div class="card-title">消息与通知</div></div><div class="card-body" style="padding:6px 16px 12px;">
+                      <div class="check-item"><span>生成完成后通知</span><n-switch v-model:value="settingsState.persNotify" /></div>
+                      <div class="check-item"><span>校验不通过时提示</span><n-switch v-model:value="settingsState.persCheckNotify" /></div>
+                      <div class="check-item" style="border-bottom:0;"><span>模板更新提醒</span><n-switch v-model:value="settingsState.persTplNotify" /></div>
+                    </div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 弹窗 -->
+      <n-modal v-model:show="modal.show" preset="card" :title="modal.title" :style="{maxWidth:modal.wide?'900px':'640px',width:'calc(100vw - 40px)'}" :bordered="false" size="huge" :mask-closable="true">
+        <div v-if="modal.progress" class="ext-modal">
+          <div class="ext-mhead">
+            <div class="ext-mtitle" :class="{done:modal.progress.done}"><span v-if="!modal.progress.done" class="spin"></span><template v-if="!modal.progress.done"> 正在处理…</template><template v-else> ✓ 处理完成</template></div>
+            <div class="ext-msub">{{modal.progress.sub}}</div>
+          </div>
+          <div class="ext-mbar"><i :style="{width:modal.progress.barPct+'%'}"></i></div>
+          <div class="ext-mlist">
+            <div class="ext-mrow" v-for="(r,i) in modal.progress.rows" :key="i">
+              <span class="ext-mic">✓</span>
+              <div class="ext-mbody"><div class="ext-mrow-top"><span class="ext-mname">{{r.name}}</span><span v-if="r.src" class="ext-msrc" :class="r.src">{{srcLabel(r.src)}}</span></div><div v-if="r.value" class="ext-mval">{{r.value}}</div></div>
+            </div>
+          </div>
+          <div v-if="modal.progress.nextLabel" class="ext-mfoot"><span>{{modal.progress.stat}}</span><n-button type="primary" :disabled="modal.progress.nextDisabled" @click="modal.progress.onNext && modal.progress.onNext()">{{modal.progress.nextLabel}}</n-button></div>
+        </div>
+        <div v-else v-html="modal.html"></div>
+        <template #footer v-if="!modal.hideFooter && !modal.progress">
+          <div style="display:flex;justify-content:flex-end;gap:10px;"><n-button @click="modal.show=false">取消</n-button><n-button type="primary" @click="onModalOk">{{modal.okText}}</n-button></div>
+        </template>
+      </n-modal>
+
+      <!-- 提示 -->
+      <div class="toast" :class="{show:toast.show}">{{toast.msg}}</div>
+    </div>
+  </n-config-provider>
+  `
+});
+app.use(naive);
+app.mount('#app');
+</script>
+</body>
+</html>
