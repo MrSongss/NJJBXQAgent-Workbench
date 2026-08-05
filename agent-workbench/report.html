@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>报告请示智能生成 · 江北新区政务AI智能体</title>
+  <style>
+    :root {
+      --bg: #f2f5fa;
+      --surface: #ffffff;
+      --surface-soft: #f8faff;
+      --line: #dfe6f1;
+      --line-soft: #edf1f7;
+      --text: #1e2b42;
+      --muted: #6f7c93;
+      --primary: #2458d7;
+      --primary-dark: #1743ae;
+      --primary-soft: #edf3ff;
+      --green: #14805c;
+      --green-soft: #eaf8f1;
+      --orange: #b96c00;
+      --orange-soft: #fff5e4;
+      --red: #c8342d;
+      --red-soft: #fff0ef;
+      --purple: #6952c8;
+      --purple-soft: #f1efff;
+      --shadow: 0 10px 28px rgba(23, 42, 76, 0.07);
+      --shadow-sm: 0 5px 16px rgba(23, 42, 76, 0.05);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 1280px; height: 100vh; overflow: hidden; color: var(--text); background: var(--bg); font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; }
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; background: none; color: inherit; cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(36, 88, 215, .15); outline-offset: 1px; }
+    .app { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: 58px 1fr; height: 100vh; }
+
+    /* 图标库：采用常用线性图标，避免文字充当功能图标。 */
+    .icon { width: 18px; height: 18px; flex: none; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 15px; height: 15px; }
+    .icon.lg { width: 22px; height: 22px; }
+
+    .topbar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding: 0 18px 0 20px; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); z-index: 5; }
+    .brand { display: flex; align-items: center; gap: 11px; min-width: 330px; font-weight: 700; color: #18366d; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; background: #24589a; color: #fff; font-size: 13px; font-weight: 700; }
+    .brand small { display: block; margin-top: 2px; color: #7c89a0; font-size: 11px; font-weight: 500; }
+    .top-actions { display: flex; align-items: center; gap: 8px; min-width: 330px; justify-content: flex-end; }
+    .safe-badge { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 1px solid #caebdc; border-radius: 7px; background: var(--green-soft); color: var(--green); font-size: 12px; font-weight: 600; }
+
+    .leftnav { grid-column: 1; min-height: 0; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px; overflow: auto; background: #fff; border-right: 1px solid var(--line); }
+    .nav-cap { margin: 4px 8px 6px; color: #8e9ab0; font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 0 12px; border-radius: 8px; color: #45536c; font-size: 14px; font-weight: 600; text-align: left; transition: .16s; }
+    .nav-item .nav-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; color: #4a6fa8; background: #edf3fb; }
+    .nav-item:hover { color: var(--primary); background: var(--primary-soft); }
+    .nav-item.active { color: #fff; background: var(--primary); box-shadow: 0 7px 15px rgba(36, 88, 215, .2); }
+    .nav-item.active .nav-icon { color: #fff; background: rgba(255,255,255,.18); }
+
+    .view { display: none; grid-column: 2; min-height: 0; }
+    .view.active { display: block; }
+    .page-scroll { height: 100%; padding: 22px 26px 42px; overflow: auto; }
+    .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .page-title { color: #162644; font-size: 21px; font-weight: 700; letter-spacing: 0; }
+    .page-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
+    .toolbar-inline { display: flex; align-items: center; gap: 8px; }
+
+    .btn, .primary-btn, .danger-btn, .icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: #42506a; font-weight: 600; transition: .16s; }
+    .btn { padding: 0 12px; }
+    .primary-btn { padding: 0 14px; border-color: var(--primary); background: var(--primary); color: #fff; box-shadow: 0 6px 14px rgba(36, 88, 215, .18); }
+    .danger-btn { padding: 0 12px; border-color: #efc7c4; color: var(--red); background: #fff8f7; }
+    .icon-btn { width: 34px; padding: 0; }
+    .btn:hover, .icon-btn:hover { color: var(--primary); border-color: #aebfe8; background: var(--primary-soft); }
+    .primary-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+    .danger-btn:hover { background: var(--red-soft); }
+    .btn:active, .primary-btn:active, .danger-btn:active, .icon-btn:active { transform: translateY(1px); }
+    .btn.sm, .primary-btn.sm { height: 30px; padding: 0 10px; font-size: 12.5px; }
+    .btn:disabled, .primary-btn:disabled { border-color: #c8d2e5; background: #c8d2e5; color: #fff; box-shadow: none; cursor: not-allowed; }
+
+    /* 生成工作台 */
+    #view-generate.active { display: grid; grid-template-rows: auto auto 1fr; }
+    .gen-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 22px; background: #fff; border-bottom: 1px solid var(--line); }
+    .tool-left { display: flex; align-items: center; gap: 12px; }
+    .task-name { color: #1d2c47; font-size: 15px; font-weight: 700; }
+    .task-meta { color: #8693a8; font-size: 12.5px; }
+    .flowbar { display: flex; align-items: center; padding: 10px 22px; overflow-x: auto; background: #fff; border-bottom: 1px solid var(--line); }
+    .flow-step { display: flex; align-items: center; }
+    .flow-node { display: inline-flex; align-items: center; gap: 7px; height: 31px; padding: 0 12px; border: 1px solid transparent; border-radius: 999px; background: #f0f3f8; color: #7d899f; font-size: 12.5px; font-weight: 700; white-space: nowrap; transition: .16s; }
+    .flow-node span { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #cbd5e5; color: #fff; font-size: 11px; }
+    .flow-node:hover:not(.locked) { color: var(--primary); background: var(--primary-soft); }
+    .flow-node.done { color: var(--green); background: var(--green-soft); }
+    .flow-node.done span { background: var(--green); }
+    .flow-node.current { color: #fff; background: var(--primary); box-shadow: 0 5px 13px rgba(36,88,215,.2); }
+    .flow-node.current span { background: rgba(255,255,255,.25); }
+    .flow-node.locked { cursor: not-allowed; opacity: .75; }
+    .flow-arrow { position: relative; flex: none; width: 24px; height: 1px; margin: 0 3px; background: #d7dfeb; }
+    .flow-arrow::after { content: ""; position: absolute; top: -3px; right: -1px; width: 6px; height: 6px; border-top: 1px solid #b9c5d8; border-right: 1px solid #b9c5d8; transform: rotate(45deg); }
+    .stage-scroll { min-height: 0; padding: 22px 26px 48px; overflow: auto; }
+    .stage { display: none; animation: pageIn .2s ease; }
+    .stage.active { display: block; }
+    @keyframes pageIn { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .stage-grid { display: grid; grid-template-columns: minmax(620px, 1fr) 360px; gap: 18px; align-items: start; }
+    .stage-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .stage-actions .right { display: flex; gap: 8px; }
+
+    .card { margin-bottom: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .card:last-child { margin-bottom: 0; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 16px; border-bottom: 1px solid var(--line-soft); }
+    .card-title { display: flex; align-items: center; gap: 8px; color: #1d2c47; font-size: 15px; font-weight: 700; }
+    .step-badge { padding: 2px 7px; border-radius: 5px; color: var(--primary); background: var(--primary-soft); font-size: 10.5px; font-weight: 700; }
+    .card-body { padding: 16px; }
+    .card-note { color: #8390a5; font-size: 12px; }
+    .subtle-note { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-left: 3px solid #a8bde8; background: #f6f9ff; color: #5c6b83; font-size: 12.5px; line-height: 1.65; }
+    .subtle-note .icon { color: var(--primary); margin-top: 1px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 20px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { display: flex; align-items: center; gap: 5px; color: #35435e; font-size: 13px; font-weight: 700; }
+    .field label .req { color: var(--red); }
+    .field .help { display: inline-grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; color: #7f8da4; background: #eaf0fa; font-size: 10px; cursor: help; }
+    .field input, .field select, .field textarea { width: 100%; height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: #2a3853; background: #fff; transition: .15s; }
+    .field textarea { height: auto; min-height: 82px; padding: 9px 10px; line-height: 1.55; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #88a5e8; box-shadow: 0 0 0 3px rgba(36,88,215,.09); }
+    .field.err input, .field.err select, .field.err textarea { border-color: var(--red); background: #fffafa; }
+    .err-msg { display: none; color: var(--red); font-size: 11.5px; }
+    .field.err .err-msg { display: block; }
+    .field .sub { color: #8c98ac; font-size: 11.5px; line-height: 1.45; }
+    .date-pair { display: grid; grid-template-columns: 1fr 14px 1fr; align-items: center; gap: 5px; }
+    .date-pair span { color: #96a1b4; text-align: center; }
+    .radio-row, .check-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .choice { display: inline-flex; align-items: center; gap: 7px; min-height: 33px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; color: #536078; font-size: 12.5px; cursor: pointer; transition: .15s; user-select: none; }
+    .choice:hover { border-color: #a9bee9; background: var(--primary-soft); }
+    .choice .radio, .choice .check { display: grid; place-items: center; width: 15px; height: 15px; border: 2px solid #c2ccdc; flex: none; }
+    .choice .radio { border-radius: 50%; }
+    .choice .check { border-radius: 4px; }
+    .choice.on { border-color: #8ba7e9; color: var(--primary-dark); background: var(--primary-soft); }
+    .choice.on .radio::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
+    .choice.on .check { color: #fff; border-color: var(--primary); background: var(--primary); }
+    .choice.on .check::after { content: ""; width: 7px; height: 4px; border-bottom: 1.5px solid #fff; border-left: 1.5px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+
+    .upload-zone { display: grid; place-items: center; min-height: 148px; padding: 20px; border: 1.5px dashed #b7c7e3; border-radius: 9px; color: #526079; background: #fafcff; cursor: pointer; transition: .16s; text-align: center; }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--primary); background: var(--primary-soft); }
+    .upload-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 9px; border-radius: 9px; color: var(--primary); background: #e9f0ff; }
+    .upload-title { font-size: 13px; font-weight: 700; }
+    .upload-copy { margin-top: 5px; color: #8a96a9; font-size: 11.5px; }
+    .file-list { display: grid; gap: 8px; margin-top: 10px; }
+    .file-item { display: flex; align-items: center; gap: 9px; min-height: 46px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+    .file-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; color: var(--primary); background: var(--primary-soft); }
+    .file-main { min-width: 0; flex: 1; }
+    .file-name { overflow: hidden; color: #3c4a64; font-size: 12.5px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .file-meta { margin-top: 2px; color: #98a3b4; font-size: 11px; }
+    .file-state { color: var(--green); font-size: 11px; font-weight: 700; }
+    .file-remove { color: #a7b0c0; }
+    .file-remove:hover { color: var(--red); }
+    .hidden { display: none !important; }
+
+    .status-list { display: grid; gap: 0; }
+    .status-line { display: flex; align-items: flex-start; gap: 10px; min-height: 45px; padding: 10px 0; border-bottom: 1px dashed var(--line-soft); color: #4a5870; font-size: 12.5px; }
+    .status-line:last-child { border-bottom: 0; }
+    .status-ico { display: grid; place-items: center; width: 21px; height: 21px; margin-top: -1px; border-radius: 50%; color: #8b98ac; background: #edf1f7; }
+    .status-line.ok .status-ico { color: #fff; background: var(--green); }
+    .status-line.doing .status-ico { color: #fff; background: var(--primary); animation: pulse 1.5s infinite; }
+    .status-line.warn .status-ico { color: #fff; background: var(--orange); }
+    @keyframes pulse { 50% { box-shadow: 0 0 0 5px rgba(36,88,215,.12); } }
+    .status-line b { display: block; color: #33415b; font-size: 12.5px; }
+    .status-line small { display: block; margin-top: 2px; color: #8a96a9; font-size: 11.5px; }
+    .status-tag { margin-left: auto; padding-top: 2px; color: #8692a5; font-size: 11px; white-space: nowrap; }
+
+    .missing-list { display: grid; gap: 0; }
+    .missing-item { display: grid; grid-template-columns: 148px 1fr auto; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px dashed var(--line-soft); }
+    .missing-item:last-child { border-bottom: 0; }
+    .missing-name { color: #33415a; font-size: 12.5px; font-weight: 700; }
+    .missing-name small { display: block; margin-top: 2px; color: #93a0b5; font-size: 11px; font-weight: 500; }
+    .missing-item input, .missing-item select { height: 34px; min-width: 0; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; color: #43516a; }
+    .tag { display: inline-flex; align-items: center; gap: 4px; min-height: 22px; padding: 0 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+    .tag.done { color: var(--green); background: var(--green-soft); }
+    .tag.wait { color: var(--orange); background: var(--orange-soft); }
+    .tag.doing { color: var(--primary); background: var(--primary-soft); }
+    .tag.block { color: var(--red); background: var(--red-soft); }
+
+    .element-table, .tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .element-table th, .tbl th { padding: 10px 11px; border-bottom: 1px solid var(--line); color: #718099; background: #f7f9fd; font-size: 11.5px; font-weight: 700; text-align: left; white-space: nowrap; }
+    .element-table td, .tbl td { padding: 11px; border-bottom: 1px solid var(--line-soft); color: #46546b; vertical-align: top; line-height: 1.55; }
+    .element-table tr:last-child td, .tbl tr:last-child td { border-bottom: 0; }
+    .element-table [contenteditable=true] { padding: 3px 5px; border-radius: 5px; outline: none; }
+    .element-table [contenteditable=true]:hover { background: #f4f7fc; }
+    .element-table [contenteditable=true]:focus { box-shadow: 0 0 0 2px rgba(36,88,215,.2); background: #fff; }
+    .confidence { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .confidence i { display: block; width: 40px; height: 5px; overflow: hidden; border-radius: 999px; background: #e7edf5; }
+    .confidence i span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+
+    .doctype-card { padding: 16px; border: 1px solid #d4e0f4; border-radius: 9px; background: #f6f9ff; }
+    .doctype-recommend { display: flex; align-items: center; gap: 12px; }
+    .doctype-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 9px; color: var(--primary); background: #e7efff; }
+    .doctype-recommend b { color: #243454; font-size: 15px; }
+    .doctype-recommend p { margin: 3px 0 0; color: #748198; font-size: 12px; line-height: 1.55; }
+    .type-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .type-option { padding: 12px; border: 1px solid #cfd9e9; border-radius: 8px; text-align: left; transition: .16s; }
+    .type-option:hover { border-color: #93ade8; background: #fff; }
+    .type-option.on { border-color: var(--primary); background: #fff; box-shadow: 0 4px 12px rgba(36,88,215,.09); }
+    .type-option strong { display: block; color: #36445d; font-size: 14px; }
+    .type-option.on strong { color: var(--primary); }
+    .type-option small { display: block; margin-top: 4px; color: #7f8ba0; font-size: 11px; line-height: 1.45; }
+    .rule-list { margin-top: 14px; border-top: 1px solid #dce5f2; }
+    .rule-row { display: flex; gap: 8px; padding: 9px 0; border-bottom: 1px solid #dce5f2; color: #5c6a80; font-size: 12px; line-height: 1.45; }
+    .rule-row .icon { margin-top: 1px; color: var(--green); }
+    .rule-row.warn .icon { color: var(--orange); }
+
+    .document-shell { overflow: hidden; border: 1px solid #d9e0eb; border-radius: 6px; background: #fff; box-shadow: var(--shadow); }
+    .document-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 0 13px; border-bottom: 1px solid var(--line-soft); background: #fbfcfe; }
+    .document-tools .hint { color: #8190a4; font-size: 11.5px; }
+    .document-page { min-height: 630px; padding: 40px 56px 50px; color: #1b1f27; font-family: FangSong, "仿宋", SimSun, serif; font-size: 16px; line-height: 2; outline: none; }
+    .document-page .red-head { margin-bottom: 22px; padding-bottom: 8px; border-bottom: 2px solid #c2342d; color: #c2342d; font-family: SimHei, "黑体", sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 2px; text-align: center; }
+    .document-page h1 { margin: 0 0 8px; font-family: SimHei, "黑体", sans-serif; font-size: 22px; line-height: 1.65; text-align: center; }
+    .document-page .doc-meta { margin: 0 0 22px; color: #5a6575; font-size: 13px; text-align: center; }
+    .document-page p { margin: 0 0 9px; text-indent: 2em; }
+    .document-page .no-indent { text-indent: 0; }
+    .document-page .right-align { text-align: right; text-indent: 0; }
+    .source-mark { padding: 0 2px; border-bottom: 2px solid var(--orange); background: #fff5e2; cursor: pointer; }
+    .source-mark.active { color: #8f4d00; background: #ffe5ac; }
+    .title-option { padding: 10px 11px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 7px; color: #45536c; font-size: 12.5px; line-height: 1.55; cursor: pointer; transition: .16s; }
+    .title-option:hover { border-color: #a4b9e8; background: var(--primary-soft); }
+    .title-option.on { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-soft); }
+    .config-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line-soft); color: #4b5870; font-size: 12.5px; }
+    .config-row:last-child { border-bottom: 0; }
+    .toggle { width: 38px; height: 22px; padding: 2px; border-radius: 999px; background: #d4ddea; transition: .16s; }
+    .toggle::after { content: ""; display: block; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(27,42,70,.25); transition: .16s; }
+    .toggle.on { background: var(--primary); }
+    .toggle.on::after { transform: translateX(16px); }
+
+    .check-summary { display: flex; align-items: center; gap: 14px; }
+    .score-circle { position: relative; display: grid; place-items: center; width: 90px; height: 90px; border-radius: 50%; background: conic-gradient(var(--green) 0 86%, #e7edf6 86% 100%); }
+    .score-circle::after { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: #fff; }
+    .score-circle span { position: relative; z-index: 1; color: #1f2d48; font-size: 22px; font-weight: 700; }
+    .score-circle small { position: relative; z-index: 1; margin-left: -34px; margin-top: 37px; color: #8390a3; font-size: 10px; }
+    .check-stat { display: grid; gap: 5px; color: #5c6b83; font-size: 12px; }
+    .check-stat b { color: #263651; }
+    .progress-wrap { padding: 12px 0 2px; }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; color: #718098; font-size: 12px; }
+    .progress { height: 8px; overflow: hidden; border-radius: 999px; background: #eaf0f7; }
+    .progress i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--primary); transition: width .35s ease; }
+    .check-card { margin-top: 10px; padding: 12px; border: 1px solid var(--line-soft); border-radius: 8px; background: #fbfcfe; transition: .16s; }
+    .check-card.resolved { opacity: .6; }
+    .check-card:hover { border-color: #b9c9e8; box-shadow: var(--shadow-sm); }
+    .check-head { display: flex; align-items: center; gap: 7px; }
+    .check-head b { flex: 1; color: #394760; font-size: 12.5px; }
+    .check-rule { color: #95a1b4; font-size: 10.5px; }
+    .check-text { margin-top: 8px; color: #526078; font-size: 12.5px; line-height: 1.6; }
+    .check-fix { margin-top: 8px; padding: 8px 9px; border-radius: 6px; color: #5a6880; background: #f1f5fb; font-size: 11.5px; line-height: 1.55; }
+    .check-actions { display: flex; gap: 12px; margin-top: 9px; }
+    .check-actions button { color: var(--primary); font-size: 11.5px; font-weight: 700; }
+    .check-actions button:hover { text-decoration: underline; }
+
+    .output-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .output-item { padding: 15px; border: 1px solid var(--line); border-radius: 9px; background: #fff; transition: .16s; }
+    .output-item:hover { border-color: #a9bde8; box-shadow: var(--shadow-sm); }
+    .output-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; color: var(--primary); background: var(--primary-soft); }
+    .output-item:nth-child(2) .output-icon { color: var(--green); background: var(--green-soft); }
+    .output-item:nth-child(3) .output-icon { color: var(--purple); background: var(--purple-soft); }
+    .output-name { margin: 10px 0 4px; color: #30405b; font-size: 13.5px; font-weight: 700; }
+    .output-desc { min-height: 39px; color: #7f8ba0; font-size: 11.5px; line-height: 1.55; }
+    .output-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; color: #9aa5b5; font-size: 11px; }
+    .process-track { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 8px; }
+    .process-node { position: relative; text-align: center; }
+    .process-node::before { content: ""; position: absolute; top: 16px; right: 50%; width: 100%; height: 2px; background: #dfe7f1; }
+    .process-node:first-child::before { display: none; }
+    .process-node.done::before { background: var(--green); }
+    .process-dot { position: relative; z-index: 1; display: grid; place-items: center; width: 33px; height: 33px; margin: 0 auto 7px; border: 2px solid #d7e0ec; border-radius: 50%; color: #91a0b3; background: #fff; }
+    .process-node.done .process-dot { border-color: var(--green); color: #fff; background: var(--green); }
+    .process-node.current .process-dot { border-color: var(--primary); color: #fff; background: var(--primary); }
+    .process-name { color: #68768d; font-size: 11.5px; font-weight: 700; }
+
+    /* 其它页面 */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+    .kpi { position: relative; min-height: 112px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; box-shadow: var(--shadow-sm); }
+    .kpi-icon { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; color: var(--primary); background: var(--primary-soft); }
+    .kpi:nth-child(2) .kpi-icon { color: var(--green); background: var(--green-soft); }
+    .kpi:nth-child(3) .kpi-icon { color: var(--orange); background: var(--orange-soft); }
+    .kpi:nth-child(4) .kpi-icon { color: var(--purple); background: var(--purple-soft); }
+    .kpi-label { color: #77849a; font-size: 12px; }
+    .kpi-value { margin: 7px 0 2px; color: #263653; font-size: 26px; font-weight: 700; }
+    .kpi-note { color: var(--green); font-size: 11.5px; font-weight: 600; }
+    .layout-2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+    .bar-list { display: grid; gap: 13px; }
+    .bar-row { display: grid; grid-template-columns: 96px 1fr 42px; align-items: center; gap: 10px; color: #59677e; font-size: 12px; }
+    .bar-track { height: 9px; overflow: hidden; border-radius: 999px; background: #edf1f7; }
+    .bar-fill { height: 100%; border-radius: inherit; background: var(--primary); }
+    .bar-row:nth-child(2) .bar-fill { background: var(--green); }
+    .bar-row:nth-child(3) .bar-fill { background: var(--purple); }
+    .bar-row:nth-child(4) .bar-fill { background: var(--orange); }
+    .rule-layout { display: grid; grid-template-columns: 220px 1fr; gap: 16px; }
+    .rule-menu { display: grid; gap: 4px; align-content: start; }
+    .rule-menu button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 42px; padding: 0 11px; border-radius: 7px; color: #526078; font-size: 13px; font-weight: 600; text-align: left; }
+    .rule-menu button:hover { color: var(--primary); background: var(--primary-soft); }
+    .rule-menu button.active { color: #fff; background: var(--primary); }
+    .counter { min-width: 20px; padding: 1px 6px; border-radius: 999px; color: #657389; background: #edf1f7; font-size: 11px; text-align: center; }
+    .rule-menu button.active .counter { color: #fff; background: rgba(255,255,255,.2); }
+    .rule-row-table { display: grid; grid-template-columns: 84px 1fr 120px 80px; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line-soft); color: #536078; font-size: 12.5px; }
+    .rule-row-table:last-child { border-bottom: 0; }
+    .switch-text { font-size: 11px; color: var(--green); font-weight: 700; }
+    .row-action { color: var(--primary); font-size: 12px; font-weight: 700; }
+    .tbl-wrap { overflow: auto; }
+    .tbl tr:hover td { background: #fafcff; }
+    .row-link { margin-right: 11px; color: var(--primary); font-size: 12px; font-weight: 700; }
+    .row-link:hover { text-decoration: underline; }
+    .empty { padding: 28px; color: #8a97aa; font-size: 13px; text-align: center; }
+
+    .modal-mask { position: fixed; inset: 0; z-index: 30; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(20, 33, 57, .42); }
+    .modal-mask.show { display: flex; }
+    .modal { display: flex; flex-direction: column; width: min(590px, calc(100vw - 40px)); max-height: calc(100vh - 40px); overflow: hidden; border-radius: 11px; background: #fff; box-shadow: 0 24px 64px rgba(22,39,72,.28); animation: modalIn .18s ease; }
+    @keyframes modalIn { from { opacity: .4; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .modal.wide { width: min(760px, calc(100vw - 40px)); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 17px; border-bottom: 1px solid var(--line); color: #273752; font-size: 15px; font-weight: 700; }
+    .modal-body { padding: 17px; overflow: auto; color: #526078; font-size: 13px; line-height: 1.65; }
+    .modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 13px 17px; border-top: 1px solid var(--line); }
+    .modal-body .field { margin-bottom: 14px; }
+    .modal-body textarea { min-height: 96px; }
+    .modal-steps { display: flex; align-items: center; gap: 7px; margin-bottom: 16px; }
+    .modal-step { display: flex; align-items: center; gap: 6px; color: #8290a4; font-size: 12px; font-weight: 700; }
+    .modal-step i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; background: #cbd5e5; font-style: normal; }
+    .modal-step.active { color: var(--primary); }
+    .modal-step.active i, .modal-step.done i { background: var(--primary); }
+    .modal-step.done i { background: var(--green); }
+    .modal-line { width: 26px; height: 1px; background: #d7dfea; }
+    .toast { position: fixed; top: 74px; right: 22px; z-index: 40; display: none; max-width: 360px; padding: 11px 13px; border-radius: 8px; color: #fff; background: rgba(28,41,65,.96); box-shadow: 0 12px 30px rgba(25,38,61,.22); font-size: 13px; }
+    .toast.show { display: block; animation: toastIn .2s ease; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+    .toast.success { background: #167a5c; }
+
+    @media (max-width: 1450px) { .brand { min-width: 290px; } .top-actions { min-width: 270px; } .stage-grid { grid-template-columns: minmax(560px, 1fr) 330px; } }
+  </style>
+</head>
+<body>
+  <svg class="hidden" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></symbol>
+    <symbol id="i-file-plus" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15h6"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.5 18a2 2 0 0 0 1.75 3h15.5a2 2 0 0 0 1.75-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.1L5 10l5.1 1.9L12 17l1.9-5.1L19 10l-5.1-1.9zM5 3v4M3 5h4M19 17v4M17 19h4"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  </svg>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">政AI</span>
+        <span>报告请示智能生成<small>江北新区政务AI智能体 · 上行文辅助起草</small></span>
+      </div>
+      <div class="top-actions">
+        <span class="safe-badge"><svg class="icon sm"><use href="#i-shield"/></svg>政务内网安全模式</span>
+        <button class="icon-btn" data-action="notice" title="通知"><svg class="icon"><use href="#i-bell"/></svg></button>
+        <button class="icon-btn" data-action="profile" title="账号信息"><svg class="icon"><use href="#i-user"/></svg></button>
+      </div>
+    </header>
+
+    <aside class="leftnav">
+      <div class="nav-cap">常用功能</div>
+      <button class="nav-item active" data-view="generate"><span class="nav-icon"><svg class="icon sm"><use href="#i-file-plus"/></svg></span>报告请示生成</button>
+      <button class="nav-item" data-view="history"><span class="nav-icon"><svg class="icon sm"><use href="#i-history"/></svg></span>历史任务记录</button>
+      <button class="nav-item" data-view="rules"><span class="nav-icon"><svg class="icon sm"><use href="#i-settings"/></svg></span>模板与规则</button>
+      <button class="nav-item" data-view="stats"><span class="nav-icon"><svg class="icon sm"><use href="#i-chart"/></svg></span>运行统计报表</button>
+    </aside>
+
+    <main class="view active" id="view-generate">
+      <div class="gen-toolbar">
+        <div class="tool-left">
+          <button class="primary-btn" data-action="newTask"><svg class="icon sm"><use href="#i-file-plus"/></svg>新建报告请示任务</button>
+          <span class="task-name" id="taskName">未创建生成任务</span>
+        </div>
+        <span class="task-meta" id="taskMeta">填写上行文材料后，系统将完成要素抽取、文种识别、初稿生成与校验。</span>
+      </div>
+      <div class="flowbar" id="flowbar">
+        <div class="flow-step"><button class="flow-node current" data-step="1"><span>1</span>材料录入</button></div><i class="flow-arrow"></i>
+        <div class="flow-step"><button class="flow-node locked" data-step="2"><span>2</span>解析补全</button></div><i class="flow-arrow"></i>
+        <div class="flow-step"><button class="flow-node locked" data-step="3"><span>3</span>文种识别</button></div><i class="flow-arrow"></i>
+        <div class="flow-step"><button class="flow-node locked" data-step="4"><span>4</span>初稿生成</button></div><i class="flow-arrow"></i>
+        <div class="flow-step"><button class="flow-node locked" data-step="5"><span>5</span>校验确认</button></div><i class="flow-arrow"></i>
+        <div class="flow-step"><button class="flow-node locked" data-step="6"><span>6</span>提交交付</button></div>
+      </div>
+
+      <div class="stage-scroll">
+        <!-- Step 1: 先输入或上传材料 -->
+        <section class="stage active" id="stage-1">
+          <div class="stage-grid">
+            <div>
+              <div class="card">
+                <div class="card-head"><div class="card-title"><span class="step-badge">STEP 1</span>上行文任务信息</div><span class="card-note">带 <b style="color:var(--red)">*</b> 为必填项</span></div>
+                <div class="card-body">
+                  <div class="form-grid" id="taskForm">
+                    <div class="field" data-field="taskTitle"><label>任务名称 <span class="req">*</span></label><input id="taskTitle" type="text" placeholder="例如：报送2026年上半年营商环境工作情况"><span class="err-msg">请填写任务名称。</span></div>
+                    <div class="field" data-field="department"><label>发文单位 <span class="req">*</span></label><select id="department"><option value="">请选择发文单位</option><option>南京江北新区管理委员会办公室</option><option>南京江北新区经济发展局</option><option>南京江北新区社会事业局</option><option>南京江北新区行政审批局</option></select><span class="err-msg">请选择发文单位。</span></div>
+                    <div class="field" data-field="recipient"><label>主送机关 <span class="req">*</span><span class="help" title="报告或请示的主要接收机关">?</span></label><input id="recipient" type="text" placeholder="例如：南京市人民政府办公厅"><span class="err-msg">请填写主送机关。</span></div>
+                    <div class="field" data-field="submitDate"><label>计划报送日期 <span class="req">*</span></label><input id="submitDate" type="date"><span class="err-msg">请选择计划报送日期。</span></div>
+                    <div class="field full"><label>办文目的 <span class="req">*</span></label><div class="radio-row" id="purposeChoices"><button class="choice on" data-choice="purpose" data-value="工作进展报送"><span class="radio"></span>工作进展报送</button><button class="choice" data-choice="purpose" data-value="阶段成果总结"><span class="radio"></span>阶段成果总结</button><button class="choice" data-choice="purpose" data-value="事项报批申请"><span class="radio"></span>事项报批申请</button><button class="choice" data-choice="purpose" data-value="工作请示协调"><span class="radio"></span>工作请示协调</button><input id="purpose" type="hidden" value="工作进展报送"></div><span class="err-msg">请选择办文目的。</span></div>
+                    <div class="field"><label>拟用文种 <span class="req">*</span></label><div class="radio-row" id="docTypeChoices"><button class="choice on" data-choice="docType" data-value="自动识别"><span class="radio"></span>自动识别</button><button class="choice" data-choice="docType" data-value="报告"><span class="radio"></span>报告</button><button class="choice" data-choice="docType" data-value="请示"><span class="radio"></span>请示</button><input id="docType" type="hidden" value="自动识别"></div><span class="sub">系统将依据材料内容推荐文种，最终以经办人确认结果为准。</span></div>
+                    <div class="field"><label>密级 <span class="req">*</span></label><select id="secret"><option>非涉密</option><option>内部</option><option>秘密</option><option>机密</option></select><span class="sub">涉密材料仅在授权环境内解析，禁止导入外部服务。</span></div>
+                    <div class="field" data-field="dates"><label>工作起止日期 <span class="req">*</span></label><div class="date-pair"><input id="startDate" type="date"><span>至</span><input id="endDate" type="date"></div><span class="err-msg">请填写有效的工作起止日期。</span></div>
+                    <div class="field" data-field="phone"><label>经办人联系电话 <span class="req">*</span></label><input id="phone" type="text" maxlength="11" placeholder="请输入11位手机号码"><span class="err-msg">请输入正确的11位手机号码。</span></div>
+                    <div class="field full" data-field="summary"><label>工作情况或请示事项说明 <span class="req">*</span><span class="help" title="请说明现状、事实、数据、问题、理由或拟请求事项">?</span></label><textarea id="summary" placeholder="可粘贴已有材料。报告建议写明工作进展、主要成效、问题及下一步安排；请示建议写明事项、理由依据和办理建议。"></textarea><span class="err-msg">请填写工作情况或请示事项说明。</span></div>
+                    <div class="field full"><label>期望输出</label><div class="check-row" id="outputChoices"><button class="choice on" data-check="draft"><span class="check"></span>正式文稿初稿</button><button class="choice on" data-check="check"><span class="check"></span>文种与格式校验结果</button><button class="choice" data-check="outline"><span class="check"></span>结构提纲</button><button class="choice" data-check="brief"><span class="check"></span>报送摘要</button></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="stage-actions"><button class="btn" data-action="resetForm"><svg class="icon sm"><use href="#i-refresh"/></svg>重置</button><div class="right"><button class="btn" data-action="saveDraft"><svg class="icon sm"><use href="#i-edit"/></svg>保存草稿</button><button class="primary-btn" data-action="toStep2">下一步：解析材料<svg class="icon sm"><use href="#i-arrow"/></svg></button></div></div>
+            </div>
+            <aside>
+              <div class="card">
+                <div class="card-head"><div class="card-title"><svg class="icon sm"><use href="#i-paperclip"/></svg>相关材料</div><span class="card-note">可选</span></div>
+                <div class="card-body">
+                  <label class="upload-zone" id="uploadZone" for="fileInput"><span class="upload-icon"><svg class="icon lg"><use href="#i-upload"/></svg></span><span class="upload-title">点击选择或拖拽文件至此处</span><span class="upload-copy">支持 Word、PDF、TXT、XLSX、图片扫描件，单个文件不超过 50MB</span></label>
+                  <input class="hidden" id="fileInput" type="file" multiple accept=".doc,.docx,.pdf,.txt,.xls,.xlsx,.png,.jpg,.jpeg">
+                  <div class="file-list" id="fileList"></div>
+                </div>
+              </div>
+              <div class="card"><div class="card-head"><div class="card-title"><svg class="icon sm"><use href="#i-shield"/></svg>办理提示</div></div><div class="card-body"><div class="subtle-note"><svg class="icon sm"><use href="#i-alert"/></svg><span>系统生成内容为辅助初稿。请在提交审核前核验事实数据、政策依据、主送机关及办文口径。</span></div></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Step 2: 解析与补全 -->
+        <section class="stage" id="stage-2">
+          <div class="stage-grid">
+            <div>
+              <div class="card"><div class="card-head"><div class="card-title"><span class="step-badge">STEP 2</span>材料解析与标准化处理</div><span class="tag doing" id="parseState">解析完成</span></div><div class="card-body"><div class="status-list" id="parseLogs"></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">待补全要素</div><span class="card-note">补全后将进入文种识别</span></div><div class="card-body"><div class="missing-list" id="missingList"></div></div></div>
+              <div class="stage-actions"><button class="btn" data-action="backStep" data-back="1">返回材料录入</button><div class="right"><button class="primary-btn" data-action="toStep3">确认要素，进入文种识别<svg class="icon sm"><use href="#i-arrow"/></svg></button></div></div>
+            </div>
+            <aside>
+              <div class="card"><div class="card-head"><div class="card-title">解析摘要</div></div><div class="card-body"><div class="status-list"><div class="status-line ok"><span class="status-ico"><svg class="icon sm"><use href="#i-check"/></svg></span><span><b>识别材料类型</b><small id="materialSummary">待读取任务材料</small></span><span class="status-tag">完成</span></div><div class="status-line ok"><span class="status-ico"><svg class="icon sm"><use href="#i-check"/></svg></span><span><b>提取主体与时间</b><small>已抽取发文单位、报送对象和工作周期</small></span><span class="status-tag">完成</span></div><div class="status-line warn"><span class="status-ico"><svg class="icon sm"><use href="#i-alert"/></svg></span><span><b>待人工确认</b><small>请确认请示事项或下一步工作表述</small></span><span class="status-tag">2 项</span></div></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">来源材料</div></div><div class="card-body" id="sourceFiles"><div class="empty">暂未上传附件，系统将基于已录入文本解析。</div></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Step 3: 文种识别 -->
+        <section class="stage" id="stage-3">
+          <div class="stage-grid">
+            <div>
+              <div class="card"><div class="card-head"><div class="card-title"><span class="step-badge">STEP 3</span>文种属性识别与要素确认</div><span class="card-note">可直接点击内容进行修正</span></div><div class="card-body"><div class="doctype-card"><div class="doctype-recommend"><span class="doctype-icon"><svg class="icon lg"><use href="#i-sparkles"/></svg></span><span><b id="recommendTitle">推荐使用：工作报告</b><p id="recommendDesc">根据“工作进展报送”目的及材料中的阶段成果表述，系统推荐采用报告文种。</p></span></div><div class="type-switch"><button class="type-option on" data-doc-type="报告"><strong>报告</strong><small>用于陈述工作进展、成果、问题、意见建议，不以请求批复为主要目的。</small></button><button class="type-option" data-doc-type="请示"><strong>请示</strong><small>用于就具体事项请求批准、指示或协调，应明确请求事项、理由和办理建议。</small></button></div><div class="rule-list" id="attributeRules"></div></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">结构化要素</div><span class="card-note">修改内容会同步应用至初稿生成</span></div><div class="card-body" style="padding:0;"><table class="element-table"><thead><tr><th style="width:135px;">要素</th><th>识别结果</th><th style="width:110px;">置信度</th></tr></thead><tbody id="elementTable"></tbody></table></div></div>
+              <div class="stage-actions"><button class="btn" data-action="backStep" data-back="2">返回解析补全</button><div class="right"><button class="primary-btn" data-action="toStep4">确认文种，生成初稿<svg class="icon sm"><use href="#i-arrow"/></svg></button></div></div>
+            </div>
+            <aside>
+              <div class="card"><div class="card-head"><div class="card-title">文种校验说明</div></div><div class="card-body"><div class="subtle-note"><svg class="icon sm"><use href="#i-shield"/></svg><span>报告与请示不可混用。系统将对标题、正文目的、请求性表述和事项数量进行校验，发现冲突时提示人工确认。</span></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">适用模板</div></div><div class="card-body"><div class="title-option on" id="templatePreview">江北新区政务上行文通用模板<br><small>适用：各委办局工作报告、事项请示</small></div><button class="btn sm" data-action="previewTemplate"><svg class="icon sm"><use href="#i-eye"/></svg>查看模板要素</button></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Step 4: 生成初稿 -->
+        <section class="stage" id="stage-4">
+          <div class="stage-grid">
+            <div>
+              <div class="document-shell"><div class="document-tools"><span class="hint">文稿支持直接编辑；选择标题或修改结构化要素后可重新生成。</span><div><button class="btn sm" data-action="regenerate"><svg class="icon sm"><use href="#i-refresh"/></svg>重新生成</button></div></div><article class="document-page" id="docPage" contenteditable="true"></article></div>
+              <div class="stage-actions"><button class="btn" data-action="backStep" data-back="3">返回文种识别</button><div class="right"><button class="btn" data-action="saveDraft"><svg class="icon sm"><use href="#i-edit"/></svg>保存草稿</button><button class="primary-btn" data-action="toStep5">下一步：校验文稿<svg class="icon sm"><use href="#i-arrow"/></svg></button></div></div>
+            </div>
+            <aside>
+              <div class="card"><div class="card-head"><div class="card-title">标题建议</div></div><div class="card-body" id="titleOptions"></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">生成配置</div></div><div class="card-body"><div class="config-row"><span>显示单位版头</span><button class="toggle on" data-toggle="redHead"></button></div><div class="config-row"><span>引用材料来源</span><button class="toggle on" data-toggle="sources"></button></div><div class="config-row"><span>自动补全责任主体与时限</span><button class="toggle on" data-toggle="responsible"></button></div><div class="config-row"><span>使用单位规范表述</span><button class="toggle on" data-toggle="tone"></button></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">生成说明</div></div><div class="card-body"><div class="subtle-note"><svg class="icon sm"><use href="#i-alert"/></svg><span>初稿依据已确认要素、适用模板和当前规则生成。涉及政策事实、资金金额、审批权限等内容必须由经办人核实。</span></div></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Step 5: 校验 -->
+        <section class="stage" id="stage-5">
+          <div class="stage-grid">
+            <div>
+              <div class="document-shell"><div class="document-tools"><span class="hint">点击右侧校验项可定位相关文稿内容。</span><button class="btn sm" data-action="runCheck"><svg class="icon sm"><use href="#i-refresh"/></svg>重新校验</button></div><article class="document-page" id="checkDocPage"></article></div>
+              <div class="stage-actions"><button class="btn" data-action="backStep" data-back="4">返回文稿编辑</button><div class="right"><button class="primary-btn" id="toStep6" data-action="toStep6" disabled>校验通过，进入提交<svg class="icon sm"><use href="#i-arrow"/></svg></button></div></div>
+            </div>
+            <aside>
+              <div class="card"><div class="card-head"><div class="card-title">校验结果</div><span class="card-note" id="checkResultText">等待校验</span></div><div class="card-body"><div class="check-summary"><div class="score-circle"><span id="scoreValue">--</span><small>合规评分</small></div><div class="check-stat"><div><b id="blockCount">0</b> 项阻断</div><div><b id="warnCount">0</b> 项需确认</div><div><b id="passCount">0</b> 项通过</div></div></div><div class="progress-wrap"><div class="progress-label"><span id="progressLabel">准备执行文种与格式校验</span><b id="progressPct">0%</b></div><div class="progress"><i id="progressBar"></i></div></div><div id="checkCards"></div></div></div>
+              <div class="card"><div class="card-head"><div class="card-title">校验范围</div></div><div class="card-body"><div class="status-list"><div class="status-line ok"><span class="status-ico"><svg class="icon sm"><use href="#i-check"/></svg></span><span><b>文种属性</b><small>报告/请示适用性、标题与正文一致性</small></span></div><div class="status-line ok"><span class="status-ico"><svg class="icon sm"><use href="#i-check"/></svg></span><span><b>内容完整性</b><small>主送机关、事实数据、请求事项、依据与建议</small></span></div><div class="status-line ok"><span class="status-ico"><svg class="icon sm"><use href="#i-check"/></svg></span><span><b>格式规范</b><small>标题、正文层次、附件、落款及成文日期</small></span></div></div></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Step 6: 输出与提交 -->
+        <section class="stage" id="stage-6">
+          <div class="card"><div class="card-head"><div class="card-title"><span class="step-badge">STEP 6</span>成果输出与审核提交</div><span class="tag done"><svg class="icon sm"><use href="#i-check"/></svg>已完成校验</span></div><div class="card-body"><div class="output-grid"><div class="output-item"><span class="output-icon"><svg class="icon lg"><use href="#i-file-text"/></svg></span><div class="output-name" id="outputDocName">正式报告初稿</div><div class="output-desc">含单位版头、标题、正文结构、落款及编辑版本记录。</div><div class="output-foot"><span>DOCX · 约 76KB</span><button class="btn sm" data-action="download" data-doc="正式文稿">下载</button></div></div><div class="output-item"><span class="output-icon"><svg class="icon lg"><use href="#i-shield"/></svg></span><div class="output-name">文种与格式校验结果</div><div class="output-desc">展示规则依据、问题定位、修改建议及复核结论。</div><div class="output-foot"><span>PDF · 约 320KB</span><button class="btn sm" data-action="download" data-doc="校验结果">下载</button></div></div><div class="output-item"><span class="output-icon"><svg class="icon lg"><use href="#i-list"/></svg></span><div class="output-name">结构化要素清单</div><div class="output-desc">留存任务要素、来源材料、文种确认和规则版本。</div><div class="output-foot"><span>XLSX · 约 18KB</span><button class="btn sm" data-action="download" data-doc="要素清单">下载</button></div></div></div></div></div>
+          <div class="card"><div class="card-head"><div class="card-title">后续流程衔接</div><span class="card-note">智能生成不替代人工审核和正式审批</span></div><div class="card-body"><div class="process-track" id="processTrack"><div class="process-node done"><span class="process-dot"><svg class="icon sm"><use href="#i-check"/></svg></span><div class="process-name">材料确认</div></div><div class="process-node done"><span class="process-dot"><svg class="icon sm"><use href="#i-check"/></svg></span><div class="process-name">初稿生成</div></div><div class="process-node done"><span class="process-dot"><svg class="icon sm"><use href="#i-check"/></svg></span><div class="process-name">规则校验</div></div><div class="process-node current" id="reviewNode"><span class="process-dot">4</span><div class="process-name">部门审核</div></div><div class="process-node" id="archiveNode"><span class="process-dot">5</span><div class="process-name">归档回写</div></div></div></div></div>
+          <div class="stage-actions"><button class="btn" data-action="backStep" data-back="5">返回校验确认</button><div class="right"><button class="btn" data-action="reviewDemo"><svg class="icon sm"><use href="#i-eye"/></svg>审核处理演示</button><button class="primary-btn" data-action="submitReview"><svg class="icon sm"><use href="#i-arrow"/></svg>提交部门审核</button></div></div>
+        </section>
+      </div>
+    </main>
+
+    <main class="view" id="view-history"><div class="page-scroll"><div class="page-head"><div><div class="page-title">历史任务记录</div><div class="page-sub">查看报告请示任务的生成、校验、审核和导出留痕，可复用已完成任务。</div></div><div class="toolbar-inline"><select class="btn" id="historyFilter"><option>全部状态</option><option>已归档</option><option>待审核</option><option>已退回</option><option>生成中</option></select><button class="btn" data-action="exportHistory"><svg class="icon sm"><use href="#i-download"/></svg>导出台账</button></div></div><div class="card"><div class="card-head"><div class="card-title">生成任务台账 <span class="card-note">共 6 条</span></div><div class="toolbar-inline"><svg class="icon sm" style="color:#8592a7"><use href="#i-search"/></svg><input id="historySearch" style="height:30px;width:210px;border:1px solid var(--line);border-radius:7px;padding:0 9px;" placeholder="搜索任务名称"></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>任务名称</th><th>文种</th><th>发文单位</th><th>生成时间</th><th>校验评分</th><th>状态</th><th style="width:190px;">操作</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></div></main>
+
+    <main class="view" id="view-rules"><div class="page-scroll"><div class="page-head"><div><div class="page-title">模板与规则配置</div><div class="page-sub">按委办局、文种和业务场景维护模板、强制规则和单位规范表述；规则发布后对新建任务生效。</div></div><div class="toolbar-inline"><button class="btn" data-action="previewTemplate"><svg class="icon sm"><use href="#i-eye"/></svg>模板预览</button><button class="primary-btn" data-action="addRule"><svg class="icon sm"><use href="#i-file-plus"/></svg>新增规则</button></div></div><div class="rule-layout"><aside class="card"><div class="card-head"><div class="card-title">规则分类</div></div><div class="card-body" style="padding:9px;"><div class="rule-menu"><button class="active" data-rule-category="all">全部规则 <span class="counter">12</span></button><button data-rule-category="docType">文种属性 <span class="counter">3</span></button><button data-rule-category="format">格式规范 <span class="counter">4</span></button><button data-rule-category="content">内容完整性 <span class="counter">3</span></button><button data-rule-category="security">安全与留痕 <span class="counter">2</span></button></div></div></aside><section class="card"><div class="card-head"><div class="card-title" id="ruleTitle">全部规则</div><span class="card-note">当前单位：江北新区管理委员会办公室</span></div><div class="card-body" id="ruleContent"></div></section></div></div></main>
+
+    <main class="view" id="view-stats"><div class="page-scroll"><div class="page-head"><div><div class="page-title">运行统计报表</div><div class="page-sub">统计周期：2026-07-01 至 2026-07-13，数据为原型演示数据。</div></div><button class="btn" data-action="exportStats"><svg class="icon sm"><use href="#i-download"/></svg>导出报表</button></div><div class="kpi-grid"><div class="kpi"><span class="kpi-icon"><svg class="icon"><use href="#i-file-text"/></svg></span><div class="kpi-label">累计生成上行文</div><div class="kpi-value">268</div><div class="kpi-note">较上月 +12.6%</div></div><div class="kpi"><span class="kpi-icon"><svg class="icon"><use href="#i-check"/></svg></span><div class="kpi-label">一次校验通过率</div><div class="kpi-value">89.4%</div><div class="kpi-note">较上月 +3.1%</div></div><div class="kpi"><span class="kpi-icon"><svg class="icon"><use href="#i-refresh"/></svg></span><div class="kpi-label">平均生成时长</div><div class="kpi-value">4.8<span style="font-size:13px;"> 分钟</span></div><div class="kpi-note">较人工缩短 62%</div></div><div class="kpi"><span class="kpi-icon"><svg class="icon"><use href="#i-history"/></svg></span><div class="kpi-label">规则命中次数</div><div class="kpi-value">1,042</div><div class="kpi-note">已覆盖 12 项规则</div></div></div><div class="layout-2"><div class="card"><div class="card-head"><div class="card-title">文种使用分布</div><span class="card-note">按任务数</span></div><div class="card-body"><div class="bar-list"><div class="bar-row"><span>工作报告</span><div class="bar-track"><div class="bar-fill" style="width:78%;"></div></div><b>128</b></div><div class="bar-row"><span>事项请示</span><div class="bar-track"><div class="bar-fill" style="width:62%;"></div></div><b>102</b></div><div class="bar-row"><span>情况报告</span><div class="bar-track"><div class="bar-fill" style="width:24%;"></div></div><b>38</b></div></div></div></div><div class="card"><div class="card-head"><div class="card-title">高频校验问题</div><span class="card-note">近 30 天</span></div><div class="card-body"><div class="bar-list"><div class="bar-row"><span>依据未标注</span><div class="bar-track"><div class="bar-fill" style="width:69%;"></div></div><b>42</b></div><div class="bar-row"><span>请求事项不清</span><div class="bar-track"><div class="bar-fill" style="width:52%;"></div></div><b>31</b></div><div class="bar-row"><span>时间逻辑冲突</span><div class="bar-track"><div class="bar-fill" style="width:35%;"></div></div><b>21</b></div><div class="bar-row"><span>格式要素缺失</span><div class="bar-track"><div class="bar-fill" style="width:26%;"></div></div><b>16</b></div></div></div></div></div></div></main>
+  </div>
+
+  <div class="modal-mask" id="modalMask"><div class="modal" id="modalBox"><div class="modal-head"><span id="modalTitle">提示</span><button class="icon-btn" id="modalClose" title="关闭"><svg class="icon"><use href="#i-x"/></svg></button></div><div class="modal-body" id="modalBody"></div><div class="modal-foot" id="modalFoot"><button class="btn" id="modalCancel">取消</button><button class="primary-btn" id="modalOk">确认</button></div></div></div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* 原型状态。实际开发时可替换为任务、模板、规则和审批接口返回的数据。 */
+    (function () {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+      const state = { step: 1, unlocked: 1, files: [], docType: '报告', selectedTitle: 0, taskCreated: false, checksResolved: false, submitted: false, config: { redHead: true, sources: true, responsible: true, tone: true } };
+      const toast = $('#toast');
+      const modalMask = $('#modalMask');
+      const modalBox = $('#modalBox');
+      const modalTitle = $('#modalTitle');
+      const modalBody = $('#modalBody');
+      const modalFoot = $('#modalFoot');
+      const modalOk = $('#modalOk');
+
+      const historyRows = [
+        ['报送2026年上半年营商环境工作情况', '报告', '经济发展局', '2026-07-11 14:26', '94', '已归档'],
+        ['关于申请设立新区人才服务专窗的请示', '请示', '社会事业局', '2026-07-10 10:18', '91', '待审核'],
+        ['关于重点项目建设推进情况的报告', '报告', '建设与交通局', '2026-07-09 16:42', '88', '已归档'],
+        ['关于协调解决园区企业用电增容事项的请示', '请示', '投资促进局', '2026-07-08 09:35', '76', '已退回'],
+        ['报送上半年政务服务效能提升情况', '报告', '行政审批局', '2026-07-07 11:04', '96', '已归档'],
+        ['关于采购政务热线智能坐席服务的请示', '请示', '管理服务中心', '2026-07-06 15:21', '—', '生成中']
+      ];
+      const rules = [
+        ['docType', '文种属性', '报告不得以请求批复、批准、协调作为主要行文目的', '阻断', 'R-DT-001'],
+        ['docType', '文种属性', '请示应明确单一请求事项、请示理由和办理建议', '阻断', 'R-DT-002'],
+        ['docType', '文种属性', '标题、正文目的和拟用文种应保持一致', '提醒', 'R-DT-003'],
+        ['format', '格式规范', '主送机关名称应使用全称并与单位通讯录匹配', '阻断', 'R-FM-001'],
+        ['format', '格式规范', '标题应含发文事由和文种名称', '提醒', 'R-FM-002'],
+        ['format', '格式规范', '正文应具备规范的段落层次、附件和落款要素', '提醒', 'R-FM-003'],
+        ['format', '格式规范', '成文日期不得早于工作周期结束日期', '提醒', 'R-FM-004'],
+        ['content', '内容完整性', '报告应包含工作情况、主要成效、问题及下一步安排', '提醒', 'R-CT-001'],
+        ['content', '内容完整性', '请示应包含事项、理由依据和办理建议', '阻断', 'R-CT-002'],
+        ['content', '内容完整性', '数据、政策文号和责任主体应可追溯至来源材料', '提醒', 'R-CT-003'],
+        ['security', '安全与留痕', '涉密材料不得导出至未授权范围', '阻断', 'R-SC-001'],
+        ['security', '安全与留痕', '生成、修改、校验、导出及提交操作须记录审计日志', '提醒', 'R-SC-002']
+      ];
+
+      function icon(id, cls = 'icon sm') { return `<svg class="${cls}"><use href="#${id}"/></svg>`; }
+      function showToast(message, success = false) { toast.textContent = message; toast.classList.toggle('success', success); toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 2600); }
+      function openModal(title, body, onOk, options = {}) { modalTitle.textContent = title; modalBody.innerHTML = body; modalOk.textContent = options.okText || '确认'; modalFoot.style.display = options.hideFooter ? 'none' : 'flex'; modalBox.classList.toggle('wide', !!options.wide); modalOk.onclick = onOk || closeModal; modalMask.classList.add('show'); }
+      function closeModal() { modalMask.classList.remove('show'); }
+      function safe(v) { return String(v || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[c]); }
+      function val(id) { return $(id).value.trim(); }
+
+      function setChoice(group, value) { $$(`[data-choice="${group}"]`).forEach(el => el.classList.toggle('on', el.dataset.value === value)); $(`#${group}`).value = value; }
+      function toggleChoice(el) { el.classList.toggle('on'); }
+      function taskData() { return { title: val('#taskTitle'), dept: val('#department'), recipient: val('#recipient'), date: val('#submitDate'), purpose: val('#purpose'), requestedType: val('#docType'), secret: val('#secret'), start: val('#startDate'), end: val('#endDate'), phone: val('#phone'), summary: val('#summary') }; }
+      function inferredType() { const d = taskData(); if (d.requestedType !== '自动识别') return d.requestedType; return /(申请|请示|请求|批准|协调|报批|同意|支持)/.test(d.purpose + d.summary) ? '请示' : '报告'; }
+      function createTaskName() { const d = taskData(); return d.title || '未命名报告请示任务'; }
+      function resetErrors() { $$('.field.err').forEach(el => el.classList.remove('err')); }
+      function markError(field) { const box = $(`[data-field="${field}"]`); if (box) box.classList.add('err'); }
+      function validateForm() {
+        resetErrors(); const d = taskData(); let ok = true;
+        if (!d.title) { markError('taskTitle'); ok = false; }
+        if (!d.dept) { markError('department'); ok = false; }
+        if (!d.recipient) { markError('recipient'); ok = false; }
+        if (!d.date) { markError('submitDate'); ok = false; }
+        if (!d.summary) { markError('summary'); ok = false; }
+        if (!/^1\d{10}$/.test(d.phone)) { markError('phone'); ok = false; }
+        if (!d.start || !d.end || d.start > d.end) { markError('dates'); ok = false; }
+        if (!ok) showToast('请检查必填项、联系电话及工作日期范围。');
+        return ok;
+      }
+      function resetForm() { ['taskTitle','department','recipient','submitDate','secret','startDate','endDate','phone','summary'].forEach(id => { const el = $('#' + id); if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; }); setChoice('purpose', '工作进展报送'); setChoice('docType', '自动识别'); state.files = []; renderFiles(); resetErrors(); showToast('已重置当前录入内容。'); }
+      function saveDraft() { const d = taskData(); state.taskCreated = true; $('#taskName').textContent = createTaskName(); $('#taskMeta').textContent = `草稿已保存 · ${d.dept || '未选择单位'} · ${d.requestedType === '自动识别' ? '待文种识别' : d.requestedType}`; showToast('草稿已保存，已记录当前录入内容。', true); }
+
+      function renderFiles() { const list = $('#fileList'); if (!state.files.length) { list.innerHTML = ''; return; } list.innerHTML = state.files.map((file, index) => `<div class="file-item"><span class="file-icon">${icon('i-file-text')}</span><span class="file-main"><span class="file-name">${safe(file.name)}</span><span class="file-meta">${file.size}</span></span><span class="file-state">待解析</span><button class="file-remove" data-remove-file="${index}" title="删除附件">${icon('i-x')}</button></div>`).join(''); }
+      function humanSize(bytes) { if (!bytes) return '模拟附件 · 128KB'; return bytes > 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)}MB` : `${Math.max(1, Math.round(bytes / 1024))}KB`; }
+      function addFiles(files) { Array.from(files).slice(0, 8 - state.files.length).forEach(file => state.files.push({ name: file.name, size: humanSize(file.size) })); renderFiles(); showToast(`已添加 ${files.length} 个材料，提交后将模拟解析。`, true); }
+
+      function goStep(next, force = false) {
+        if (!force && next > state.unlocked) { showToast('请先完成当前环节。'); return; }
+        state.step = next; state.unlocked = Math.max(state.unlocked, next);
+        $$('.stage').forEach(el => el.classList.toggle('active', el.id === `stage-${next}`));
+        $$('.flow-node').forEach(node => { const number = Number(node.dataset.step); node.classList.toggle('current', number === next); node.classList.toggle('done', number < next); node.classList.toggle('locked', number > state.unlocked); });
+        if (next === 2) renderParse();
+        if (next === 3) renderIdentification();
+        if (next === 4) renderDocument();
+        if (next === 5) { $('#checkDocPage').innerHTML = $('#docPage').innerHTML; runCheck(); }
+        if (next === 6) renderOutput();
+        $('.stage-scroll').scrollTop = 0;
+      }
+
+      function renderParse() {
+        const d = taskData();
+        $('#materialSummary').textContent = state.files.length ? `已读取 ${state.files.length} 个附件及任务说明` : '已读取任务说明文本，未上传附件';
+        $('#parseLogs').innerHTML = [
+          ['ok', '识别任务与发文主体', `任务：${d.title || '未命名任务'}；单位：${d.dept || '待确认'}`, '完成'],
+          ['ok', '解析文本与附件材料', state.files.length ? `识别 ${state.files.length} 个文件，已提取正文、表格和附件名称` : '基于已输入的工作说明提取文本要素', '完成'],
+          ['ok', '抽取事实、时间与主体', `工作周期：${d.start || '待补录'} 至 ${d.end || '待补录'}`, '完成'],
+          ['warn', '识别待确认要素', '请补充请示事项、依据文件或下一步工作安排，系统将据此完成文种判定。', '待处理']
+        ].map(x => `<div class="status-line ${x[0]}"><span class="status-ico">${x[0] === 'ok' ? icon('i-check') : icon('i-alert')}</span><span><b>${x[1]}</b><small>${x[2]}</small></span><span class="status-tag">${x[3]}</span></div>`).join('');
+        $('#missingList').innerHTML = `<div class="missing-item"><span class="missing-name">政策或业务依据<small>请示场景建议必填</small></span><input id="basisInput" placeholder="例如：相关政策文件名称、文号或会议纪要"><span class="tag wait">待补充</span></div><div class="missing-item"><span class="missing-name" id="missingSecondName">下一步工作安排<small>报告场景建议补充</small></span><input id="nextActionInput" placeholder="例如：拟于三季度完成专项攻坚并形成长效机制"><span class="tag wait">待补充</span></div><div class="missing-item"><span class="missing-name">责任主体与时限<small>用于生成执行性表述</small></span><select id="ownerInput"><option value="">请选择</option><option>由发文单位牵头，相关部门配合</option><option>由业务处室负责，限期办理</option><option>由上级部门统筹协调</option></select><span class="tag wait">待确认</span></div>`;
+        const files = $('#sourceFiles'); files.innerHTML = state.files.length ? state.files.map(f => `<div class="file-item"><span class="file-icon">${icon('i-file-text')}</span><span class="file-main"><span class="file-name">${safe(f.name)}</span><span class="file-meta">已纳入解析范围</span></span><span class="file-state">已识别</span></div>`).join('') : '<div class="empty">当前任务未上传附件，系统将以页面填写内容为解析来源。</div>';
+      }
+
+      function renderIdentification() {
+        const d = taskData(); state.docType = inferredType();
+        $$('.type-option').forEach(el => el.classList.toggle('on', el.dataset.docType === state.docType));
+        const isRequest = state.docType === '请示';
+        $('#recommendTitle').textContent = `推荐使用：${isRequest ? '事项请示' : '工作报告'}`;
+        $('#recommendDesc').textContent = isRequest ? '材料包含事项申请、请求协调或审批性表达，建议采用请示文种并明确单一请求事项。' : '材料以工作进展、阶段成效和下一步安排为主，建议采用报告文种。';
+        $('#attributeRules').innerHTML = isRequest ? `<div class="rule-row">${icon('i-check')}<span>已识别请求性表达，建议将请示事项置于正文结尾并使用明确办理建议。</span></div><div class="rule-row warn">${icon('i-alert')}<span>请确认是否仅包含一个核心请示事项；多个无关事项应拆分办理。</span></div>` : `<div class="rule-row">${icon('i-check')}<span>已识别工作进展、成果和问题陈述，符合报告类行文特征。</span></div><div class="rule-row warn">${icon('i-alert')}<span>如需上级批准、协调或明确意见，请调整为请示文种并补充请求事项。</span></div>`;
+        const basis = val('#basisInput') || '待补充业务依据或相关文件文号';
+        const last = isRequest ? '请示事项' : '下一步工作';
+        const content = isRequest ? (d.summary || '待补充请示内容') : (val('#nextActionInput') || '待补充下一步工作安排');
+        $('#elementTable').innerHTML = [
+          ['发文单位', d.dept || '待确认', 96], ['主送机关', d.recipient || '待确认', 93], ['办文目的', d.purpose || '待确认', 95], ['工作周期', `${d.start || '待确认'} 至 ${d.end || '待确认'}`, 88], ['主要事实/情况', d.summary || '待补充', 90], ['政策或业务依据', basis, 68], [last, content, 79]
+        ].map(row => `<tr><td><b>${row[0]}</b></td><td contenteditable="true" data-element="${row[0]}">${safe(row[1])}</td><td><span class="confidence"><i><span style="width:${row[2]}%"></span></i>${row[2]}%</span></td></tr>`).join('');
+      }
+      function syncElementsToForm() {
+        const elements = Object.fromEntries($$('[data-element]').map(el => [el.dataset.element, el.textContent.trim()]));
+        if (elements['主送机关']) $('#recipient').value = elements['主送机关'];
+        if (elements['主要事实/情况']) $('#summary').value = elements['主要事实/情况'];
+        if (elements['政策或业务依据'] && $('#basisInput')) $('#basisInput').value = elements['政策或业务依据'];
+        const finalKey = state.docType === '请示' ? '请示事项' : '下一步工作';
+        if (elements[finalKey] && $('#nextActionInput')) $('#nextActionInput').value = elements[finalKey];
+      }
+
+      function docTitleOptions(type, title) { return type === '请示' ? [`关于${title || '有关事项'}的请示`, `关于请求协调解决${title || '有关事项'}的请示`, `关于${title || '有关事项'}的请示报告`] : [`关于${title || '有关工作'}的报告`, `关于报送${title || '工作情况'}的报告`, `关于${title || '阶段性工作情况'}的专题报告`]; }
+      function documentHtml() {
+        const d = taskData(); const type = state.docType; const isRequest = type === '请示'; const title = docTitleOptions(type, d.title)[state.selectedTitle] || docTitleOptions(type, d.title)[0];
+        const basis = val('#basisInput') || '有关政策文件及会议纪要'; const next = val('#nextActionInput') || '持续推进有关工作，及时报送阶段进展。'; const owner = val('#ownerInput') || '由相关业务处室牵头落实。';
+        const head = state.config.redHead ? '<div class="red-head">南京江北新区管理委员会办公室</div>' : '';
+        const source = state.config.sources ? '<span class="source-mark" data-source="basis">相关政策文件及会议纪要</span>' : '相关政策文件及会议纪要';
+        const respectful = state.config.tone ? '现将有关情况报告如下：' : '有关情况如下：';
+        if (isRequest) return `${head}<h1>${safe(title)}</h1><div class="doc-meta">${safe(d.recipient || '主送机关')}：</div><p>为妥善推进${safe(d.title || '有关工作')}，根据${source}，结合当前工作实际，现就有关事项请示如下。</p><p><b>一、请示事项</b></p><p id="mark-request" class="source-mark" data-source="request">请求${safe(d.summary || '对有关事项予以研究支持')}。</p><p><b>二、请示理由</b></p><p>当前有关工作已进入关键阶段，需进一步统筹资源、明确办理路径。经梳理，现有条件尚需上级部门予以指导和协调，具体依据为${safe(basis)}。</p><p><b>三、办理建议</b></p><p>建议由${safe(owner)}。妥否，请批示。</p><p class="right-align">${safe(d.dept || '发文单位')}</p><p class="right-align">${safe(d.date || '2026年7月')}</p>`;
+        return `${head}<h1>${safe(title)}</h1><div class="doc-meta">${safe(d.recipient || '主送机关')}：</div><p>${respectful}</p><p><b>一、工作进展</b></p><p id="mark-fact" class="source-mark" data-source="fact">${safe(d.summary || '现阶段工作正按计划推进。')}</p><p><b>二、主要成效</b></p><p>围绕年度重点任务，持续完善工作机制，推动相关事项协同落实，已形成阶段性工作成果。</p><p><b>三、存在问题</b></p><p>当前仍存在跨部门协同、资料汇集与后续落实等方面需要持续关注的问题。</p><p><b>四、下一步工作</b></p><p id="mark-next" class="source-mark" data-source="next">${safe(next)} ${state.config.responsible ? safe(owner) : ''}</p><p class="right-align">${safe(d.dept || '发文单位')}</p><p class="right-align">${safe(d.date || '2026年7月')}</p>`;
+      }
+      function renderDocument() { const d = taskData(); const titles = docTitleOptions(state.docType, d.title); $('#docPage').innerHTML = documentHtml(); $('#titleOptions').innerHTML = titles.map((title, i) => `<button class="title-option ${i === state.selectedTitle ? 'on' : ''}" data-title-index="${i}">${safe(title)}<small>${i === 0 ? '推荐标题' : '备选标题'}</small></button>`).join(''); }
+
+      function runCheck() {
+        state.checksResolved = false; $('#toStep6').disabled = true; $('#checkResultText').textContent = '正在校验'; $('#scoreValue').textContent = '--'; $('#progressBar').style.width = '0'; $('#progressPct').textContent = '0%'; $('#progressLabel').textContent = '准备执行文种与格式校验'; $('#checkCards').innerHTML = '';
+        const stages = [[18, '校验文种属性与标题一致性'], [42, '校验主送机关、工作周期与落款'], [66, '核验事实、依据与请求事项'], [86, '匹配单位格式规范与禁用表述'], [100, '生成校验结果与修改指引']]; let index = 0;
+        const timer = setInterval(() => { const item = stages[index++]; $('#progressBar').style.width = `${item[0]}%`; $('#progressPct').textContent = `${item[0]}%`; $('#progressLabel').textContent = item[1]; if (index === stages.length) { clearInterval(timer); setTimeout(renderChecks, 260); } }, 320);
+      }
+      function renderChecks() {
+        const isRequest = state.docType === '请示'; const basis = val('#basisInput'); const blocks = state.checksResolved ? [] : [
+          { id: 'need', level: 'block', label: '阻断', dim: isRequest ? '请示事项完整性' : '事实与依据完整性', rule: isRequest ? 'R-CT-002' : 'R-CT-003', text: isRequest ? '请示事项应明确具体请求内容及期望办理结果。' : '报告中的关键事实或下一步工作缺少可追溯的业务依据。', fix: isRequest ? '已根据任务说明生成请示事项，建议补充具体办理范围后再次校验。' : '建议补充政策、会议纪要或业务台账来源，并在文稿中明确引用。' },
+          { id: 'format', level: 'warn', label: '需确认', dim: '格式规范', rule: 'R-FM-003', text: '成文日期采用计划报送日期，需在正式提交前按单位流程确认。', fix: '提交审核时自动生成日期确认项，不影响草稿保存。' }
+        ];
+        $('#checkDocPage').innerHTML = $('#docPage').innerHTML;
+        $$('#checkDocPage .source-mark').forEach(el => el.addEventListener('click', () => { el.classList.add('active'); setTimeout(() => el.classList.remove('active'), 900); }));
+        $('#scoreValue').textContent = state.checksResolved ? '96' : (basis ? '89' : '82'); $('#blockCount').textContent = state.checksResolved ? '0' : '1'; $('#warnCount').textContent = state.checksResolved ? '1' : '1'; $('#passCount').textContent = state.checksResolved ? '12' : '10'; $('#checkResultText').textContent = state.checksResolved ? '校验通过' : '发现 1 项阻断';
+        $('#checkCards').innerHTML = blocks.length ? blocks.map(c => `<div class="check-card" id="check-${c.id}"><div class="check-head"><span class="tag ${c.level === 'block' ? 'block' : 'wait'}">${c.label}</span><b>${c.dim}</b><span class="check-rule">${c.rule}</span></div><div class="check-text">${c.text}</div><div class="check-fix"><b>修改建议：</b>${c.fix}</div><div class="check-actions"><button data-check-fix="${c.id}">一键采纳建议</button><button data-check-locate="${c.id}">定位文稿</button></div></div>`).join('') : `<div class="subtle-note">${icon('i-check')}<span>阻断项已处理，当前文稿可进入提交环节。仍请在审核前核对事实数据、政策依据和单位口径。</span></div>`;
+        $('#toStep6').disabled = !state.checksResolved;
+        showToast(state.checksResolved ? '复核完成，文稿可进入审核提交。' : '校验完成，请处理阻断项后继续。', state.checksResolved);
+      }
+      function resolveCheck(id) { state.checksResolved = true; const isRequest = state.docType === '请示'; if (isRequest) { const request = $('#docPage #mark-request'); if (request) request.textContent = `请求上级部门对“${taskData().title || '有关事项'}”予以研究支持，并明确具体办理路径。`; } else { const next = $('#docPage #mark-next'); if (next) next.textContent = `${val('#nextActionInput') || '持续推进有关工作，及时报送阶段进展。'} 依据：${val('#basisInput') || '相关政策文件及会议纪要'}。`; } $('#checkDocPage').innerHTML = $('#docPage').innerHTML; renderChecks(); }
+      function renderOutput() { const type = state.docType === '请示' ? '正式请示初稿' : '正式报告初稿'; $('#outputDocName').textContent = type; }
+
+      function renderHistory() { const query = val('#historySearch'); const filter = $('#historyFilter').value; const rows = historyRows.filter(r => (!query || r[0].includes(query)) && (filter === '全部状态' || r[5] === filter)); $('#historyBody').innerHTML = rows.length ? rows.map((r, i) => `<tr><td><b>${r[0]}</b></td><td><span class="tag ${r[1] === '请示' ? 'wait' : 'doing'}">${r[1]}</span></td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4] === '—' ? '—' : r[4] + ' 分'}</td><td><span class="tag ${r[5] === '已归档' ? 'done' : r[5] === '已退回' ? 'block' : r[5] === '生成中' ? 'doing' : 'wait'}">${r[5]}</span></td><td><button class="row-link" data-history="view" data-index="${i}">查看</button><button class="row-link" data-history="reuse" data-index="${i}">复用</button><button class="row-link" data-history="download" data-index="${i}">下载</button>${r[5] === '待审核' ? `<button class="row-link" data-history="reject" data-index="${i}" style="color:var(--red)">退回</button>` : ''}</td></tr>`).join('') : '<tr><td colspan="7" class="empty">未找到匹配的任务记录。</td></tr>'; }
+      function renderRules(category = 'all') { const labels = { all: '全部规则', docType: '文种属性规则', format: '格式规范规则', content: '内容完整性规则', security: '安全与留痕规则' }; $('#ruleTitle').textContent = labels[category]; const list = rules.filter(r => category === 'all' || r[0] === category); $('#ruleContent').innerHTML = `<div class="subtle-note" style="margin-bottom:12px;">${icon('i-shield')}<span>强制规则命中后将作为阻断项提示，经办人需修改文稿或由授权审核人说明豁免原因。</span></div><div>${list.map((r, i) => `<div class="rule-row-table"><span class="tag ${r[3] === '阻断' ? 'block' : 'wait'}">${r[3]}</span><span><b style="display:block;color:#3c4b64;margin-bottom:2px;">${r[1]}</b>${r[2]}</span><span class="switch-text">已启用 · ${r[4]}</span><button class="row-action" data-rule-view="${i}">查看</button></div>`).join('')}</div>`; }
+
+      function submitReview() { if (state.submitted) { showToast('该任务已提交部门审核。'); return; } openModal('确认提交部门审核', `<div class="modal-steps"><span class="modal-step done"><i>1</i>材料确认</span><span class="modal-line"></span><span class="modal-step done"><i>2</i>智能生成</span><span class="modal-line"></span><span class="modal-step active"><i>3</i>部门审核</span></div><div class="subtle-note">${icon('i-check')}<span>系统将提交当前文稿、校验结果、结构化要素及规则版本至部门审核人。提交后仍可查看任务，但需在退回后修改正文。</span></div><div class="field" style="margin-top:16px;"><label>审核意见（选填）</label><textarea id="submitNote" placeholder="例如：请重点核验统计数据和政策依据。"></textarea></div>`, () => { state.submitted = true; closeModal(); $('#reviewNode').classList.remove('current'); $('#reviewNode').classList.add('done'); $('#reviewNode .process-dot').innerHTML = icon('i-check'); $('#taskMeta').textContent = '已提交部门审核 · 等待审核人处理 · 所有操作已留痕'; showToast('提交成功，任务已进入部门审核流程。', true); }, { okText: '确认提交' }); }
+      function reviewDemo() { openModal('审核处理演示', `<div class="subtle-note">${icon('i-eye')}<span>该演示用于展示审核人通过或退回后的流程反馈。实际系统应由具备审核权限的用户处理。</span></div><div class="field" style="margin-top:16px;"><label>退回原因 <span class="req">*</span></label><textarea id="rejectReason" placeholder="例如：请补充政策依据文号，并核实统计数据口径。"></textarea><span class="sub">选择“退回修改”时必须填写原因。</span></div>`, () => { const reason = val('#rejectReason'); if (!reason) { $('#rejectReason').style.borderColor = 'var(--red)'; showToast('请填写退回原因。'); return; } closeModal(); openModal('任务已退回修改', `<div class="subtle-note">${icon('i-alert')}<span>驳回原因：${safe(reason)}<br>系统已记录审核意见，请返回“初稿生成”环节修改后重新校验、提交。</span></div>`, () => { closeModal(); goStep(4, true); showToast('已返回初稿生成环节。'); }, { okText: '返回修改' }); }, { okText: '退回修改' }); }
+
+      /* 事件绑定 */
+      document.addEventListener('click', event => {
+        const target = event.target.closest('[data-action],[data-view],[data-step],[data-choice],[data-check],[data-doc-type],[data-title-index],[data-remove-file],[data-check-fix],[data-check-locate],[data-history],[data-rule-category],[data-rule-view],[data-toggle]'); if (!target) return;
+        if (target.dataset.view) { switchView(target.dataset.view); return; }
+        if (target.dataset.step) { goStep(Number(target.dataset.step)); return; }
+        if (target.dataset.choice) { setChoice(target.dataset.choice, target.dataset.value); return; }
+        if (target.dataset.check) { toggleChoice(target); return; }
+        if (target.dataset.docType) { state.docType = target.dataset.docType; $$('.type-option').forEach(el => el.classList.toggle('on', el === target)); renderIdentification(); return; }
+        if (target.dataset.titleIndex !== undefined) { state.selectedTitle = Number(target.dataset.titleIndex); renderDocument(); return; }
+        if (target.dataset.removeFile !== undefined) { state.files.splice(Number(target.dataset.removeFile), 1); renderFiles(); return; }
+        if (target.dataset.checkFix) { resolveCheck(target.dataset.checkFix); return; }
+        if (target.dataset.checkLocate) { const mark = $('#checkDocPage .source-mark'); if (mark) { mark.scrollIntoView({ behavior: 'smooth', block: 'center' }); mark.classList.add('active'); setTimeout(() => mark.classList.remove('active'), 1000); } return; }
+        if (target.dataset.history) { handleHistory(target.dataset.history, Number(target.dataset.index)); return; }
+        if (target.dataset.ruleCategory) { $$('.rule-menu button').forEach(el => el.classList.toggle('active', el === target)); renderRules(target.dataset.ruleCategory); return; }
+        if (target.dataset.ruleView !== undefined) { const r = rules[Number(target.dataset.ruleView)]; openModal('规则详情', `<b>${r[1]} · ${r[4]}</b><p style="margin:10px 0 0;">${r[2]}</p><p style="color:#8190a5;">规则等级：${r[3]}；当前状态：已启用；适用范围：江北新区各委办局报告请示任务。</p>`, null, { hideFooter: true }); return; }
+        if (target.dataset.toggle) { state.config[target.dataset.toggle] = !state.config[target.dataset.toggle]; target.classList.toggle('on', state.config[target.dataset.toggle]); renderDocument(); return; }
+        const action = target.dataset.action;
+        if (!action) return;
+        if (action === 'newTask') { state.step = 1; state.unlocked = 1; state.checksResolved = false; state.submitted = false; state.selectedTitle = 0; resetForm(); $('#taskName').textContent = '新建报告请示任务'; $('#taskMeta').textContent = '请填写或上传上行文材料，系统将在后续环节自动处理。'; goStep(1, true); showToast('已创建新任务，请开始录入材料。', true); }
+        if (action === 'resetForm') resetForm();
+        if (action === 'saveDraft') saveDraft();
+        if (action === 'toStep2') { if (validateForm()) { saveDraft(); state.unlocked = 2; goStep(2); } }
+        if (action === 'toStep3') { state.unlocked = 3; goStep(3); }
+        if (action === 'toStep4') { syncElementsToForm(); state.unlocked = 4; goStep(4); }
+        if (action === 'toStep5') { state.unlocked = 5; goStep(5); }
+        if (action === 'toStep6') { if (state.checksResolved) { state.unlocked = 6; goStep(6); } else showToast('请先处理校验阻断项。'); }
+        if (action === 'backStep') goStep(Number(target.dataset.back), true);
+        if (action === 'regenerate') { $('#docPage').innerHTML = documentHtml(); showToast('已依据最新要素重新生成初稿。', true); }
+        if (action === 'runCheck') runCheck();
+        if (action === 'download') showToast(`已生成“${target.dataset.doc}”下载任务（原型演示）。`, true);
+        if (action === 'submitReview') submitReview();
+        if (action === 'reviewDemo') reviewDemo();
+        if (action === 'previewTemplate') openModal('模板预览 · 江北新区政务上行文通用模板', `<div class="modal-steps"><span class="modal-step done"><i>1</i>文种确认</span><span class="modal-line"></span><span class="modal-step active"><i>2</i>正文生成</span><span class="modal-line"></span><span class="modal-step"><i>3</i>格式校验</span></div><p><b>报告模板：</b>标题、主送机关、工作进展、主要成效、存在问题、下一步工作、落款。</p><p><b>请示模板：</b>标题、主送机关、请示事项、请示理由、办理建议、落款。</p><div class="subtle-note">${icon('i-shield')}<span>模板应用范围可由公文管理员按委办局、报送对象和业务场景配置。</span></div>`, null, { hideFooter: true });
+        if (action === 'notice') openModal('通知', `<div class="status-list"><div class="status-line ok"><span class="status-ico">${icon('i-check')}</span><span><b>规则库已更新</b><small>上行文格式规范规则已更新至 v1.3。</small></span><span class="status-tag">今天</span></div><div class="status-line warn"><span class="status-ico">${icon('i-alert')}</span><span><b>待审核任务提醒</b><small>“关于申请设立新区人才服务专窗的请示”待部门审核。</small></span><span class="status-tag">1 条</span></div></div>`, null, { hideFooter: true });
+        if (action === 'profile') openModal('账号信息', `<p><b>当前账号：</b>综合办公室 · 材料经办人</p><p><b>所属机构：</b>南京江北新区管理委员会办公室</p><p><b>当前权限：</b>材料录入、任务生成、文种确认、合规校验、成果导出、提交审核。</p><div class="subtle-note">${icon('i-shield')}<span>数据权限随统一身份认证及组织岗位信息同步。</span></div>`, null, { hideFooter: true });
+        if (action === 'exportHistory' || action === 'exportStats') showToast('已生成导出文件（原型演示）。', true);
+        if (action === 'addRule') openModal('新增规则', `<div class="field"><label>规则名称 <span class="req">*</span></label><input id="newRuleName" placeholder="例如：请示事项单一性校验"></div><div class="field"><label>规则说明 <span class="req">*</span></label><textarea id="newRuleDesc" placeholder="说明规则的适用条件、校验逻辑与提示内容。"></textarea></div><div class="field"><label>规则等级</label><select id="newRuleLevel"><option>提醒</option><option>阻断</option></select></div>`, () => { if (!val('#newRuleName') || !val('#newRuleDesc')) { showToast('请填写规则名称和规则说明。'); return; } closeModal(); showToast('规则已保存，待管理员发布后生效。', true); }, { okText: '保存规则' });
+      });
+
+      function handleHistory(action, index) { const row = historyRows[index]; if (!row) return; if (action === 'view') { openModal('任务详情', `<p><b>任务名称：</b>${row[0]}</p><p><b>文种：</b>${row[1]}　<b>状态：</b>${row[5]}</p><p><b>发文单位：</b>${row[2]}　<b>生成时间：</b>${row[3]}</p><div class="subtle-note">${icon('i-list')}<span>已留存任务材料、要素确认、文稿版本、校验结果和审核流转记录。</span></div>`, null, { hideFooter: true }); } if (action === 'reuse') { switchView('generate'); $('#taskTitle').value = row[0]; $('#department').value = '南京江北新区管理委员会办公室'; $('#recipient').value = '南京市人民政府办公厅'; $('#submitDate').value = '2026-07-15'; $('#startDate').value = '2026-01-01'; $('#endDate').value = '2026-06-30'; $('#phone').value = '13800138000'; $('#summary').value = '现将有关工作推进情况及阶段性成效汇报如下，请结合实际研究办理。'; setChoice('docType', row[1]); saveDraft(); goStep(1, true); showToast(`已复用“${row[0]}”的基础信息。`, true); } if (action === 'download') showToast('已生成历史任务成果下载（原型演示）。', true); if (action === 'reject') { openModal('退回任务', `<div class="field"><label>退回原因 <span class="req">*</span></label><textarea id="historyRejectReason" placeholder="请填写退回原因，系统将同步给经办人员。"></textarea></div>`, () => { if (!val('#historyRejectReason')) { showToast('请填写退回原因。'); return; } closeModal(); showToast('已退回任务并发送修改提醒。', true); }, { okText: '确认退回' }); } }
+      function switchView(view) { $$('.view').forEach(el => el.classList.toggle('active', el.id === `view-${view}`)); $$('[data-view]').forEach(el => el.classList.toggle('active', el.dataset.view === view)); if (view === 'history') renderHistory(); if (view === 'rules') renderRules('all'); }
+
+      $('#fileInput').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+      $('#uploadZone').addEventListener('dragover', e => { e.preventDefault(); $('#uploadZone').classList.add('drag'); });
+      $('#uploadZone').addEventListener('dragleave', () => $('#uploadZone').classList.remove('drag'));
+      $('#uploadZone').addEventListener('drop', e => { e.preventDefault(); $('#uploadZone').classList.remove('drag'); addFiles(e.dataTransfer.files); });
+      $('#historySearch').addEventListener('input', renderHistory);
+      $('#historyFilter').addEventListener('change', renderHistory);
+      $('#modalClose').onclick = closeModal; $('#modalCancel').onclick = closeModal; modalMask.addEventListener('click', e => { if (e.target === modalMask) closeModal(); });
+      $('#taskTitle').addEventListener('input', () => { if (state.taskCreated) $('#taskName').textContent = createTaskName(); });
+      renderHistory(); renderRules();
+    })();
+  </script>
+<script>window.ADAPTER_CONFIG={agentId:"report",inputSelector:"#taskTitle",inputFullSelector:"#summary",outputSelector:"#docPage",docKind:"document",waitForMs:2000,hideSelectors:[".topbar"]};</script>
+<script src="_shared/adapter.js"></script>
+<script src="handoff-context.js"></script>
+</body>
+</html>
