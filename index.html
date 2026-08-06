@@ -913,7 +913,7 @@
   .home-composer .composer-foot { padding: 7px 16px 13px; }
   .home-composer .send-btn { min-width: 92px; height: 39px; border-radius: 10px; font-size: 14px; background: linear-gradient(135deg,#126fae,#1598bd); box-shadow: 0 8px 18px rgba(18,111,174,.26); }
   .home-composer .send-btn:hover { background: linear-gradient(135deg,#203b86,#126fae); transform: translateY(-1px); }
-  /* 常用推荐 */
+  /* 试一试 */
   .home-try { margin: 12px 0 2px; }
   .home-try-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
   .home-try .lbl { font-size: 12px; color: var(--muted); font-weight: 700; }
@@ -1317,14 +1317,22 @@
 
   /* ===== 对话 + 在线编辑双栏 ===== */
   .chat-workspace { height:100%; min-width:0; min-height:0; overflow:hidden; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); background:var(--bg); }
-  .document-editor-panel { min-width:0; display:none; grid-template-rows:58px auto minmax(0,1fr) auto; border-left:1px solid #dfe6ec; background:#f7f8fa; }
+  .document-editor-panel { min-width:0; display:none; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); border-left:1px solid #e8edf2; background:#f7f8fa; overflow:hidden; }
   #view-chat.editor-open .chat-workspace { grid-template-columns:minmax(400px,.78fr) minmax(620px,1.22fr); }
   #view-chat.editor-open .document-editor-panel { display:grid; }
+  .editor-top-bar { grid-column:1; grid-row:1; display:flex; flex-direction:column; min-width:0; border-bottom:1px solid #e8edf2; background:#fff; }
+  .editor-bottom-area { grid-column:1; grid-row:2; display:grid; grid-template-columns:0px minmax(0,1fr); grid-template-rows:minmax(0,1fr) auto; min-height:0; overflow:hidden; }
+  #view-chat.v3-editor-open .editor-bottom-area { grid-template-columns:200px minmax(0,1fr); }
+  .editor-main-content { display:grid; grid-template-rows:minmax(0,1fr) auto; min-width:0; min-height:0; overflow:hidden; grid-column:2; position:relative; }
+  #view-chat.editor-open .doc-outline-panel { display:none; }
+  #view-chat.v3-editor-open .chat-workspace { grid-template-columns: minmax(320px,.5fr) minmax(680px,1fr); }
+  #view-chat.v3-editor-open .doc-outline-panel { display: grid; }
+  @media (max-width:1280px) { #view-chat.v3-editor-open .chat-workspace { grid-template-columns: minmax(280px,.48fr) minmax(560px,1fr); } #view-chat.v3-editor-open .editor-bottom-area { grid-template-columns:170px minmax(0,1fr); } }
   #view-chat.editor-open .thread-inner { max-width:680px; padding-left:22px; padding-right:22px; }
   #view-chat.editor-open .composer-wrap { padding-left:14px; padding-right:14px; }
   body.editor-mode .body { grid-template-columns:1fr; }
   body.editor-mode .sidebar { display:none; }
-  body.editor-mode.editor-sidebar-shown .body { grid-template-columns:220px minmax(0,1fr); }
+  body.editor-mode.editor-sidebar-shown .body { grid-template-columns:244px minmax(0,1fr); }
   body.editor-mode.editor-sidebar-shown .sidebar { display:flex; }
   .editor-sidebar-toggle { position:absolute; z-index:18; top:12px; left:14px; width:34px; height:34px; display:none; place-items:center; border:1px solid #d5e0e8; border-radius:9px; background:#fff; color:var(--gov-700); box-shadow:0 5px 14px rgba(32,56,83,.12); }
   .editor-sidebar-toggle:hover { border-color:var(--gov-500); background:var(--gov-50); }
@@ -1340,7 +1348,7 @@
   .editor-head-actions button:hover { border-color:#d7e2eb; background:#f7f9fb; color:var(--gov-700); }
   .editor-head-actions .editor-close { width:32px; padding:0; justify-content:center; font-size:19px; }
   .editor-stage { min-height:0; overflow:auto; padding:28px 34px 54px; }
-  .editor-save-bar { display:flex; justify-content:flex-end; padding:10px 18px 12px; border-top:1px solid #e1e6eb; background:rgba(255,255,255,.96); }
+  .editor-save-bar { display:flex; justify-content:flex-end; grid-column:1 / -1; grid-row:2; padding:10px 18px 12px; border-top:1px solid #e1e6eb; background:rgba(255,255,255,.96); }
   .editor-save-btn { min-width:94px; height:38px; display:inline-flex; align-items:center; justify-content:center; gap:7px; border:0; border-radius:9px; background:var(--gov-700); color:#fff; font-size:13px; font-weight:800; box-shadow:0 5px 14px rgba(36,104,182,.2); }
   .editor-save-btn:hover { background:var(--gov-800); }
   .editor-save-btn:disabled { background:#b7c3d0; box-shadow:none; cursor:not-allowed; }
@@ -1417,8 +1425,315 @@
     #view-chat.editor-open .chat-workspace { grid-template-columns:minmax(360px,.72fr) minmax(560px,1.28fr); }
     .editor-paper { padding:48px 52px 72px; }
   }
+  .cg-guide-body { padding: 4px 0; }
+  .v2-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 6px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+
+  /* ===== v3.0 函件先出稿后迭代 ===== */
+  .lv3-draft-card {
+    border: 1px solid #d5e2ec; border-radius: 14px; overflow: hidden;
+    background: #fff; box-shadow: 0 4px 16px rgba(18, 80, 140, 0.08);
+  }
+  .lv3-draft-header {
+    display: flex; align-items: center; gap: 8px; padding: 12px 18px;
+    background: linear-gradient(135deg, #f0f7fd, #e8f2fa); border-bottom: 1px solid #d5e2ec;
+  }
+  .lv3-draft-header .lv3-dh-icon { color: var(--gov-600); flex: none; }
+  .lv3-dh-title { font-size: 14px; font-weight: 800; color: var(--gov-900); flex: 1; }
+  .lv3-dh-badge {
+    font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px;
+    background: #e8f7ec; color: #2a8a4a; border: 1px solid #c5e8d0;
+  }
+  .lv3-dh-badge.draft { background: #fff4e6; color: #d4801a; border-color: #f0d090; }
+  .lv3-draft-body { padding: 18px 22px; font-size: 14px; line-height: 1.85; color: #2a3b52; }
+  .lv3-draft-body h2 { font-size: 17px; font-weight: 800; color: var(--gov-900); text-align: center; margin: 0 0 14px; }
+  .lv3-draft-body h3 { font-size: 14.5px; font-weight: 700; color: var(--gov-800); margin: 14px 0 6px; }
+  .lv3-draft-body p { margin: 0 0 8px; }
+  .lv3-ph {
+    display: inline; background: #fff8ec; color: #c08020; font-weight: 600;
+    border-bottom: 2px dashed #f0c050; padding: 1px 6px; border-radius: 3px;
+    cursor: pointer; transition: 0.15s;
+  }
+  .lv3-ph:hover { background: #fff0d8; border-bottom-color: #e0a030; }
+  .lv3-ph::before { content: "［"; opacity: 0.6; }
+  .lv3-ph::after { content: "］"; opacity: 0.6; }
+  .lv3-missing-box {
+    margin: 0 18px 14px; padding: 12px 16px; border-radius: 10px;
+    background: #fff9f0; border: 1px solid #f0d8a8;
+  }
+  .lv3-missing-title {
+    font-size: 12.5px; font-weight: 700; color: #b87020; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .lv3-missing-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .lv3-missing-chip {
+    font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 6px;
+    background: #fff; border: 1px solid #f0d090; color: #c08020;
+  }
+  .lv3-draft-footer {
+    padding: 10px 18px; background: #f8fbfd; border-top: 1px solid #e8f0f5;
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  .lv3-refine-btn {
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 18px;
+    border: 0; border-radius: 9px; background: linear-gradient(135deg, var(--gov-600), var(--gov-700));
+    color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.15s;
+  }
+  .lv3-refine-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(18, 111, 174, 0.25); }
+
+  /* ===== v3.0 文件卡片样式 ===== */
+  .lv3-file-card {
+    display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box;
+    margin: 10px 0; padding: 14px 18px; border: 1px solid #d5e2ec; border-left: 4px solid var(--gov-600);
+    border-radius: 12px; background: #fff; cursor: pointer; transition: 0.2s;
+    box-shadow: 0 2px 10px rgba(18,80,140,.06);
+  }
+  .lv3-file-card:hover {
+    border-left-color: var(--gov-700); box-shadow: 0 6px 20px rgba(18,80,140,.12);
+    transform: translateY(-2px);
+  }
+  .lv3-file-card-icon {
+    width: 42px; height: 42px; flex: none; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gov-50), #e8f2fa);
+    display: grid; place-items: center; color: var(--gov-600);
+  }
+  .lv3-file-card-icon .svg-icon { width: 22px; height: 22px; }
+  .lv3-file-card-info { flex: 1; min-width: 0; }
+  .lv3-file-card-title {
+    font-size: 14px; font-weight: 700; color: #1e3a5f;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .lv3-file-card-meta {
+    display: flex; align-items: center; gap: 10px; margin-top: 4px;
+    font-size: 11.5px; color: #8a95a5;
+  }
+  .lv3-file-card-meta .lv3-fc-status {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 5px; font-weight: 600;
+  }
+  .lv3-file-card-meta .lv3-fc-status.complete { background: #e8f7ec; color: #2a8a4a; }
+  .lv3-file-card-meta .lv3-fc-status.draft { background: #fff4e6; color: #d4801a; }
+  .lv3-fc-download { display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex: none; margin-left: auto; padding: 6px 12px; border: 1px solid #cfe0ec; border-radius: 7px; background: #f6fbff; color: var(--gov-700); cursor: pointer; font-size: 12.5px; font-weight: 600; white-space: nowrap; opacity: 0; visibility: hidden; transform: translateX(6px); transition: 0.18s; }
+  .lv3-file-card:hover .lv3-fc-download { opacity: 1; visibility: visible; transform: none; }
+  .lv3-fc-download:hover { background: var(--gov-600); color: #fff; border-color: var(--gov-600); }
+
+  /* ===== 三栏编辑器布局：对话 + 大纲 + 编辑区 ===== */
+  .doc-outline-panel {
+    display: none; min-width: 0; min-height:0; border-right: none;
+    background: #f7f8fa; grid-template-rows: 48px minmax(0,1fr) auto;
+    overflow: hidden; grid-row: 1;
+  }
+  .doc-outline-head {
+    display: flex; align-items: center; gap: 8px; padding: 0 14px;
+    border-bottom: 1px solid #eef1f5; background: transparent;
+    font-size: 12px; font-weight: 700; color: #5a6c80;
+  }
+  .doc-outline-head .doc-outline-time { font-size: 11px; color: #9aa3af; font-weight: 500; }
+  .doc-outline-body { overflow-y: auto; min-height:0; padding: 10px 6px; }
+  .doc-outline-item {
+    display: block; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 12.5px; color: #4a5a70; line-height: 1.5; transition: 0.12s;
+    border-left: 3px solid transparent; margin-bottom: 2px;
+  }
+  .doc-outline-item:hover { background: #eef4f9; color: var(--gov-700); }
+  .doc-outline-item.active { background: #e8f2fa; color: var(--gov-800); border-left-color: var(--gov-600); font-weight: 700; }
+  .doc-outline-tabs {
+    display: flex; gap: 4px; padding: 8px 10px; border-top: 1px solid #eef1f5; background: transparent;
+    overflow-x: auto;
+  }
+  .doc-outline-tab {
+    display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+    border-radius: 6px; background: #f0f4f8; font-size: 11.5px; color: #5a6c80;
+    cursor: pointer; white-space: nowrap; transition: 0.12s;
+  }
+  .doc-outline-tab.active { background: var(--gov-50); color: var(--gov-700); font-weight: 700; border: 1px solid #c5deef; }
+  .doc-outline-tab .tab-close { font-size: 14px; line-height: 1; opacity: .5; }
+  .doc-outline-tab .tab-close:hover { opacity: 1; }
+  .lv3-finalize-btn {
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 18px;
+    border: 1.5px solid var(--gov-600); border-radius: 9px; background: #fff;
+    color: var(--gov-700); font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.15s;
+  }
+  .lv3-finalize-btn:hover { background: var(--gov-50); }
+  .lv3-footer-hint { font-size: 11.5px; color: #8a95a5; font-weight: 500; flex: 1; }
+  .lv3-questions-box {
+    margin: 0 18px 14px; padding: 14px 16px; border-radius: 10px;
+    background: #f0f7fd; border: 1px solid #c5deef;
+  }
+  .lv3-questions-title {
+    font-size: 13px; font-weight: 700; color: var(--gov-800); margin-bottom: 8px;
+  }
+  .lv3-question-item {
+    font-size: 12.5px; color: #3a5070; line-height: 1.8; padding-left: 14px; position: relative;
+  }
+  .lv3-question-item::before { content: "●"; position: absolute; left: 0; color: var(--gov-500); font-size: 8px; top: 6px; }
+  .lv3-version-tag {
+    font-size: 10px; font-weight: 700; color: var(--gov-600); padding: 2px 7px;
+    border-radius: 4px; background: var(--gov-50); border: 1px solid #c5deef;
+  }
+
+  /* ============================================================
+     首页重设计覆盖层（2026-08-06）
+     品牌光谱提取自江北新区 Logo：
+     黄绿 #DCE100 → 绿 #099849 → 青 #06A398 → 浅蓝 #30AADD → 蓝 #0755A0 → 藏青 #121A63
+     黄金分割节奏：斐波那契间距 8 / 13 / 21 / 34 / 55
+     ============================================================ */
+  :root {
+    --jb-yellow: #DCE100; --jb-green: #099849; --jb-teal: #06A398;
+    --jb-blue-light: #30AADD; --jb-blue: #0755A0; --jb-navy: #121A63;
+    --jb-ink-1: #17204A; --jb-ink-2: #3D4A6B; --jb-ink-3: #5B6B85; --jb-ink-4: #9AA6BF;
+    --jb-bg: #F5F8FC; --jb-line: #E4EAF2; --jb-line-soft: #EDF1F8;
+    --jb-hover: #F3F6FB; --jb-active: #EDF2FB;
+    --jb-spectrum: linear-gradient(90deg, var(--jb-yellow) 0%, var(--jb-green) 24%, var(--jb-teal) 46%, var(--jb-blue-light) 66%, var(--jb-blue) 84%, var(--jb-navy) 100%);
+    --jb-btn-grad: linear-gradient(95deg, var(--jb-green), var(--jb-teal) 48%, var(--jb-blue));
+    --jb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --jb-shadow-card: 0 1px 2px rgba(18,26,99,.05), 0 12px 40px -14px rgba(18,26,99,.14);
+  }
+
+  /* ===== 布局：侧栏加宽至 264px ===== */
+  .body { grid-template-columns: 264px 1fr; }
+
+  /* ===== 侧栏 ===== */
+  .sidebar { border-right-color: var(--jb-line-soft); padding-top: 3px; }
+  .sidebar::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--jb-spectrum); z-index: 6; }
+
+  /* 品牌区 */
+  .side-home { margin: 12px 9px 6px; min-height: 0; padding: 6px 8px; gap: 10px; border-radius: 10px; }
+  .side-brand-logo { height: 38px; width: auto; display: block; flex: none; }
+  .side-brand-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; text-align: left; }
+  .side-brand-name { font-size: 15px; font-weight: 600; color: var(--jb-navy); letter-spacing: .02em; line-height: 1; white-space: nowrap; }
+  .side-brand-sub { font-size: 8px; letter-spacing: .16em; color: var(--jb-ink-4); line-height: 1; white-space: nowrap; font-weight: 500; }
+
+  /* 新对话：光谱渐变 */
+  .new-btn { height: 40px; margin: 8px 11px 13px; border-radius: 10px; background: var(--jb-btn-grad); font-size: 14px; font-weight: 600; letter-spacing: .06em; box-shadow: 0 6px 16px -6px rgba(7,85,160,.45); }
+  .new-btn:hover { background: var(--jb-btn-grad); filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 10px 22px -8px rgba(7,85,160,.55); }
+  .new-btn .svg-icon { width: 15px; height: 15px; stroke-width: 2.2; }
+
+  /* 主菜单 */
+  .side-nav { gap: 2px; padding-bottom: 13px; border-bottom-color: var(--jb-line-soft); }
+  .side-nav .nav-tab { position: relative; height: 40px; padding: 0 12px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--jb-ink-2); gap: 10px; }
+  .side-nav .nav-tab .svg-icon { width: 17px; height: 17px; padding: 0; background: none; border: 0; box-shadow: none; color: var(--jb-ink-3); transition: color .25s var(--jb-ease); }
+  .side-nav .nav-tab:hover { background: var(--jb-hover); color: var(--jb-navy); }
+  .side-nav .nav-tab:hover .svg-icon { color: var(--jb-navy); background: none; border: 0; box-shadow: none; }
+  .side-nav .nav-tab.active { background: var(--jb-active); color: var(--jb-navy); font-weight: 600; box-shadow: none; }
+  .side-nav .nav-tab.active .svg-icon { color: var(--jb-navy); background: none; border: 0; box-shadow: none; }
+  .side-nav .nav-tab.active::before { content: ""; position: absolute; left: -4px; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: linear-gradient(180deg, var(--jb-teal), var(--jb-blue)); }
+
+  /* 历史对话 */
+  .side-cap { margin: 13px 12px 10px; font-size: 12px; font-weight: 500; color: var(--jb-ink-4); letter-spacing: .08em; }
+  .side-cap .cnt { min-width: 18px; height: 16px; padding: 0 5px; margin-left: 2px; border-radius: 8px; background: var(--jb-active); color: var(--jb-blue); font-size: 10px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .side-conv-toolbar { grid-template-columns: minmax(0, 1fr) 34px; gap: 6px; margin-bottom: 10px; }
+  .conv-search { height: 34px; border-radius: 9px; border-color: var(--jb-line); color: var(--jb-ink-4); transition: border-color .25s var(--jb-ease), box-shadow .25s var(--jb-ease); }
+  .conv-search:focus-within { border-color: rgba(6,163,152,.55); box-shadow: 0 0 0 3px rgba(6,163,152,.10); }
+  .conv-search input { font-size: 12px; }
+  .conv-time-btn { width: 34px; height: 34px; border-radius: 9px; border-color: var(--jb-line); color: var(--jb-ink-3); }
+  .conv-time-btn:hover { border-color: var(--jb-blue-light); color: var(--jb-navy); background: var(--jb-hover); }
+  .conv-item { padding: 9px 12px; border-radius: 9px; margin-bottom: 1px; transition: background .2s var(--jb-ease); }
+  .conv-item:hover { background: var(--jb-hover); }
+  .conv-item.active { background: var(--jb-active); border-color: transparent; }
+  .conv-title { font-size: 13px; font-weight: 400; color: var(--jb-ink-2); line-height: 1.4; }
+  .conv-item:hover .conv-title { color: var(--jb-navy); }
+  .conv-line .conv-time, .conv-time { color: var(--jb-ink-4); font-size: 11px; }
+  .conv-more { height: 32px; margin: 8px 8px 4px; border-radius: 9px; background: none; color: var(--jb-blue); font-size: 12px; font-weight: 500; }
+  .conv-more:hover { background: var(--jb-active); }
+
+  /* 底部用户区 */
+  .side-foot { gap: 6px; padding: 10px 9px 8px; border-top-color: var(--jb-line-soft); }
+  .side-foot .user-chip { border: 0; background: none; height: 38px; padding: 0 6px; border-radius: 9px; }
+  .side-foot .user-chip:hover { background: var(--jb-hover); }
+  .side-foot .user-chip .av { width: 30px; height: 30px; background: var(--jb-navy); font-size: 12px; font-weight: 600; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px rgba(6,163,152,.45); }
+  .side-foot .user-chip .user-name { color: var(--jb-ink-2); font-size: 13px; font-weight: 500; }
+  .side-foot .user-chip .user-role { color: var(--jb-ink-4); font-size: 10.5px; }
+  .side-foot .icon-pill { width: 30px; height: 30px; border: 0; background: none; border-radius: 8px; color: var(--jb-ink-3); }
+  .side-foot .icon-pill:hover { background: var(--jb-hover); color: var(--jb-navy); border: 0; }
+
+  /* ===== 主页视图 ===== */
+  .home-main { position: relative; background: var(--jb-bg); }
+
+  /* 低多边形切面装饰 */
+  .facets { position: absolute; pointer-events: none; z-index: 0; }
+  .facets-tr { top: -30px; right: -50px; width: clamp(320px, 26vw, 480px); }
+  .facets-bl { bottom: -60px; left: -50px; width: clamp(300px, 22vw, 420px); }
+
+  /* φ 构图：视觉焦点落于视口 38.2% 光学中心 */
+  .home-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; padding: clamp(55px, 9vh, 140px) 21px 55px; transform: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+
+  /* 主视觉锚点：放大的江北图形标 */
+  .greet-logo { height: 96px; width: auto; display: block; margin-bottom: 21px; filter: drop-shadow(0 10px 24px rgba(18,26,99,.16)); }
+
+  .home-hero { margin-bottom: 0; }
+  .home-hero h1 { margin: 0; font-size: clamp(26px, 2.4vw, 32px); font-weight: 600; letter-spacing: .02em; color: var(--jb-navy); line-height: 1.3; }
+  .home-hero h1 .hl { background: linear-gradient(100deg, var(--jb-green), var(--jb-teal) 45%, var(--jb-blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* 对话框卡片 */
+  :is(#view-home, #view-newchat) .home-composer { margin-top: 34px; width: 100%; border: 1px solid var(--jb-line); border-radius: 16px; background: #fff; box-shadow: var(--jb-shadow-card); overflow: hidden; transition: border-color .3s var(--jb-ease), box-shadow .3s var(--jb-ease); }
+  :is(#view-home, #view-newchat) .home-composer:focus-within { border-color: rgba(6,163,152,.55); box-shadow: var(--jb-shadow-card), 0 0 0 4px rgba(6,163,152,.10); }
+  :is(#view-home, #view-newchat) .home-composer::before { inset: 0 0 auto; height: 3px; border-radius: 0; background: var(--jb-spectrum); opacity: 1; }
+  :is(#view-home, #view-newchat) .home-composer .composer { border: 0; box-shadow: none; border-radius: 0; }
+  :is(#view-home, #view-newchat) .home-composer textarea { font-size: 15px; line-height: 1.7; padding: 21px 21px 8px; min-height: 89px; color: var(--jb-ink-1); }
+  :is(#view-home, #view-newchat) .home-composer textarea::placeholder { color: var(--jb-ink-4); }
+  :is(#view-home, #view-newchat) .home-composer .prompt-highlight { padding: 21px 21px 8px; font-size: 15px; line-height: 1.7; min-height: 89px; }
+  :is(#view-home, #view-newchat) .home-composer .composer-foot { padding: 8px 13px 13px; gap: 8px; }
+  :is(#view-home, #view-newchat) .composer-plus { width: 30px; height: 30px; border-color: var(--jb-line); color: var(--jb-ink-3); font-size: 20px; }
+  :is(#view-home, #view-newchat) .composer-plus:hover, :is(#view-home, #view-newchat) .composer-plus.open { border-color: var(--jb-teal); color: var(--jb-teal); background: none; }
+  :is(#view-home, #view-newchat) .composer-foot .tool-chip { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 12px; border-radius: 8px; font-size: 12px; color: var(--jb-ink-3); cursor: default; transition: all .25s var(--jb-ease); }
+  :is(#view-home, #view-newchat) .composer-foot .tool-chip:hover { background: #F0F6FB; color: var(--jb-blue); }
+  :is(#view-home, #view-newchat) .composer-foot .tool-chip .svg-icon { width: 13px; height: 13px; }
+  :is(#view-home, #view-newchat) .home-composer .send-btn { min-width: 0; height: 38px; padding: 0 21px; border-radius: 10px; font-size: 14px; font-weight: 600; letter-spacing: .04em; background: var(--jb-btn-grad); box-shadow: 0 6px 16px -6px rgba(7,85,160,.5); transition: transform .25s var(--jb-ease), box-shadow .25s var(--jb-ease), filter .25s var(--jb-ease); }
+  :is(#view-home, #view-newchat) .home-composer .send-btn:hover { background: var(--jb-btn-grad); filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 10px 22px -8px rgba(7,85,160,.55); }
+  :is(#view-home, #view-newchat) .home-composer .send-btn .svg-icon { width: 15px; height: 15px; }
+
+  /* 快捷功能按钮：等宽六列，总宽与对话框 1:1 对齐 */
+  :is(#view-home, #view-newchat) .quick-actions { margin-top: 21px; width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  :is(#view-home, #view-newchat) .qa-btn { height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fff; border: 1px solid var(--jb-line); border-radius: 10px; font-size: 13px; color: var(--jb-ink-2); white-space: nowrap; transition: transform .25s var(--jb-ease), border-color .25s var(--jb-ease), box-shadow .25s var(--jb-ease), color .25s var(--jb-ease); }
+  :is(#view-home, #view-newchat) .qa-btn .svg-icon { width: 15px; height: 15px; flex-shrink: 0; }
+  :is(#view-home, #view-newchat) .qa-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgba(18,26,99,.18); color: var(--jb-navy); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(1) .svg-icon { color: var(--jb-green); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(2) .svg-icon { color: var(--jb-teal); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(3) .svg-icon { color: var(--jb-blue-light); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(4) .svg-icon { color: var(--jb-blue); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(5) .svg-icon { color: var(--jb-navy); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(6) .svg-icon { color: var(--jb-ink-4); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(1):hover { border-color: rgba(9,152,73,.5); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(2):hover { border-color: rgba(6,163,152,.5); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(3):hover { border-color: rgba(48,170,221,.55); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(4):hover { border-color: rgba(7,85,160,.5); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(5):hover { border-color: rgba(18,26,99,.4); }
+  :is(#view-home, #view-newchat) .qa-btn:nth-child(6):hover { border-color: var(--jb-ink-4); }
+
+  /* 页脚 */
+  :is(#view-home, #view-newchat) .page-footer { margin-top: auto; padding-top: 55px; font-size: 12px; color: var(--jb-ink-4); letter-spacing: .06em; display: flex; align-items: center; gap: 13px; }
+  :is(#view-home, #view-newchat) .page-footer::before { content: ""; width: 34px; height: 2px; background: var(--jb-spectrum); border-radius: 1px; }
+
+  /* 入场动效：指数缓动 + stagger */
+  @keyframes jbRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  :is(#view-home, #view-newchat) .home-inner > * { animation: jbRise .7s var(--jb-ease) both; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(1) { animation-delay: .05s; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(2) { animation-delay: .13s; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(3) { animation-delay: .22s; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(4) { animation-delay: .31s; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(5) { animation-delay: .36s; }
+  :is(#view-home, #view-newchat) .home-inner > *:nth-child(6) { animation-delay: .40s; }
+  @media (prefers-reduced-motion: reduce) { :is(#view-home, #view-newchat) .home-inner > * { animation: none; } }
+
+  /* ===== 新对话视图：与主页同一设计语言 ===== */
+  #view-newchat .new-chat-page { position: relative; display: block; background: var(--jb-bg); padding: 0; }
+  #view-newchat .new-chat-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; min-height: 100%; padding: clamp(55px, 9vh, 140px) 21px 55px; transform: none; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  #view-newchat .home-composer { width: 100%; }
+  #view-newchat .new-chat-inner > * { animation: jbRise .7s var(--jb-ease) both; }
+  #view-newchat .new-chat-inner > *:nth-child(1) { animation-delay: .05s; }
+  #view-newchat .new-chat-inner > *:nth-child(2) { animation-delay: .13s; }
+  #view-newchat .new-chat-inner > *:nth-child(3) { animation-delay: .22s; }
+  #view-newchat .new-chat-inner > *:nth-child(4) { animation-delay: .31s; }
+  #view-newchat .new-chat-inner > *:nth-child(5) { animation-delay: .36s; }
+  #view-newchat .new-chat-inner > *:nth-child(6) { animation-delay: .40s; }
+  @media (prefers-reduced-motion: reduce) { #view-newchat .new-chat-inner > * { animation: none; } }
 </style>
-</head>
+<meta name="prototype-version" content=""></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-bot" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></symbol>
@@ -1430,6 +1745,7 @@
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></symbol>
+  <symbol id="i-doc-outline" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M15 3v5h5M8 13h8M8 17h6M8 9h4"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
@@ -1484,8 +1800,8 @@
     <aside class="sidebar">
       <button class="side-drawer-toggle" id="sideDrawerToggle" title="收起左侧菜单" aria-label="收起左侧菜单"><svg class="svg-icon"><use href="#i-chevron-left"></use></svg></button>
       <button class="side-home" id="sideHome" title="返回主页" aria-label="返回主页">
-        <span class="brand-mark"><img src="assets/jiangbei-logo.jpeg" alt="南京江北新区标识"></span>
-        <span class="side-home-title">政务AI办公助手</span>
+        <img class="side-brand-logo" src="assets/jiangbei-mark.png" alt="南京江北新区标识">
+        <span class="side-brand-text"><span class="side-brand-name">政务AI办公助手</span><span class="side-brand-sub">NANJING JIANGBEI NEW AREA</span></span>
       </button>
       <button class="new-btn" id="newBtn"><svg class="svg-icon"><use href="#i-plus"></use></svg>新对话</button>
       <nav class="side-nav" id="navTabs" aria-label="平台功能导航">
@@ -1527,7 +1843,7 @@
           </div>
         </div>
         <div id="convList"></div>
-        <button class="conv-more" data-view-jump="history-conversations">查看历史对话</button>
+        <button class="conv-more" data-view-jump="history-conversations">查看全部历史对话</button>
         <div class="common-skill-block" hidden>
           <div class="side-cap">常用技能库 <span class="cnt">3</span></div>
           <div id="commonSkillList"></div>
@@ -1549,12 +1865,27 @@
       <!-- ============ 视图：主页 ============ -->
       <div class="view active" id="view-home">
         <div class="home-main">
+          <!-- 低多边形切面装饰：呼应江北 Logo 几何语言（右上蓝系 / 左下绿系） -->
+          <svg class="facets facets-tr" viewBox="0 0 400 400" aria-hidden="true">
+            <polygon points="250,20 320,140 180,140" fill="#30AADD" fill-opacity=".14"/>
+            <polygon points="320,140 390,260 250,260" fill="#0755A0" fill-opacity=".10"/>
+            <polygon points="180,140 250,260 110,260" fill="#30AADD" fill-opacity=".08"/>
+            <polygon points="250,260 320,380 180,380" fill="#121A63" fill-opacity=".08"/>
+            <polygon points="320,20 390,140 250,140" fill="#0755A0" fill-opacity=".07"/>
+          </svg>
+          <svg class="facets facets-bl" viewBox="0 0 400 400" aria-hidden="true">
+            <polygon points="90,380 160,260 20,260" fill="#099849" fill-opacity=".12"/>
+            <polygon points="160,260 230,140 90,140" fill="#06A398" fill-opacity=".10"/>
+            <polygon points="230,380 300,260 160,260" fill="#DCE100" fill-opacity=".10"/>
+            <polygon points="160,380 230,260 90,260" fill="#099849" fill-opacity=".07"/>
+          </svg>
           <div class="home-inner">
+            <img class="greet-logo" src="assets/jiangbei-mark.png" alt="南京江北新区标识">
             <div class="home-hero">
-              <h1>你好，我是政务AI助手</h1>
+              <h1>你好，我是<span class="hl">政务AI助手</span></h1>
             </div>
             <div class="home-composer">
-              <div class="composer" style="border:0;box-shadow:none;border-radius:0;">
+              <div class="composer">
                  <div class="agent-bar">
                    <button class="mini" id="homePick" hidden><svg class="svg-icon"><use href="#i-bot"></use></svg>选择智能体</button>
                    <span id="homeAgentLive"></span>
@@ -1569,13 +1900,16 @@
                  </div>
                  <div class="prompt-editor"><div class="prompt-highlight" id="homePromptHighlight" aria-hidden="true"></div><textarea id="homeInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
                 <div class="composer-foot">
-                  <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button><span class="foot-hint">@选择智能体，/选择连接器</span></span>
+                  <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button></span>
                   <button class="send-btn" id="homeSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button>
                 </div>
               </div>
             </div>
-            <div class="home-try"><div class="home-try-head"><span class="lbl">常用推荐</span><button class="try-refresh" id="tryRefresh"><svg class="svg-icon"><use href="#i-refresh"></use></svg>换一批</button></div><div id="homeTry" class="try-chips"></div></div>
-
+            <!-- 常用推荐：按个性化配置顺序展示 5 个智能体 + 更多 -->
+            <div class="quick-actions" id="homeQuickActions" role="group" aria-label="常用推荐"></div>
+            <!-- 旧"试一试"逻辑保留但隐藏（JS 仍写入 #homeTry / 绑定 #tryRefresh，避免报错） -->
+            <div class="home-try" hidden><div class="home-try-head"><span class="lbl">试一试</span><button class="try-refresh" id="tryRefresh"><svg class="svg-icon"><use href="#i-refresh"></use></svg>换一批</button></div><div id="homeTry" class="try-chips"></div></div>
+            <footer class="page-footer">©南京江北新区管理委员会 · 政务AI办公平台</footer>
           </div>
         </div>
         <aside class="side-panel is-collapsed" id="homeRail"></aside>
@@ -1583,10 +1917,26 @@
 
       <!-- ============ 视图：新对话 ============ -->
       <div class="view" id="view-newchat">
-        <div class="new-chat-page"><div class="new-chat-inner">
-           <div class="home-hero"><h1>你好，我是政务AI助手</h1></div>
+        <div class="new-chat-page">
+          <!-- 低多边形切面装饰：呼应江北 Logo 几何语言（右上蓝系 / 左下绿系） -->
+          <svg class="facets facets-tr" viewBox="0 0 400 400" aria-hidden="true">
+            <polygon points="250,20 320,140 180,140" fill="#30AADD" fill-opacity=".14"/>
+            <polygon points="320,140 390,260 250,260" fill="#0755A0" fill-opacity=".10"/>
+            <polygon points="180,140 250,260 110,260" fill="#30AADD" fill-opacity=".08"/>
+            <polygon points="250,260 320,380 180,380" fill="#121A63" fill-opacity=".08"/>
+            <polygon points="320,20 390,140 250,140" fill="#0755A0" fill-opacity=".07"/>
+          </svg>
+          <svg class="facets facets-bl" viewBox="0 0 400 400" aria-hidden="true">
+            <polygon points="90,380 160,260 20,260" fill="#099849" fill-opacity=".12"/>
+            <polygon points="160,260 230,140 90,140" fill="#06A398" fill-opacity=".10"/>
+            <polygon points="230,380 300,260 160,260" fill="#DCE100" fill-opacity=".10"/>
+            <polygon points="160,380 230,260 90,260" fill="#099849" fill-opacity=".07"/>
+          </svg>
+          <div class="new-chat-inner">
+           <img class="greet-logo" src="assets/jiangbei-mark.png" alt="南京江北新区标识">
+           <div class="home-hero"><h1>你好，我是<span class="hl">政务AI助手</span></h1></div>
           <div class="home-composer">
-            <div class="composer" style="border:0;box-shadow:none;border-radius:0;">
+            <div class="composer">
                <div class="agent-bar">
                  <button class="mini" id="newPick" hidden><svg class="svg-icon"><use href="#i-bot"></use></svg>选择智能体</button>
                  <span id="newAgentLive"></span>
@@ -1600,10 +1950,14 @@
                  <span id="newAttachLive"></span>
                </div>
                <div class="prompt-editor"><div class="prompt-highlight" id="newPromptHighlight" aria-hidden="true"></div><textarea id="newInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
-              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button><span class="foot-hint">@选择智能体，/选择连接器</span></span><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></div>
+              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button></span><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></div>
             </div>
           </div>
-          <div class="home-try"><div class="home-try-head"><span class="lbl">常用推荐</span><button class="try-refresh" id="newTryRefresh"><svg class="svg-icon"><use href="#i-refresh"></use></svg>换一批</button></div><div id="newTry" class="try-chips"></div></div>
+          <!-- 常用推荐：与主页一致（JS 渲染个性化智能体 + 更多） -->
+          <div class="quick-actions" id="newQuickActions" role="group" aria-label="常用推荐"></div>
+          <!-- 旧"试一试"逻辑保留但隐藏（JS 仍写入 #newTry / 绑定 #newTryRefresh，避免报错） -->
+          <div class="home-try" hidden><div class="home-try-head"><span class="lbl">试一试</span><button class="try-refresh" id="newTryRefresh"><svg class="svg-icon"><use href="#i-refresh"></use></svg>换一批</button></div><div id="newTry" class="try-chips"></div></div>
+          <footer class="page-footer">©南京江北新区管理委员会 · 政务AI办公平台</footer>
         </div></div>
       </div>
 
@@ -1645,6 +1999,7 @@
             </div>
           </main>
           <aside class="document-editor-panel" id="documentEditorPanel" aria-label="在线编辑区">
+            <div class="editor-top-bar">
             <div class="editor-panel-head">
               <div class="editor-panel-title"><b id="editorPanelTitle">在线编辑文稿</b><button class="editor-modified-btn" id="editorModifiedBtn" type="button" data-editor-action="history" title="查看文档修改历史"><svg class="svg-icon" style="width:12px;height:12px"><use href="#i-clock"></use></svg><span id="editorModifiedLabel">修改于—</span></button></div>
               <div class="editor-head-actions"><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
@@ -1686,11 +2041,17 @@
                 <button class="oo-btn" type="button" data-oo-cmd="removeFormat" title="清除格式">清除</button>
               </div>
             </div>
-            <div class="editor-stage" id="editorStage"><article class="editor-paper" id="editorPaper" contenteditable="true" spellcheck="false"></article></div>
-            <div class="editor-save-bar">
-              <span class="oo-status" id="ooStatus"><span class="oo-dot"></span>页 1 / 1 · 已就绪</span>
-              <span class="oo-autosave-hint" id="ooAutosaveHint">修改后自动保存</span>
             </div>
+            <div class="editor-bottom-area">
+            <aside class="doc-outline-panel" id="docOutlinePanel" aria-label="文档大纲">
+              <div class="doc-outline-head">
+                <span id="docOutlineTime" class="doc-outline-time">修改于 --:--</span>
+              </div>
+              <div class="doc-outline-body" id="docOutlineBody"></div>
+              <div class="doc-outline-tabs" id="docOutlineTabs"></div>
+            </aside>
+            <div class="editor-main-content">
+            <div class="editor-stage" id="editorStage"><article class="editor-paper" id="editorPaper" contenteditable="true" spellcheck="false"></article></div>
             <div class="editor-history-drawer" id="editorHistoryDrawer" hidden>
               <div class="ehd-head">
                 <button class="ehd-back" type="button" data-editor-action="closeHistory"><svg class="svg-icon"><use href="#i-chevron-left"></use></svg>返回文档</button>
@@ -1700,6 +2061,12 @@
                 <div class="ehd-text-pane"><div class="ehd-pane-cap"><svg class="svg-icon" style="width:14px;height:14px"><use href="#i-file"></use></svg> 文档内容预览</div><div class="ehd-text" id="ehdText"></div></div>
                 <div class="ehd-timeline-pane"><div class="ehd-pane-cap"><svg class="svg-icon" style="width:14px;height:14px"><use href="#i-clock"></use></svg> 历史版本</div><div class="ehd-timeline" id="ehdTimeline"></div></div>
               </div>
+            </div>
+            </div>
+            <div class="editor-save-bar">
+              <span class="oo-status" id="ooStatus"><span class="oo-dot"></span>页 1 / 1 · 已就绪</span>
+              <span class="oo-autosave-hint" id="ooAutosaveHint">修改后自动保存</span>
+            </div>
             </div>
           </aside>
         </div>
@@ -2088,7 +2455,7 @@
   ];
   // 主页会话开放 10 个文稿生成智能体，并增加政务文件解读的会话发起入口。
   // 审查、润色、工作计划、会议纪要、合同和 PPT 等复杂任务仍统一进入独立工作台。
-  const CHAT_AGENT_IDS = new Set(["decision", "notice", "speech", "report", "summary", "news", "letter", "communique", "reply", "motion", "interpret"]);
+  const CHAT_AGENT_IDS = new Set(["decision", "notice", "speech", "report", "summary", "news", "letter", "plan", "communique", "reply", "motion", "interpret"]);
   AGENTS.forEach(agent => { agent.entryMode = CHAT_AGENT_IDS.has(agent.id) ? "chat" : "workbench"; });
   const CHAT_AGENT_SCHEMAS = {
     decision: {
@@ -2172,6 +2539,18 @@
         { key:"details", label:"核心事项", type:"textarea", placeholder:"填写商洽事项、理由、工作建议或答复内容", required:true, wide:true }
       ],
       prompt: v => `帮我生成一份${v.kind}，发函单位：${v.sender}，收函单位：${v.receiver}，函件主题：${v.subject}${v.deadline ? `，答复或办理时限：${v.deadline}` : ""}，核心事项：${v.details}。`
+    },
+    plan: {
+      hint: "适合年度、季度、月度或专项工作计划编制与任务拆解。",
+      fields: [
+        { key:"type", label:"计划类型", type:"select", required:true, options:["年度工作计划","季度工作计划","月度工作计划","专项工作计划"] },
+        { key:"period", label:"计划周期", placeholder:"如：2026年度、2026年第三季度", required:true, wide:true },
+        { key:"issuer", label:"编制单位", type:"select", required:true, options:["南京江北新区管理委员会","南京江北新区管委会办公室","南京江北新区经济发展局","南京江北新区数据局","其他部门"] },
+        { key:"goal", label:"总体目标", type:"textarea", placeholder:"填写本期工作的总体目标、指导思想、核心方向", required:true, wide:true },
+        { key:"tasks", label:"重点工作任务", type:"textarea", placeholder:"分条填写重点工作任务、具体举措、责任分工、时间节点", required:true, wide:true },
+        { key:"measures", label:"保障措施", type:"textarea", placeholder:"可选：填写组织保障、制度保障、经费保障等", wide:true }
+      ],
+      prompt: v => `帮我生成一份${v.type}，计划周期：${v.period}，编制单位：${v.issuer}，总体目标：${v.goal}，重点工作任务：${v.tasks}${v.measures ? `，保障措施：${v.measures}` : ""}。`
     },
     communique: {
       hint: "用于会议公报、政务公告和重大事项公开发布。",
@@ -2304,7 +2683,7 @@ let sidebarCollapsed = false;
     doc: { secret: "非涉密", dateCn: true, font: "仿宋_GB2312", autoTitle: true },
     exportOA: { word: true, pdf: true, oa: true, watermark: true },
    model: { local: true, audit: true, offline: true },
-    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, homeAgents: ["decision", "notice", "interpret", "review", "meeting", "ppt"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
+    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, homeAgents: ["decision", "notice", "interpret", "review", "meeting"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
     department: { strictness: "严格", officialName: "南京江北新区管理委员会办公室", numberPattern: "宁新区〔年份〕序号", watermark: true },
    agentsOff: new Set(), templates: {}
  };
@@ -2749,7 +3128,7 @@ let sidebarCollapsed = false;
   }
   function updateEditorModifiedLabel(message) {
     const label = $("#editorModifiedLabel");
-    if (label && message) label.textContent = "修改于" + (message.lastModified || formatDateTime(message.createdAt || Date.now()));
+    if (label && message) label.textContent = "修改于 " + (message.lastModified || formatDateTime(message.createdAt || Date.now()));
   }
   let editorHistorySelected = -1;
   function openEditorHistoryDrawer() {
@@ -2935,7 +3314,6 @@ let sidebarCollapsed = false;
   }
   function messageActionText(message) {
     if (!message) return "";
-    if (message.materialHTML) return plainText(message.materialHTML);
     if (message.html) return plainText(message.html);
     if (message.card) {
       const agent = byId(message.card.agentId) || byId(message.agent);
@@ -2966,6 +3344,26 @@ let sidebarCollapsed = false;
     const input = $("#composerInput"); if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
     showToast("已引用这条回答，可继续输入追问");
   }
+  // 重试：回到该 AI 回复对应的用户提问，截断之后的消息并重新路由生成（用于断线/中断重发）
+  function retryAgentReply(messageIndex) {
+    const conv = cur(); if (!conv) return;
+    const idx = Number(messageIndex);
+    const agentMsg = conv.msgs[idx];
+    if (!agentMsg || agentMsg.role !== "agent") { showToast("未找到可重试的回复"); return; }
+    let ui = idx - 1;
+    while (ui >= 0 && conv.msgs[ui].role !== "user") ui--;
+    if (ui < 0) { showToast("未找到对应的提问"); return; }
+    const userText = plainText(conv.msgs[ui].html).replace(/\s+/g, " ").trim();
+    conv.msgs.length = ui; // 截断到该提问之前
+    agentV3Session = null;
+    activeAgent = agentMsg.agent || null;
+    activeConnector = null;
+    switchView("chat");
+    const ta = $("#composerInput");
+    if (ta) { ta.value = userText; if (typeof syncPromptHighlight === "function") syncPromptHighlight(ta); if (typeof autoSize === "function") autoSize(); if (typeof toggleSend === "function") toggleSend(); }
+    renderChat(); renderSidebar();
+    send();
+  }
   function agentResponseActions(message, index) {
     if (!message || message.kind === "task-progress") return "";
     return `<div class="agent-response-actions"><button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button></div>`;
@@ -2977,17 +3375,17 @@ let sidebarCollapsed = false;
     const isDirect = !!(m && m.directGenerated);
     const timeStr = esc(isDirect ? (m.generationTime || formatDateTime((m && m.createdAt) || Date.now())) : formatDateTime((m && m.createdAt) || Date.now()));
     const showActions = !m || m.kind !== "task-progress";
-    const actionBtns = showActions ? `<button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button>` : "";
+    const actionBtns = showActions ? `<button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button><button class="agent-response-action" type="button" data-act="retryAgentReply" data-msg-index="${index}" title="重新生成回复">${svgi("i-refresh",14)}<span>重试</span></button>` : "";
     const disclaimerCell = isDirect ? `<span class="ai-disclaimer-cell"><span class="ai-disclaimer">AI 生成可能有误 注意核实</span></span>` : "";
     const materialAction = messageMaterialAction(m, index);
     const footer = `${materialAction}<div class="msg-footer">${actionBtns}${disclaimerCell}<span class="msg-footer-time">${timeStr}</span></div>`;
-    return `<div class="msg agent${m && m._wide ? " has-wide" : ""}"><div class="av" style="${a ? ic(a.cat) : "background:linear-gradient(135deg,#4a93d1,#2f80c2)"}">${a ? agentIcon(a, 18) : svgi("i-spark", 18)}</div>
+    return `<div class="msg agent${m && m._wide ? " has-wide" : ""}"><div class="av"><img src="assets/jiangbei-logo.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
       <div class="bubble"><div class="who"><b>${esc(name)}</b>${tag}</div>${html}${footer}</div></div>`;
   }
   function typingBubble(agentId, label) {
     const a = agentId ? byId(agentId) : null;
     const name = a ? a.name : "政务AI助手";
-    return `<div class="msg agent typing" id="typingBubble"><div class="av" style="${a ? ic(a.cat) : "background:linear-gradient(135deg,#4a93d1,#2f80c2)"}">${a ? agentIcon(a, 18) : svgi("i-spark", 18)}</div>
+    return `<div class="msg agent typing" id="typingBubble"><div class="av"><img src="assets/jiangbei-logo.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
       <div class="bubble"><div class="who"><b>${esc(name)}</b><span class="tag green">${label || "思考中"}</span></div><div class="typing-dots"><i></i><i></i><i></i></div></div></div>`;
   }
   function scrollBottom() { const t = $("#thread"); if (t) t.scrollTop = t.scrollHeight; }
@@ -3010,7 +3408,7 @@ let sidebarCollapsed = false;
   function formatDateTime(timestamp) {
     const date = new Date(Number(timestamp || Date.now()));
     const pad = value => String(value).padStart(2, "0");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   }
 
   // ===== 欢迎页 =====
@@ -3123,6 +3521,944 @@ let sidebarCollapsed = false;
     ];
     return `<div class="intent-analysis-card"><div class="intent-analysis-title">${svgi("i-scan", 15)} 主智能体 · 意图识别</div><div class="intent-analysis-steps">${steps.map(([cls,title,detail]) => `<div class="intent-analysis-step ${cls}"><i>${cls === "done" ? "✓" : cls === "warn" ? "!" : "·"}</i><span><b>${title}</b> · ${esc(detail)}</span></div>`).join("")}</div></div>`;
   }
+
+  // 智能解析：从自然语言描述中提取关键字段
+  function smartExtractFields(text, schema) {
+    const result = {}; // key -> { value, source: 'text'|'placeholder' }
+    if (!schema || !text) return result;
+    const t = String(text || "");
+
+    // 辅助函数：从文本中提取组织机构名（避免误匹配字段标签前缀）
+    const extractOrgName = (text) => {
+      // 优先匹配已知完整机构名（含"南京江北新区"前缀）
+      const fullOrg = text.match(/(南京江北新区(?:管理委员会(?:办公室)?|数据局|经济发展局|建设与交通局|科技创新局|社会事业局|综合行政执法局|财政局|市场监督管理局|公安分局|政法委|环境保护局|行政审批局|城市管理局)|南京(?:市)?(?:人民政府|市场监督管理局|数据局))\b/);
+      if (fullOrg) return fullOrg[1];
+      // 匹配独立出现的组织名：前面不能紧跟"是/为/叫"等字（避免"收函单位是商务局"误匹配）
+      // 要求组织名前是行首、标点、空格、或"单位"/"机关"等词之后
+      const orgMatch = text.match(/(?:^|[，。、；;：:\s\n])([\u4e00-\u9fa5]{2,6}(?:局|委员会|管理委员会|办公室|委|办|中心))\b/);
+      if (orgMatch) return orgMatch[1];
+      // 放宽：匹配2-4字+局/委/办/中心
+      const simpleMatch = text.match(/(?:^|[，。、；;：:\s\n是])([\u4e00-\u9fa5]{2,4}(?:局|委|办|中心))\b/);
+      if (simpleMatch) return simpleMatch[1];
+      return "";
+    };
+
+    schema.fields.forEach(field => {
+      let extracted = "";
+      const fLabel = field.label.replace(/[（）()]/g, "");
+
+      // 0. 优先：匹配"字段标签+是/为/：+内容"模式（最精确）
+      if (!extracted) {
+        // 判断是否为组织机构类字段
+        const isOrgField = field.key === "sender" || field.key === "receiver" || field.key === "approver" || field.key === "requester" || field.key === "proposer" || field.key === "issuer" || field.key === "body" || field.key === "publisher" || field.label.includes("单位") || field.label.includes("机关");
+        // 收集所有字段标签，用于在提取值时作为边界截断
+        const allLabels = schema.fields.map(f => f.label.replace(/[（）()]/g, "")).filter(l => l && l !== fLabel);
+        // 值在标点、换行、或其他字段标签处截断
+        const stopPattern = `[^，。；,;\\n]*?`;
+        const labelRe = new RegExp(fLabel + "\\s*[是为：:]\\s*(" + stopPattern + ")(?=$|[，。；,;\\n]|" + allLabels.map(l => l.replace(/[（）()]/g,"")).join("|") + ")", "i");
+        const labelMatch = t.match(labelRe);
+        if (labelMatch && labelMatch[1] && labelMatch[1].trim().length > 0) {
+          const rawVal = labelMatch[1].trim();
+          if (isOrgField) {
+            // 组织类字段：从提取的文本中再提取组织名
+            const org = extractOrgName(rawVal);
+            if (org) extracted = org;
+          } else {
+            extracted = rawVal;
+          }
+        }
+        // 如果上面的精确截断没匹配到，回退到简单截断（标点分隔）
+        if (!extracted) {
+          const simpleRe = new RegExp(fLabel + "\\s*[是为：:]\\s*([^，。；,;\\n]+)", "i");
+          const simpleMatch = t.match(simpleRe);
+          if (simpleMatch && simpleMatch[1] && simpleMatch[1].trim().length > 0) {
+            const val = simpleMatch[1].trim();
+            if (isOrgField) {
+              const org = extractOrgName(val);
+              if (org) extracted = org;
+            } else {
+              extracted = val;
+            }
+          }
+        }
+      }
+
+      // 1. 日期字段：匹配 YYYY年MM月DD日 / YYYY-MM-DD / YYYY/MM/DD
+      if (!extracted && field.type === "date") {
+        const m = t.match(/(\d{4})\s*[年\/\-\.]\s*(\d{1,2})\s*[月\/\-\.]\s*(\d{1,2})\s*日?/);
+        if (m) extracted = `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+      }
+
+      // 2. select字段：检查文本中是否包含某个选项
+      if (!extracted && field.type === "select" && field.options) {
+        for (const opt of field.options) {
+          if (t.includes(opt)) { extracted = opt; break; }
+        }
+      }
+
+      // 3. 标题/事项名称：提取引号内的内容或"关于...的"模式
+      if (!extracted && (field.key === "subject" || field.key === "topic" || field.key === "event" || field.key === "title" || field.label.includes("名称") || field.label.includes("主题"))) {
+        const quotes = t.match(/[「『"【](.+?)[」』"】]/);
+        if (quotes) extracted = quotes[1].trim();
+        else if (field.key === "subject" || field.key === "topic" || field.key === "title") {
+          const about = t.match(/关于(.+?)的/);
+          if (about) {
+            const aboutVal = about[1].trim();
+            // 排除提取到的是字段标签本身的情况（如"关于函件主题的"→"函件主题"）
+            const isLabel = schema.fields.some(f => f.label.replace(/[（）()]/g, "") === aboutVal);
+            if (!isLabel && aboutVal.length >= 2) extracted = aboutVal;
+          }
+        }
+      }
+
+      // 3b. 计划周期：匹配 "2026年度"、"2026年第三季度" 等
+      if (!extracted && (field.key === "period" || field.label.includes("周期"))) {
+        const periodMatch = t.match(/(\d{4}\s*年(度|第?[一二三四四五五六六七八九十]+季度?|第?[1-4]季度?|[\d]{1,2}月(份)?))/);
+        if (periodMatch) extracted = periodMatch[1].trim();
+      }
+
+      // 4. 发文单位/主体：匹配组织机构名
+      if (!extracted && (field.key === "issuer" || field.key === "body" || field.key === "publisher" || field.key === "sender" || field.key === "receiver" || field.key === "approver" || field.key === "requester" || field.key === "proposer" || field.label.includes("单位") || field.label.includes("主体") || field.label.includes("机关"))) {
+        if (field.type === "select" && field.options) {
+          // 已在select逻辑中处理
+        } else {
+          const org = extractOrgName(t);
+          if (org) extracted = org;
+        }
+      }
+
+      // 5. 文本域/内容字段：非指令性文本整段使用
+      if (!extracted && field.type === "textarea") {
+        // 5a. 已在步骤0中尝试"字段标签+是/为+内容"模式
+        // 5b. 指令性前缀检测
+        const isCommand = /^\s*(帮[我忙]?|给我|请|麻烦|我想|我要|需要|来|生成|起草|拟写?|写|做|制作|编制|出具|能不能|可以)/.test(t);
+        if (!isCommand && t.length > 10) extracted = t;
+      }
+
+      if (extracted) {
+        result[field.key] = { value: extracted, source: "text" };
+      }
+    });
+    return result;
+  }
+
+  // 附件模拟解析：根据附件名生成占位预填
+  function mockParseAttach(attachName, schema) {
+    const result = {}; // key -> { value, source: 'material'|'placeholder' }
+    if (!schema) return result;
+    schema.fields.forEach(field => {
+      // 模拟：材料中提取到的字段用占位符表示"从材料中提取"
+      // 实际场景中这里应该调用后端API解析附件
+      const placeholder = field.placeholder || `（待从材料中确认${field.label}）`;
+      result[field.key] = { value: placeholder, source: "placeholder" };
+    });
+    return result;
+  }
+
+  // ============================================================
+  // v3.0 先出稿后迭代（通用：函件、议案等）
+  // 场景A：用户描述/上传材料 → 解析 → 生成带占位符草稿 → 用户补充 → 迭代更新
+  // 场景B：用户无描述无材料 → 提问 + 输出通用模板 → 用户回答 → 迭代更新
+  // ============================================================
+  let agentV3Session = null;
+
+  // v3支持的智能体
+  const V3_AGENT_IDS = new Set(["letter", "motion", "plan", "communique", "report", "decision", "notice", "speech", "summary", "news", "reply"]);
+
+  // 各智能体的文档标题
+  function v3DocTitle(agentId, v) {
+    const val = key => (v && v[key] && !v[key].startsWith("（") && !v[key].startsWith("如：") && v[key] !== "XX") ? v[key] : "";
+    if (agentId === "letter") return `关于${val("subject") || "XXX"}的${val("kind") || "函"}`;
+    if (agentId === "motion") return `关于提请审议《${val("title") || "XXXXXX（草案）"}》的议案`;
+    if (agentId === "communique") {
+      const kind = val("kind") || "公告";
+      const subject = val("subject") || "XXX";
+      return kind === "公报" ? `关于${subject}的公报` : `${subject}${kind}`;
+    }
+    if (agentId === "plan") {
+      const issuer = val("issuer") || "XX单位";
+      const period = val("period") || "XXXX年度";
+      const typeVal = val("type") || "工作计划";
+      // 避免重复"年度"（如 period="2026年度" + type="年度工作计划"）
+      const typeClean = typeVal.replace(/^(年度|季度|月度)/, "");
+      return `${issuer}${period}${typeClean}`;
+    }
+    if (agentId === "report") {
+      const kind = val("kind") || "报告";
+      const subject = val("subject") || "XXX";
+      return `关于${subject}的${kind}`;
+    }
+    if (agentId === "decision") return `关于${val("subject") || "XXX"}的决定`;
+    if (agentId === "notice") return `关于${val("subject") || "XXX"}的通知`;
+    if (agentId === "speech") return `${val("topic") || "XXX"}`;
+    if (agentId === "summary") return `${val("period") || "XXXX年XX阶段"}${val("type") || "工作总结"}`;
+    if (agentId === "news") return `${val("event") || "XXX"}新闻稿`;
+    if (agentId === "reply") return `关于${val("subject") || "XXX"}的批复`;
+    return "文稿草稿";
+  }
+
+  // 各智能体的草稿正文HTML（带占位符）
+  function v3DraftBodyHTML(agentId, v) {
+    const ph = label => `<span class="lv3-ph" data-field="${label}">${label}</span>`;
+    const valOrPh = (key, label) => {
+      const val = v[key];
+      if (val && !val.startsWith("（") && !val.startsWith("如：") && val !== "XX") return esc(val);
+      return ph(label);
+    };
+
+    if (agentId === "letter") {
+      const kind = v.kind && !v.kind.startsWith("（") ? v.kind : "函";
+      const subject = valOrPh("subject", "函件主题");
+      const sender = valOrPh("sender", "发函单位全称");
+      const receiver = valOrPh("receiver", "收函单位全称");
+      const details = valOrPh("details", "核心事项");
+      const deadlineLine = v.deadline && !v.deadline.startsWith("（") ? `<p>请于${esc(v.deadline)}前反馈办理情况。</p>` : "";
+      return `<div class="lv3-draft-body">
+        <h2>${sender}关于${subject}的${kind}</h2><p>[发文字号]</p><p>${receiver}：</p>
+        <p>[函由缘由。交代发函的背景、原因和目的。]</p>
+        <h3>一、[函件事项一]</h3><p>${details}</p>
+        <h3>二、[函件事项二]</h3><p>[具体内容。]</p>
+        <p>以上事项，请予研究函复为盼。</p>${deadlineLine}
+        <p style="text-align:right">${sender}（盖章）</p><p style="text-align:right">[XXXX年X月X日]</p>
+        <p>联系人：[姓名]，联系电话：[电话]</p><p>抄送：[抄送机关列表]</p><p>${sender} [XXXX年X月X日]印发</p>
+      </div>`;
+    }
+
+    if (agentId === "motion") {
+      const title = valOrPh("title", "XXXXXX（草案）");
+      const proposer = valOrPh("proposer", "XX市人民政府");
+      const recipient = valOrPh("recipient", "XX市人民代表大会常务委员会");
+      const meetingVal = v.meeting && !v.meeting.startsWith("（") && !v.meeting.startsWith("如：") ? esc(v.meeting) : "";
+      const date = valOrPh("date", "XXXX年XX月XX日");
+      const basis = valOrPh("basis", "政策依据、现实依据、必要性");
+      const matter = valOrPh("matter", "提请审议事项");
+      return `<div class="lv3-draft-body">
+        <h2>关于提请审议《${title}》的议案</h2>
+        <p>${recipient}：</p>
+        <h3>案由</h3>
+        <p>为深入贯彻落实${meetingVal || "XX"}部署要求，规范/促进${matter}领域工作，破解${matter}领域突出问题，保障公民、法人和其他组织合法权益，推动${matter}高质量发展，根据《中华人民共和国XX法》《XX条例》等法律法规规定，结合本市实际，拟制定（修订）《${title}》。</p>
+        <h3>案据</h3>
+        <p>该草案由${proposer}牵头起草，通过公开征求意见、专题调研、专家论证、风险评估等程序，广泛听取了相关部门、市场主体、社会公众及专家学者意见，经反复修改完善，已经市政府第XX次常务会议审议通过。${basis}</p>
+        <h3>方案</h3>
+        <p>《${title}》共X章X条，核心内容包括：${matter}。现将草案及说明一并报送，请予审议。</p>
+        <p>附件：</p>
+        <p>1. 《${title}》</p>
+        <p>2. 关于《${title}》的说明</p>
+        <p>3. 征求意见情况汇总表（及其他参阅资料）</p>
+        <p style="text-align:right">${proposer}（公章）</p>
+        <p style="text-align:right">市长：XXX（签章）</p>
+        <p style="text-align:right">${date}</p>
+      </div>`;
+    }
+
+    if (agentId === "plan") {
+      const typeRaw = v.type && !v.type.startsWith("（") && !v.type.startsWith("如：") ? v.type : "工作计划";
+      const type = esc(typeRaw.replace(/^(年度|季度|月度)/, ""));
+      const period = valOrPh("period", "计划周期");
+      const issuer = valOrPh("issuer", "编制单位");
+      const goal = valOrPh("goal", "总体目标");
+      const tasks = valOrPh("tasks", "重点工作任务");
+      const measures = v.measures && !v.measures.startsWith("（") && !v.measures.startsWith("如：") ? esc(v.measures) : `<p>${ph("保障措施（可选）")}</p>`;
+      return `<div class="lv3-draft-body">
+        <h2>${issuer}${period}${type}</h2>
+        <h3>一、总体要求</h3>
+        <p>为深入贯彻落实上级关于经济社会发展、民生保障、城乡建设、基层治理等工作部署，立足本部门、本领域发展实际，围绕中心、服务大局，现就${period}重点工作安排如下。</p>
+        <p>${goal}</p>
+        <h3>二、重点工作任务</h3>
+        <p>${tasks}</p>
+        <h3>三、保障措施</h3>
+        ${measures}
+        <h3>四、工作要求</h3>
+        <p>1. 提高思想认识，强化责任担当。各部门要高度重视，将本计划确定的各项任务纳入重要议事日程，主要负责同志亲自抓、分管负责同志具体抓，确保各项工作落到实处。</p>
+        <p>2. 加强统筹协调，形成工作合力。牵头部门要主动协调配合，相关部门要各司其职、各负其责，建立信息共享和沟通联络机制，确保各项工作高效推进。</p>
+        <p>3. 严格督导考核，确保落地见效。建立健全督查考核机制，定期通报工作进展，对推进不力、落实不到位的及时督促整改，确保各项任务按时保质完成。</p>
+      </div>`;
+    }
+
+    if (agentId === "communique") {
+      const kind = v.kind && !v.kind.startsWith("（") && !v.kind.startsWith("如：") ? v.kind : "公告";
+      const subject = valOrPh("subject", "事项主题");
+      const publisher = valOrPh("publisher", "发文机关");
+      const date = valOrPh("date", "XXXX年X月X日");
+      const scope = valOrPh("scope", "发布范围");
+      const content = valOrPh("content", "公告的具体内容");
+      return `<div class="lv3-draft-body">
+        <h2>${publisher}关于${subject}的${kind}</h2><p>[发文字号]</p>
+        <p>根据[法律法规/政策文件/决定决议]，为[公告目的]，现将${subject}有关事项${kind}如下（${scope}）：</p>
+        <h3>一、[第一方面事项]</h3><p>${content}</p>
+        <h3>二、[第二方面事项]</h3><p>[${kind}的具体内容。]</p>
+        <h3>三、[第三方面事项]</h3><p>[${kind}的具体内容。]</p>
+        <p>特此${kind}。</p><p style="text-align:right">${publisher}（盖章）</p><p style="text-align:right">${date}</p>
+      </div>`;
+    }
+
+    if (agentId === "report") {
+      const kind = v.kind && !v.kind.startsWith("（") && !v.kind.startsWith("如：") ? v.kind : "报告";
+      const subject = valOrPh("subject", "事项名称");
+      const issuer = valOrPh("issuer", "发文单位");
+      const recipient = valOrPh("recipient", "主送机关");
+      const date = valOrPh("date", "XXXX年XX月XX日");
+      const details = valOrPh("details", "工作情况或请示事项");
+      if (kind === "请示") {
+        return `<div class="lv3-draft-body">
+          <h2>${issuer}关于${subject}的请示</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>${recipient}：</p>
+          <p>为[目的意义]，根据[政策依据/工作需要]，现就${subject}请示如下：</p>
+          <h3>一、请示缘由</h3><p>${details}</p>
+          <h3>二、请示事项</h3><p>[明确提出需要上级机关指示或批准的具体事项，内容具体明确。]</p>
+          <h3>三、建议意见</h3><p>[提出倾向性意见和工作建议，不能只提问题不给方案。]</p>
+          <p>以上请示，妥否，请批示。</p><p>（单位主要领导签字）　　${issuer}（盖章）</p><p>${date}</p><p>（联系人：[姓名]，联系方式：[电话]）</p><p>抄送：[抄送机关]，存档。</p><p>${issuer} ${date}印发</p>
+        </div>`;
+      }
+      return `<div class="lv3-draft-body">
+        <h2>${issuer}关于${subject}的报告</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>${recipient}：</p>
+        <p>[报告引言。交代报告期间、指导思想、总体工作概况和成效，起统领全文作用。]</p>
+        <h3>一、[第一方面工作]</h3><p>${details}</p>
+        <h3>二、[第二方面工作]</h3><p>[工作做法和成效。]</p>
+        <h3>三、[第三方面工作]</h3><p>[工作做法和成效。]</p>
+        <p>特此报告。</p><p style="text-align:right">${issuer}</p><p style="text-align:right">${date}</p><p>抄送：[抄送机关列表]</p><p>${issuer} ${date}印发</p>
+      </div>`;
+    }
+
+    if (agentId === "decision") {
+      const subject = valOrPh("subject", "事项名称"), body = valOrPh("body", "决策主体"), date = valOrPh("date", "审议时间"), type = valOrPh("type", "事项类型"), matter = valOrPh("matter", "决定事项");
+      return `<div class="lv3-draft-body"><h2>${body}关于${subject}的决定</h2><p>[发文字号]</p><p>[主送机关]：</p><p>为[目的意义]，根据[政策依据/法律法规/上级精神]，结合[实际情况]，经${body}审议，现就${subject}（${type}）作出如下决定。</p><h3>一、[决定事项一]</h3><p>${matter}</p><h3>二、[决定事项二]</h3><p>[具体内容。]</p><h3>三、[保障措施]</h3><p>[组织保障、资金保障、监督检查等方面的要求。]</p><p>[号召性结语。对相关单位和人员提出希望和要求。]</p><p style="text-align:right">${body}（盖章）</p><p style="text-align:right">${date}</p><p>抄送：[抄送机关列表]</p><p>${body} ${date}印发</p></div>`;
+    }
+    if (agentId === "notice") {
+      const subject = valOrPh("subject", "通知主题"), issuer = valOrPh("issuer", "发文单位"), recipient = valOrPh("recipient", "主送单位"), type = valOrPh("type", "通知类型"), points = valOrPh("points", "正文要点");
+      const deadlineLine = v.deadline && !v.deadline.startsWith("（") && !v.deadline.startsWith("如：") ? `请于${esc(v.deadline)}前落实到位。` : "请于[完成时限]前落实到位。";
+      return `<div class="lv3-draft-body"><h2>${issuer}关于${subject}的通知</h2><p>[发文字号]</p><p>${recipient}：</p><p>为[目的意义]，根据[政策依据/上级要求]，现就${subject}有关事项通知如下（${type}）：</p><h3>一、[通知事项一]</h3><p>${points}</p><h3>二、[通知事项二]</h3><p>[具体内容和要求。]</p><h3>三、[工作要求]</h3><p>[对执行机关提出的总体要求。]${deadlineLine}</p><p style="text-align:right">${issuer}（盖章）</p><p style="text-align:right">[XXXX年X月X日]</p><p>抄送：[抄送机关列表]</p><p>${issuer} [XXXX年X月X日]印发</p></div>`;
+    }
+    if (agentId === "speech") {
+      const topic = valOrPh("topic", "讲话主题"), occasion = valOrPh("occasion", "会议场合"), speaker = valOrPh("speaker", "讲话人及职务"), audience = valOrPh("audience", "听众对象"), duration = valOrPh("duration", "讲话时长"), points = valOrPh("points", "核心内容要点");
+      return `<div class="lv3-draft-body"><h2>${topic}</h2><p>（${occasion}，${duration}）</p><p>${audience}：</p><p>今天，我们在这里${occasion}，围绕${topic}进行交流。首先，我代表[单位]，向${audience}表示诚挚的问候！</p><h3>一、提高认识，准确把握工作方向</h3><p>${points}</p><h3>二、聚焦重点，推动任务落地见效</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>[加强统筹调度和跟踪问效，确保各项部署落到实处、取得实效。]</p><p>同志们，让我们统一思想、凝聚共识，为推动高质量发展而不懈奋斗！谢谢大家。</p><p style="text-align:right">${speaker}</p></div>`;
+    }
+    if (agentId === "summary") {
+      const type = valOrPh("type", "总结类型"), period = valOrPh("period", "总结周期"), area = valOrPh("area", "业务领域"), work = valOrPh("work", "重点工作与成效"), next = v.next && !v.next.startsWith("（") ? esc(v.next) : ph("问题与下一步计划（可选）");
+      return `<div class="lv3-draft-body"><h2>${period}${type}</h2><p>在上级党委政府的坚强领导下，我单位坚持以习近平新时代中国特色社会主义思想为指导，深入贯彻落实上级决策部署，紧紧围绕${area}重点任务，扎实推进年度各项工作，现将${period}工作情况总结如下。</p><h3>一、${period}工作回顾</h3><p>（一）聚焦${area}重点领域，提质增效取得新进展。</p><p>${work}</p><p>（二）聚焦作风建设，履职能力持续提升。</p><p>[补充队伍建设和作风转变方面的举措成效。]</p><h3>二、存在的问题与不足</h3><p>${next}</p><h3>三、下一阶段工作打算</h3><p>（一）聚力${area}，推动重点任务落地见效。</p><p>[补充下一阶段具体措施和量化目标。]</p><p>（二）聚力自身建设，提升履职尽责能力水平。</p><p>[补充保障措施和自身建设安排。]</p><p style="text-align:right">[单位名称]</p><p style="text-align:right">[XXXX年X月X日]</p></div>`;
+    }
+    if (agentId === "news") {
+      const event = valOrPh("event", "新闻主题"), date = valOrPh("date", "发生时间"), place = valOrPh("place", "发生地点"), channel = valOrPh("channel", "发布渠道"), people = valOrPh("people", "参与人员"), content = valOrPh("content", "活动内容与成效");
+      return `<div class="lv3-draft-body"><h2>${event}</h2><p>${date}，${place}开展${event}相关活动，${people}参加。</p><h3>聚焦重点任务 推动工作落实</h3><p>${content}</p><p>此次${event}统一了思想、明确了路径。下一步，相关单位将持续深化举措、巩固工作成效，全力推动各项任务落地，为"强富美高"新南京建设提供支撑。</p><p>（拟通过${channel}发布）</p></div>`;
+    }
+    if (agentId === "reply") {
+      const subject = valOrPh("subject", "事项主题"), approver = valOrPh("approver", "批复机关"), requester = valOrPh("requester", "请示机关"), attitude = valOrPh("attitude", "批复意见"), basis = valOrPh("basis", "政策或事实依据"), opinion = valOrPh("opinion", "执行要求");
+      return `<div class="lv3-draft-body"><h2>${approver}关于${subject}的批复</h2><p>[发文字号]</p><p>${requester}：</p><p>你[单位/局/委]《${subject}》（[请示文件字号]）收悉。经研究，${basis ? `根据${basis}，` : ""}现批复如下：</p><h3>一、${attitude}</h3><p>[明确表示同意、不同意或部分同意，并说明理由或补充意见。]</p><h3>二、执行要求</h3><p>${opinion}</p><p>此复。</p><p style="text-align:right">${approver}（盖章）</p><p style="text-align:right">[XXXX年X月X日]</p><p>抄送：[抄送机关列表]</p><p>${approver} [XXXX年X月X日]印发</p></div>`;
+    }
+    return `<div class="lv3-draft-body"><p>草稿内容</p></div>`;
+  }
+
+  // 各智能体的通用模板HTML（场景B使用）
+  function v3TemplateHTML(agentId, specifiedKind) {
+    if (agentId === "letter") {
+      return `<div class="lv3-draft-body">
+        <h2>[发文机关名称]关于[事项主题]的函</h2><p>[发文字号]</p>
+        <p>[受文机关名称]：</p>
+        <p>[函由缘由。交代发函的背景、原因和目的。]</p>
+        <h3>一、[函件事项一]</h3>
+        <p>[具体内容。明确提出商洽、询问或请求的事项。]</p>
+        <h3>二、[函件事项二]</h3>
+        <p>[具体内容。]</p>
+        <p>以上事项，请予研究函复为盼。</p>
+        <p style="text-align:right">[发文机关名称]（盖章）</p><p style="text-align:right">[XXXX年X月X日]</p>
+        <p>联系人：[姓名]，联系电话：[电话]</p><p>抄送：[抄送机关列表]</p><p>[发文机关名称] [XXXX年X月X日]印发</p>
+      </div>`;
+    }
+    if (agentId === "motion") {
+      return `<div class="lv3-draft-body">
+        <h2>关于提请审议《XXXXXX（草案）》的议案</h2>
+        <p>[发文字号]</p>
+        <p>XX市人民代表大会常务委员会：</p>
+        <h3>案由</h3>
+        <p>为深入贯彻落实XX部署要求，规范/促进XX领域工作，破解XX领域突出问题，保障公民、法人和其他组织合法权益，推动XX高质量发展，根据《中华人民共和国XX法》《XX条例》等法律法规规定，结合本市实际，拟制定（修订）《XXXXXX条例》。</p>
+        <h3>案据</h3>
+        <p>该草案由XX部门牵头起草，通过公开征求意见、专题调研、专家论证、风险评估等程序，广泛听取了相关部门、市场主体、社会公众及专家学者意见，经反复修改完善，已经市政府第XX次常务会议审议通过。草案符合上位法规定，契合本市发展实际，具备较强的可行性与操作性。</p>
+        <h3>方案</h3>
+        <p>《XXXXXX条例（草案）》共X章X条，核心内容包括：XXXX、XXXX、XXXX。现将草案及说明一并报送，请予审议。</p>
+        <p>附件：</p>
+        <p>1. 《XXXXXX条例（草案）》</p>
+        <p>2. 关于《XXXXXX条例（草案）》的说明</p>
+        <p>3. 征求意见情况汇总表（及其他参阅资料）</p>
+        <p style="text-align:right">XX市人民政府（公章）</p>
+        <p style="text-align:right">市长：XXX（签章）</p>
+        <p style="text-align:right">XXXX年XX月XX日</p>
+      </div>`;
+    }
+    if (agentId === "plan") {
+      return `<div class="lv3-draft-body">
+        <h2>XX单位XXXX年度工作计划</h2>
+        <h3>一、总体要求</h3>
+        <p>为深入贯彻落实上级关于经济社会发展、民生保障、城乡建设、基层治理等工作部署，立足本部门、本领域发展实际，围绕中心、服务大局，现就本期重点工作安排如下。</p>
+        <p>（填写总体目标、指导思想、核心方向：明确本期工作的总体定位、预期成效和关键指标，体现上级要求与本地实际的有机结合。）</p>
+        <h3>二、重点工作任务</h3>
+        <p>1.（重点任务一：明确任务名称、具体举措、责任部门、时间节点、预期成效）</p>
+        <p>2.（重点任务二：结合实际，细化工作路径和量化目标）</p>
+        <p>3.（重点任务三：聚焦关键环节，确保任务可执行、可考核）</p>
+        <p>4.（重点任务四：根据实际情况补充，不限于以上条目）</p>
+        <h3>三、保障措施</h3>
+        <p>1. 组织保障。加强组织领导，明确责任分工，成立工作专班或领导小组，统筹推进各项任务落实。</p>
+        <p>2. 制度保障。完善相关管理制度、工作规范、协调机制，确保各项工作有章可循、规范运行。</p>
+        <p>3. 经费保障。合理安排工作经费，优化资源配置，优先保障重点任务和民生项目资金需求。</p>
+        <p>4. 人员保障。加强干部队伍建设，优化人员配置，强化业务培训，提升工作能力和水平。</p>
+        <h3>四、工作要求</h3>
+        <p>1. 提高思想认识，强化责任担当。各部门要高度重视，将本计划确定的各项任务纳入重要议事日程，主要负责同志亲自抓、分管负责同志具体抓，确保各项工作落到实处。</p>
+        <p>2. 加强统筹协调，形成工作合力。牵头部门要主动协调配合，相关部门要各司其职、各负其责，建立信息共享和沟通联络机制，确保各项工作高效推进。</p>
+        <p>3. 严格督导考核，确保落地见效。建立健全督查考核机制，定期通报工作进展，对推进不力、落实不到位的及时督促整改，确保各项任务按时保质完成。</p>
+      </div>`;
+    }
+    if (agentId === "communique") {
+      return `<div class="lv3-draft-body">
+        <h2>[发文机关]关于[事项主题]的公告</h2><p>[发文字号]</p>
+        <p>根据[法律法规/政策文件/决定决议]，为[公告目的]，现将[事项主题]有关事项公告如下（[发布范围]）：</p>
+        <h3>一、[第一方面事项]</h3><p>[公告的具体内容。语言简洁明了，便于公众理解。]</p>
+        <h3>二、[第二方面事项]</h3><p>[公告的具体内容。]</p>
+        <h3>三、[第三方面事项]</h3><p>[公告的具体内容。]</p>
+        <p>特此公告。</p><p style="text-align:right">[发文机关名称]（盖章）</p><p style="text-align:right">[XXXX年X月X日]</p>
+      </div>`;
+    }
+    if (agentId === "report") {
+      const reportTpl = `<div class="lv3-draft-body">
+        <h2>关于XXX的报告</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>[上级机关名称]：</p>
+        <p>[报告引言。交代报告期间、指导思想、总体工作概况和成效，起统领全文作用。]</p>
+        <h3>一、[第一方面工作]</h3><p>[工作做法和成效，含具体数据支撑。]</p>
+        <h3>二、[第二方面工作]</h3><p>[工作做法和成效。]</p>
+        <h3>三、[第三方面工作]</h3><p>[工作做法和成效。]</p>
+        <p>特此报告。</p><p style="text-align:right">[发文机关名称]</p><p style="text-align:right">[XXXX年X月X日]</p><p>抄送：[抄送机关列表]</p><p>[发文机关名称] [XXXX年X月X日]印发</p>
+      </div>`;
+      const requestTpl = `<div class="lv3-draft-body">
+        <h2>关于XXX的请示</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>[上级机关名称]：</p>
+        <p>为[目的意义]，根据[政策依据/工作需要]，现就[请示事项]请示如下：</p>
+        <h3>一、请示缘由</h3><p>[交代事项背景、来龙去脉、问题症结或上级要求，说明请示的必要性和依据。]</p>
+        <h3>二、请示事项</h3><p>[明确提出需要上级机关指示或批准的具体事项，内容具体明确。]</p>
+        <h3>三、建议意见</h3><p>[提出倾向性意见和工作建议，不能只提问题不给方案。]</p>
+        <p>以上请示，妥否，请批示。</p><p>（单位主要领导签字）　　[发文机关名称]（盖章）</p><p>[XXXX年X月X日]</p><p>（联系人：[姓名]，联系方式：[电话]）</p><p>抄送：[抄送机关]，存档。</p><p>[发文机关名称] [XXXX年X月X日]印发</p>
+      </div>`;
+      if (specifiedKind === "请示") return requestTpl;
+      // 未指定文种时，先展示报告模板，同时在提问中确认用户是否需要改为请示。
+      return reportTpl;
+    }
+    if (agentId === "summary") {
+      return `<div class="lv3-draft-body">
+        <h2>XXXX年XX阶段工作总结</h2>
+        <p>在上级党委政府的坚强领导下，我单位坚持以习近平新时代中国特色社会主义思想为指导，深入贯彻落实上级决策部署，紧紧围绕核心任务和年度目标，牢牢把握稳中求进工作总基调，扎实推进年度各项工作，现将工作情况总结如下。</p>
+        <h3>一、工作回顾</h3>
+        <p>（一）聚焦重点领域，提质增效取得新进展。</p>
+        <p>一是……。二是……。三是……。〔关键数据：同比增长X%、居全省第X、完成率X%。〕</p>
+        <p>（二）聚焦改革创新，攻坚突破迈出新步伐。</p>
+        <p>一是……。二是……。三是……。</p>
+        <p>（三）聚焦作风建设，履职能力持续提升。</p>
+        <p>一是……。二是……。三是……。</p>
+        <h3>二、存在的问题与不足</h3>
+        <p>在取得成绩的同时，我们也清醒看到，工作中还存在一些短板和不足：（一）业务层面短板。（二）管理机制层面弱项。（三）队伍作风层面不足。究其原因，一是……，二是……，三是……。对此，我们将高度重视，采取有力措施加以解决。</p>
+        <h3>三、下一阶段工作打算</h3>
+        <p>（一）聚力重点任务，推动工作落地见效。重点抓好以下措施：……</p>
+        <p>（二）聚力改革创新，激发发展动力活力。重点抓好以下措施：……</p>
+        <p>（三）聚力自身建设，提升履职尽责能力。重点抓好以下措施：……</p>
+        <p>我们将更加紧密地团结在以习近平同志为核心的党中央周围，在上级党委政府坚强领导下，锐意进取、担当作为，为推动高质量发展而不懈奋斗！</p>
+        <p style="text-align:right">[单位名称]</p>
+        <p style="text-align:right">[XXXX年X月X日]</p>
+      </div>`;
+    }
+    if (agentId === "news") {
+      return `<div class="lv3-draft-body">
+        <h2>[发文主体][核心事件][成效/导向]</h2>
+        <p>[时间]，[主体]在[地点]开展[会议/活动]，贯彻落实[上级部署]，总结[阶段工作]，部署[下一阶段任务]。[领导职务+姓名]出席并讲话，[参会范围]参加。</p>
+        <h3>聚焦重点任务 推动工作落实</h3>
+        <p>工作概况：[周期]以来，[主体]围绕[总体目标]推进各项工作。截至目前，[核心数据]，整体态势稳中有进。</p>
+        <p>重点举措：一是聚焦[方向一]，落实[具体举措]，实现[对应成效]；二是聚焦[方向二]，创新[工作模式]，破解[痛点问题]；三是聚焦[方向三]，完善[机制保障]，夯实工作基础。</p>
+        <p>工作要求：提高政治站位，紧盯时间节点，压实工作责任，强化协同联动，确保各项部署落地见效。</p>
+        <p>此次[会议/活动]统一了思想、明确了路径。下一步，[主体]将持续深化举措、巩固工作成效，全力推动[目标任务]落地，为"强富美高"新南京建设提供支撑。</p>
+        <p>（拟通过[发布渠道]发布）</p>
+      </div>`;
+    }
+    if (agentId === "speech") {
+      return `<div class="lv3-draft-body">
+        <h2>[讲话主题]</h2>
+        <p>（[会议场合]，[讲话时长]）</p>
+        <p>[听众对象]：</p>
+        <p>今天，我们在这里[会议场合]，围绕[讲话主题]进行交流。首先，我代表[单位]，向[听众对象]表示诚挚的问候！[一句话交代背景：贯彻落实上级什么部署/总结前一阶段什么工作/部署下一阶段什么任务。]</p>
+        <h3>一、提高认识，准确把握工作方向</h3>
+        <p>[讲清楚为什么开展这项工作、上级有什么要求、当前面临什么形势。]</p>
+        <h3>二、聚焦重点，推动任务落地见效</h3>
+        <p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]</p>
+        <p>一是……。二是……。三是……。</p>
+        <h3>三、压实责任，形成协同推进合力</h3>
+        <p>[加强统筹调度和跟踪问效，确保各项部署落到实处、取得实效。]</p>
+        <p>同志们，让我们统一思想、凝聚共识，为推动高质量发展而不懈奋斗！</p>
+        <p>谢谢大家。</p>
+        <p style="text-align:right">[讲话人及职务]</p>
+      </div>`;
+    }
+    // 其余起草类智能体：直接以同字段、同结构的空白草稿作为通用模板，
+    // 后续用户补充的信息会替换高亮占位符。
+    if (["decision", "notice", "reply"].includes(agentId)) {
+      return v3DraftBodyHTML(agentId, {});
+    }
+    return `<div class="lv3-draft-body"><p>通用模板</p></div>`;
+  }
+
+  function startAgentV3Flow(conv, agent, text, attach) {
+    if (currentView !== "chat") switchView("chat");
+    const schema = CHAT_AGENT_SCHEMAS[agent.id];
+    if (!schema) return;
+
+    const hasAttach = !!attach;
+    const hasDescription = !!(text && text.trim().length > 3);
+
+    agentV3Session = {
+      convId: conv.id,
+      agentId: agent.id,
+      values: {},
+      version: 0,
+      schema: schema,
+    };
+
+    // 智能解析用户描述
+    const smartResults = smartExtractFields(text, schema);
+
+    // 判断提取到的字段中是否有"实质性"字段（非select类型），仅提取到文种等选项不算实质信息
+    const hasSubstantiveInfo = Object.keys(smartResults).some(key => {
+      const field = schema.fields.find(f => f.key === key);
+      return field && field.type !== "select";
+    });
+
+    if (hasAttach || (hasDescription && hasSubstantiveInfo)) {
+      // === 场景A：有材料或有可提取实质信息 → 解析 + 生成草稿 ===
+      agentV3Session.scenario = "analysis";
+
+      Object.keys(smartResults).forEach(key => {
+        agentV3Session.values[key] = smartResults[key].value;
+      });
+
+      if (hasAttach) {
+        const attachResults = mockParseAttach(attach, schema);
+        schema.fields.forEach(f => {
+          if (!agentV3Session.values[f.key] && attachResults[f.key]) {
+            agentV3Session.values[f.key] = attachResults[f.key].value;
+          }
+        });
+      }
+
+      const docName = agent.docType || "文稿";
+      const introText = hasAttach
+        ? `好的，我来帮您生成${docName}。已从您上传的材料${text && text.trim() ? '和描述' : ''}中提取关键信息，先输出一版草稿，高亮标记的字段需要您补充确认：`
+        : `好的，我来帮您生成${docName}。您的描述比较详细，我已从中识别到${Object.keys(smartResults).length}项信息，先输出一版草稿，高亮标记的字段需要您补充确认：`;
+
+      const introMsg = { role: "agent", agent: agent.id, kind: "lv3-intro", noTrust: true, html: `<div class="cg-guide-body"><p style="font-size:14px;color:#1e3a5f;line-height:1.65;margin:0">${esc(introText)}</p></div>`, createdAt: Date.now(), time: nowTime() };
+      conv.msgs.push(introMsg);
+      renderChat(); renderSidebar(); scrollBottom();
+
+      setTimeout(() => {
+        agentV3Session.version = 1;
+        v3ShowFileCard(conv, agent);
+      }, 800);
+    } else {
+      // === 场景B：无材料无描述 → 提问 + 通用模板 ===
+      agentV3Session.scenario = "template";
+
+      // 报告请示特殊处理：检测用户是否已指定文种
+      let specifiedKind = null;
+      if (agent.id === "report" && text) {
+        if (/请示/.test(text) && !/报告/.test(text)) specifiedKind = "请示";
+        else if (/报告/.test(text) && !/请示/.test(text)) specifiedKind = "报告";
+      }
+      if (specifiedKind) agentV3Session.values.kind = specifiedKind;
+
+      const docName = specifiedKind ? specifiedKind : (agent.docType || "文稿");
+      const introText = `好的，我来帮您生成${docName}。我先跟您确认关键信息，才能生成规范正式的${docName}。同时先给您一份通用模板，您回复关键信息后我帮您精准修改成定稿。`;
+      const introMsg = { role: "agent", agent: agent.id, kind: "lv3-intro", noTrust: true, html: `<div class="cg-guide-body"><p style="font-size:14px;color:#1e3a5f;line-height:1.65;margin:0">${esc(introText)}</p></div>`, createdAt: Date.now(), time: nowTime() };
+      conv.msgs.push(introMsg);
+      renderChat(); renderSidebar(); scrollBottom();
+
+      setTimeout(() => { v3ShowTemplateWithQuestions(conv, agent, specifiedKind); }, 800);
+    }
+  }
+
+  // 通用模板 + 关键问题（根据智能体实际字段动态生成提问）+ 文件卡片
+  function v3ShowTemplateWithQuestions(conv, agent, specifiedKind) {
+    const schema = agentV3Session.schema;
+    const fields = schema.fields;
+
+    // 根据字段定义动态生成提问（已指定文种时跳过文种字段）
+    const questions = fields.filter(f => {
+      // 报告请示：已指定文种时不再询问 kind 字段
+      if (agent.id === "report" && specifiedKind && f.key === "kind") return false;
+      return true;
+    }).map(f => {
+      if (f.type === "select" && f.options) {
+        return `${f.label}：${f.options.join(" / ")}？`;
+      }
+      if (f.type === "date") {
+        return `${f.label}是什么时候？${f.required ? "" : "（可选）"}`;
+      }
+      if (f.type === "textarea") {
+        return `${f.label}是什么？${f.placeholder ? "（" + f.placeholder + "）" : ""}`;
+      }
+      return `${f.label}是什么？${f.placeholder ? "（如：" + f.placeholder + "）" : ""}`;
+    });
+
+    const docName = specifiedKind ? specifiedKind : (agent.docType || "文稿");
+    const docTitle = v3DocTitle(agent.id, specifiedKind ? { kind: specifiedKind } : {});
+    const kindPrompt = agent.id === "report" && !specifiedKind ? "请选择文种：报告或请示（未回复时默认先按报告生成）。" : "";
+
+    // 关键信息确认（与普通文字回复样式一致）
+    const questionsHtml = `<div class="cg-guide-body"><p style="font-size:14px;color:#1e3a5f;line-height:1.65;margin:0 0 8px">${esc(kindPrompt)}${kindPrompt ? "<br>" : ""}请回复以下信息，我将为您精准生成${esc(docName)}：</p>${questions.map(q => `<p style="font-size:14px;color:#1e3a5f;line-height:1.65;margin:4px 0 0">${esc(q)}</p>`).join("")}<p style="font-size:12.5px;color:#8a95a5;line-height:1.6;margin:10px 0 0">回复关键信息后我会在文件中精准修改，也可点击下方文件直接编辑</p></div>`;
+
+    const qMsg = { role: "agent", agent: agent.id, kind: "lv3-template", noTrust: true, html: questionsHtml, createdAt: Date.now(), time: nowTime() };
+    conv.msgs.push(qMsg);
+    renderChat(); scrollBottom();
+
+    // 同时生成文件卡片（不自动打开编辑器，由用户点击文件展开）
+    setTimeout(() => {
+      agentV3Session.version = 1;
+      v3ShowFileCard(conv, agent);
+    }, 600);
+  }
+
+  // 生成文件卡片（展示在对话中，点击可打开编辑器）
+  function v3ShowFileCard(conv, agent) {
+    const schema = agentV3Session.schema;
+    const v = agentV3Session.values;
+    const ver = agentV3Session.version;
+    const docName = agent.docType || "文稿";
+    const docTitle = v3DocTitle(agent.id, v);
+
+    // 找出缺失字段
+    const missingFields = [];
+    schema.fields.forEach(f => {
+      const val = v[f.key] || "";
+      if (!val || val.startsWith("（") || val.startsWith("如：") || val === "XX") {
+        missingFields.push(f);
+      }
+    });
+    const allFilled = missingFields.length === 0;
+
+    // 保存当前文档HTML到 session（无任何字段值时使用通用模板，有值时用草稿正文）
+    const hasAnyValue = Object.keys(v).some(k => v[k] && !v[k].startsWith("（") && !v[k].startsWith("如：") && v[k] !== "XX");
+    // 报告请示：根据已指定文种选择对应模板
+    const tplKind = (agent.id === "report" && v.kind && !v.kind.startsWith("（") && !v.kind.startsWith("如：") && v.kind !== "XX") ? v.kind : undefined;
+    agentV3Session.docHtml = hasAnyValue ? v3DraftBodyHTML(agent.id, v) : v3TemplateHTML(agent.id, tplKind);
+    agentV3Session.docTitle = docTitle;
+    agentV3Session.missingFields = missingFields;
+    agentV3Session.allFilled = allFilled;
+
+    const statusText = allFilled ? "信息完整" : `待补充 ${missingFields.length} 项`;
+    const statusClass = allFilled ? "complete" : "draft";
+
+    const fileCardHtml = `<div class="lv3-file-card js-lv3-file-card" data-act="v3OpenEditor" data-ver="${ver}" role="button" tabindex="0">
+      <div class="lv3-file-card-icon">${svgi("i-doc-outline", 22)}</div>
+      <div class="lv3-file-card-info">
+        <div class="lv3-file-card-title">${esc(docTitle)}.docx</div>
+      </div>
+      <button class="lv3-fc-download" data-act="v3Download" title="下载文档">${svgi("i-download", 16)}<span>下载</span></button>
+    </div>`;
+
+    // 文件卡作为附件并入最近一条 lv3-intro / lv3-template 消息气泡；已含卡则回退为独立消息（避免堆叠）
+    const target = [...conv.msgs].reverse().find(m => m.agent === agent.id && (m.kind === "lv3-intro" || m.kind === "lv3-template"));
+    if (target && !/lv3-file-card/.test(target.html || "")) {
+      target.html = (target.html || "") + fileCardHtml;
+    } else {
+      conv.msgs.push({ role: "agent", agent: agent.id, kind: "lv3-filecard", noTrust: true, html: fileCardHtml, createdAt: Date.now(), time: nowTime() });
+    }
+    renderChat(); scrollBottom();
+  }
+
+  // 打开文档编辑器（三栏布局：对话 + 大纲 + 编辑区）
+  function v3OpenDocEditor(conv, agent) {
+    if (!agentV3Session) return;
+    const docHtml = agentV3Session.docHtml || v3DraftBodyHTML(agent.id, agentV3Session.values);
+    const docTitle = agentV3Session.docTitle || v3DocTitle(agent.id, agentV3Session.values);
+
+    const paper = $("#editorPaper");
+    if (paper) paper.innerHTML = docHtml;
+    $("#editorPanelTitle").textContent = docTitle;
+    $("#view-chat").classList.add("editor-open", "v3-editor-open");
+    document.body.classList.add("editor-mode");
+    document.body.classList.remove("editor-sidebar-shown");
+    editorSidebarVisible = false;
+    const sidebarToggle = $("#editorSidebarToggle");
+    if (sidebarToggle) { sidebarToggle.setAttribute("aria-pressed", "false"); sidebarToggle.setAttribute("title", "显示左侧菜单"); }
+
+    // 更新大纲
+    v3RenderOutline(docHtml);
+    const v3Mtime = "修改于 " + formatDateTime(Date.now());
+    $("#docOutlineTime").textContent = v3Mtime;
+    const v3Mlabel = $("#editorModifiedLabel"); if (v3Mlabel) v3Mlabel.textContent = v3Mtime;
+
+    // 更新底部标签
+    v3RenderTabs(conv, agent);
+
+    setTimeout(() => { if (paper) paper.focus(); }, 0);
+    renderChat();
+  }
+
+  // 关闭文档编辑器
+  function v3CloseDocEditor() {
+    const paper = $("#editorPaper");
+    if (paper && agentV3Session) {
+      // 保存编辑器中的修改回 session
+      agentV3Session.docHtml = paper.innerHTML;
+    }
+    document.body.classList.remove("editor-mode", "editor-sidebar-shown");
+    $("#view-chat").classList.remove("editor-open", "v3-editor-open");
+    editorSidebarVisible = false;
+    renderChat(); renderSidebar();
+  }
+
+  // 下载V3文档
+  function v3DownloadDocument() {
+    if (!agentV3Session) return;
+    const docHtml = agentV3Session.docHtml || v3DraftBodyHTML(agentV3Session.agentId, agentV3Session.values);
+    const docTitle = agentV3Session.docTitle || v3DocTitle(agentV3Session.agentId, agentV3Session.values);
+    const temp = document.createElement("div");
+    temp.innerHTML = docHtml;
+    const text = temp.innerText || temp.textContent || "";
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (docTitle || "文档") + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("文档已下载");
+  }
+
+  // 渲染文档大纲
+  function v3RenderOutline(docHtml) {
+    const outlineBody = $("#docOutlineBody");
+    if (!outlineBody) return;
+    // 从文档HTML中提取 h2/h3 作为大纲
+    const temp = document.createElement("div");
+    temp.innerHTML = docHtml;
+    const headings = temp.querySelectorAll("h2, h3");
+    if (headings.length === 0) { outlineBody.innerHTML = ""; return; }
+    const items = Array.from(headings).map((h, i) => {
+      const tag = h.tagName.toLowerCase();
+      const text = h.textContent.trim();
+      const indent = tag === "h3" ? "padding-left:24px;" : "";
+      return `<div class="doc-outline-item" data-heading-idx="${i}" style="${indent}">${esc(text)}</div>`;
+    });
+    outlineBody.innerHTML = items.join("");
+
+    // 绑定点击跳转
+    outlineBody.querySelectorAll(".doc-outline-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const idx = parseInt(item.dataset.headingIdx);
+        const paper = $("#editorPaper");
+        if (!paper) return;
+        const paperHeadings = paper.querySelectorAll("h2, h3");
+        const target = paperHeadings[idx];
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          outlineBody.querySelectorAll(".doc-outline-item").forEach(it => it.classList.remove("active"));
+          item.classList.add("active");
+        }
+      });
+    });
+  }
+
+  // 渲染底部文件标签
+  function v3RenderTabs(conv, agent) {
+    // 文档标签已移除（标题与关闭入口由顶栏承担），隐藏容器避免空占位
+    const tabsEl = $("#docOutlineTabs");
+    if (tabsEl) { tabsEl.innerHTML = ""; tabsEl.style.display = "none"; }
+  }
+
+  // 在编辑器中更新文档内容（对话迭代时调用）
+  function v3UpdateDocEditor(conv, agent) {
+    if (!agentV3Session) return;
+    const v = agentV3Session.values;
+    const newHtml = v3DraftBodyHTML(agent.id, v);
+    const newTitle = v3DocTitle(agent.id, v);
+    agentV3Session.docHtml = newHtml;
+    agentV3Session.docTitle = newTitle;
+
+    const paper = $("#editorPaper");
+    if (paper) paper.innerHTML = newHtml;
+    $("#editorPanelTitle").textContent = newTitle;
+    v3RenderOutline(newHtml);
+    const v3Mtime = "修改于 " + formatDateTime(Date.now());
+    $("#docOutlineTime").textContent = v3Mtime;
+    const v3Mlabel = $("#editorModifiedLabel"); if (v3Mlabel) v3Mlabel.textContent = v3Mtime;
+    v3RenderTabs(conv, agent);
+  }
+
+  // 处理用户在v3会话中的输入（补充信息 → 更新文件）
+  function agentV3HandleUserInput(text, attach) {
+    if (!agentV3Session) return;
+    const conv = convs.find(c => c.id === agentV3Session.convId);
+    if (!conv) { agentV3Session = null; return; }
+    const agent = byId(agentV3Session.agentId);
+    if (!agent) return;
+
+    const userMsg = { role: "user", html: esc(text || "").replace(/\n/g, "<br>") || "（已上传附件）", attach: attach || undefined, createdAt: Date.now(), time: nowTime() };
+    conv.msgs.push(userMsg);
+    renderChat(); scrollBottom();
+
+    const updatingMsg = { role: "agent", agent: agent.id, kind: "lv3-updating", noTrust: true, html: `<div class="cg-guide-body"><p style="font-size:13.5px;color:#5a7a94">正在根据您提供的信息更新文件…</p></div>`, createdAt: Date.now(), time: nowTime() };
+    conv.msgs.push(updatingMsg);
+    renderChat(); scrollBottom();
+
+    setTimeout(() => {
+      const idx = conv.msgs.indexOf(updatingMsg);
+      if (idx >= 0) conv.msgs.splice(idx, 1);
+
+      const schema = agentV3Session.schema;
+      const newResults = smartExtractFields(text, schema);
+
+      // 辅助函数：判断值是否为空/占位符
+      const isEmptyOrPlaceholder = (val) => !val || val.startsWith("（") || val.startsWith("如：") || val === "XX";
+
+      // 1. 先处理 smartExtractFields 提取到的字段（可覆盖已有值）
+      Object.keys(newResults).forEach(key => {
+        if (newResults[key].value) {
+          agentV3Session.values[key] = newResults[key].value;
+        }
+      });
+
+      // 2. 处理"把XX改成YY"修改指令（覆盖已有值）
+      const cleanText = String(text || "").trim();
+      schema.fields.forEach(field => {
+        // 匹配"把[字段标签]改成/改为/修改为/换成XX"模式
+        const modifyRe = new RegExp(`(?:把)?\\s*${field.label}\\s*(?:改成|改为|修改为|换成|改|更新为)\\s*[：:]?\\s*(.+?)(?:[，。；,;\\n]|$)`, "i");
+        const modifyMatch = cleanText.match(modifyRe);
+        if (modifyMatch && modifyMatch[1] && modifyMatch[1].trim().length > 0) {
+          agentV3Session.values[field.key] = modifyMatch[1].trim();
+        }
+        // 匹配"字段标签：值"或"字段标签是值"模式（覆盖已有值）
+        const labelRe = new RegExp(`${field.label}\\s*[：:]\\s*([^，。；;\\n]+)`, "i");
+        const labelMatch = cleanText.match(labelRe);
+        if (labelMatch && labelMatch[1] && labelMatch[1].trim().length > 0) {
+          agentV3Session.values[field.key] = labelMatch[1].trim();
+        }
+      });
+
+      // 3. 上下文感知：如果用户直接回答某个未填字段的问题
+      //    在场景B中所有问题同时展示，用户可能直接回复某个字段的答案
+      const unfilledFields = schema.fields.filter(f => isEmptyOrPlaceholder(agentV3Session.values[f.key]));
+      if (unfilledFields.length > 0 && Object.keys(newResults).length === 0) {
+        const t = cleanText.replace(/^(好的|好|嗯|是|对|就是|应该是)/, "").trim();
+        // 排除明显的指令性前缀
+        const isCommand = /^\s*(帮[我忙]?|给我|请|麻烦|我想|我要|需要|来|生成|起草|拟写?|写|做|制作|编制|出具)/.test(t);
+        if (!isCommand && t.length > 1) {
+          // select 类型：检查是否匹配某个选项
+          let matched = false;
+          for (const field of unfilledFields) {
+            if (field.type === "select" && field.options) {
+              for (const opt of field.options) {
+                if (t.includes(opt)) {
+                  agentV3Session.values[field.key] = opt;
+                  matched = true;
+                  break;
+                }
+              }
+              if (matched) break;
+            }
+          }
+          // 非select：如果只有一个未填字段，直接赋值
+          if (!matched && unfilledFields.length === 1) {
+            const field = unfilledFields[0];
+            if (field.type === "date") {
+              const dm = t.match(/(\d{4})\s*[年\/\-\.]\s*(\d{1,2})\s*[月\/\-\.]\s*(\d{1,2})\s*日?/);
+              if (dm) agentV3Session.values[field.key] = `${dm[1]}-${dm[2].padStart(2,'0')}-${dm[3].padStart(2,'0')}`;
+            } else if (t.length >= 2 && t.length <= 300) {
+              agentV3Session.values[field.key] = t;
+            }
+          }
+          // 多个未填字段但有明确标签匹配
+          if (!matched && unfilledFields.length > 1) {
+            for (const field of unfilledFields) {
+              const fLabel = field.label.replace(/[（）()]/g, "");
+              const fRe = new RegExp(`${fLabel}\\s*[是为：:]\\s*([^，。；,;\\n]+)`, "i");
+              const fMatch = t.match(fRe);
+              if (fMatch && fMatch[1] && fMatch[1].trim().length > 0) {
+                let fVal = fMatch[1].trim();
+                // 组织类字段：只取组织名
+                if (field.key === "sender" || field.key === "receiver" || field.key === "approver" || field.key === "requester" || field.key === "proposer" || field.key === "issuer" || field.key === "body" || field.key === "publisher" || field.label.includes("单位") || field.label.includes("机关")) {
+                  const orgMatch = fVal.match(/([\u4e00-\u9fa5]{2,6}(?:局|委员会|管理委员会|办公室|委|办|中心))/);
+                  if (orgMatch) fVal = orgMatch[1];
+                  else continue; // 组织字段未匹配到组织名，跳过
+                }
+                agentV3Session.values[field.key] = fVal;
+              }
+            }
+          }
+        }
+      }
+
+      if (attach) {
+        const attachResults = mockParseAttach(attach, schema);
+        schema.fields.forEach(f => {
+          if (isEmptyOrPlaceholder(agentV3Session.values[f.key])) {
+            if (attachResults[f.key]) {
+              agentV3Session.values[f.key] = attachResults[f.key].value;
+            }
+          }
+        });
+      }
+
+      agentV3Session.version++;
+
+      // 如果编辑器已打开，直接更新编辑器内容
+      const editorOpen = $("#view-chat").classList.contains("editor-open");
+      if (editorOpen) {
+        v3UpdateDocEditor(conv, agent);
+        // 对话中显示简短更新提示 + 新的文件卡片
+        const schema2 = agentV3Session.schema;
+        const missingFields = [];
+        schema2.fields.forEach(f => {
+          const val = agentV3Session.values[f.key] || "";
+          if (isEmptyOrPlaceholder(val)) missingFields.push(f);
+        });
+        const allFilled = missingFields.length === 0;
+        const docTitle = v3DocTitle(agent.id, agentV3Session.values);
+
+        // 更新消息也用文件卡片形式展示
+        const updateHtml = `<div class="lv3-file-card js-lv3-file-card" data-act="v3OpenEditor" data-ver="${agentV3Session.version}" role="button" tabindex="0">
+          <div class="lv3-file-card-icon">${svgi("i-doc-outline", 22)}</div>
+          <div class="lv3-file-card-info">
+            <div class="lv3-file-card-title">${esc(docTitle)}.docx</div>
+          </div>
+          <button class="lv3-fc-download" data-act="v3Download" title="下载文档">${svgi("i-download", 16)}<span>下载</span></button>
+        </div>`;
+        const updateMsg = { role: "agent", agent: agent.id, kind: "lv3-updated", noTrust: true, html: updateHtml, createdAt: Date.now(), time: nowTime() };
+        conv.msgs.push(updateMsg);
+        renderChat(); scrollBottom();
+      } else {
+        // 编辑器未打开，显示新的文件卡片
+        v3ShowFileCard(conv, agent);
+      }
+    }, 1000);
+  }
+
+  // 定稿：进入正式生成流程
+  function v3Finalize(conv, agent) {
+    const values = Object.assign({}, agentV3Session.values);
+    const schema = agentV3Session.schema;
+
+    schema.fields.forEach(f => {
+      const val = values[f.key];
+      if (val && (val.startsWith("（") || val.startsWith("如："))) {
+        values[f.key] = "";
+      }
+    });
+
+    const docName = agent.docType || "文稿";
+    const completeMsg = { role: "agent", agent: agent.id, kind: "lv3-complete", noTrust: true, html: `<div class="cg-guide-body"><p style="font-size:14px;color:#2a8a4a;font-weight:600">${svgi("i-check", 16)} 信息确认完成，正在为您生成正式${esc(docName)}…</p></div>`, createdAt: Date.now(), time: nowTime() };
+    conv.msgs.push(completeMsg);
+    renderChat(); scrollBottom();
+
+    const prompt = schema.prompt(values);
+    const attach = null;
+    const reference = { knowledgeBases: (conv.knowledgeBases || []).slice(), attachment: "" };
+    agentV3Session = null;
+
+    setTimeout(() => {
+      startDirectGeneration(conv, agent, prompt, attach, values, reference);
+    }, 800);
+  }
+
   function startAgentIntentAnalysis(conv, agent, text, attach, parsed) {
     if (currentView !== "chat") switchView("chat");
     const state = beginShortGeneration("intent"), message = { role:"agent", agent:null, kind:"intent-analysis", noTrust:true, html:intentAnalysisHTML(agent, text, parsed, 0), createdAt:Date.now(), time:nowTime() };
@@ -3228,6 +4564,18 @@ let sidebarCollapsed = false;
     const ta = $("#composerInput");
     const text = ta.value.trim();
     if (!text && !pendingAttach) return;
+    // v3.0: 如果正在进行v3迭代，将用户输入作为补充信息
+    if (agentV3Session) {
+      const curConv = cur();
+      if (!curConv || agentV3Session.convId !== curConv.id) {
+        agentV3Session = null;
+      } else if (text || pendingAttach) {
+        ta.value = ""; syncPromptHighlight(ta); autoSize(); toggleSend();
+        agentV3HandleUserInput(text, pendingAttach);
+        clearAttach();
+        return;
+      }
+    }
     const c = cur(); if (!c) return;
     const pendingConversationalDraft = conversationalDraft && conversationalDraft.convId === c.id ? conversationalDraft : null;
     const pendingReplyContext = replyContext ? { ...replyContext } : null;
@@ -3259,6 +4607,11 @@ let sidebarCollapsed = false;
     ta.value = ""; syncPromptHighlight(ta); clearAttach(); clearReplyContext(); autoSize(); toggleSend();
     resetComposerSelections();
     renderChat(); renderSidebar();
+    // v3.0: 函件/议案/工作计划智能体走先出稿后迭代流程
+    if (replyAgent && V3_AGENT_IDS.has(replyAgent.id)) {
+      startAgentV3Flow(c, replyAgent, enrichedText, attach);
+      return;
+    }
     if (pendingConversationalDraft) {
       handleConversationalReply(c, pendingConversationalDraft, text, attach);
       return;
@@ -3575,7 +4928,7 @@ let sidebarCollapsed = false;
     const attachNote = attach ? `<div class="panel-note"><b>已接收附件：</b>${esc(attach)}<br>我会结合附件内容继续处理，您也可以补充希望关注的重点。</div>` : "";
     const hasContext = (conv.knowledgeBases || []).length;
     const contextNote = hasContext ? "我已结合您选择的知识库处理这项需求。" : "我已收到您的问题，将以普通大模型对话方式为您处理。";
-    return `${generalContextHTML(conv)}<p>${contextNote}</p>${clean ? `<div class="panel-note"><b>当前需求：</b>${esc(clean)}</div>` : ""}${attachNote}<p>您可以继续补充背景、格式或输出要求，我会在当前会话中接着完善。</p>`;
+    return `${generalContextHTML(conv)}<p>${contextNote}</p>${attachNote}<p>您可以继续补充背景、格式或输出要求，我会在当前会话中接着完善。</p>`;
   }
   function knowledgeReplyHTML(text, attach, conv) {
     const clean = String(text || "").replace(/【(?:技能|引用知识库|引用知识文件|连接器)：.*?】/g, "").replace(/\u2063/g, "").trim();
@@ -3668,37 +5021,43 @@ let sidebarCollapsed = false;
       if (currentView === "chat") setTimeout(() => input.focus(), 0);
     }
   }
-  function directValue(values, key) { return String(values && values[key] || "").trim(); }
+  function directValue(values, key) { const v = String(values && values[key] || "").trim(); return (v === "XX" || v.startsWith("（") || v.startsWith("如：")) ? "" : v; }
   function directDocumentTitle(agent, values) {
     const v = values || {};
     const titles = {
       decision: `关于${directValue(v, "subject") || "相关事项"}的决定`,
       notice: `关于${directValue(v, "subject") || "相关工作"}的通知`,
-      speech: `${directValue(v, "topic") || "工作部署"}发言稿`,
-      report: `${directValue(v, "subject") || "工作情况"}${directValue(v, "kind") || "报告"}`,
+      speech: `${directValue(v, "topic") || "工作部署"}`,
+      report: `关于${directValue(v, "subject") || "有关事项"}的${directValue(v, "kind") || "报告"}`,
       summary: `${directValue(v, "period") || "阶段"}${directValue(v, "type") || "工作总结"}`,
       news: `${directValue(v, "event") || "政务工作"}新闻稿`,
       letter: `关于${directValue(v, "subject") || "有关事项"}的${directValue(v, "kind") || "函"}`,
       communique: `${directValue(v, "subject") || "有关事项"}${directValue(v, "kind") || "公告"}`,
       reply: `关于${directValue(v, "subject") || "有关事项"}的批复`,
-      motion: `关于${directValue(v, "title") || "有关事项"}的议案`,
+      motion: `关于提请审议《${directValue(v, "title") || "XXXXXX（草案）"}》的议案`,
       interpret: `${directValue(v, "subject") || "政策文件"}解读`
     };
     return titles[agent.id] || `${agent.name}初稿`;
   }
   function directDocumentHTML(agent, values) {
     const v = values || {}, val = key => esc(directValue(v, key));
-    if (agent.id === "decision") return `<h2>${val("subject") || "有关事项"}的决定</h2><p>经${val("body")}于${val("date")}审议，现就${val("subject")}作出如下决定：</p><h3>一、决定事项</h3><p>${val("matter")}</p><h3>二、执行要求</h3><p>请有关单位按照职责分工认真组织实施，及时报告执行情况。</p>`;
-    if (agent.id === "notice") return `<h2>关于${val("subject") || "相关工作"}的通知</h2><p>发文单位：${val("issuer")}　　主送单位：${val("recipient")}</p>${v.deadline ? `<p>完成时限：${val("deadline")}</p>` : ""}<p>为推进${val("subject") || "相关工作"}，现将有关事项通知如下：</p><h3>一、工作目标</h3><p>围绕重点任务，明确责任分工，强化统筹协调和跟踪问效。</p><h3>二、工作要求</h3><p>${val("points")}</p><h3>三、其他事项</h3><p>请各单位结合实际抓好落实，并按要求反馈进展。</p>`;
-    if (agent.id === "speech") return `<h2>${val("topic") || "工作部署"}发言稿</h2><p>（${val("occasion")}）</p><p>各位同志、各位同事：</p><p>今天围绕${val("topic")}作交流发言。${val("points")}</p><h3>一、提高认识，准确把握工作方向</h3><p>……</p><h3>二、聚焦重点，推动任务落地见效</h3><p>……</p><h3>三、压实责任，形成协同推进合力</h3><p>谢谢大家。</p>`;
-    if (agent.id === "report") return `<h2>关于${val("subject") || "有关工作"}的${val("kind") || "报告"}</h2><p>报送单位：${val("issuer")}　　主送机关：${val("recipient")}</p><p>报送日期：${val("date")}</p><h3>一、基本情况</h3><p>${val("details")}</p><h3>二、下一步工作</h3><p>我们将进一步完善工作机制，细化任务清单，确保各项部署落地。</p>`;
-    if (agent.id === "summary") return `<h2>${val("period") || "阶段"}${val("type") || "工作总结"}</h2><p>业务领域：${val("area")}</p><h3>一、重点工作与成效</h3><p>${val("work")}</p>${v.next ? `<h3>二、问题与下一步计划</h3><p>${val("next")}</p>` : ""}`;
-    if (agent.id === "news") return `<h2>${val("event") || "政务工作"}新闻稿</h2><p>${val("date")}，${val("place")}开展相关活动。发布渠道：${val("channel")}。</p><p>参加人员：${val("people") || "相关单位和人员"}。</p><h3>活动内容与成效</h3><p>${val("content")}</p>`;
-    if (agent.id === "letter") return `<h2>关于${val("subject") || "XX"}的${val("kind") || "函"}</h2><p>收函单位：${val("receiver") || "XX"}</p><p>发函单位：${val("sender") || "XX"}</p><p>函件主题：${val("subject") || "XX"}</p><p>我单位现就上述事项函告如下：</p><p>核心事项：${val("details") || "XX"}</p><p>答复或办理时限：${val("deadline") || "XX"}</p><p>特此函达。</p><p style="text-align:right">${val("sender") || "XX"}<br>XX年XX月XX日</p>`;
-    if (agent.id === "communique") return `<h2>${val("subject") || "有关事项"}${val("kind") || "公告"}</h2><p>发布主体：${val("publisher")}　　发布日期：${val("date")}　　发布范围：${val("scope")}</p><p>${val("content")}</p>`;
-    if (agent.id === "reply") return `<h2>关于${val("subject") || "有关事项"}的批复</h2><p>${val("requester")}：</p><p>你单位关于${val("subject")}的请示收悉。经研究，现批复如下：</p><p>${val("opinion")}</p><p>批复依据：${val("basis")}</p><p>请认真组织实施。</p>`;
-    if (agent.id === "motion") return `<h2>关于${val("title") || "有关事项"}的议案</h2><p>提案人：${val("proposer")}　　提请对象：${val("recipient")}　　会议：${val("meeting")}　　日期：${val("date")}</p><h3>一、提出背景</h3><p>${val("basis")}</p><h3>二、议案事项</h3><p>${val("matter")}</p>`;
+    if (agent.id === "decision") { const dtype = val("type"); const ddate = val("date"); return `<h2>${val("body") || "发文机关"}关于${val("subject") || "事项主题"}的决定</h2><p>[发文字号]</p><p>[主送机关]：</p><p>为[目的意义]，根据[政策依据/法律法规/上级精神]，结合[实际情况]${dtype ? `，经${val("body") || "决策机关"}审议` : ""}，现就${val("subject") || "事项主题"}${dtype ? `（${dtype}）` : ""}作出如下决定。</p><h3>一、[决定事项一]</h3><p>${val("matter") || "具体内容。明确目标任务、工作路径和责任主体。"}</p><h3>二、[决定事项二]</h3><p>[具体内容。]</p><h3>三、[保障措施]</h3><p>[组织保障、资金保障、监督检查等方面的要求。]</p><p>[号召性结语。对相关单位和人员提出希望和要求。]</p><p>${val("body") || "发文机关"}（盖章）</p><p>${ddate || "XXXX年X月X日"}</p><p>抄送：[抄送机关列表]</p><p>${val("body") || "发文机关"} ${ddate || "[XXXX年X月X日]"}印发</p>`; }
+    if (agent.id === "notice") { const ntype = val("type"); const ndeadline = val("deadline"); return `<h2>${val("issuer") || "发文机关"}关于${val("subject") || "事项主题"}的通知</h2><p>[发文字号]</p><p>${val("recipient") || "主送机关"}：</p><p>为[目的意义]，根据[政策依据/上级要求]，现就${val("subject") || "事项主题"}有关事项通知如下${ntype ? `（${ntype}）` : ""}：</p><h3>一、[通知事项一]</h3><p>${val("points") || "具体内容和要求。"}</p><h3>二、[通知事项二]</h3><p>[具体内容和要求。]</p><h3>三、[工作要求]</h3><p>[对执行机关提出的总体要求。]${ndeadline ? `请于${ndeadline}前落实到位。` : "请认真抓好贯彻落实。"}</p><p>${val("issuer") || "发文机关"}（盖章）</p><p>XXXX年X月X日</p><p>抄送：[抄送机关列表]</p><p>${val("issuer") || "发文机关"} [XXXX年X月X日]印发</p>`; }
+    if (agent.id === "speech") return `<h2>${val("topic") || "讲话主题"}</h2><p>（${val("occasion") || "会议场合"}，${val("duration") || "讲话时长"}）</p><p>${val("audience") || "各位同志"}：</p><p>今天，我们在这里${val("occasion") || "召开会议"}，围绕${val("topic") || "讲话主题"}进行交流。首先，我代表[单位]，向${val("audience") || "各位同志"}表示诚挚的问候！</p><h3>一、提高认识，准确把握工作方向</h3><p>${val("points") || "[核心内容要点。]"}</p><h3>二、聚焦重点，推动任务落地见效</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>[加强统筹调度和跟踪问效，确保各项部署落到实处、取得实效。]</p><p>同志们，让我们统一思想、凝聚共识，为推动高质量发展而不懈奋斗！</p><p>谢谢大家。</p><p style="text-align:right">${val("speaker") || "[讲话人及职务]"}</p>`;
+    if (agent.id === "report") {
+      const rkind = directValue(v, "kind") || "报告";
+      const rdate = val("date");
+      if (rkind === "请示") return `<h2>${val("issuer") || "发文机关"}关于${val("subject") || "请示事项"}的请示</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>${val("recipient") || "上级机关名称"}：</p><p>为[目的意义]，根据[政策依据/工作需要]，现就${val("subject") || "请示事项"}请示如下：</p><h3>一、请示缘由</h3><p>${val("details") || "交代事项背景、来龙去脉、问题症结或上级要求，说明请示的必要性和依据。"}</p><h3>二、请示事项</h3><p>[明确提出需要上级机关指示或批准的具体事项，内容具体明确。]</p><h3>三、建议意见</h3><p>[提出倾向性意见和工作建议，不能只提问题不给方案。]</p><p>以上请示，妥否，请批示。</p><p>（单位主要领导签字）　　${val("issuer") || "发文机关"}（盖章）</p><p>${rdate || "XXXX年X月X日"}</p><p>（联系人：[姓名]，联系方式：[电话]）</p><p>抄送：[抄送机关]，存档。</p><p>${val("issuer") || "发文机关"} ${rdate || "[XXXX年X月X日]"}印发</p>`;
+      return `<h2>${val("issuer") || "发文机关"}关于${val("subject") || "报告事项"}的报告</h2><p>[发文字号]</p><p>签发人：[签发人姓名]</p><p>${val("recipient") || "上级机关名称"}：</p><p>[报告引言。交代报告期间、指导思想、总体工作概况和成效，起统领全文作用。]</p><h3>一、[第一方面工作]</h3><p>${val("details") || "工作做法和成效，含具体数据支撑。"}</p><h3>二、[第二方面工作]</h3><p>[工作做法和成效。]</p><h3>三、[第三方面工作]</h3><p>[工作做法和成效。]</p><p>特此报告。</p><p>${val("issuer") || "发文机关"}</p><p>${rdate || "XXXX年X月X日"}</p><p>抄送：[抄送机关列表]</p><p>${val("issuer") || "发文机关"} ${rdate || "[XXXX年X月X日]"}印发</p>`;
+    }
+    if (agent.id === "summary") return `<h2>${val("period") || "阶段"}${val("type") || "工作总结"}</h2><p>在上级党委政府的坚强领导下，我单位坚持以习近平新时代中国特色社会主义思想为指导，深入贯彻落实上级决策部署，紧紧围绕${val("area") || "重点任务"}，扎实推进年度各项工作，现将${val("period") || "本阶段"}工作情况总结如下。</p><h3>一、${val("period") || "报告期"}工作回顾</h3><p>（一）聚焦${val("area") || "重点领域"}，提质增效取得新进展。</p><p>${val("work") || "重点工作与成效内容。"}</p><p>（二）聚焦作风建设，履职能力持续提升。</p><p>[队伍建设、作风转变等方面的举措成效。]</p><h3>二、存在的问题与不足</h3><p>${val("next") || "问题不足及下一步安排。"}</p><h3>三、下一阶段工作打算</h3><p>（一）聚力${val("area") || "重点任务"}，推动工作落地见效。</p><p>[下一阶段具体措施和量化目标。]</p><p>（二）聚力自身建设，提升履职尽责能力水平。</p><p>[保障措施和自身建设安排。]</p><p>我们将更加紧密地团结在以习近平同志为核心的党中央周围，在上级党委政府坚强领导下，锐意进取、担当作为，为推动高质量发展而不懈奋斗！</p><p style="text-align:right">[单位名称]</p><p style="text-align:right">[XXXX年X月X日]</p>`;
+    if (agent.id === "news") return `<h2>${val("event") || "政务工作"}</h2><p>${val("date")}，${val("place")}开展${val("event") || "相关活动"}，${val("people") || "相关单位和人员"}参加。</p><h3>聚焦重点任务 推动工作落实</h3><p>${val("content") || "活动内容与成效。"}</p><p>此次${val("event") || "活动"}统一了思想、明确了路径。下一步，相关单位将持续深化举措、巩固工作成效，全力推动各项任务落地，为"强富美高"新南京建设提供支撑。</p><p>（拟通过${val("channel") || "发布渠道"}发布）</p>`;
+    if (agent.id === "letter") { const ldeadline = val("deadline"); return `<h2>${val("sender") || "发文机关"}关于${val("subject") || "事项主题"}的${val("kind") || "函"}</h2><p>[发文字号]</p><p>${val("receiver") || "受文机关名称"}：</p><p>[函由缘由。交代发函的背景、原因和目的。]</p><h3>一、[函件事项一]</h3><p>${val("details") || "具体内容。明确提出商洽、询问或请求的事项。"}</p><h3>二、[函件事项二]</h3><p>[具体内容。]</p><p>以上事项，请予研究函复为盼。${ldeadline ? `请于${ldeadline}前反馈办理情况。` : ""}</p><p>${val("sender") || "发文机关"}（盖章）</p><p>XXXX年X月X日</p><p>联系人：[姓名]，联系电话：[电话]</p><p>抄送：[抄送机关列表]</p><p>${val("sender") || "发文机关"} [XXXX年X月X日]印发</p>`; }
+    if (agent.id === "communique") { const ck = val("kind") || "公告"; const cscope = val("scope"); return `<h2>${val("publisher") || "发文机关"}关于${val("subject") || "事项主题"}的${ck}</h2><p>[发文字号]</p><p>根据[法律法规/政策文件/决定决议]，为[公告目的]，现将${val("subject") || "事项主题"}有关事项${ck}如下${cscope ? `（${cscope}）` : ""}：</p><h3>一、[第一方面事项]</h3><p>${val("content") || "公告的具体内容。语言简洁明了，便于公众理解。"}</p><h3>二、[第二方面事项]</h3><p>[公告的具体内容。]</p><h3>三、[第三方面事项]</h3><p>[公告的具体内容。]</p><p>特此${ck}。</p><p>${val("publisher") || "发文机关"}（盖章）</p><p>${val("date") || "XXXX年X月X日"}</p>`; }
+    if (agent.id === "reply") { const rattitude = val("attitude"); const rbasis = val("basis"); return `<h2>${val("approver") || "发文机关"}关于${val("subject") || "事项主题"}的批复</h2><p>[发文字号]</p><p>${val("requester") || "请示机关名称"}：</p><p>你[单位/局/委]《${val("subject") || "请示文件标题"}》（[请示文件字号]）收悉。经研究，${rbasis ? `根据${rbasis}，` : ""}现批复如下：</p><h3>一、${rattitude || "[批复意见]"}</h3><p>${val("opinion") || "明确表示同意、不同意或部分同意，并说明理由或补充意见。"}</p><h3>二、[执行要求]</h3><p>[对实施过程中的具体要求，如时间节点、责任主体、监督检查等。]</p><p>此复。</p><p>${val("approver") || "发文机关"}（盖章）</p><p>XXXX年X月X日</p><p>抄送：[抄送机关列表]</p><p>${val("approver") || "发文机关"} [XXXX年X月X日]印发</p>`; }
+    if (agent.id === "motion") return `<h2>关于提请审议《${val("title") || "XXXXXX（草案）"}》的议案</h2><p>[发文字号]</p><p>${val("recipient") || "XX市人民代表大会常务委员会"}：</p><h3>案由</h3><p>为深入贯彻落实${val("meeting") || "XX"}部署要求，规范/促进${val("matter") || "XX"}领域工作，破解${val("matter") || "XX"}领域突出问题，保障公民、法人和其他组织合法权益，推动${val("matter") || "XX"}高质量发展，根据《中华人民共和国XX法》《XX条例》等法律法规规定，结合本市实际，拟制定（修订）《${val("title") || "XXXXXX"}》。</p><h3>案据</h3><p>该草案由${val("proposer") || "XX部门"}牵头起草，通过公开征求意见、专题调研、专家论证、风险评估等程序，广泛听取了相关部门、市场主体、社会公众及专家学者意见，经反复修改完善，已经市政府第XX次常务会议审议通过。${val("basis") || "草案符合上位法规定，契合本市发展实际，具备较强的可行性与操作性。"}</p><h3>方案</h3><p>《${val("title") || "XXXXXX"}》共X章X条，核心内容包括：${val("matter") || "XXXX"}。现将草案及说明一并报送，请予审议。</p><p>附件：</p><p>1. 《${val("title") || "XXXXXX"}》</p><p>2. 关于《${val("title") || "XXXXXX"}》的说明</p><p>3. 征求意见情况汇总表（及其他参阅资料）</p><p style="text-align:right">${val("proposer") || "XX市人民政府"}（公章）</p><p style="text-align:right">市长：XXX（签章）</p><p style="text-align:right">${val("date") || "XXXX年XX月XX日"}</p>`;
     if (agent.id === "interpret") return `<h2>${val("subject") || "政策文件"}解读</h2><p>解读来源：${val("sourceMode")}　　解读对象：${val("audience")}　　解读深度：${val("depth")}</p><h3>一、文件核心要点</h3><p>围绕“${val("focus")}”梳理文件的主要政策安排、适用范围和执行要求。</p><h3>二、适用对象与办理路径</h3><p>建议结合文件原文、现行政策依据和知识库权威版本，逐项核对适用条件、申报材料、办理部门及时间要求。</p><h3>三、重点关注事项</h3><p>${val("question") || "需重点关注政策有效期、限制条件、职责边界和材料真实性要求。"}</p><h3>四、核实提示</h3><p>本解读为辅助参考，涉及正式办理结论时应以政策原文及主管部门最新口径为准。</p>`;
+    if (agent.id === "plan") { const ptype = val("type"); const pperiod = val("period"); const ptypeShort = ptype ? ptype.replace(/^(年度|季度|月度)/, "") : "工作计划"; return `<h2>${val("issuer") || "编制单位"}${pperiod || "XXXX"}${ptypeShort}</h2><h3>一、总体要求</h3><p>为深入贯彻落实上级关于经济社会发展、民生保障、城乡建设、基层治理等工作部署，立足本部门、本领域发展实际，围绕中心、服务大局，现就${pperiod || "本期"}重点工作安排如下。</p><p>${val("goal") || "（填写总体目标、指导思想、核心方向：明确本期工作的总体定位、预期成效和关键指标。）"}</p><h3>二、重点工作任务</h3><p>${val("tasks") || "1.（重点任务一：明确任务名称、具体举措、责任部门、时间节点、预期成效）"}</p><h3>三、保障措施</h3><p>${val("measures") || "1. 组织保障。加强组织领导，明确责任分工，成立工作专班或领导小组，统筹推进各项任务落实。"}</p><h3>四、工作要求</h3><p>1. 提高思想认识，强化责任担当。各部门要高度重视，将本计划确定的各项任务纳入重要议事日程，主要负责同志亲自抓、分管负责同志具体抓，确保各项工作落到实处。</p><p>2. 加强统筹协调，形成工作合力。牵头部门要主动协调配合，相关部门要各司其职、各负其责，建立信息共享和沟通联络机制，确保各项工作高效推进。</p><p>3. 严格督导考核，确保落地见效。建立健全督查考核机制，定期通报工作进展，对推进不力、落实不到位的及时督促整改，确保各项任务按时保质完成。</p>`; }
     const schema = CHAT_AGENT_SCHEMAS[agent.id], rows = schema ? schema.fields.map(field => `<p><b>${esc(field.label)}：</b>${esc(directValue(v, field.key))}</p>`).join("") : "";
     return `<h2>${esc(directDocumentTitle(agent, values))}</h2>${rows}`;
   }
@@ -5156,7 +6515,7 @@ let sidebarCollapsed = false;
     if (!config.templates[agent.id]) config.templates[agent.id] = { format: "Markdown", editable: true, content: `# ${agent.name}\n\n## 一、背景与目标\n\n## 二、主要内容\n\n## 三、办理要求\n\n> 请补充依据、责任部门和完成时限。` };
     return config.templates[agent.id];
   }
-  // 「常用推荐」示例问题维护卡片（仅系统/部门管理员可见可编辑）。每条：问题文本 + 关联智能体(可空) + 删除；可新增。
+  // 「试一试」示例问题维护卡片（仅系统/部门管理员可见可编辑）。每条：问题文本 + 关联智能体(可空) + 删除；可新增。
   function tryQuestionsCard() {
     const list = (config.personal.tryQuestions && config.personal.tryQuestions.length ? config.personal.tryQuestions.map(normTryItem) : []);
     const agentOptsTry = `<option value="">不指定（自动路由）</option>` + AGENTS.map(a => `<option value="${a.id}">${a.name}</option>`).join("");
@@ -5165,10 +6524,10 @@ let sidebarCollapsed = false;
       <select class="try-agent select">${agentOptsTry.replace(`value="${it.agent}"`, `value="${it.agent}" selected`)}</select>
       <button class="try-del" data-act="tryDel" data-idx="${i}" title="删除">×</button>
     </div>`).join("");
-    const body = `<div class="cfg-readonly" style="margin-bottom:10px">主页/新对话「常用推荐」展示这组问题，默认显示前 4 条，多于 4 条时可「换一批」循环。每条可指定一个智能体，或不指定（自动路由）。仅系统/部门管理员可维护。</div>
+    const body = `<div class="cfg-readonly" style="margin-bottom:10px">主页/新对话「试一试」展示这组问题，默认显示前 4 条，多于 4 条时可「换一批」循环。每条可指定一个智能体，或不指定（自动路由）。仅系统/部门管理员可维护。</div>
       <div id="tryRows">${rows || '<div class="cfg-readonly">暂无示例问题。</div>'}</div>
       <div class="try-row-foot"><button class="btn" data-act="tryAdd"><svg class="svg-icon"><use href="#i-plus"></use></svg>新增示例问题</button></div>`;
-    return `<div class="card" style="margin-bottom:16px"><div class="card-head"><div class="card-title">主页「常用推荐」示例问题</div><button class="btn primary" data-act="trySave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存示例</button></div><div class="card-body">${body}</div></div>`;
+    return `<div class="card" style="margin-bottom:16px"><div class="card-head"><div class="card-title">主页「试一试」示例问题</div><button class="btn primary" data-act="trySave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存示例</button></div><div class="card-body">${body}</div></div>`;
   }
   function tryQuestionsReadFromDOM() {
     const rows = $$("#tryRows .try-row");
@@ -5179,8 +6538,8 @@ let sidebarCollapsed = false;
     const prefSelect = (pref, slot, val, opts) => `<select class="select" data-pref="${pref}" data-slot="${slot}">${opts.map(o => `<option value="${o.v}" ${o.v === val ? "selected" : ""}>${o.n}</option>`).join("")}</select>`;
     const agentOpts = AGENTS.map(a => ({ v: a.id, n: a.name }));
     const grid = (pref, count, opts, vals, label) => `<div style="margin-bottom:14px"><div class="cfg-label" style="margin:0 0 8px">${label}</div><div style="display:grid;grid-template-columns:repeat(${Math.min(count, 3)},minmax(0,1fr));gap:8px">${Array.from({ length: count }, (_, i) => prefSelect(pref, i, vals[i], opts)).join("")}</div></div>`;
-    const body = grid("homeAgents", 6, agentOpts, config.personal.homeAgents, "主页推荐智能体（6 个，按顺序展示）");
-    return `<div class="card"><div class="card-head"><div class="card-title">工作台内容偏好</div><span class="cfg-status live">当前用户</span></div><div class="card-body">${body}</div></div>`;
+    const body = grid("homeAgents", 5, agentOpts, config.personal.homeAgents, "常用推荐智能体（5 个，按顺序展示）");
+    return `<div class="card"><div class="card-head"><div class="card-title">常用推荐</div><span class="cfg-status live">当前用户</span></div><div class="card-body">${body}</div></div>`;
   }
   const DEPARTMENT_PERSONA_DEFAULTS = {
     "数据局": "你是南京江北新区数据局的政务办公智能助手。回答时应立足数据治理、数字政府建设和跨部门数据协同场景，使用规范、审慎、简洁的政务表达。涉及政策、数据口径或办理流程时，应优先引用权威依据并说明来源；信息不足时先提示需要补充的材料，不编造事实、数据、文号或办理结论。默认输出结构清晰、重点突出，便于直接用于政务办公。",
@@ -5417,7 +6776,7 @@ let sidebarCollapsed = false;
     { id: "N-20260713-01", tone: "blue", icon: "i-star", title: "决定决议智能生成本月已服务 486 次，位列调用榜首", time: "2026-07-13 16:20", detail: "截至 7 月 13 日，决定决议智能生成累计完成 486 次调用，主要覆盖表彰奖励、事项审议、人事任免和制度发布等场景。平台将持续优化字段引导和合规校验体验。" },
     { id: "N-20260712-01", tone: "green", icon: "i-check", title: "OA 审批对接已升级，交付公文可一键推送并回传状态", time: "2026-07-12 14:10", detail: "OA 审批对接能力已完成升级。用户在任务交付后可一键将公文推送至 OA，并在本平台查看审批流转与回传状态，减少重复上传与人工跟踪。" }
   ];
-  // 常用推荐题库（系统/部门管理员在配置管理维护）
+  // 试一试题库（系统/部门管理员在配置管理维护）
   const TRY_POOL = [];
   function normTryItem(t) { return typeof t === "string" ? { text: t, agent: "" } : { text: t.text || "", agent: t.agent || "" }; }
   function refreshTryPool() {
@@ -5503,7 +6862,7 @@ let sidebarCollapsed = false;
     $("#homeTry").innerHTML = picks.map((t, i) => chip(t, (tryOffset + i) % n, "hometry")).join("");
     if ($("#newTry")) $("#newTry").innerHTML = picks.map((t, i) => chip(t, (tryOffset + i) % n, "newtry")).join("");
   }
-  // 点击常用推荐问题：只在当前主页/新对话框选择智能体并带入示例，不自动发送、不进入旧欢迎页。
+  // 点击试一试问题：只在当前主页/新对话框选择智能体并带入示例，不自动发送、不进入旧欢迎页。
   function applyTryQuestion(idx, from) {
     const item = TRY_POOL[idx];
     if (!item) return;
@@ -5524,11 +6883,26 @@ let sidebarCollapsed = false;
   }
   function renderHome() {
     renderTryChips();
+    renderHomeQuickActions();
     renderHomePill();
     renderHomeSkill();
     renderHomeKnowledge();
     renderConnectorSelection();
     renderRail();
+  }
+  // 主页/新对话「常用推荐」：按个性化配置的 5 个智能体顺序渲染，末尾固定「更多」跳智能体广场
+  function renderHomeQuickActions() {
+    const el = $("#homeQuickActions");
+    const newEl = $("#newQuickActions");
+    if (!el && !newEl) return;
+    const ids = (config.personal.homeAgents || []).filter(Boolean).slice(0, 5);
+    const cards = ids.map(id => {
+      const a = byId(id); if (!a) return "";
+      return `<button class="qa-btn" data-home-agent="${a.id}" title="${esc(a.name)}">${agentIcon(a, 15)}<span>${esc(a.name)}</span></button>`;
+    }).join("");
+    const more = `<button class="qa-btn" data-view-jump="agents" title="智能体广场">${svgi("i-menu", 15)}<span>更多</span></button>`;
+    if (el) el.innerHTML = cards + more;
+    if (newEl) newEl.innerHTML = cards + more;
   }
   function renderHomeSkill() {
     const html = homeSkills.map(skill => `<button class="selection-chip skill-selected" data-clear-resource="skill" data-resource-id="${skill.id}" title="点击移除已选技能"><span class="sel-ic" style="background:#7652ad">${svgi("i-wand", 12)}</span>${esc(skill.name)}<i class="sel-x">×</i></button>`).join("");
@@ -5939,7 +7313,6 @@ let sidebarCollapsed = false;
       return `<div class="task-card" data-taskjump="${t.id}">
         <div class="tc-top"><span class="tc-ic" style="${ic(a.cat)};color:#fff">${agentIcon(a, 14)}</span><span class="tc-name">${esc(t.name)}</span><span class="tc-state" style="color:${sc.c};background:${sc.bg}">${t.state}</span></div>
         <div class="tc-bar"><i style="width:${pct}%;background:${CAT_COLOR[a.cat]}"></i></div>
-        <div class="tc-meta"><span>${completedCard ? "完成节点" : "当前节点"} · ${t.idx}/${t.total} · ${esc(t.node)}</span></div>
       </div>`;
     };
     const tcards = running.map(t => taskCard(t, false)).join("");
@@ -6362,7 +7735,7 @@ let sidebarCollapsed = false;
     $("#wbToChat").style.display = a.entryMode === "chat" ? "inline-flex" : "none";
     // 切换下拉
     $("#wbSwitch").innerHTML = AGENTS.filter(x => !config.agentsOff.has(x.id)).map(x => `<option value="${x.id}" ${x.id === agentId ? "selected" : ""}>切换：${esc(x.name)}</option>`).join("");
-    // 加载 iframe
+    // 加载 iframe（带时间戳避免缓存，解决文件替换后iframe不刷新的问题）
     const frame = $("#wbFrame"), loading = $("#wbLoading");
     loading.classList.remove("hide");
     frame.onload = () => {
@@ -6376,7 +7749,9 @@ let sidebarCollapsed = false;
         }
       }
     };
-    frame.src = workbenchPath(agentId);
+    // 先清空再加载，确保即使路径相同也会重新请求
+    frame.src = "about:blank";
+    setTimeout(() => { frame.src = workbenchPath(agentId) + "?t=" + Date.now(); }, 30);
     switchView("workbench");
     setSidebarCollapsed(true);
   }
@@ -6649,7 +8024,7 @@ let sidebarCollapsed = false;
       if (act === "copy") copyEditorDocument();
       else if (act === "download") downloadEditorDocument();
       else if (act === "save") saveDocumentEditor();
-      else if (act === "close") closeDocumentEditor();
+      else if (act === "close") { agentV3Session ? v3CloseDocEditor() : closeDocumentEditor(); }
       else if (act === "history") openEditorHistoryDrawer();
       else if (act === "closeHistory") closeEditorHistoryDrawer();
       else if (act === "restoreHistory") restoreHistoryVersion();
@@ -6917,9 +8292,12 @@ let sidebarCollapsed = false;
       case "copyAgentReply": copyAgentReply(el.dataset.msgIndex); break;
       case "copyUserReply": copyUserReply(el.dataset.msgIndex); break;
       case "followUpAgentReply": followUpAgentReply(el.dataset.msgIndex); break;
+      case "retryAgentReply": retryAgentReply(el.dataset.msgIndex); break;
       case "saveConversationKnowledge": saveConversationKnowledge(el.dataset.msgIndex); break;
       case "generatedExport": exportGeneratedMessage(el.dataset.msgIndex); break;
       case "generatedEdit": openDocumentEditor(el.dataset.msgIndex); break;
+      case "v3OpenEditor": { if (agentV3Session) { const c = cur(); const a = c ? byId(c.agent) : null; if (a) v3OpenDocEditor(c, a); } break; }
+      case "v3Download": { if (agentV3Session) v3DownloadDocument(); break; }
       case "generatedOpenWorkbench": openGeneratedResultWorkbench(el.dataset.msgIndex); break;
       case "generatedOpenReview": openGeneratedResultWorkbench(el.dataset.msgIndex, "review"); break;
       case "generatedOpenPolish": openGeneratedResultWorkbench(el.dataset.msgIndex, "polish"); break;
@@ -7190,6 +8568,25 @@ let sidebarCollapsed = false;
   // ===== 启动 =====
   init();
 })();
+</script>
+<script src="assets/proto-version.js" data-proto-version></script>
+<script>
+/* 首页/新对话快捷功能按钮：点击将示例需求带入对应输入框（不自动发送） */
+window.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("click", function (e) {
+    var more = e.target.closest("[data-hq-more]");
+    if (more) { var mb = document.querySelector("#sideMoreBtn"); if (mb) mb.click(); return; }
+    var btn = e.target.closest("[data-hq]");
+    if (!btn) return;
+    var inNewChat = !!btn.closest("#view-newchat");
+    var input = document.querySelector(inNewChat ? "#newInput" : "#homeInput");
+    if (!input) return;
+    input.value = btn.getAttribute("data-hq");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.focus();
+    if (typeof showToast === "function") showToast("示例已带入，可修改后发送");
+  });
+});
 </script>
 </body>
 </html>
