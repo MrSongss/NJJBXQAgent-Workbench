@@ -90,8 +90,10 @@
   .view { min-height: 0; height: 100%; display: none; }
   .view.active { display: block; }
   #view-chat.active { display: block; }
-  #view-home.active { display: grid; grid-template-columns: 1fr 52px; min-height: 0; transition: grid-template-columns .24s ease; }
-  #view-home.active.rail-open { grid-template-columns: 1fr 322px; }
+  #view-home.active { display: grid; grid-template-columns: 1fr; min-height: 0; position: relative; }
+  /* 任务流浮框：悬浮于主页右上角，折叠态为小按钮、展开态为浮卡，不再是满高竖框 */
+  #homeRail { position: absolute; right: 14px; top: 14px; bottom: auto; max-height: calc(100% - 28px); width: 322px; z-index: 25; border-left: none; border-radius: 14px; box-shadow: 0 12px 32px rgba(18,36,95,.14); transition: width .24s ease, max-height .24s ease; }
+  #homeRail.is-collapsed { width: 52px; max-height: 128px; }
 
   /* ===== 侧栏（对话工作台）===== */
   .sidebar { position: relative; background: var(--white); border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; overflow: visible; }
@@ -1347,6 +1349,26 @@
   .editor-head-actions button { height:32px; display:inline-flex; align-items:center; gap:6px; padding:0 10px; border:1px solid transparent; border-radius:8px; background:#fff; color:#445268; font-size:12px; font-weight:700; }
   .editor-head-actions button:hover { border-color:#d7e2eb; background:#f7f9fb; color:var(--gov-700); }
   .editor-head-actions .editor-close { width:32px; padding:0; justify-content:center; font-size:19px; }
+
+  /* 生成版式公文 弹窗 */
+  .fdm { display:flex; flex-direction:column; gap:18px; }
+  .fdm-sec-t { font-size:13px; font-weight:800; color:var(--gov-900); margin:0 0 10px; }
+  .fdm-tpls { display:flex; flex-wrap:wrap; gap:8px; }
+  .fdm-tpl { padding:7px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text-mid); font-size:13px; font-weight:600; cursor:pointer; transition:.15s; }
+  .fdm-tpl:hover { border-color:var(--gov-500); color:var(--gov-700); }
+  .fdm-tpl.active { border-color:var(--gov-600); background:var(--gov-50); color:var(--gov-800); }
+  .fdm-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .fdm-field { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--muted); }
+  .fdm-field input, .fdm-field select { height:34px; padding:0 10px; border:1px solid var(--line); border-radius:8px; font-size:13px; color:var(--text); background:#fff; }
+  .fdm-field input:focus, .fdm-field select:focus { border-color:var(--gov-500); outline:none; }
+  .fdm-tip { font-size:11.5px; color:var(--muted-2); }
+  /* 版式公文：版头 / 版记 */
+  .editor-paper .doc-head { text-align:center; margin-bottom:18px; }
+  .editor-paper .doc-head .dh-top { display:flex; justify-content:space-between; font-size:12px; color:#555; margin-bottom:6px; padding:0 4px; }
+  .editor-paper .doc-head .dh-number { font-size:13px; color:#333; }
+  .editor-paper .doc-foot { margin-top:24px; }
+  .editor-paper .doc-foot hr { border:none; border-top:1px solid #999; margin-bottom:6px; }
+  .editor-paper .doc-foot .df-row { display:flex; justify-content:space-between; font-size:12px; color:#555; }
   .editor-stage { min-height:0; overflow:auto; padding:28px 34px 54px; }
   .editor-save-bar { display:flex; justify-content:flex-end; grid-column:1 / -1; grid-row:2; padding:10px 18px 12px; border-top:1px solid #e1e6eb; background:rgba(255,255,255,.96); }
   .editor-save-btn { min-width:94px; height:38px; display:inline-flex; align-items:center; justify-content:center; gap:7px; border:0; border-radius:9px; background:var(--gov-700); color:#fff; font-size:13px; font-weight:800; box-shadow:0 5px 14px rgba(36,104,182,.2); }
@@ -1678,8 +1700,9 @@
   :is(#view-home, #view-newchat) .home-composer textarea::placeholder { color: var(--jb-ink-4); }
   :is(#view-home, #view-newchat) .home-composer .prompt-highlight { padding: 21px 21px 8px; font-size: 15px; line-height: 1.7; min-height: 89px; }
   :is(#view-home, #view-newchat) .home-composer .composer-foot { padding: 8px 13px 13px; gap: 8px; }
-  :is(#view-home, #view-newchat) .composer-plus { width: 30px; height: 30px; border-color: var(--jb-line); color: var(--jb-ink-3); font-size: 20px; }
-  :is(#view-home, #view-newchat) .composer-plus:hover, :is(#view-home, #view-newchat) .composer-plus.open { border-color: var(--jb-teal); color: var(--jb-teal); background: none; }
+  :is(#view-home, #view-newchat) .composer-plus { width: 32px; height: 32px; border: none; border-radius: 50%; background: rgba(6,163,152,.10); color: var(--jb-teal); font-size: 0; transition: transform .25s var(--jb-ease), background .25s var(--jb-ease), box-shadow .25s var(--jb-ease); }
+  :is(#view-home, #view-newchat) .composer-plus .svg-icon { width: 16px; height: 16px; }
+  :is(#view-home, #view-newchat) .composer-plus:hover, :is(#view-home, #view-newchat) .composer-plus.open { background: var(--jb-teal); color: #fff; transform: translateY(-1px); box-shadow: 0 6px 14px -4px rgba(6,163,152,.5); }
   :is(#view-home, #view-newchat) .composer-foot .tool-chip { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 12px; border-radius: 8px; font-size: 12px; color: var(--jb-ink-3); cursor: default; transition: all .25s var(--jb-ease); }
   :is(#view-home, #view-newchat) .composer-foot .tool-chip:hover { background: #F0F6FB; color: var(--jb-blue); }
   :is(#view-home, #view-newchat) .composer-foot .tool-chip .svg-icon { width: 13px; height: 13px; }
@@ -1721,6 +1744,7 @@
   @media (prefers-reduced-motion: reduce) { :is(#view-home, #view-newchat) .home-inner > * { animation: none; } }
 
   /* ===== 新对话视图：与主页同一设计语言 ===== */
+  #view-newchat { overflow: hidden; }
   #view-newchat .new-chat-page { position: relative; display: block; background: var(--jb-bg); padding: 0; }
   #view-newchat .new-chat-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; min-height: 100%; padding: clamp(55px, 9vh, 140px) 21px 55px; transform: none; display: flex; flex-direction: column; align-items: center; text-align: center; }
   #view-newchat .home-composer { width: 100%; }
@@ -1900,7 +1924,7 @@
                  </div>
                  <div class="prompt-editor"><div class="prompt-highlight" id="homePromptHighlight" aria-hidden="true"></div><textarea id="homeInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
                 <div class="composer-foot">
-                  <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button></span>
+                  <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span>
                   <button class="send-btn" id="homeSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button>
                 </div>
               </div>
@@ -1950,7 +1974,7 @@
                  <span id="newAttachLive"></span>
                </div>
                <div class="prompt-editor"><div class="prompt-highlight" id="newPromptHighlight" aria-hidden="true"></div><textarea id="newInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
-              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button></span><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></div>
+              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></div>
             </div>
           </div>
           <!-- 常用推荐：与主页一致（JS 渲染个性化智能体 + 更多） -->
@@ -2002,7 +2026,7 @@
             <div class="editor-top-bar">
             <div class="editor-panel-head">
               <div class="editor-panel-title"><b id="editorPanelTitle">在线编辑文稿</b><button class="editor-modified-btn" id="editorModifiedBtn" type="button" data-editor-action="history" title="查看文档修改历史"><svg class="svg-icon" style="width:12px;height:12px"><use href="#i-clock"></use></svg><span id="editorModifiedLabel">修改于—</span></button></div>
-              <div class="editor-head-actions"><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
+              <div class="editor-head-actions"><button data-editor-action="formatDoc"><svg class="svg-icon"><use href="#i-file-check"></use></svg>生成版式公文</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
             </div>
             <div class="oo-toolbar" id="ooToolbar">
               <div class="oo-tabs">
@@ -3311,6 +3335,55 @@ let sidebarCollapsed = false;
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>body{font-family:"Microsoft YaHei",sans-serif;line-height:1.9;padding:36px;color:#1f2937}h2{text-align:center}</style></head><body>${paper.innerHTML}</body></html>`;
     const blob = new Blob([html], { type:"application/msword;charset=utf-8" }), url = URL.createObjectURL(blob), link = document.createElement("a");
     link.href = url; link.download = `${title}.doc`; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 500); showToast("文稿下载已开始");
+  }
+  // 生成版式公文：选择模板 + 版头（密级/紧急程度/发文字号）+ 版记（印发机关/印发日期），套用到编辑区
+  function openGenerateFormatDocModal() {
+    const tpls = [
+      { id: "notice", name: "通知" }, { id: "report", name: "报告" }, { id: "request", name: "请示" },
+      { id: "decision", name: "决定/决议" }, { id: "letter", name: "函" }, { id: "reply", name: "批复" },
+      { id: "meeting", name: "纪要" }, { id: "bulletin", name: "公告" }
+    ];
+    const body = `<div class="fdm">
+      <div class="fdm-sec"><div class="fdm-sec-t">公文格式模板</div><div class="fdm-tpls">${tpls.map((t,i) => `<button type="button" class="fdm-tpl${i===0?" active":""}" data-tpl="${t.id}">${t.name}</button>`).join("")}</div></div>
+      <div class="fdm-sec"><div class="fdm-sec-t">版头</div><div class="fdm-grid">
+        <label class="fdm-field"><span>密级和保密期限</span><select id="fdmSecret"><option>非涉密</option><option>内部</option><option>秘密★10年</option><option>机密★20年</option></select></label>
+        <label class="fdm-field"><span>紧急程度</span><select id="fdmUrgent"><option>常规</option><option>加急</option><option>特急</option><option>特急★</option></select></label>
+        <label class="fdm-field"><span>发文字号</span><input id="fdmNumber" placeholder="如：江北新管发〔2026〕12号"></label>
+      </div></div>
+      <div class="fdm-sec"><div class="fdm-sec-t">版记</div><div class="fdm-grid">
+        <label class="fdm-field"><span>印发机关</span><input id="fdmIssuer" placeholder="如：南京江北新区管委会办公室"></label>
+        <label class="fdm-field"><span>印发日期</span><input id="fdmDate" type="date"></label>
+      </div></div>
+      <div class="fdm-tip">说明：当前为内置模板，后续新增模板需提交研发人员配置。</div>
+    </div>`;
+    openModal("生成版式公文", body, () => {
+      const tplEl = $(".fdm-tpl.active") || $(".fdm-tpl");
+      const tplName = tplEl ? tplEl.textContent : "";
+      const secret = ($("#fdmSecret") || {}).value || "";
+      const urgent = ($("#fdmUrgent") || {}).value || "";
+      const number = (($("#fdmNumber") || {}).value || "").trim();
+      const issuer = (($("#fdmIssuer") || {}).value || "").trim();
+      const dateRaw = ($("#fdmDate") || {}).value || "";
+      const date = dateRaw ? (() => { const p = dateRaw.split("-"); return `${p[0]}年${Number(p[1])}月${Number(p[2])}日`; })() : "";
+      const paper = $("#editorPaper");
+      if (paper) {
+        const oldHead = paper.querySelector(":scope > .doc-head"); if (oldHead) oldHead.remove();
+        const oldFoot = paper.querySelector(":scope > .doc-foot"); if (oldFoot) oldFoot.remove();
+        const head = `<div class="doc-head"><div class="dh-top"><span class="dh-secret">${esc(secret)}</span><span class="dh-urgent">${esc(urgent)}</span></div><div class="dh-number">${esc(number || "[发文字号]")}</div></div>`;
+        const foot = `<div class="doc-foot"><hr><div class="df-row"><span>印发机关：${esc(issuer || "[印发机关]")}</span><span>印发日期：${esc(date || "[印发日期]")}</span></div></div>`;
+        paper.insertAdjacentHTML("afterbegin", head);
+        paper.insertAdjacentHTML("beforeend", foot);
+        scheduleAutoSave();
+      }
+      closeModal();
+      showToast(`已按「${tplName}」模板生成版式公文`);
+    }, { okText: "生成版式公文" });
+    setTimeout(() => {
+      $$(".fdm-tpl").forEach(b => b.addEventListener("click", () => {
+        $$(".fdm-tpl").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+      }));
+    }, 0);
   }
   function messageActionText(message) {
     if (!message) return "";
@@ -6515,19 +6588,9 @@ let sidebarCollapsed = false;
     if (!config.templates[agent.id]) config.templates[agent.id] = { format: "Markdown", editable: true, content: `# ${agent.name}\n\n## 一、背景与目标\n\n## 二、主要内容\n\n## 三、办理要求\n\n> 请补充依据、责任部门和完成时限。` };
     return config.templates[agent.id];
   }
-  // 「试一试」示例问题维护卡片（仅系统/部门管理员可见可编辑）。每条：问题文本 + 关联智能体(可空) + 删除；可新增。
+  // 「试一试」示例问题维护卡片：暂时隐藏（需要时恢复函数体即可）
   function tryQuestionsCard() {
-    const list = (config.personal.tryQuestions && config.personal.tryQuestions.length ? config.personal.tryQuestions.map(normTryItem) : []);
-    const agentOptsTry = `<option value="">不指定（自动路由）</option>` + AGENTS.map(a => `<option value="${a.id}">${a.name}</option>`).join("");
-    const rows = list.map((it, i) => `<div class="try-row" data-tryidx="${i}">
-      <input class="try-text" type="text" value="${esc(it.text)}" placeholder="示例问题，如：帮我生成一份决定决议">
-      <select class="try-agent select">${agentOptsTry.replace(`value="${it.agent}"`, `value="${it.agent}" selected`)}</select>
-      <button class="try-del" data-act="tryDel" data-idx="${i}" title="删除">×</button>
-    </div>`).join("");
-    const body = `<div class="cfg-readonly" style="margin-bottom:10px">主页/新对话「试一试」展示这组问题，默认显示前 4 条，多于 4 条时可「换一批」循环。每条可指定一个智能体，或不指定（自动路由）。仅系统/部门管理员可维护。</div>
-      <div id="tryRows">${rows || '<div class="cfg-readonly">暂无示例问题。</div>'}</div>
-      <div class="try-row-foot"><button class="btn" data-act="tryAdd"><svg class="svg-icon"><use href="#i-plus"></use></svg>新增示例问题</button></div>`;
-    return `<div class="card" style="margin-bottom:16px"><div class="card-head"><div class="card-title">主页「试一试」示例问题</div><button class="btn primary" data-act="trySave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存示例</button></div><div class="card-body">${body}</div></div>`;
+    return "";
   }
   function tryQuestionsReadFromDOM() {
     const rows = $$("#tryRows .try-row");
@@ -8023,6 +8086,7 @@ let sidebarCollapsed = false;
       const act = action.dataset.editorAction;
       if (act === "copy") copyEditorDocument();
       else if (act === "download") downloadEditorDocument();
+      else if (act === "formatDoc") openGenerateFormatDocModal();
       else if (act === "save") saveDocumentEditor();
       else if (act === "close") { agentV3Session ? v3CloseDocEditor() : closeDocumentEditor(); }
       else if (act === "history") openEditorHistoryDrawer();
