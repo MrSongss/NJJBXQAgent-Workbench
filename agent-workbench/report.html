@@ -27,6 +27,9 @@
       --text:#333639; --muted:#6b7680; --line:#e6e9ef;
       --shadow-sm:0 4px 14px rgba(14,76,146,.06);
       --shadow:0 8px 24px rgba(14,76,146,.10);
+      --border:#e6e9ef; --border-light:#eef1f7;
+      --text-main:#333639; --text-secondary:#75809a; --text-regular:#606266;
+      --primary:#0E4C92; --danger:#D9534F;
     }
     *{box-sizing:border-box}
     body{margin:0;min-width:1280px;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 78% -4%,rgba(19,168,168,.12),transparent 30%),radial-gradient(circle at 12% 100%,rgba(14,76,146,.08),transparent 35%),var(--bg);color:var(--text)}
@@ -48,8 +51,9 @@
 .glass-card{background:rgba(10,53,115,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(19,168,168,.3);box-shadow:var(--ai-glow);border-radius:12px;color:#fff}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
-    .app{display:grid;grid-template-columns: 260px 1fr;grid-template-rows:58px 1fr;height:100vh}
-    .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;color:#fff;
+    .app{display:grid;grid-template-columns: 300px 1fr;grid-template-rows:58px 1fr;height:100vh;transition:grid-template-columns .3s ease}
+    .app.sidebar-collapsed{grid-template-columns:56px 1fr}
+    .topbar{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;color:#fff;
       background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);box-shadow:0 4px 20px rgba(10,53,115,.18);z-index:5}
     .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px}
     .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.1));border:1px solid rgba(255,255,255,.3);box-shadow:var(--ai-glow);color:#fff;font-size:13px;font-weight:800;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -62,15 +66,69 @@
     .role-badge.dept{background:linear-gradient(135deg,var(--ai-cyan),var(--ai-green))}
     .role-badge.user{background:rgba(255,255,255,.22)}
 
-    .leftnav{grid-column:1;min-height:0;display:flex;flex-direction:column;gap:4px;padding:14px 10px;overflow:auto;background:#fff;border-right:1px solid var(--line)}
-    .nav-cap{margin:4px 8px 6px;color:#9aa3ad;font-size:11px;font-weight:700;letter-spacing:.5px}
-    .nav-item{display:flex;align-items:center;gap:10px;min-height:42px;padding:0 12px;border-radius:10px;color:#45536c;font-size:14px;font-weight:600;text-align:left;border:none;background:none;cursor:pointer;transition:.25s ease}
-    .nav-item .nav-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;color:var(--ai-blue);background:#eaf2fb}
-    .nav-item:hover{color:var(--ai-blue);background:#edf3ff;transform:translateX(2px)}
-    .nav-item.active{color:#fff;background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));box-shadow:0 7px 15px rgba(19,168,168,.25),var(--ai-glow)}
-    .nav-item.active .nav-icon{color:#fff;background:rgba(255,255,255,.2)}
+    /* ============ 左侧侧边栏 ============ */
+    .sidebar{width:300px;background:#fafbfc;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .3s ease;position:relative;grid-column:1;grid-row:1/3}
+    .sidebar.collapsed{width:56px}
+    .sidebar-header{padding:20px 16px 16px;background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);border-bottom:none;box-shadow:0 4px 20px rgba(10,53,115,.18)}
+    .sidebar.collapsed .sidebar-header{padding:20px 8px 16px}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+    .sidebar-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.1));border:1px solid rgba(255,255,255,.3);box-shadow:var(--ai-glow);color:#fff;display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:bold;font-size:16px;flex-shrink:0}
+    .sidebar-logo-text{font-size:15px;font-weight:600;color:#fff;white-space:nowrap}
+    .sidebar.collapsed .sidebar-logo-text{display:none}
+    .sidebar.collapsed .sidebar-logo{justify-content:center}
+    .btn-new{width:100%;padding:10px 12px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;white-space:nowrap;overflow:hidden}
+    .btn-new:hover{background:var(--primary-hover)}
+    .sidebar.collapsed .btn-new{padding:10px 0}
+    .sidebar.collapsed .btn-new .btn-text{display:none}
 
-    .view{display:none;grid-column:2;min-height:0}
+    .sidebar-filter-box{padding:12px 16px;border-bottom:1px solid var(--border-light);display:flex;flex-direction:column;gap:8px}
+    .sidebar.collapsed .sidebar-filter-box{display:none}
+    .sidebar-search-wrap{position:relative}
+    .sidebar-search-input{width:100%;padding:7px 12px 7px 30px;border:1px solid var(--border);border-radius:4px;font-size:13px;color:var(--text-main);background:#fff;transition:border-color .2s}
+    .sidebar-search-input:focus{outline:none;border-color:var(--primary)}
+    .sidebar-search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:13px;pointer-events:none}
+    .sidebar-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text-secondary);cursor:pointer;font-size:14px;display:none}
+    .sidebar-search-clear:hover{color:var(--danger)}
+    .time-filter-row{display:flex;gap:4px;flex-wrap:wrap}
+    .time-chip{padding:3px 9px;font-size:12px;color:var(--text-regular);background:#fff;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .time-chip:hover{border-color:var(--primary);color:var(--primary)}
+    .time-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+    .sidebar-section-title{padding:14px 16px 8px;font-size:12px;color:var(--text-secondary);font-weight:500;white-space:nowrap;display:flex;align-items:center;justify-content:space-between}
+    .sidebar.collapsed .sidebar-section-title{text-align:center;padding:14px 4px 8px;font-size:10px}
+    .record-count{font-size:11px;color:var(--text-secondary);font-weight:normal}
+    .history-list{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 8px 16px;min-height:0}
+    .history-item{padding:10px 12px;border-radius:6px;cursor:pointer;margin-bottom:4px;transition:.25s ease;position:relative}
+    .history-item:hover{background:#eef2f7;transform:translateX(2px)}
+    .history-item.active{background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));box-shadow:0 8px 20px rgba(14,76,146,.25),var(--ai-glow)}
+    .history-item.active .history-title{color:#fff}
+    .history-title{font-size:13px;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+    .history-meta{font-size:11px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .history-tag{display:inline-block;padding:1px 6px;background:#f0f0f0;border-radius:3px;font-size:11px;color:var(--text-regular)}
+    .history-status{display:inline-block;padding:1px 6px;border-radius:3px;font-size:11px}
+    .history-status.s-draft{background:#fff7e6;color:#d48806}
+    .history-status.s-submitted{background:#e6f4ff;color:#0958d9}
+    .history-status.s-review{background:#fff2e8;color:#d46b08}
+    .history-status.s-exported{background:#f6ffed;color:#2e7d32}
+    .history-step{display:inline-block;padding:1px 5px;background:#f0f0f0;border-radius:3px;font-size:10px;color:#909399}
+    .history-time{font-size:11px;color:var(--text-secondary);margin-left:auto}
+    .sidebar.collapsed .history-item{padding:10px 4px;text-align:center}
+    .sidebar.collapsed .history-title,.sidebar.collapsed .history-meta,.sidebar.collapsed .history-time{display:none}
+    .sidebar.collapsed .history-item::after{content:attr(data-abbr);display:inline-block;padding:3px 6px;background:#e6f4ff;color:#0958d9;border-radius:3px;font-size:11px}
+    .sidebar.collapsed .history-item:hover::before{content:attr(data-full);position:absolute;left:60px;top:50%;transform:translateY(-50%);background:#303133;color:#fff;padding:6px 12px;border-radius:4px;font-size:12px;white-space:nowrap;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .sidebar-footer{padding:12px 16px;border-top:1px solid var(--border-light);display:flex;align-items:center;gap:10px}
+    .sidebar.collapsed .sidebar-footer{padding:12px 8px;justify-content:center}
+    .sidebar.collapsed .sidebar-user-info{display:none}
+    .sidebar-user-avatar{width:32px;height:32px;border-radius:50%;background:#d9dcdf;color:var(--text-regular);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+    .sidebar-user-info{flex:1;overflow:hidden}
+    .sidebar-user-name{font-size:13px;color:var(--text-main);white-space:nowrap}
+    .sidebar-user-dept{font-size:11px;color:var(--text-secondary);white-space:nowrap}
+    .collapse-btn{position:absolute;right:-12px;top:20px;width:24px;height:24px;background:#fff;border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-regular);font-size:12px;z-index:10;box-shadow:0 2px 4px rgba(0,0,0,.06);transition:all .2s}
+    .collapse-btn:hover{color:var(--primary);border-color:var(--primary)}
+    .collapse-icon{transition:transform .3s}
+    .sidebar.collapsed .collapse-icon{transform:rotate(180deg)}
+
+    .view{display:none;grid-column:2;grid-row:2;min-height:0;overflow:hidden}
     .view.active{display:block}
     .page-scroll{height:100%;padding:22px 26px 42px;overflow:auto}
 
@@ -320,20 +378,119 @@
         const view = ref('generate');
         const step = ref(1);
         const unlocked = ref(1);
-        const navItems = [
-          {key:'generate',label:'报告请示生成',icon:'filePlus',roles:['super','dept','user']},
-          {key:'history',label:'历史任务记录',icon:'history',roles:['super','dept','user']},
-          {key:'rules',label:'模板与规则',icon:'settings',roles:['super','dept']},
-          {key:'stats',label:'运行统计报表',icon:'chart',roles:['super','dept','user']},
-          {key:'audit',label:'审计日志',icon:'shield',roles:['super']}
-        ];
-        const visibleNav = computed(()=>navItems.filter(n=>n.roles.includes(role.value)));
         const flowSteps = ['材料录入','解析补全','文种识别','初稿生成','校验确认','提交交付'];
 
         const taskName = ref('未创建生成任务');
         const taskMeta = ref('填写上行文材料后，系统将完成要素抽取、文种识别、初稿生成与校验。');
         // taskStatus: draft | submitted | approved | archived | rejected
         const taskStatus = ref('draft');
+
+        // ===== 侧边栏状态 =====
+        const sidebarCollapsed = ref(false);
+        const sidebarSearch = ref('');
+        const timeRange = ref('all');
+        const activeHistoryId = ref('');
+
+        // ===== 侧边栏历史记录数据 =====
+        const HISTORY_DATA = {
+          h1:{title:'关于报送2026年上半年优化营商环境工作情况的报告',type:'报告',typeAbbr:'报',timeDisplay:'今天 14:35',dateIso:'2026-07-10',status:'review',step:5,
+            formData:{taskTitle:'关于报送2026年上半年优化营商环境工作情况的报告',department:'南京江北新区管理委员会办公室',recipient:'南京市人民政府办公厅',submitDate:'2026-07-10',purpose:'工作进展报送',requestedType:'报告',secret:'非涉密',docNumber:'\u30102026\u301135号',signer:'李处室负责人',urgency:'常规',startDate:'2026-01-01',endDate:'2026-06-30',phone:'13800138000',summary:'现将2026年上半年优化营商环境工作推进情况及阶段性成效汇报如下，请审阅。'}},
+          h2:{title:'关于申请追加2026年度信息化建设预算的请示',type:'请示',typeAbbr:'示',timeDisplay:'07-08 10:20',dateIso:'2026-07-08',status:'exported',step:6,
+            formData:{taskTitle:'关于申请追加2026年度信息化建设预算的请示',department:'南京江北新区经济发展局',recipient:'南京江北新区管理委员会',submitDate:'2026-07-08',purpose:'事项报批',requestedType:'请示',secret:'非涉密',docNumber:'\u30102026\u301142号',signer:'王经办',urgency:'常规',startDate:'2026-01-01',endDate:'2026-12-31',phone:'13900139000',summary:'因智慧城市建设需要，拟申请追加信息化建设预算500万元，用于政务数据共享平台建设。'}},
+          h3:{title:'关于报送江北新区2026年二季度经济运行情况的报告',type:'报告',typeAbbr:'报',timeDisplay:'07-05 16:48',dateIso:'2026-07-05',status:'exported',step:6,
+            formData:{taskTitle:'关于报送江北新区2026年二季度经济运行情况的报告',department:'南京江北新区经济发展局',recipient:'南京市人民政府办公厅',submitDate:'2026-07-05',purpose:'履职情况汇报',requestedType:'报告',secret:'内部',docNumber:'\u30102026\u301128号',signer:'李处室负责人',urgency:'常规',startDate:'2026-04-01',endDate:'2026-06-30',phone:'13800138000',summary:'现将2026年二季度经济运行情况报告如下，地区生产总值同比增长7.2%，主要指标完成情况良好。'}},
+          h4:{title:'关于协调解决重点项目用地指标的请示',type:'请示',typeAbbr:'示',timeDisplay:'07-03 09:15',dateIso:'2026-07-03',status:'submitted',step:5,
+            formData:{taskTitle:'关于协调解决重点项目用地指标的请示',department:'南京江北新区规划和自然资源局',recipient:'南京江北新区管理委员会',submitDate:'2026-07-03',purpose:'事项协调',requestedType:'请示',secret:'非涉密',docNumber:'\u30102026\u301138号',signer:'张经办',urgency:'紧急',startDate:'2026-01-01',endDate:'2026-12-31',phone:'13700137000',summary:'因重大产业项目落地需要，恳请协调解决新增建设用地计划指标200亩。'}},
+          h5:{title:'关于报送人才服务专窗建设情况的报告',type:'报告',typeAbbr:'报',timeDisplay:'06-30 14:20',dateIso:'2026-06-30',status:'exported',step:6,
+            formData:{taskTitle:'关于报送人才服务专窗建设情况的报告',department:'南京江北新区社会事业局',recipient:'南京市人民政府办公厅',submitDate:'2026-06-30',purpose:'阶段性成果总结',requestedType:'报告',secret:'非涉密',docNumber:'\u30102026\u301125号',signer:'王经办',urgency:'常规',startDate:'2026-01-01',endDate:'2026-06-30',phone:'13800138000',summary:'现将人才服务专窗建设运行情况及成效报告如下，已累计服务高层次人才1200余人次。'}},
+          h6:{title:'关于请求批准举办智能制造产业对接会的请示',type:'请示',typeAbbr:'示',timeDisplay:'06-28 11:05',dateIso:'2026-06-28',status:'draft',step:3,
+            formData:{taskTitle:'关于请求批准举办智能制造产业对接会的请示',department:'南京江北新区经济发展局',recipient:'南京江北新区管理委员会',submitDate:'2026-06-28',purpose:'事项报批',requestedType:'请示',secret:'非涉密',docNumber:'',signer:'',urgency:'常规',startDate:'2026-01-01',endDate:'2026-12-31',phone:'',summary:''}},
+          h7:{title:'关于报送上半年工作总结及下半年工作计划的报告',type:'报告',typeAbbr:'报',timeDisplay:'06-25 09:40',dateIso:'2026-06-25',status:'draft',step:1,
+            formData:{taskTitle:'关于报送上半年工作总结及下半年工作计划的报告',department:'',recipient:'',submitDate:'2026-06-25',purpose:'工作进展报送',requestedType:'自动识别',secret:'非涉密',docNumber:'',signer:'',urgency:'常规',startDate:'2026-01-01',endDate:'2026-06-30',phone:'',summary:''}}
+        };
+        const historyOrder = ['h1','h2','h3','h4','h5','h6','h7'];
+        const TODAY_SB = new Date('2026-07-10');
+
+        const STATUS_MAP = {
+          draft:{text:'草稿',cls:'s-draft'},
+          submitted:{text:'已提交',cls:'s-submitted'},
+          review:{text:'待审核',cls:'s-review'},
+          exported:{text:'已归档',cls:'s-exported'}
+        };
+        const STEP_LABELS = {1:'材料录入',2:'解析补全',3:'文种识别',4:'初稿生成',5:'校验确认',6:'提交交付'};
+
+        const filteredHistoryList = computed(()=>{
+          const kw = (sidebarSearch.value||'').trim().toLowerCase();
+          return historyOrder.map(id=>{
+            const d = HISTORY_DATA[id];
+            const st = STATUS_MAP[d.status]||STATUS_MAP.exported;
+            return {...d,id,statusText:st.text,statusCls:st.cls};
+          }).filter(d=>{
+            if(kw && !d.title.toLowerCase().includes(kw) && !d.type.includes(kw)) return false;
+            const itemDate = new Date(d.dateIso);
+            if(timeRange.value==='7d'){
+              const diff=(TODAY_SB-itemDate)/(1000*60*60*24);
+              if(diff<0||diff>6) return false;
+            }else if(timeRange.value==='30d'){
+              const diff=(TODAY_SB-itemDate)/(1000*60*60*24);
+              if(diff<0||diff>29) return false;
+            }
+            return true;
+          });
+        });
+
+        function toggleSidebar(){ sidebarCollapsed.value = !sidebarCollapsed.value; }
+
+        function selectHistoryItem(id){
+          const data = HISTORY_DATA[id];
+          if(!data){ showToast('未找到该历史记录'); return; }
+          activeHistoryId.value = id;
+          view.value = 'generate';
+          // 恢复表单数据
+          const fd = data.formData||{};
+          form.taskTitle = fd.taskTitle||data.title;
+          form.department = fd.department||'';
+          form.recipient = fd.recipient||'';
+          form.submitDate = fd.submitDate||todayStr();
+          form.purpose = fd.purpose||'工作进展报送';
+          form.requestedType = fd.requestedType||'自动识别';
+          if(typeof onTypeChange==='function') onTypeChange();
+          form.secret = fd.secret||'非涉密';
+          form.secretPeriod = fd.secretPeriod||'';
+          form.docNumber = fd.docNumber||'';
+          form.signer = fd.signer||'';
+          form.urgency = fd.urgency||'常规';
+          form.ccRecipients = fd.ccRecipients||'';
+          form.startDate = fd.startDate||todayStr();
+          form.endDate = fd.endDate||todayStr();
+          form.phone = fd.phone||'';
+          form.summary = fd.summary||'';
+          // 更新任务名称和元数据
+          taskName.value = fd.taskTitle||data.title;
+          const st = STATUS_MAP[data.status]||{};
+          taskMeta.value = '\u00b7 文种：'+data.type+' \u00b7 状态：'+(st.text||'')+' \u00b7 密级：'+(fd.secret||'非涉密');
+          // 跳转到对应步骤
+          const targetStep = data.step||1;
+          if(data.status==='exported'){
+            unlocked.value = 6;
+            if(targetStep>=4) renderDocument();
+            goStep(6, true);
+            taskStatus.value = 'archived';
+            showToast('已加载归档记录：'+data.title.substring(0,18)+'...',true);
+          }else if(data.status==='review'||data.status==='submitted'){
+            unlocked.value = 5;
+            if(targetStep>=4) renderDocument();
+            goStep(5, true);
+            taskStatus.value = data.status==='review'?'approved':'submitted';
+            showToast('已加载\u300c'+st.text+'\u300d记录，可继续审核',true);
+          }else{
+            unlocked.value = targetStep;
+            if(targetStep>=4) renderDocument();
+            goStep(targetStep, true);
+            taskStatus.value = 'draft';
+            showToast('已恢复草稿（第'+targetStep+'步\u00b7'+(STEP_LABELS[targetStep]||'')+'），可继续编辑',true);
+          }
+        }
 
         // ===== 表单（补齐公文格式要素） =====
         const todayStr = ()=>{ const n=new Date(); const m=String(n.getMonth()+1).padStart(2,'0'); const d=String(n.getDate()).padStart(2,'0'); return `${n.getFullYear()}-${m}-${d}`; };
@@ -842,14 +999,6 @@
         rules.forEach(r=>{ ruleEnabled[r[4]]=true; });
         function toggleRule(r){ if(!canManageRule.value){ showToast('仅超级管理员可启用/停用规则。'); return; } ruleEnabled[r[4]]=!ruleEnabled[r[4]]; showToast(`规则 ${r[4]} 已${ruleEnabled[r[4]]?'启用':'停用'}。`,true); }
 
-        // ===== 统计（按角色范围化） =====
-        const statsScope = computed(()=>({super:'全新区',dept:'本部门',user:'本人'}[role.value]));
-        const kpiData = computed(()=>({
-          super:[{label:'累计生成上行文',value:'268',note:'较上月 +12.6%'},{label:'平均生成时长',value:'4.8 分钟',note:'较人工缩短 62%'},{label:'规则命中次数',value:'1,042',note:'已覆盖 '+rules.length+' 项规则'},{label:'待审核任务',value:'3',note:'请及时处理'}],
-          dept:[{label:'本部门生成上行文',value:'46',note:'较上月 +8.2%'},{label:'平均生成时长',value:'5.1 分钟',note:'较人工缩短 60%'},{label:'待审核任务',value:'2',note:'请及时处理'},{label:'退回修改次数',value:'1',note:'本月 0 次'}],
-          user:[{label:'我生成的上行文',value:'8',note:'本月 4 篇'},{label:'平均生成时长',value:'4.6 分钟',note:'较人工缩短 63%'},{label:'退回修改次数',value:'1',note:'本月 0 次'},{label:'待审核任务',value:'0',note:'全部完成'}]
-        }[role.value]));
-
         // ===== 审计日志（超级管理员） =====
         const auditLogs = [
           ['2026-07-13 09:42','王经办','经济发展局','生成文稿','报送上半年营商环境工作情况','—'],
@@ -881,7 +1030,7 @@
         }
         function newTask(){ step.value=1; unlocked.value=1; Object.keys(checkStates).forEach(k=>delete checkStates[k]); taskStatus.value='draft'; exempted.value=false; selectedTitle.value=0; resetForm(); taskName.value='新建报告请示任务'; taskMeta.value='请填写或上传上行文材料，系统将在后续环节自动处理。'; goStep(1,true); showToast('已创建新任务，请开始录入材料。',true); }
         function switchView(v){ view.value=v; }
-        function onRoleChange(){ if(!visibleNav.value.some(n=>n.key===view.value)) view.value='generate'; taskStatus.value='draft'; }
+        function onRoleChange(){ view.value='generate'; taskStatus.value='draft'; }
         function toStep2(){ if(validateForm()){ saveDraft(); unlocked.value=2; goStep(2);} }
         function toStep3(){ unlocked.value=3; goStep(3); }
         function toStep4(){ syncElementsToForm(); unlocked.value=4; goStep(4); }
@@ -907,7 +1056,9 @@
         return {
           h,
           themeOverrides, role, roleOptions, roleText, currentUser, canExempt, canReview, canManageRule, onRoleChange,
-          view, step, unlocked, navItems, visibleNav, flowSteps, taskName, taskMeta, taskStatus,
+          view, step, unlocked, flowSteps, taskName, taskMeta, taskStatus,
+          sidebarCollapsed, sidebarSearch, timeRange, activeHistoryId,
+          filteredHistoryList, toggleSidebar, selectHistoryItem,
           form, onTypeChange, purposeOptions, docTypeOptions, deptOptions, secretOptions, urgencyOptions, formErrors,
           files, uploadRef, handleUpload, removeFile,
           goStep, backStep, newTask, switchView, saveDraft, resetForm, toStep2, toStep3, toStep4, toStep5, toStep6,
@@ -919,7 +1070,7 @@
           outputDocName, downloadDoc, submitReview, approveTask, rejectTask, archiveTask,
           historySearch, historyFilter, filteredHistory, historyColumns, statusTagClass, typeTagClass, reuseHistory, auditHistory,
           ruleCategory, ruleCategories, filteredRules, ruleEnabled, toggleRule, previewTemplate, viewRule, addRule,
-          statsScope, kpiData, auditLogs,
+          auditLogs,
           modalShow, modalTitle, modalBody, modalOkText, modalHideFooter, closeModal, onModalOk,
           toastShow, toastText, toastSuccess
         };
@@ -941,11 +1092,47 @@
               </div>
             </header>
 
-            <aside class="leftnav">
-              <div class="nav-cap">常用功能</div>
-              <button v-for="n in visibleNav" :key="n.key" class="nav-item" :class="{active:view===n.key}" @click="switchView(n.key)">
-                <span class="nav-icon"><icon :name="n.icon" /></span>{{n.label}}
-              </button>
+            <!-- ===================== 左侧边栏 ===================== -->
+            <aside class="sidebar" id="sidebar" :class="{collapsed:sidebarCollapsed}">
+              <button class="collapse-btn" id="collapseBtn" @click="toggleSidebar"><span class="collapse-icon">◀</span></button>
+              <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">报</div><span class="sidebar-logo-text">报告请示生成</span></div>
+                <button class="btn-new" @click="newTask"><span>+</span><span class="btn-text">新建报告请示</span></button>
+              </div>
+              <div class="sidebar-filter-box">
+                <div class="sidebar-search-wrap">
+                  <span class="sidebar-search-icon">🔍</span>
+                  <input type="text" class="sidebar-search-input" v-model="sidebarSearch" placeholder="搜索历史记录..." />
+                  <span class="sidebar-search-clear" v-show="sidebarSearch" @click="sidebarSearch=''">✕</span>
+                </div>
+                <div class="time-filter-row">
+                  <span class="time-chip" :class="{active:timeRange==='all'}" @click="timeRange='all'">全部</span>
+                  <span class="time-chip" :class="{active:timeRange==='7d'}" @click="timeRange='7d'">近7天</span>
+                  <span class="time-chip" :class="{active:timeRange==='30d'}" @click="timeRange='30d'">近30天</span>
+                </div>
+              </div>
+              <div class="sidebar-section-title"><span>历史生成记录</span><span class="record-count">{{filteredHistoryList.length}} 条</span></div>
+              <div class="history-list">
+                <div v-for="item in filteredHistoryList" :key="item.id" class="history-item"
+                  :class="{active:activeHistoryId===item.id}"
+                  :data-abbr="item.typeAbbr" :data-full="item.title"
+                  @click="selectHistoryItem(item.id)">
+                  <div class="history-title">{{item.title}}</div>
+                  <div class="history-meta">
+                    <span class="history-tag">{{item.type}}</span>
+                    <span class="history-status" :class="item.statusCls">{{item.statusText}}</span>
+                    <span class="history-step" v-if="item.step&&item.status!=='exported'">第{{item.step}}步</span>
+                    <span class="history-time">{{item.timeDisplay}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="sidebar-footer">
+                <div class="sidebar-user-avatar">政</div>
+                <div class="sidebar-user-info">
+                  <div class="sidebar-user-name">{{currentUser.name}}</div>
+                  <div class="sidebar-user-dept">{{currentUser.dept}}</div>
+                </div>
+              </div>
             </aside>
 
             <!-- ===== 生成工作台 ===== -->
@@ -1234,30 +1421,6 @@
                     <div style="display:flex;gap:11px;align-items:center;"><n-switch v-if="canManageRule" :value="ruleEnabled[r[4]]" @update:value="()=>toggleRule(r)" size="small" /><button class="row-action" @click="viewRule(r)">{{canManageRule?'编辑':'查看'}}</button></div>
                   </div>
                 </div></section>
-              </div>
-            </div></main>
-
-            <!-- ===== 统计报表 ===== -->
-            <main class="view" :class="{active:view==='stats'}" id="view-stats"><div class="page-scroll">
-              <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;">
-                <div><div style="font-size:21px;font-weight:700;color:#162644;">运行统计报表</div><div style="margin-top:5px;color:var(--muted);font-size:13px;">统计范围：{{statsScope}} · 数据为原型演示数据。</div></div>
-                <n-button @click="downloadDoc('报表')"><template #icon><icon name="download" /></template>导出报表</n-button>
-              </div>
-              <div class="kpi-grid">
-                <div class="kpi" v-for="(k,i) in kpiData" :key="i"><span class="kpi-icon"><icon :name="['fileText','check','refresh','history'][i]" /></span><div class="kpi-label">{{k.label}}</div><div class="kpi-value" v-html="k.value"></div><div class="kpi-note">{{k.note}}</div></div>
-              </div>
-              <div class="layout-2">
-                <div class="card"><div class="card-head"><div class="card-title">文种使用分布</div><span class="card-note">按任务数</span></div><div class="card-body"><div class="bar-list">
-                  <div class="bar-row"><span>工作报告</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><b>{{statsScope==='本人'?'6':statsScope==='本部门'?'36':'128'}}</b></div>
-                  <div class="bar-row"><span>事项请示</span><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div><b>{{statsScope==='本人'?'2':statsScope==='本部门'?'28':'102'}}</b></div>
-                  <div class="bar-row"><span>建议性报告</span><div class="bar-track"><div class="bar-fill" style="width:24%"></div></div><b>{{statsScope==='本人'?'0':statsScope==='本部门'?'8':'38'}}</b></div>
-                </div></div></div>
-                <div class="card"><div class="card-head"><div class="card-title">高频校验问题</div><span class="card-note">近 30 天</span></div><div class="card-body"><div class="bar-list">
-                  <div class="bar-row"><span>依据文号未标注</span><div class="bar-track"><div class="bar-fill" style="width:69%"></div></div><b>42</b></div>
-                  <div class="bar-row"><span>请求事项不清</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><b>31</b></div>
-                  <div class="bar-row"><span>发文字号缺失</span><div class="bar-track"><div class="bar-fill" style="width:40%"></div></div><b>24</b></div>
-                  <div class="bar-row"><span>格式要素缺失</span><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><b>16</b></div>
-                </div></div></div>
               </div>
             </div></main>
 
