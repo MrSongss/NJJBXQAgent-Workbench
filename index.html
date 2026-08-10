@@ -82,8 +82,10 @@
   .user-chip .av { width: 22px; height: 22px; border-radius: 50%; background: var(--gov-700); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
 
   /* ===== 视图容器 ===== */
-  .body { min-height: 0; display: grid; grid-template-columns: 220px 1fr; height: 100%; }
-  .body.sidebar-collapsed { grid-template-columns: 50px 1fr; transition: grid-template-columns .2s ease; }
+  .body { position: relative; min-height: 0; display: grid; grid-template-columns: 220px 1fr; height: 100%; }
+  .body.sidebar-collapsed { grid-template-columns: 1fr; transition: grid-template-columns .2s ease; }
+  /* 收起态：侧栏悬浮为左上角小浮钮，不再占满高整框 */
+  .body.sidebar-collapsed .sidebar { position: absolute; left: 14px; top: 14px; bottom: auto; width: 50px; height: 50px; border-right: none; border-radius: 14px; box-shadow: 0 12px 32px rgba(18,36,95,.14); z-index: 30; }
   .body.no-side { grid-template-columns: 1fr; }
   .body.no-side .sidebar { display: none; }
   .stage { min-width: 0; min-height: 0; position: relative; }
@@ -198,7 +200,8 @@
   .role-menu small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 500; }
   .side-foot .icon-pill { flex: none; }
   .body.sidebar-collapsed .side-home, .body.sidebar-collapsed .new-btn, .body.sidebar-collapsed .side-nav, .body.sidebar-collapsed .side-scroll, .body.sidebar-collapsed .side-foot { display: none; }
-  .body.sidebar-collapsed .side-drawer-toggle { top: 12px; right: 13px; width: 24px; height: 24px; }
+  .body.sidebar-collapsed .side-drawer-toggle { top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; border: none; background: transparent; box-shadow: none; border-radius: 14px; }
+  .body.sidebar-collapsed .side-drawer-toggle .svg-icon { width: 20px; height: 20px; }
   .progress { height: 6px; background: #e3e9f1; border-radius: 999px; overflow: hidden; }
   .progress i { display: block; height: 100%; width: 37%; background: var(--gov-700); }
 
@@ -1756,6 +1759,34 @@
   #view-newchat .new-chat-inner > *:nth-child(5) { animation-delay: .36s; }
   #view-newchat .new-chat-inner > *:nth-child(6) { animation-delay: .40s; }
   @media (prefers-reduced-motion: reduce) { #view-newchat .new-chat-inner > * { animation: none; } }
+  /* ===== 简洁个性化与智能体配置 ===== */
+  .pref-layout,.simple-config-layout{display:grid;grid-template-columns:238px minmax(0,1fr);gap:16px;align-items:start}
+  .pref-nav,.simple-config-nav{position:sticky;top:16px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:9px;box-shadow:var(--shadow-sm)}
+  .pref-nav-title,.simple-config-nav-title{padding:8px 10px 10px;color:var(--muted-2);font-size:12px;font-weight:800}
+  .pref-agent-btn,.simple-config-btn{width:100%;display:flex;align-items:center;gap:10px;border:0;border-radius:10px;background:transparent;padding:10px 11px;color:var(--ink-2);font-weight:750;text-align:left;cursor:pointer}
+  .pref-agent-btn:hover,.simple-config-btn:hover{background:#f4f8fb}
+  .pref-agent-btn.active,.simple-config-btn.active{background:#eaf5fb;color:var(--gov-800)}
+  .pref-agent-btn .pref-ic,.simple-config-btn .pref-ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#f1f7fb;color:var(--gov-700);flex:0 0 auto}
+  .pref-detail,.simple-config-detail{min-width:0;display:grid;gap:14px}
+  .pref-explain{margin:0;color:var(--muted);font-size:13px;line-height:1.75}
+  .pref-single-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,280px);gap:18px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:12px;background:#fbfdff}
+  .speaker-summary{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:linear-gradient(135deg,#eff8fc,#f8fcff);border:1px solid #cfe3ed}
+  .speaker-avatar{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--gov-700);color:#fff;font-size:15px;font-weight:900;flex:0 0 auto}
+  .speaker-summary-copy{min-width:0;flex:1}.speaker-summary-copy b{display:block;color:var(--ink);font-size:15px}.speaker-summary-copy span{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+  .speaker-role-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .speaker-role-card{position:relative;border:1px solid var(--line);border-radius:12px;background:#fff;padding:13px;text-align:left;cursor:pointer;transition:.16s ease}
+  .speaker-role-card:hover{border-color:#8ebbd2;box-shadow:0 5px 16px rgba(23,94,130,.09)}
+  .speaker-role-card.active{border-color:var(--gov-600);background:#f1f9fc;box-shadow:0 0 0 2px rgba(19,130,174,.08)}
+  .speaker-role-card b{display:block;color:var(--ink);font-size:14px}.speaker-role-card span{display:block;margin-top:4px;color:var(--muted);font-size:11.5px;line-height:1.5}
+  .speaker-role-card em{position:absolute;right:10px;top:10px;color:var(--gov-700);font-size:11px;font-style:normal;font-weight:800}
+  .speaker-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .speaker-dimensions{display:grid;gap:10px;margin-top:12px}.speaker-dim-row{display:grid;grid-template-columns:72px minmax(0,1fr) 40px;gap:10px;align-items:center;color:var(--ink-2);font-size:12px}.speaker-dim-row input{accent-color:var(--gov-700)}
+  .speaker-samples{display:grid;gap:8px;margin-top:10px}.speaker-sample{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:12px;color:var(--ink-2)}.speaker-sample span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .simple-config-item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}.simple-config-item:last-child{border-bottom:0}.simple-config-copy{min-width:0;flex:1}.simple-config-copy b{display:block;color:var(--ink);font-size:14px}.simple-config-copy span{display:block;margin-top:5px;color:var(--muted);font-size:12px;line-height:1.65}
+  .speech-style-switch{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:4px 8px;border:1px solid #bcd8e7;border-radius:999px;background:#f3faff;color:var(--gov-800);font-size:11px;font-weight:800;cursor:pointer}.speech-style-switch:hover{background:#e7f5fb}.speech-style-switch strong{font-size:10px;color:var(--gov-600)}
+  .generated-file-card.has-style{grid-template-columns:44px minmax(0,1fr) auto}.generated-file-card-copy .speech-style-switch{width:max-content}
+  .lv3-file-card-info .speech-style-switch{width:max-content}
+  @media(max-width:900px){.pref-layout,.simple-config-layout{grid-template-columns:1fr}.pref-nav,.simple-config-nav{position:static}.speaker-role-list{grid-template-columns:1fr}.speaker-edit-grid{grid-template-columns:1fr}}
 </style>
 <meta name="prototype-version" content=""></head>
 <body>
@@ -1829,15 +1860,15 @@
       </button>
       <button class="new-btn" id="newBtn"><svg class="svg-icon"><use href="#i-plus"></use></svg>新对话</button>
       <nav class="side-nav" id="navTabs" aria-label="平台功能导航">
-        <button class="nav-tab" data-view="agents"><svg class="svg-icon"><use href="#i-bot"></use></svg>智能体广场</button>
-        <button class="nav-tab" data-view="connectors"><svg class="svg-icon"><use href="#i-plug"></use></svg>业务连接器</button>
-        <button class="nav-tab" data-view="kb"><svg class="svg-icon"><use href="#i-book"></use></svg>知识库</button>
+        <button class="nav-tab" data-view="agents" data-role-menu="user,dept,system"><svg class="svg-icon"><use href="#i-bot"></use></svg>智能体广场</button>
+        <button class="nav-tab" data-view="connectors" data-role-menu="user,dept,system"><svg class="svg-icon"><use href="#i-plug"></use></svg>业务连接器</button>
+        <button class="nav-tab" data-view="kb" data-role-menu="user,dept,system"><svg class="svg-icon"><use href="#i-book"></use></svg>知识库</button>
         <div class="side-more-wrap">
           <button class="nav-tab" id="sideMoreBtn" type="button" aria-haspopup="true" aria-expanded="false"><svg class="svg-icon"><use href="#i-menu"></use></svg>更多</button>
           <div class="side-more-menu" id="sideMoreMenu" aria-hidden="true">
-            <button type="button" data-more-view="tasks"><svg class="svg-icon"><use href="#i-clipboard"></use></svg>任务空间</button>
-            <button type="button" data-more-view="stats"><svg class="svg-icon"><use href="#i-chart"></use></svg>统计报表</button>
-            <button type="button" data-more-view="config"><svg class="svg-icon"><use href="#i-settings"></use></svg>配置管理</button>
+            <button type="button" data-more-view="tasks" data-role-menu="user,dept,system"><svg class="svg-icon"><use href="#i-clipboard"></use></svg>任务空间</button>
+            <button type="button" data-more-view="stats" data-role-menu="dept,system"><svg class="svg-icon"><use href="#i-chart"></use></svg>统计报表</button>
+            <button type="button" data-more-view="config" data-role-menu="dept,system"><svg class="svg-icon"><use href="#i-settings"></use></svg>配置管理</button>
           </div>
         </div>
       </nav>
@@ -1881,7 +1912,7 @@
         <button class="user-chip" id="sideUserBtn" aria-haspopup="true" aria-expanded="false" title="切换身份"><span class="av" id="sideUserAv">张</span><span class="user-copy"><span class="user-name" id="sideUserName">张敏 · 数据局</span><span class="user-role" id="sideUserRole">政务办公使用人员</span></span></button>
         <button class="icon-pill" id="topBellBtn" title="通知" aria-label="打开通知"><svg class="svg-icon"><use href="#i-bell"></use></svg></button>
         <button class="icon-pill" id="topPersonalBtn" title="个性化" aria-label="打开个性化设置" data-view-jump="personalization"><svg class="svg-icon"><use href="#i-settings"></use></svg></button>
-        <div class="role-menu" id="roleMenu"><div class="rm-cap">切换当前工作身份</div><button data-role-switch="user"><span class="rm-ic">办</span><span>政务办公使用人员<small>日常办公与任务参数</small></span></button><button data-role-switch="dept"><span class="rm-ic">部</span><span>部门管理员<small>本部门规则与模板</small></span></button><button data-role-switch="system"><span class="rm-ic">管</span><span>系统管理员<small>平台规则与治理</small></span></button></div>
+        <div class="role-menu" id="roleMenu"><div class="rm-cap">切换当前工作身份</div><button data-role-switch="user"><span class="rm-ic">办</span><span>政务办公使用人员<small>使用智能体、管理个人资产与偏好</small></span></button><button data-role-switch="dept"><span class="rm-ic">部</span><span>委办局管理员<small>本部门知识、模板与人物档案</small></span></button><button data-role-switch="system"><span class="rm-ic">管</span><span>系统管理员<small>平台启停、全局基线与审计治理</small></span></button></div>
       </div>
     </aside>
 
@@ -2358,8 +2389,8 @@
   <div class="view" id="view-personalization">
     <div class="page"><div class="page-inner">
       <div class="page-head">
-        <div><div class="page-title">个性化</div><div class="page-sub">设置个人工作台内容和政务AI助手的人设提示词，仅影响当前登录用户。</div></div>
-        <div class="toolbar-inline"><button class="btn" data-act="personalResetPersona">恢复部门默认人设</button><button class="btn primary" data-act="personalSave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存个性化设置</button></div>
+        <div><div class="page-title">个性化</div><div class="page-sub">设置少量常用偏好和讲话人风格，仅影响当前登录用户。</div></div>
+        <div class="toolbar-inline"><button class="btn primary" data-act="personalSave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存个性化设置</button></div>
       </div>
       <div id="personalizationWorkspace"></div>
     </div></div>
@@ -2369,7 +2400,7 @@
  <div class="view" id="view-config">
    <div class="page"><div class="page-inner">
      <div class="page-head">
-        <div><div class="page-title">配置治理中心</div><div class="page-sub">按平台、部门、个人三层作用域管理配置，规则与模板保存后形成版本并全程留痕。</div></div>
+        <div><div class="page-title">配置治理中心</div><div class="page-sub">按当前管理员身份展示可维护范围，通用规则与智能体配置分开管理。</div></div>
         <div class="toolbar-inline"><button class="btn" data-act="cfgReset">恢复当前配置</button><button class="btn primary" data-act="cfgSave"><svg class="svg-icon"><use href="#i-check"></use></svg>保存配置</button></div>
      </div>
      <div id="cfgWorkspace"></div>
@@ -2506,16 +2537,16 @@
       prompt: v => `帮我生成一份${v.type}通知，主题：${v.subject}，发文单位：${v.issuer}，主送单位：${v.recipient}${v.deadline ? `，完成时限：${v.deadline}` : ""}，正文要点：${v.points}。`
     },
     speech: {
-      hint: "用场合、听众和时长控制发言稿语气与篇幅。",
+      hint: "只需说明讲话主题即可先生成；讲话人、场合、听众和时长均可自动判断或后续补充。",
       fields: [
         { key:"topic", label:"讲话主题", placeholder:"如：数字政府建设推进会讲话", required:true, wide:true },
-        { key:"occasion", label:"会议场合", type:"select", required:true, options:["专题工作汇报","内部会议动员","对外宣传致辞","调研交流座谈","活动开幕致辞","表彰大会讲话"] },
-        { key:"speaker", label:"讲话人及职务", placeholder:"如：管委会副主任张某" },
-        { key:"audience", label:"听众对象", type:"select", required:true, options:["新区各部门负责人","基层工作人员","企业代表","社会公众","其他"] },
-        { key:"duration", label:"讲话时长", type:"select", required:true, options:["5分钟","10分钟","15分钟","20分钟"] },
-        { key:"points", label:"核心内容要点", type:"textarea", placeholder:"填写背景、成绩、问题和部署要求", required:true, wide:true }
+        { key:"speaker", label:"讲话人及职务", placeholder:"可选：不填写时使用个人偏好中的常用讲话人" },
+        { key:"occasion", label:"会议场合", type:"select", options:["自动判断","专题工作汇报","内部会议动员","对外宣传致辞","调研交流座谈","活动开幕致辞","表彰大会讲话"] },
+        { key:"audience", label:"听众对象", type:"select", options:["自动判断","新区各部门负责人","基层工作人员","企业代表","社会公众","其他"] },
+        { key:"duration", label:"讲话时长", type:"select", options:["自动控制","5分钟","10分钟","15分钟","20分钟"] },
+        { key:"points", label:"核心内容要点", type:"textarea", placeholder:"可选：背景、成绩、问题和部署要求；缺失内容使用 XX 占位", wide:true }
       ],
-      prompt: v => `帮我生成一份发言稿，讲话主题：${v.topic}，会议场合：${v.occasion}${v.speaker ? `，讲话人：${v.speaker}` : ""}，听众对象：${v.audience}，讲话时长：${v.duration}，核心内容：${v.points}。`
+      prompt: v => `帮我生成一份发言稿，讲话主题：${v.topic}${v.speaker ? `，讲话人：${v.speaker}` : ""}${v.occasion && v.occasion !== "自动判断" ? `，会议场合：${v.occasion}` : ""}${v.audience && v.audience !== "自动判断" ? `，听众对象：${v.audience}` : ""}${v.duration && v.duration !== "自动控制" ? `，讲话时长：${v.duration}` : ""}${v.points ? `，核心内容：${v.points}` : ""}。未明确的信息请结合政务讲话场景合理补齐，事实性信息不足时用 XX 占位。`
     },
     report: {
       hint: "先选择“报告”或“请示”，系统将按不同上行文逻辑生成。",
@@ -2707,9 +2738,9 @@ let sidebarCollapsed = false;
     doc: { secret: "非涉密", dateCn: true, font: "仿宋_GB2312", autoTitle: true },
     exportOA: { word: true, pdf: true, oa: true, watermark: true },
    model: { local: true, audit: true, offline: true },
-    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, homeAgents: ["decision", "notice", "interpret", "review", "meeting"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
+    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, homeAgents: ["decision", "notice", "interpret", "review", "meeting"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, roleStyle: { activeRoleId:"rs-zhang" }, agentPrefs: { review:"问题清单优先", polish:"标准润色", interpret:"政务工作人员", speech:"张主任 · 管委会副主任", meeting:"标准纪要", summary:"标准篇幅", news:"政府门户网站", ppt:"部门政务蓝", plan:"按事项拆分" }, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
     department: { strictness: "严格", officialName: "南京江北新区管理委员会办公室", numberPattern: "宁新区〔年份〕序号", watermark: true },
-   agentsOff: new Set(), templates: {}
+   agentsOff: new Set(), departmentAgentsOff: new Set(), templates: {}
  };
  const CFG_APPROVALS = [
     { id: "AP-260715-01", dept: "数据局 + 经发局", asset: "产业政策联合口径共享空间", level: "L3", status: "待审核" },
@@ -3000,13 +3031,17 @@ let sidebarCollapsed = false;
     }
     return null;
   }
+  function speechStyleSwitchHTML(msgIndex, source) {
+    const role = activeSpeakerStyle();
+    return `<button class="speech-style-switch" type="button" data-act="speechStyleSwitch" data-msg-index="${msgIndex == null ? "" : msgIndex}" data-style-source="${source || "direct"}" title="切换其他讲话人风格"><span data-speaker-style-label>${esc(role.name)}风格</span><strong>更换</strong></button>`;
+  }
   function messageMaterialAction(m, index) {
     const material = messageMaterial(m); if (!material) return "";
     if (m.directGenerated) {
       const created = m.generationTime || formatDateTime(m.createdAt || Date.now());
-      return `<div class="generated-file-card" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(material.name)}》在线编辑">
+      return `<div class="generated-file-card ${m.agent === "speech" ? "has-style" : ""}" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(material.name)}》在线编辑">
         <span class="generated-file-card-icon">${svgi("i-file",22)}</span>
-        <span class="generated-file-card-copy"><b>${esc(material.name)}</b><small>创建时间：${esc(created)}</small></span>
+        <span class="generated-file-card-copy"><b>${esc(material.name)}</b><small>创建时间：${esc(created)}</small>${m.agent === "speech" ? speechStyleSwitchHTML(index,"direct") : ""}</span>
         <button class="generated-file-download" type="button" data-act="generatedExport" data-msg-index="${index}">${svgi("i-download",13)} 下载</button>
       </div>`;
     }
@@ -3770,6 +3805,16 @@ let sidebarCollapsed = false;
     return "文稿草稿";
   }
 
+  function speakerStyleCopy(roleId) {
+    const copies = {
+      "rs-zhang": { lead:"这项工作不是选择题，而是必须答好的必答题。要坚持目标导向、问题导向和结果导向，把任务落实到项目、责任压实到岗位、节点细化到具体日期。", section:"紧盯目标节点，实行清单管理、闭环推进", close:"要以钉钉子精神一项一项抓推进、一件一件求实效，确保部署有力度、落实有速度、结果有成色。" },
+      "rs-li": { lead:"这项工作涉及面广、协同性强，要在统一部署下加强统筹衔接，做到上下贯通、左右协同、前后衔接。", section:"强化统筹协调，推动各项任务有序衔接", close:"各责任单位要主动靠前、密切配合，重要情况及时报告，共同把各项工作组织好、协调好、落实好。" },
+      "rs-wang": { lead:"要以应用场景为牵引、以数据要素为支撑、以改革成效为检验，推动业务流程和数字技术深度融合。", section:"突出场景牵引，以数据赋能提升治理效能", close:"要用数据说话、用场景验证、用成效评价，不断把数字化能力转化为服务发展和基层治理的实际效能。" },
+      "rs-zhangmin": { lead:"下面我结合当前进展，重点汇报任务安排、存在问题和下一步措施。", section:"抓住重点事项，逐项明确责任和完成时限", close:"会后我将按任务清单持续跟进，及时反馈进展和问题，确保各项安排落实到位。" }
+    };
+    return copies[roleId] || copies["rs-zhang"];
+  }
+
   // 各智能体的草稿正文HTML（带占位符）
   function v3DraftBodyHTML(agentId, v) {
     const ph = label => `<span class="lv3-ph" data-field="${label}">${label}</span>`;
@@ -3903,7 +3948,8 @@ let sidebarCollapsed = false;
     }
     if (agentId === "speech") {
       const topic = valOrPh("topic", "讲话主题"), occasion = valOrPh("occasion", "会议场合"), speaker = valOrPh("speaker", "讲话人及职务"), audience = valOrPh("audience", "听众对象"), duration = valOrPh("duration", "讲话时长"), points = valOrPh("points", "核心内容要点");
-      return `<div class="lv3-draft-body"><h2>${topic}</h2><p>（${occasion}，${duration}）</p><p>${audience}：</p><p>今天，我们在这里${occasion}，围绕${topic}进行交流。首先，我代表[单位]，向${audience}表示诚挚的问候！</p><h3>一、提高认识，准确把握工作方向</h3><p>${points}</p><h3>二、聚焦重点，推动任务落地见效</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>[加强统筹调度和跟踪问效，确保各项部署落到实处、取得实效。]</p><p>同志们，让我们统一思想、凝聚共识，为推动高质量发展而不懈奋斗！谢谢大家。</p><p style="text-align:right">${speaker}</p></div>`;
+      const role = activeSpeakerStyle(), style = speakerStyleCopy(role.id);
+      return `<div class="lv3-draft-body" data-speaker-style="${role.id}"><h2>${topic}</h2><p>（${occasion}，${duration}）</p><p>${audience}：</p><p>今天，我们在这里${occasion}，围绕${topic}进行交流。${style.lead}</p><h3>一、提高认识，准确把握工作方向</h3><p>${points}</p><h3>二、${style.section}</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>${style.close}</p><p>谢谢大家。</p><p style="text-align:right">${speaker || esc(role.name + " · " + role.title)}</p></div>`;
     }
     if (agentId === "summary") {
       const type = valOrPh("type", "总结类型"), period = valOrPh("period", "总结周期"), area = valOrPh("area", "业务领域"), work = valOrPh("work", "重点工作与成效"), next = v.next && !v.next.startsWith("（") ? esc(v.next) : ph("问题与下一步计划（可选）");
@@ -4221,6 +4267,7 @@ let sidebarCollapsed = false;
       <div class="lv3-file-card-icon">${svgi("i-doc-outline", 22)}</div>
       <div class="lv3-file-card-info">
         <div class="lv3-file-card-title">${esc(docTitle)}.docx</div>
+        ${agent.id === "speech" ? speechStyleSwitchHTML(null,"v3") : ""}
       </div>
       <button class="lv3-fc-download" data-act="v3Download" title="下载文档">${svgi("i-download", 16)}<span>下载</span></button>
     </div>`;
@@ -4492,6 +4539,7 @@ let sidebarCollapsed = false;
           <div class="lv3-file-card-icon">${svgi("i-doc-outline", 22)}</div>
           <div class="lv3-file-card-info">
             <div class="lv3-file-card-title">${esc(docTitle)}.docx</div>
+            ${agent.id === "speech" ? speechStyleSwitchHTML(null,"v3") : ""}
           </div>
           <button class="lv3-fc-download" data-act="v3Download" title="下载文档">${svgi("i-download", 16)}<span>下载</span></button>
         </div>`;
@@ -4569,12 +4617,20 @@ let sidebarCollapsed = false;
   }
   function conversationalIntroHTML(agent) {
     const docType = agent.docType || agent.name.replace("智能生成", "");
+    if (agent.id === "speech") {
+      const commonSpeaker = config.personal.agentPrefs.speech || "不预设";
+      return `<p class="draft-guidance">我可以先根据你给出的<strong>讲话主题</strong>直接起草一版发言稿。场合、听众、篇幅和结构会结合语义自动判断；不确定的事实信息使用 <strong>XX</strong> 占位，后续可继续对话补充。</p><p>当前常用讲话人：<strong>${esc(commonSpeaker)}</strong>${commonSpeaker === "不预设" ? "。你也可以在本次对话里直接告诉我讲话人。" : "。如本次不是该讲话人，可在生成后的文件卡片上直接切换。"}</p><p>您可以在“个性化”中维护常用讲话人和参考材料，系统会自动提取表达习惯，无需配置提示词。</p>`;
+    }
     return agent.id === "letter"
       ? `<p class="draft-guidance">我可以帮你生成规范正式的<strong>函件</strong>，但需要你补充几个关键信息，我就能直接排版成文：</p><ul class="draft-guidance-list"><li><strong>函件类型</strong>：商洽函 / 告知函 / 请示函 / 复函 等</li><li><strong>发函单位 &amp; 收函单位</strong></li><li><strong>发函事由、核心内容、诉求</strong></li><li><strong>是否需要落款日期、盖章位置、附件</strong></li></ul><p>你直接把<strong>函件用途和大致内容</strong>发给我即可，我帮你生成标准公文格式函件。</p><p>需要我先给你一份<strong>通用空白函件模板</strong>直接套用吗？</p>`
       : `<p class="draft-guidance">我理解了，你要生成一份<strong>${esc(docType)}</strong>。你可以先告诉我任何一个已知信息，例如主题、对象或核心内容，我会先生成一版可继续修改的初稿；暂时缺少的内容会用<strong>XX</strong>占位，后续直接在对话中补充即可。</p><p>你不需要一次填完所有信息，像和同事沟通一样边问边改就可以。</p>`;
   }
   function beginConversationalCapture(conv, agent, text, attach, parsed) {
     const values = { ...(parsed.values || {}) };
+    if (agent.id === "speech" && !values.speaker) {
+      const commonSpeaker = config.personal.agentPrefs.speech;
+      if (commonSpeaker && commonSpeaker !== "不预设") values.speaker = commonSpeaker;
+    }
     conversationalDraft = { convId:conv.id, agentId:agent.id, baseText:text, attach:attach || "", values, knowledgeFiles:[...(conv.knowledgeFiles || [])] };
     const intro = conversationalIntroHTML(agent);
     const message = { role:"agent", agent:agent.id, kind:"clarification", html:intro, time:nowTime(), createdAt:Date.now() };
@@ -5116,7 +5172,7 @@ let sidebarCollapsed = false;
     const v = values || {}, val = key => esc(directValue(v, key));
     if (agent.id === "decision") { const dtype = val("type"); const ddate = val("date"); return `<h2>${val("body") || "发文机关"}关于${val("subject") || "事项主题"}的决定</h2><p>[发文字号]</p><p>[主送机关]：</p><p>为[目的意义]，根据[政策依据/法律法规/上级精神]，结合[实际情况]${dtype ? `，经${val("body") || "决策机关"}审议` : ""}，现就${val("subject") || "事项主题"}${dtype ? `（${dtype}）` : ""}作出如下决定。</p><h3>一、[决定事项一]</h3><p>${val("matter") || "具体内容。明确目标任务、工作路径和责任主体。"}</p><h3>二、[决定事项二]</h3><p>[具体内容。]</p><h3>三、[保障措施]</h3><p>[组织保障、资金保障、监督检查等方面的要求。]</p><p>[号召性结语。对相关单位和人员提出希望和要求。]</p><p>${val("body") || "发文机关"}（盖章）</p><p>${ddate || "XXXX年X月X日"}</p><p>抄送：[抄送机关列表]</p><p>${val("body") || "发文机关"} ${ddate || "[XXXX年X月X日]"}印发</p>`; }
     if (agent.id === "notice") { const ntype = val("type"); const ndeadline = val("deadline"); return `<h2>${val("issuer") || "发文机关"}关于${val("subject") || "事项主题"}的通知</h2><p>[发文字号]</p><p>${val("recipient") || "主送机关"}：</p><p>为[目的意义]，根据[政策依据/上级要求]，现就${val("subject") || "事项主题"}有关事项通知如下${ntype ? `（${ntype}）` : ""}：</p><h3>一、[通知事项一]</h3><p>${val("points") || "具体内容和要求。"}</p><h3>二、[通知事项二]</h3><p>[具体内容和要求。]</p><h3>三、[工作要求]</h3><p>[对执行机关提出的总体要求。]${ndeadline ? `请于${ndeadline}前落实到位。` : "请认真抓好贯彻落实。"}</p><p>${val("issuer") || "发文机关"}（盖章）</p><p>XXXX年X月X日</p><p>抄送：[抄送机关列表]</p><p>${val("issuer") || "发文机关"} [XXXX年X月X日]印发</p>`; }
-    if (agent.id === "speech") return `<h2>${val("topic") || "讲话主题"}</h2><p>（${val("occasion") || "会议场合"}，${val("duration") || "讲话时长"}）</p><p>${val("audience") || "各位同志"}：</p><p>今天，我们在这里${val("occasion") || "召开会议"}，围绕${val("topic") || "讲话主题"}进行交流。首先，我代表[单位]，向${val("audience") || "各位同志"}表示诚挚的问候！</p><h3>一、提高认识，准确把握工作方向</h3><p>${val("points") || "[核心内容要点。]"}</p><h3>二、聚焦重点，推动任务落地见效</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>[加强统筹调度和跟踪问效，确保各项部署落到实处、取得实效。]</p><p>同志们，让我们统一思想、凝聚共识，为推动高质量发展而不懈奋斗！</p><p>谢谢大家。</p><p style="text-align:right">${val("speaker") || "[讲话人及职务]"}</p>`;
+    if (agent.id === "speech") { const role = activeSpeakerStyle(), style = speakerStyleCopy(role.id); return `<div data-speaker-style="${role.id}"><h2>${val("topic") || "讲话主题"}</h2><p>（${val("occasion") || "会议场合"}，${val("duration") || "讲话时长"}）</p><p>${val("audience") || "各位同志"}：</p><p>今天，我们在这里${val("occasion") || "召开会议"}，围绕${val("topic") || "讲话主题"}进行交流。${style.lead}</p><h3>一、提高认识，准确把握工作方向</h3><p>${val("points") || "[核心内容要点。]"}</p><h3>二、${style.section}</h3><p>[围绕重点任务，细化工作举措，明确责任分工和时间节点。]一是……。二是……。三是……。</p><h3>三、压实责任，形成协同推进合力</h3><p>${style.close}</p><p>谢谢大家。</p><p style="text-align:right">${val("speaker") || esc(role.name + " · " + role.title)}</p></div>`; }
     if (agent.id === "report") {
       const rkind = directValue(v, "kind") || "报告";
       const rdate = val("date");
@@ -6616,57 +6672,131 @@ let sidebarCollapsed = false;
     if (!config.personal.personaPrompts[dept]) config.personal.personaPrompts[dept] = defaultPersonaPrompt(dept);
     return config.personal.personaPrompts[dept];
   }
+  const AGENT_PERSONAL_PREFS = {
+    review: { label:"审查结果默认视图", options:["问题清单优先","修订稿优先"] },
+    polish: { label:"默认润色力度", options:["轻度润色","标准润色","深度润色"] },
+    interpret: { label:"默认解读对象", options:["政务工作人员","企业办事人员","社会公众"] },
+    speech: { label:"常用讲话人", options:["不预设","李强 · 市委副书记、市长","李静 · 数据局副局长","王强 · 办公室主任"] },
+    meeting: { label:"常用纪要模板", options:["标准纪要","简明纪要","专题会议纪要"] },
+    summary: { label:"默认篇幅", options:["简短篇幅","标准篇幅","详细篇幅"] },
+    news: { label:"默认发布渠道", options:["政府门户网站","政务公众号","内部简报"] },
+    ppt: { label:"常用主题", options:["部门政务蓝","新区品牌蓝绿","简洁汇报"] },
+    plan: { label:"默认任务颗粒度", options:["按事项拆分","到责任人","到时间节点"] }
+  };
+  const SPEAKER_STYLE_PROFILES = [
+    { id:"rs-zhang", name:"张主任", title:"管委会副主任 · 分管数字经济", desc:"务实干练、数据导向，强调目标、节点和责任闭环。", initials:"张", dimensions:{ sentence:75, vocabulary:80, structure:60, tone:85, format:50 }, samples:["在全区数字经济推进会上的讲话.docx","重点项目调度会讲话稿.docx","数字政府建设专题部署讲话.docx"] },
+    { id:"rs-li", name:"李主任", title:"办公室主任 · 综合协调", desc:"结构严谨、统筹意识强，擅长政策承接与任务部署。", initials:"李", dimensions:{ sentence:40, vocabulary:65, structure:85, tone:55, format:80 }, samples:["综合协调工作会议讲话.docx","年度办公室工作部署讲话.docx","督查督办专题会议讲话.docx"] },
+    { id:"rs-wang", name:"王局长", title:"数据局局长 · 技术导向", desc:"专业理性、术语准确，突出场景、数据和改革成效。", initials:"王", dimensions:{ sentence:60, vocabulary:90, structure:70, tone:45, format:65 }, samples:["公共数据授权运营研讨会发言.docx","数据要素市场化配置讲话稿.docx","数字化转型专题培训讲话.docx"] },
+    { id:"rs-zhangmin", name:"张敏（自己）", title:"数据局政务办公使用人员", desc:"简洁直接、执行导向，适合内部汇报和日常工作交流。", initials:"敏", dimensions:{ sentence:80, vocabulary:50, structure:45, tone:60, format:40 }, samples:["季度工作汇报发言.docx","项目复盘会交流材料.docx"] }
+  ];
+  let personalAgentTarget = "speech";
+  let adminConfigTarget = "global";
+  const SPEAKER_DIMENSIONS = [
+    ["sentence","句式节奏"],["vocabulary","用词专业度"],["structure","结构严谨度"],["tone","语气力度"],["format","格式规范度"]
+  ];
+  function activeSpeakerStyle() {
+    config.personal.roleStyle = config.personal.roleStyle || { activeRoleId:"rs-zhang" };
+    return SPEAKER_STYLE_PROFILES.find(role => role.id === config.personal.roleStyle.activeRoleId) || SPEAKER_STYLE_PROFILES[0];
+  }
+  function setActiveSpeakerStyle(roleId, quiet) {
+    const role = SPEAKER_STYLE_PROFILES.find(item => item.id === roleId); if (!role) return;
+    config.personal.roleStyle.activeRoleId = role.id;
+    config.personal.agentPrefs.speech = `${role.name} · ${role.title}`;
+    if (!quiet) showToast(`发言稿已切换为“${role.name}”讲话风格`);
+  }
+  function speakerRoleCardsHTML() {
+    const active = activeSpeakerStyle();
+    return `<div class="speaker-role-list">${SPEAKER_STYLE_PROFILES.map(role => `<button class="speaker-role-card ${role.id === active.id ? "active" : ""}" type="button" data-act="speakerRoleSelect" data-role-id="${role.id}"><b>${esc(role.name)}</b><span>${esc(role.title)}</span><span>${esc(role.desc)}</span>${role.id === active.id ? "<em>当前使用</em>" : ""}</button>`).join("")}</div>`;
+  }
+  function speakerStyleEditorHTML() {
+    const role = activeSpeakerStyle();
+    const dimensions = SPEAKER_DIMENSIONS.map(([key,label]) => `<label class="speaker-dim-row"><span>${label}</span><input type="range" min="0" max="100" value="${role.dimensions[key]}" data-speaker-dim="${key}"><b data-speaker-dim-value="${key}">${role.dimensions[key]}</b></label>`).join("");
+    const samples = role.samples.map(name => `<div class="speaker-sample">${svgi("i-file",14)}<span>${esc(name)}</span><button class="icon-btn" type="button" data-act="speakerSampleRemove" data-sample-name="${esc(name)}" title="移除参考材料">×</button></div>`).join("");
+    return `<div class="card"><div class="card-head"><div><div class="card-title">讲话人风格</div><div class="page-sub" style="margin-top:3px">选择本次默认讲话人；生成发言稿后仍可在文件卡片上随时切换</div></div><button class="btn" type="button" data-act="speakerRoleAdd">+ 新增讲话人</button></div><div class="card-body" style="display:grid;gap:14px"><div class="speaker-summary"><span class="speaker-avatar">${esc(role.initials)}</span><span class="speaker-summary-copy"><b>${esc(role.name)}</b><span>${esc(role.title)} · ${esc(role.desc)}</span></span><span class="cfg-status live">默认讲话人</span></div>${speakerRoleCardsHTML()}<div class="speaker-edit-grid"><div class="field"><label>讲话人名称</label><input value="${esc(role.name)}" data-speaker-field="name"></div><div class="field"><label>职务或适用场景</label><input value="${esc(role.title)}" data-speaker-field="title"></div></div><div class="field"><label>风格说明</label><input value="${esc(role.desc)}" data-speaker-field="desc"></div><div><div class="card-title" style="font-size:13px">五维风格</div><p class="pref-explain">数值越高，表示该讲话人的该项特征越明显。系统会自动带入发言稿提示词，普通使用人员无需维护提示词。</p><div class="speaker-dimensions">${dimensions}</div></div><div><div class="card-title" style="font-size:13px">参考材料</div><p class="pref-explain">上传经授权的历史讲话材料用于提取表达习惯，建议保留 3—10 份代表性材料。</p><div class="speaker-samples">${samples || '<div class="cfg-readonly">尚未上传参考材料</div>'}</div><input id="speakerSampleInput" type="file" accept=".doc,.docx,.pdf,.txt" multiple hidden><button class="btn" type="button" data-act="speakerSampleUpload" style="margin-top:10px">${svgi("i-upload",14)} 上传参考材料</button></div><div style="display:flex;justify-content:flex-end"><button class="btn primary" type="button" data-act="speakerStyleSave">保存讲话人风格</button></div></div></div>`;
+  }
+  function personalPreferenceDetailHTML(agentId) {
+    if (agentId === "speech") return speakerStyleEditorHTML();
+    const agent = byId(agentId), pref = AGENT_PERSONAL_PREFS[agentId];
+    if (!agent || !pref) return "";
+    const current = config.personal.agentPrefs[agentId] || pref.options[0];
+    return `<div class="card"><div class="card-head"><div><div class="card-title">${esc(agent.name)}</div><div class="page-sub" style="margin-top:3px">仅保留 1 项最常用偏好，任务内容仍由系统根据本次输入自动判断</div></div><span class="cfg-status live">个人级</span></div><div class="card-body"><div class="pref-single-row"><div><b>${esc(pref.label)}</b><p class="pref-explain">系统会在调用该智能体时自动采用此设置；您仍可在当前任务中临时调整，不影响已生成内容。</p></div><select class="select" data-agent-pref="${agent.id}">${pref.options.map(option => `<option ${option === current ? "selected" : ""}>${esc(option)}</option>`).join("")}</select></div></div></div>`;
+  }
   function renderPersonalization() {
-    const dept = currentPersonalDepartment(), prompt = personaPromptFor(dept);
+    const configurable = ["speech","review","polish","interpret","meeting","summary","news","ppt","plan"].map(byId).filter(Boolean);
+    if (!configurable.some(agent => agent.id === personalAgentTarget)) personalAgentTarget = "speech";
     const profile = configRole === "system" ? "王强 · 平台治理" : configRole === "dept" ? "李静 · 数据局" : "张敏 · 数据局";
-    const identity = `<div class="personal-identity"><span class="pi-icon">${svgi("i-settings",21)}</span><span class="pi-copy"><span class="pi-title">${esc(profile)}的个性化空间</span><span class="pi-desc">系统已根据所属部门「${esc(dept)}」生成默认人设提示词，修改后仅对当前用户生效。</span></span><span class="cfg-status live">个人级</span></div>`;
-    const persona = `<div class="card"><div class="card-head"><div class="card-title">政务AI助手人设提示词</div><span class="cfg-status live">${esc(dept)}默认</span></div><div class="card-body"><div class="persona-meta"><span>用于普通大模型对话的角色、表达方式与回答边界</span><span id="personaCharCount">${prompt.length} 字</span></div><textarea class="persona-editor" id="personaPromptInput" data-persona-dept="${esc(dept)}">${esc(prompt)}</textarea><div class="cfg-readonly" style="margin-top:10px">人设提示词不能覆盖平台安全规则、部门强制口径和数据访问权限；留空保存时会自动恢复当前部门默认内容。</div></div></div>`;
-    $("#personalizationWorkspace").innerHTML = identity + `<div class="grid-2" style="align-items:start"><div>${persona}</div><div>${prefTabHTML()}</div></div>`;
+    const identity = `<div class="personal-identity"><span class="pi-icon">${svgi("i-settings",21)}</span><span class="pi-copy"><span class="pi-title">${esc(profile)}的个性化空间</span><span class="pi-desc">这里只展示确有复用价值的个人偏好；没有必要配置的智能体不展示。</span></span><span class="cfg-status live">仅对本人有效</span></div>`;
+    const nav = `<aside class="pref-nav"><div class="pref-nav-title">选择智能体</div>${configurable.map(agent => `<button class="pref-agent-btn ${agent.id === personalAgentTarget ? "active" : ""}" type="button" data-act="personalAgentSelect" data-agent-id="${agent.id}"><span class="pref-ic">${agentIcon(agent,15)}</span><span>${esc(agent.name)}</span></button>`).join("")}</aside>`;
+    $("#personalizationWorkspace").innerHTML = identity + `<div class="pref-layout">${nav}<section class="pref-detail">${personalPreferenceDetailHTML(personalAgentTarget)}</section></div>`;
   }
   // 配置治理中心仅保留当前角色可操作的通用/智能体配置。
   function wrapCfgTabs(prefHTML, agentHTML) {
     return agentHTML;
   }
   const MANAGED_AGENT_CONFIGS = {
-    review: {
-      version: "REVIEW-BASE-v2.5",
-      deptVersion: "D-REVIEW-v2.4",
-      items: [
-        { title:"支持文种与格式模板", desc:"配置支持审查的文种，以及各文种的标题、主送机关、正文结构、层级序号、附件说明、落款、成文日期、印发时间。", system:"维护平台支持文种、统一字段结构和国家标准模板版本。", dept:"选择本部门启用文种，补充部门范文和受控模板，不得删除平台必审字段。", systemCount:"15 个文种", deptCount:"12 个启用" },
-        { title:"行文规则库", desc:"覆盖请示报告混用、越级行文、并行文规则及允许例外的具体情形。", system:"维护通用行文规则、触发条件、例外类型和判断依据。", dept:"配置部门隶属关系、授权链路和经批准的例外口径。", systemCount:"24 条规则", deptCount:"6 条补充" },
-        { title:"政策法规库", desc:"字段包括名称、文号、发布机关、有效期、失效状态、替代关系和适用范围。", system:"统一数据结构、权威来源、有效性同步和替代关系校验。", dept:"维护本部门适用政策、地方性依据和重点关注范围。", systemCount:"1,286 条", deptCount:"86 条关注" },
-        { title:"制度规则库", desc:"维护新区及各单位内部制度、适用部门、版本号和生效时间。", system:"定义制度字段、版本追溯和跨部门共享规则。", dept:"维护本部门内部制度、适用科室和生效版本。", systemCount:"92 项制度", deptCount:"18 项制度" },
-        { title:"保密规则库", desc:"配置涉敏词、涉密场景、风险等级及命中后的处置建议。", system:"维护平台保密基线、密级映射和高风险阻断策略。", dept:"补充部门敏感词和业务场景，只能提高风险等级。", systemCount:"67 条基线", deptCount:"12 条补充" },
-        { title:"Word 版式要求", desc:"包含字体、字号、页边距、行距、页码等 Word 版面规范及校验容差。", system:"维护平台统一版式基线、模板样式标识和校验参数。", dept:"选择部门适用模板，补充版头版记等受控样式。", systemCount:"18 项规范", deptCount:"3 套模板" },
-        { title:"文种识别与规则匹配", desc:"维护文种别名、识别特征，以及文种与格式、行文、风险规则的匹配关系。", system:"维护通用别名、识别模型特征和规则映射优先级。", dept:"补充部门俗称、内部简称和部门特有匹配特征。", systemCount:"46 个别名", deptCount:"9 个别名" },
-        { title:"风险分级标准", desc:"明确高风险、中风险、一般问题的划分依据，以及是否阻断复核通过。", system:"定义分级阈值、阻断动作、人工复核条件和降级权限。", dept:"在平台基线上提高风险级别或增加阻断，不得放宽。", systemCount:"3 级标准", deptCount:"严格模式" },
-        { title:"审查报告与问题清单模板", desc:"配置报告和问题清单的字段、文件名称规则、模板版本及 Word、PDF、Excel 导出格式。", system:"维护平台标准字段、文件命名规则和导出格式。", dept:"配置部门抬头、默认接收人和部门扩展字段。", systemCount:"3 种格式", deptCount:"2 套模板" }
-      ]
-    },
-    polish: {
-      version: "POLISH-BASE-v2.1",
-      deptVersion: "D-POLISH-v1.6",
-      items: [
-        { title:"各文种版式和要素规范", desc:"按通知、报告、请示、函、纪要等文种维护版式模板和必备要素。", system:"维护通用文种和平台模板基线。", dept:"启用部门常用文种并补充部门样例。", systemCount:"15 个文种", deptCount:"11 个启用" },
-        { title:"格式规则", desc:"配置标题、正文、层级序号、落款、日期等格式规则和自动修正方式。", system:"统一字段规则、层级序号和日期表达标准。", dept:"维护部门版头、落款习惯及允许差异。", systemCount:"31 条规则", deptCount:"7 条补充" },
-        { title:"标准政务术语", desc:"维护标准政务术语、定义、适用场景、来源依据和优先级。", system:"维护平台权威术语主数据。", dept:"维护部门业务术语和统一口径。", systemCount:"438 条", deptCount:"76 条" },
-        { title:"旧称、别名与口语替换", desc:"配置旧称、机构别名、口语化表达及对应的标准替换词。", system:"维护通用替换词和历史机构名称。", dept:"补充本部门旧称、简称和业务口语。", systemCount:"216 组", deptCount:"38 组" },
-        { title:"不规范表达规则", desc:"识别网络流行语、情绪化、夸张和绝对化表述，并给出稳妥替换建议。", system:"定义识别词表、规则强度和禁用场景。", dept:"补充部门高频不规范表达，只能收紧。", systemCount:"84 条规则", deptCount:"13 条补充" },
-        { title:"部门专有名称与统一口径", desc:"维护部门专有名称、机构全称、简称、职责表述和统一发布口径。", system:"同步统一组织机构主数据和公共口径。", dept:"维护本部门专有名称、业务对象和发布口径。", systemCount:"组织主数据", deptCount:"42 条口径" },
-        { title:"冗余表达识别与压缩", desc:"配置重复、空泛、叠词和长句识别，以及保守、标准、精简三档压缩规则。", system:"维护通用冗余模式和压缩强度。", dept:"配置部门默认强度和不可删减表达。", systemCount:"56 个模式", deptCount:"标准档" },
-        { title:"段落逻辑与结构调整", desc:"配置段落主题、过渡句、前后逻辑、结构重排规则和调整边界。", system:"维护通用逻辑规则和禁止改变原意的边界。", dept:"配置部门常用结构和必须保留段落。", systemCount:"22 条规则", deptCount:"5 套结构" },
-        { title:"润色输出模板", desc:"配置润色稿、修改痕迹、修改说明的字段、文件名称和 Word、PDF 导出模板。", system:"维护平台标准输出、修订标记和说明字段。", dept:"配置部门文件命名、落款和默认导出组合。", systemCount:"3 类输出", deptCount:"2 套模板" }
-      ]
-    },
-    notice: {
-      version: "NOTICE-BASE-v1.8",
-      deptVersion: "D-NOTICE-v1.3",
-      items: [
-        { title:"通知类型管理", desc:"维护工作部署、会议、任免、批转转发、事项告知、紧急通知等类型及必填要素、适用场景。", system:"维护平台标准类型、类型编码、必填字段和生成规则。", dept:"选择部门启用类型，新增部门子类型并设置默认紧急程度。", systemCount:"8 个类型", deptCount:"6 个启用" },
-        { title:"发文单位管理", desc:"维护发文单位全称、规范简称、统一社会信用代码、可用印章、联系人及有效状态。", system:"对接统一组织机构和 OA 主数据，维护平台可用单位范围。", dept:"维护本部门可选发文单位、默认单位和授权使用范围。", systemCount:"38 个单位", deptCount:"4 个可用" },
-        { title:"通知通告版式模板管理", desc:"维护标题、主送单位、正文结构、层级序号、落款、日期、版记及 Word 字体字号、页边距、行距、页码。", system:"维护平台统一通知通告模板、字段和版式基线。", dept:"配置部门模板变体、版头版记和默认导出模板。", systemCount:"12 套模板", deptCount:"3 套模板" }
-      ]
-    }
+    review: { version:"REVIEW-v3.0", deptVersion:"D-REVIEW-v2.6", items:[
+      { title:"文种审查规则映射", desc:"把全局文种、行文、版式、政策有效性和风险基线映射到具体审查场景。", system:"维护文种识别特征、规则映射和阻断动作。", dept:"选择本部门适用文种并补充例外依据，不重复维护敏感词和通用术语。", systemCount:"15 个文种", deptCount:"12 个启用" },
+      { title:"审查结果模板", desc:"维护问题清单、修订建议和审查报告的字段与导出格式。", system:"维护平台标准输出模板。", dept:"配置部门抬头、文件名和扩展字段。", systemCount:"3 套模板", deptCount:"1 套扩展" }
+    ]},
+    polish: { version:"POLISH-v3.0", deptVersion:"D-POLISH-v2.0", items:[
+      { title:"润色策略", desc:"维护轻度、标准、深度三档改写边界，覆盖压缩、段落逻辑和过渡句。", system:"维护通用改写策略和禁止改变原意的边界。", dept:"补充部门保留表达和常用结构。", systemCount:"3 档策略", deptCount:"6 条保留表达" },
+      { title:"润色输出模板", desc:"维护润色稿、修改痕迹和修改说明的输出结构。", system:"维护平台标准输出与修订标记。", dept:"配置部门文件名和默认导出组合。", systemCount:"3 类输出", deptCount:"1 套扩展" }
+    ]},
+    interpret: { version:"INTERPRET-v2.2", deptVersion:"D-INTERPRET-v1.5", items:[
+      { title:"解读结构与受众模板", desc:"维护面向工作人员、企业和公众的摘要、要点、办理路径与问答结构。", system:"维护三类受众的统一解读结构。", dept:"补充部门办事口径和联系人字段。", systemCount:"3 类受众", deptCount:"8 条口径" },
+      { title:"来源绑定规则", desc:"规定政策原文、具体知识文件和引用段落的展示与追溯方式。", system:"维护来源优先级和失效提示。", dept:"标记本部门权威来源和适用范围。", systemCount:"4 级来源", deptCount:"26 个来源" }
+    ]},
+    speech: { version:"SPEECH-v3.0", deptVersion:"D-SPEECH-v2.3", items:[
+      { title:"讲话人风格档案", desc:"按讲话人维护有效任职期、素材范围、版本、覆盖场景和五维风格画像。", system:"定义档案字段、脱敏与版本规则，不维护具体讲话人内容。", dept:"上传经授权历史材料，维护讲话人档案并发布可用版本。", systemCount:"5 维模型", deptCount:"4 位讲话人" },
+      { title:"讲话场景模板", desc:"维护部署、汇报、致辞、座谈、调研等场景的结构与篇幅。", system:"维护通用场景模板。", dept:"补充本部门典型场景和固定表述。", systemCount:"8 类场景", deptCount:"3 套补充" }
+    ]},
+    meeting: { version:"MEETING-v2.4", deptVersion:"D-MEETING-v1.8", items:[
+      { title:"会议纪要模板", desc:"维护标准纪要、简明纪要和专题纪要的字段、版式及导出模板。", system:"维护统一模板和必备字段。", dept:"选择部门默认模板并补充版头。", systemCount:"3 套模板", deptCount:"1 套默认" },
+      { title:"转写词表与留存策略", desc:"维护机构名、项目名等识别热词，以及录音、转写文本的保存期限。", system:"维护转写服务、安全和留存基线。", dept:"补充部门热词并选择更短留存周期。", systemCount:"安全基线", deptCount:"42 个热词" }
+    ]},
+    notice: { version:"NOTICE-v2.0", deptVersion:"D-NOTICE-v1.5", items:[
+      { title:"通知类型与字段", desc:"维护工作部署、会议、事项告知等类型及对应结构化字段。", system:"维护标准类型和字段模型。", dept:"选择启用类型并补充部门子类型。", systemCount:"8 个类型", deptCount:"6 个启用" },
+      { title:"发文单位与版式模板", desc:"关联组织机构主数据、可用发文单位和通知通告版式。", system:"维护组织同步和平台模板。", dept:"配置本部门默认单位、版头和模板变体。", systemCount:"12 套模板", deptCount:"3 套模板" }
+    ]},
+    summary: { version:"SUMMARY-v2.0", deptVersion:"D-SUMMARY-v1.4", items:[
+      { title:"总结结构模板", desc:"维护季度、半年、年度和专项总结的结构与篇幅。", system:"维护通用结构模板。", dept:"补充部门常用章节和固定口径。", systemCount:"6 类总结", deptCount:"2 套模板" },
+      { title:"指标字段映射", desc:"定义成果、问题和计划中的指标字段及引用方式。", system:"维护统一字段格式。", dept:"映射本部门台账指标。", systemCount:"18 个字段", deptCount:"9 个映射" }
+    ]},
+    news: { version:"NEWS-v2.1", deptVersion:"D-NEWS-v1.6", items:[
+      { title:"发布渠道模板", desc:"维护门户网站、公众号和内部简报的结构、篇幅和配图说明。", system:"维护通用渠道模板。", dept:"选择部门渠道并补充栏目要求。", systemCount:"4 类渠道", deptCount:"3 个启用" },
+      { title:"采编口径", desc:"维护标题、导语、领导排序和机构名称等采编规则。", system:"维护通用采编规范。", dept:"补充部门发布口径。", systemCount:"16 条规则", deptCount:"7 条补充" }
+    ]},
+    contract: { version:"CONTRACT-v2.5", deptVersion:"D-CONTRACT-v1.9", items:[
+      { title:"合同模板", desc:"按合同类型维护字段、章节和适用范围。", system:"维护平台标准模板及版本。", dept:"启用部门合同类型并补充专用模板。", systemCount:"10 类合同", deptCount:"4 个启用" },
+      { title:"标准条款包", desc:"维护付款、验收、保密、数据安全、违约和争议解决条款。", system:"维护标准条款和风险标签。", dept:"选择部门默认条款组合。", systemCount:"36 条条款", deptCount:"2 套组合" }
+    ]},
+    decision: { version:"DECISION-v2.0", deptVersion:"D-DECISION-v1.5", items:[
+      { title:"决定决议模板", desc:"维护决定、决议类型、结构字段和版式模板。", system:"维护标准文种模板。", dept:"选择适用类型并补充部门范文。", systemCount:"5 类", deptCount:"3 个启用" },
+      { title:"议事程序字段", desc:"维护决策主体、审议时间、事项类型和程序要素。", system:"维护统一字段模型。", dept:"配置本部门可选主体和事项类型。", systemCount:"9 个字段", deptCount:"4 个主体" }
+    ]},
+    communique: { version:"COMMUNIQUE-v1.8", deptVersion:"D-COMMUNIQUE-v1.3", items:[
+      { title:"公报公告类型与模板", desc:"维护公报、公告、公示等类型及公开发布模板。", system:"维护标准类型和法定字段。", dept:"选择部门启用类型并补充版头。", systemCount:"6 类", deptCount:"4 个启用" }
+    ]},
+    ppt: { version:"PPT-v2.6", deptVersion:"D-PPT-v2.0", items:[
+      { title:"视觉主题与母版", desc:"维护品牌色、字体、页眉页脚、封面和常用页面母版。", system:"维护平台视觉基线。", dept:"上传部门标识并选择默认主题。", systemCount:"5 套主题", deptCount:"2 套主题" },
+      { title:"汇报结构模板", desc:"维护工作汇报、项目汇报和领导讲话等页面结构。", system:"维护通用页面结构。", dept:"补充部门常用结构和页数范围。", systemCount:"8 类结构", deptCount:"3 套模板" }
+    ]},
+    report: { version:"REPORT-v2.2", deptVersion:"D-REPORT-v1.6", items:[
+      { title:"报告请示模板", desc:"维护报告、请示的结构差异、字段和版式。", system:"维护标准文种模板。", dept:"选择启用模板并补充部门范文。", systemCount:"7 类", deptCount:"4 个启用" },
+      { title:"上行文字段", desc:"维护主送机关、请示事项、联系人和报送时间等字段。", system:"维护统一字段模型。", dept:"配置本部门常用主送机关和联系人。", systemCount:"12 个字段", deptCount:"6 个常用值" }
+    ]},
+    reply: { version:"REPLY-v1.9", deptVersion:"D-REPLY-v1.4", items:[
+      { title:"批复模板与结论字段", desc:"维护批复类型、依据、批复结论和执行要求。", system:"维护统一模板和字段。", dept:"补充部门常用结论与主送机关。", systemCount:"5 类模板", deptCount:"3 个启用" }
+    ]},
+    motion: { version:"MOTION-v1.7", deptVersion:"D-MOTION-v1.2", items:[
+      { title:"议案模板与法定字段", desc:"维护案由、提案主体、理由、建议方案和办理字段。", system:"维护统一模板与法定字段。", dept:"补充部门办理口径和承办单位。", systemCount:"10 个字段", deptCount:"5 个常用值" }
+    ]},
+    letter: { version:"LETTER-v2.0", deptVersion:"D-LETTER-v1.5", items:[
+      { title:"函件类型与模板", desc:"维护商洽函、告知函、请示函、复函等结构和标准结语。", system:"维护标准类型、字段和结语库。", dept:"选择部门启用类型并补充专用模板。", systemCount:"7 类函件", deptCount:"5 个启用" }
+    ]},
+    plan: { version:"PLAN-v2.0", deptVersion:"D-PLAN-v1.4", items:[
+      { title:"计划模板与任务字段", desc:"维护年度、季度、月度和专项计划结构，以及事项、责任、时限字段。", system:"维护标准模板和字段模型。", dept:"补充部门计划模板和责任单位选项。", systemCount:"6 类计划", deptCount:"3 套模板" }
+    ]}
   };
   function managedAgentConfigHTML(agent, role, ctxHTML) {
     const catalog = MANAGED_AGENT_CONFIGS[agent.id];
@@ -6709,7 +6839,7 @@ let sidebarCollapsed = false;
       renderConfig();
     }, { okText:"保存配置", width:"min(820px, calc(100vw - 40px))" });
   }
-  function renderConfig() {
+  function renderConfigRoleLegacy() {
     const roleName = configRole === "system" ? "系统管理员" : configRole === "dept" ? "部门管理员 · 数据局" : "政务办公使用人员 · 张敏";
     const targets = (configRole === "user" ? [] : [{ id: "global", name: "全局通用配置", desc: "平台级安全、模型、组织与系统策略" }]).concat(AGENTS.map(a => ({ id: a.id, name: a.name, desc: a.cat + " · " + a.desc })));
     if (configRole === "user" && configTarget === "global") configTarget = "review";
@@ -6768,6 +6898,143 @@ let sidebarCollapsed = false;
     const userAgentGrid = ctxHTML + `<div class="grid-2" style="align-items:start"><div style="display:grid;gap:16px">${card("本次智能体的个人偏好", userControls)}${card("模板输出偏好", userTemplateControls)}</div><div style="display:grid;gap:16px">${card("任务参数范围", `<div class="cfg-item"><span>字数、结构、风格与摘要粒度</span><span class="cfg-status live">可在任务中调整</span></div><div class="cfg-item"><span>平台强制规则、单位信息、正式密级</span><span class="cfg-status lock">不可修改</span></div>`)}</div></div>`;
     $("#cfgWorkspace").innerHTML = wrapCfgTabs(prefTabHTML(), userAgentGrid);
   }
+  function renderConfig() {
+    const roleName = configRole === "system" ? "系统管理员" : configRole === "dept" ? "部门管理员 · 数据局" : "政务办公使用人员 · 张敏";
+    if (configRole === "user") {
+      $("#cfgWorkspace").innerHTML = `<div class="cfg-role-boundary"><span class="crb-ic">${svgi("i-shield",17)}</span><span><b>普通使用人员不进入后台配置管理</b>可在“个性化”中设置常用推荐智能体及少量个人偏好；平台规则、部门模板和智能体配置均为只读继承。</span></div><div class="card"><div class="card-head"><div class="card-title">可调整范围</div></div><div class="card-body"><div class="cfg-item"><span>每个智能体最多 1 项高频个人偏好</span><button class="btn primary" data-view="personalization">前往个性化</button></div><div class="cfg-item"><span>单位信息、敏感词、合规规则、模板和数据权限</span><span class="cfg-status lock">不可修改</span></div></div></div>`;
+      return;
+    }
+    const targets = [{ id:"global", name: configRole === "system" ? "全局通用配置" : "部门通用配置", desc: configRole === "system" ? "全平台公共基线与服务治理" : "数据局可维护的部门资产与可用范围" }].concat(AGENTS.map(a => ({ id:a.id, name:a.name, desc:a.cat + " · " + a.desc })));
+    if (!targets.some(target => target.id === configTarget)) configTarget = "global";
+    const target = targets.find(item => item.id === configTarget);
+    const ctxHTML = `<div class="cfg-context"><span class="ctx-ic">${svgi("i-layers",18)}</span><span class="ctx-main"><span class="ctx-name">${esc(target.name)}</span><span class="ctx-desc">${esc(target.desc)} · 当前身份：${roleName}</span></span><select class="cfg-target-select" id="cfgTargetSelect" aria-label="选择配置对象">${targets.map(item => `<option value="${item.id}" ${item.id === configTarget ? "selected" : ""}>${esc(item.name)}</option>`).join("")}</select></div>`;
+    const tog = (on, path) => `<button class="toggle ${on ? "on" : ""}" data-cfg="${path}" aria-label="切换状态"></button>`;
+    const action = (icon, title, desc, act, text) => `<div class="cfg-action"><span class="ca-ic">${svgi(icon,16)}</span><span class="ca-copy"><span class="ca-title">${title}</span><span class="ca-desc">${desc}</span></span><button class="btn" data-act="${act}">${text || "管理"}</button></div>`;
+    const card = (title, body, extra) => `<div class="card"><div class="card-head"><div class="card-title">${title}</div>${extra || ""}</div><div class="card-body">${body}</div></div>`;
+    if (configTarget !== "global") {
+      const agent = byId(configTarget);
+      $("#cfgWorkspace").innerHTML = managedAgentConfigHTML(agent, configRole, ctxHTML);
+      return;
+    }
+    if (configRole === "system") {
+      const common = [
+        ["安全与合规基线","敏感词、涉密场景、个人信息、绝对化表达、风险分级和阻断动作","67 条基线"],
+        ["公文规范与术语","文种、行文规则、版式、机构名称、标准政务术语、旧称和别名","15 个文种"],
+        ["政策法规有效性","名称、文号、发布机关、有效期、替代关系、适用范围和权威来源","1,286 条依据"],
+        ["组织与数据权限","统一组织机构、角色、部门级数据范围、明细查看和导出权限","部门级权限"],
+        ["模型路由与安全审计","主智能体路由、模型服务、业务连接器、留痕审计和异常降级","全局策略"],
+        ["输出归档规范","文件命名、输出格式、我的成果、OA/公文系统/档案系统归档规则","6 类交付" ]
+      ].map(([title,desc,count],index) => `<div class="cfg-rule-row"><span class="cfg-rule-no">${String(index + 1).padStart(2,"0")}</span><span class="cfg-rule-main"><span class="cfg-rule-title">${title}<span class="cfg-status lock">全局唯一</span></span><span class="cfg-rule-desc">${desc}</span></span><span class="cfg-rule-actions"><span class="cfg-mini-count">${count}</span><button class="btn" data-act="cfgManage">管理</button></span></div>`).join("");
+      const agents = AGENTS.map(agent => `<div class="agent-toggle"><div class="at-ic" style="${ic(agent.cat)}">${agentIcon(agent,15)}</div><div class="at-name">${esc(agent.name)}</div>${tog(!config.agentsOff.has(agent.id), "agent." + agent.id)}</div>`).join("");
+      $("#cfgWorkspace").innerHTML = ctxHTML + `<div class="cfg-role-boundary"><span class="crb-ic">${svgi("i-shield",17)}</span><span><b>系统管理员 · 全局治理</b>只维护跨部门共用的安全、规范、权限和服务基线；具体讲话人、部门模板和业务口径由所属部门维护。</span></div><div class="grid-2" style="align-items:start"><div class="card"><div class="card-head"><div><div class="card-title">全局通用配置</div><div class="page-sub" style="margin-top:3px">敏感词、合规词、术语、公文规范等不再分散到各智能体</div></div><button class="btn primary" data-act="cfgSave">发布全局版本</button></div><div class="card-body"><div class="cfg-rule-list">${common}</div></div></div><div style="display:grid;gap:16px">${card("智能体全局启停", `<div class="agent-toggle-grid">${agents}</div>`)}${card("全局资源入口", `<div class="cfg-action-list">${action("i-book","政策法规与制度库","统一有效性、来源和适用范围","cfgManage","管理")}${action("i-wand","安全合规与术语库","敏感词、合规词、机构名称和标准替换词","cfgManage","管理")}${action("i-file","通用公文与输出模板","全平台标准模板和文件命名规范","cfgManage","管理")}</div>`)}</div></div>`;
+      return;
+    }
+    const departmentAgents = AGENTS.map(agent => `<div class="agent-toggle"><div class="at-ic" style="${ic(agent.cat)}">${agentIcon(agent,15)}</div><div class="at-name">${esc(agent.name)}</div>${config.agentsOff.has(agent.id) ? `<span class="cfg-status lock">平台停用</span>` : tog(!config.departmentAgentsOff.has(agent.id), "deptagent." + agent.id)}</div>`).join("");
+    $("#cfgWorkspace").innerHTML = ctxHTML + `<div class="cfg-role-boundary"><span class="crb-ic">${svgi("i-landmark",17)}</span><span><b>部门管理员 · 数据局范围</b>继承全局基线，只维护本部门权威信息、模板、讲话人档案和业务口径；不能放宽平台规则或越权查看其他部门资产。</span></div><div class="grid-2" style="align-items:start"><div style="display:grid;gap:16px">${card("全局基线（只读继承）", `<div class="cfg-item"><span>安全合规、公文规范、政策有效性和模型路由</span><span class="cfg-status lock">平台发布</span></div><div class="cfg-readonly">部门配置只能补充或收紧，不能删除必填字段、降低风险等级或扩大数据权限。</div>`)}${card("本部门权威信息", `<div class="cfg-action-list">${action("i-landmark","组织与发文信息","单位全称、简称、发文字号、联系人和 OA 映射","cfgManage","维护")}${action("i-file","部门模板与业务口径","部门公文模板、固定表述、术语和内部制度","cfgManage","维护")}${action("i-user","讲话人风格档案","经授权材料、任职有效期、五维风格画像和版本","cfgManage","维护")}</div>`)}</div><div>${card("本部门智能体可用范围", `<div class="agent-toggle-grid">${departmentAgents}</div>`, `<span class="cfg-status live">仅本部门</span>`)}</div></div>`;
+  }
+  const SIMPLE_DRAFT_AGENT_IDS = new Set(["decision","notice","speech","report","summary","news","letter","plan","communique","reply","motion"]);
+  function simpleConfigItemHTML(title, desc, actionText, act, agentId) {
+    return `<div class="simple-config-item"><span class="pref-ic">${svgi("i-settings",15)}</span><span class="simple-config-copy"><b>${esc(title)}</b><span>${esc(desc)}</span></span><button class="btn" type="button" data-act="${act || "cfgManage"}" ${agentId ? `data-agent-id="${agentId}"` : ""}>${esc(actionText || "管理")}</button></div>`;
+  }
+  function simpleAgentConfigItems(agent) {
+    if (SIMPLE_DRAFT_AGENT_IDS.has(agent.id)) {
+      return [{ title:"公文格式模板", desc:`查看${agent.docType || agent.name}的标题、正文层级、落款、日期和版式规范。`, action:"查看模板", act:"adminViewTemplate" }];
+    }
+    const map = {
+      review:["审查规则","文种、行文、政策有效性、保密和风险分级规则。","审查报告模板","问题清单、修订建议和导出格式。"],
+      polish:["润色规则","政务术语、冗余压缩、逻辑调整和保留原意边界。","润色输出模板","润色稿、修改痕迹和修改说明的输出形式。"],
+      interpret:["解读结构模板","面向工作人员、企业和公众的摘要、要点与办理路径。","来源引用规则","政策原文、知识文件和引用段落的展示方式。"],
+      meeting:["会议纪要模板","标准纪要、简明纪要和专题会议纪要的版式。","转写词表","机构名、项目名和常用政务词汇。"],
+      contract:["合同模板","常用合同类型、主体信息和条款结构。","标准条款库","履约、违约、保密、争议解决等标准条款。"],
+      ppt:["PPT 主题母版","部门品牌色、封面、目录和页面版式。","汇报结构模板","工作汇报、项目汇报和专题汇报结构。"]
+    };
+    const raw = map[agent.id] || ["运行配置","查看该智能体的输入要求、输出格式和处理边界。"];
+    const items = [];
+    for (let i=0;i<raw.length;i+=2) items.push({ title:raw[i], desc:raw[i+1], action:"管理", act:"cfgManage" });
+    return items;
+  }
+  function renderConfig() {
+    if (configRole === "user") {
+      $("#cfgWorkspace").innerHTML = `<div class="cfg-role-boundary"><span class="crb-ic">${svgi("i-shield",17)}</span><span><b>普通使用人员无需进入后台配置</b>您只需在“个性化”中维护少量个人偏好和常用讲话人，其余规则由平台自动继承。</span></div><div class="card"><div class="card-body"><div class="simple-config-item"><span class="simple-config-copy"><b>个人偏好与讲话人风格</b><span>仅对本人有效，不影响部门和平台配置。</span></span><button class="btn primary" data-view="personalization">前往个性化</button></div></div></div>`;
+      return;
+    }
+    const targets = [{ id:"global", name:configRole === "system" ? "全局通用配置" : "部门通用配置", icon:"i-shield" }].concat(AGENTS.map(agent => ({ id:agent.id, name:agent.name, icon:AGENT_ICON[agent.id] || "i-bot" })));
+    if (!targets.some(item => item.id === adminConfigTarget)) adminConfigTarget = "global";
+    const nav = `<aside class="simple-config-nav"><div class="simple-config-nav-title">选择配置对象</div>${targets.map(item => `<button class="simple-config-btn ${item.id === adminConfigTarget ? "active" : ""}" type="button" data-act="adminConfigSelect" data-agent-id="${item.id}"><span class="pref-ic">${svgi(item.icon,15)}</span><span>${esc(item.name)}</span></button>`).join("")}</aside>`;
+    let detail = "";
+    if (adminConfigTarget === "global") {
+      const isSystem = configRole === "system";
+      const items = isSystem
+        ? [
+          ["智能体与连接器启停","统一控制全平台智能体和业务连接器是否可用。"],
+          ["安全合规与公文规范","集中维护敏感词、保密规则、行文规范、标准术语和风险等级。"],
+          ["组织与数据权限","维护组织机构、角色以及部门级数据访问和导出权限。"],
+          ["通用知识与公文模板","维护跨部门通用知识库和平台标准公文模板。"]
+        ] : [
+          ["本部门智能体可用范围","控制数据局可使用的智能体和业务连接器。"],
+          ["部门组织与发文信息","维护单位全称、简称、发文字号、联系人和 OA 映射。"],
+          ["部门知识与公文模板","维护本部门通用知识库、内部制度和部门模板。"]
+        ];
+      detail = `<div class="card"><div class="card-head"><div><div class="card-title">${isSystem ? "全局通用配置" : "数据局通用配置"}</div><div class="page-sub" style="margin-top:3px">通用能力集中维护，不在每个智能体中重复配置</div></div><span class="cfg-status live">${isSystem ? "全平台" : "仅本部门"}</span></div><div class="card-body">${items.map(([title,desc]) => simpleConfigItemHTML(title,desc,"管理","cfgManage")).join("")}</div></div>`;
+    } else {
+      const agent = byId(adminConfigTarget), items = simpleAgentConfigItems(agent);
+      const list = items.map(item => simpleConfigItemHTML(item.title,item.desc,item.action,item.act,agent.id)).join("");
+      detail = `<div class="card"><div class="card-head"><div><div class="card-title">${esc(agent.name)}</div><div class="page-sub" style="margin-top:3px">只保留研发和业务确需维护的配置项，页面保持简单清晰</div></div><span class="cfg-status live">${configRole === "system" ? "平台配置" : "部门配置"}</span></div><div class="card-body">${list}</div></div>${agent.id === "speech" ? speakerStyleEditorHTML() : ""}`;
+    }
+    $("#cfgWorkspace").innerHTML = `<div class="simple-config-layout">${nav}<section class="simple-config-detail">${detail}</section></div>`;
+  }
+  function restyleSpeechHTML(html, role) {
+    let next = String(html || ""), target = speakerStyleCopy(role.id);
+    SPEAKER_STYLE_PROFILES.forEach(item => {
+      const old = speakerStyleCopy(item.id);
+      next = next.split(old.lead).join(target.lead).split(old.section).join(target.section).split(old.close).join(target.close);
+    });
+    next = next.replace(/data-speaker-style="[^"]*"/g, `data-speaker-style="${role.id}"`);
+    return next;
+  }
+  function refreshSpeechStyle(source, messageIndex) {
+    const role = activeSpeakerStyle(), conv = cur();
+    if (source === "v3" && agentV3Session) {
+      agentV3Session.values.speaker = `${role.name} · ${role.title}`;
+      agentV3Session.docHtml = v3DraftBodyHTML("speech", agentV3Session.values);
+      const paper = $("#editorPaper");
+      if (paper && $("#view-chat").classList.contains("v3-editor-open")) { paper.innerHTML = agentV3Session.docHtml; v3RenderOutline(agentV3Session.docHtml); }
+    }
+    if (conv) {
+      const index = Number(messageIndex), message = Number.isFinite(index) ? conv.msgs[index] : null;
+      if (message && message.agent === "speech" && message.directGenerated) {
+        message.structuredValues = { ...(message.structuredValues || {}), speaker:`${role.name} · ${role.title}` };
+        message.materialHTML = restyleSpeechHTML(message.materialHTML || directDocumentHTML(byId("speech"), message.structuredValues), role);
+        if (Number(editorMessageIndex) === index && $("#view-chat").classList.contains("editor-open")) {
+          const paper = $("#editorPaper"); if (paper) paper.innerHTML = message.materialHTML;
+          editorDraftHTML = message.materialHTML;
+        }
+      }
+      conv.msgs.forEach(item => {
+        if (item.agent === "speech" && item.html) item.html = item.html.replace(/(<span data-speaker-style-label>)[^<]*(<\/span>)/g, `$1${esc(role.name)}风格$2`);
+      });
+    }
+    renderChat(); renderPersonalization(); if (configRole !== "user" && currentView === "config") renderConfig();
+  }
+  function openSpeechStyleSwitch(messageIndex, source) {
+    const active = activeSpeakerStyle();
+    const options = SPEAKER_STYLE_PROFILES.map(role => `<option value="${role.id}" ${role.id === active.id ? "selected" : ""}>${esc(role.name)} · ${esc(role.title)}</option>`).join("");
+    openModal("切换讲话人风格", `<div class="field"><label>选择讲话人</label><select id="speechStyleSwitchSelect">${options}</select></div><div class="cfg-readonly">切换后将保留当前主题和已补充内容，并按所选讲话人的表达习惯重新组织发言稿。后续仍可继续在对话中修改。</div>`, () => {
+      const select = $("#speechStyleSwitchSelect"); if (!select) return;
+      setActiveSpeakerStyle(select.value, true); closeModal(); refreshSpeechStyle(source || "direct", messageIndex); showToast(`已切换为“${activeSpeakerStyle().name}”讲话风格`);
+    }, { okText:"切换并更新发言稿" });
+  }
+  function applyRoleVisibility() {
+    $$('[data-role-menu]').forEach(item => {
+      const allowed = (item.dataset.roleMenu || "").split(",").includes(configRole);
+      item.hidden = !allowed;
+      item.style.display = allowed ? "" : "none";
+    });
+    const moreVisible = $$("#sideMoreMenu [data-more-view]").some(item => item.style.display !== "none");
+    const moreButton = $("#sideMoreBtn");
+    if (moreButton) { moreButton.hidden = !moreVisible; moreButton.style.display = moreVisible ? "" : "none"; }
+    if (configRole === "user" && (currentView === "config" || currentView === "stats")) switchView("home");
+  }
   function applyPortalRole(role) {
     const profiles = {
       user: { av: "张", name: "张敏 · 数据局", role: "政务办公使用人员" },
@@ -6781,6 +7048,7 @@ let sidebarCollapsed = false;
     const menu = $("#roleMenu"); const userBtn = $("#sideUserBtn");
     if (menu) menu.classList.remove("show");
     if (userBtn) userBtn.setAttribute("aria-expanded", "false");
+    applyRoleVisibility();
     if (currentView === "config") renderConfig();
     if (currentView === "personalization") renderPersonalization();
     showToast("已切换为" + p.role + "，页面仅展示当前身份可操作配置");
@@ -6790,6 +7058,11 @@ let sidebarCollapsed = false;
       const id = path.slice(6);
       if (config.agentsOff.has(id)) config.agentsOff.delete(id); else config.agentsOff.add(id);
       renderConfig(); renderSidebar(); return;
+    }
+    if (path.startsWith("deptagent.")) {
+      const id = path.slice(10);
+      if (config.departmentAgentsOff.has(id)) config.departmentAgentsOff.delete(id); else config.departmentAgentsOff.add(id);
+      renderConfig(); return;
     }
     if (path.startsWith("template.")) {
       const [, id, key] = path.split(".");
@@ -8318,6 +8591,12 @@ let sidebarCollapsed = false;
         arr[+prefSel.dataset.slot] = prefSel.value;
         return;
       }
+      const agentPref = e.target.closest("[data-agent-pref]");
+      if (agentPref) {
+        config.personal.agentPrefs[agentPref.dataset.agentPref] = agentPref.value;
+        showToast("个人偏好已保存，仅对当前用户生效");
+        return;
+      }
       const s = e.target.closest("[data-cfgsel]");
       if (s) {
         const [g, k] = s.dataset.cfgsel.split(".");
@@ -8325,6 +8604,20 @@ let sidebarCollapsed = false;
       }
     });
     document.addEventListener("input", (e) => {
+      const speakerField = e.target.closest("[data-speaker-field]");
+      if (speakerField) {
+        const role = activeSpeakerStyle(), key = speakerField.dataset.speakerField;
+        role[key] = speakerField.value;
+        if (key === "name") role.initials = (speakerField.value || "讲").slice(0,1);
+        return;
+      }
+      const speakerDimension = e.target.closest("[data-speaker-dim]");
+      if (speakerDimension) {
+        const role = activeSpeakerStyle(), key = speakerDimension.dataset.speakerDim, value = Number(speakerDimension.value);
+        role.dimensions[key] = value;
+        const output = $(`[data-speaker-dim-value="${key}"]`); if (output) output.textContent = value;
+        return;
+      }
       if (e.target.id === "personaPromptInput") {
         const count = $("#personaCharCount"); if (count) count.textContent = `${e.target.value.length} 字`;
         return;
@@ -8343,6 +8636,7 @@ let sidebarCollapsed = false;
     seedConversations();
     syncConversationAchievements();
     renderSidebar();
+    applyRoleVisibility();
     $("#roleMenu [data-role-switch='user']").classList.add("active");
     refreshTryPool(); renderTryChips();
     syncExclusion();
@@ -8352,6 +8646,15 @@ let sidebarCollapsed = false;
 
  function handlePageAction(act, el) {
    switch (act) {
+      case "personalAgentSelect": personalAgentTarget = el.dataset.agentId || "speech"; renderPersonalization(); break;
+      case "speakerRoleSelect": setActiveSpeakerStyle(el.dataset.roleId); renderPersonalization(); if (configRole !== "user" && currentView === "config") renderConfig(); break;
+      case "speakerRoleAdd": openModal("新增讲话人", `<div class="grid-2"><div class="field"><label>讲话人名称</label><input id="newSpeakerName" placeholder="如：赵主任"></div><div class="field"><label>职务或适用场景</label><input id="newSpeakerTitle" placeholder="如：部门负责人 · 专题汇报"></div></div><div class="field"><label>风格说明</label><input id="newSpeakerDesc" placeholder="如：简洁务实，突出问题和措施"></div>`, () => { const name = ($("#newSpeakerName").value || "").trim(); if (!name) { showToast("请填写讲话人名称"); return; } const id = "rs-" + Date.now(); SPEAKER_STYLE_PROFILES.push({ id, name, title:($("#newSpeakerTitle").value || "常用讲话人").trim(), desc:($("#newSpeakerDesc").value || "待补充风格说明").trim(), initials:name.slice(0,1), dimensions:{ sentence:60,vocabulary:60,structure:60,tone:60,format:60 }, samples:[] }); setActiveSpeakerStyle(id,true); closeModal(); renderPersonalization(); if (configRole !== "user" && currentView === "config") renderConfig(); showToast("讲话人已新增，可继续上传参考材料"); }, { okText:"新增" }); break;
+      case "speakerSampleUpload": { const input = $("#speakerSampleInput"); if (!input) break; input.onchange = () => { const role = activeSpeakerStyle(); Array.from(input.files || []).slice(0,10).forEach(file => { if (!role.samples.includes(file.name)) role.samples.push(file.name); }); input.value = ""; renderPersonalization(); if (configRole !== "user" && currentView === "config") renderConfig(); showToast("参考材料已加入讲话人风格"); }; input.click(); break; }
+      case "speakerSampleRemove": { const role = activeSpeakerStyle(); role.samples = role.samples.filter(name => name !== el.dataset.sampleName); renderPersonalization(); if (configRole !== "user" && currentView === "config") renderConfig(); showToast("参考材料已移除"); break; }
+      case "speakerStyleSave": setActiveSpeakerStyle(activeSpeakerStyle().id,true); showToast("讲话人风格已保存，后续发言稿将默认使用"); break;
+      case "speechStyleSwitch": openSpeechStyleSwitch(el.dataset.msgIndex, el.dataset.styleSource); break;
+      case "adminConfigSelect": adminConfigTarget = el.dataset.agentId || "global"; renderConfig(); break;
+      case "adminViewTemplate": { const agent = byId(el.dataset.agentId); if (agent) openModal(`${agent.name} · 公文格式模板`, `<div class="cfg-readonly" style="margin-bottom:12px">仅供查看：标题、正文层级、落款、日期和版式规范由平台统一维护。</div><div class="editor-paper" style="min-height:360px;padding:32px">${v3TemplateHTML(agent.id)}</div>`, null, { hideFooter:true, width:"min(900px, calc(100vw - 40px))" }); break; }
       case "conversationChoice": sendConversationalChoice(el.dataset.choiceValue || ""); break;
       case "copyAgentReply": copyAgentReply(el.dataset.msgIndex); break;
       case "copyUserReply": copyUserReply(el.dataset.msgIndex); break;
@@ -8465,7 +8768,7 @@ let sidebarCollapsed = false;
       case "cfgRuleEdit": openManagedAgentConfigEditor(el); break;
       case "cfgManage": showToast("已进入当前智能体的配置项管理范围"); break;
       case "cfgPublish": openModal("保存平台规则版本", "保存后会自动生成版本号、变更摘要和回滚点。确认保存当前配置？", () => { closeModal(); showToast("平台规则已保存并生成新版本"); }, { okText: "保存版本" }); break;
-      case "cfgSave": showToast(configRole === "user" ? "个人偏好已保存，不影响平台和部门规则" : configRole === "dept" ? "部门配置已保存并生成新版本" : "平台配置已保存并生成新版本"); break;
+      case "cfgSave": showToast(configRole === "user" ? "个人偏好已保存，不影响平台和部门规则" : configRole === "dept" ? "部门配置已保存并生效" : "平台配置已保存并生效"); break;
       case "kbPickerGoto": $("#kbPickerMask").classList.remove("show"); switchView("kb"); showToast("已跳转到知识库管理"); break;
       case "tryAdd": {
         config.personal.tryQuestions = tryQuestionsReadFromDOM();
