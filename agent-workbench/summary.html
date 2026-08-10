@@ -6,22 +6,25 @@
 <title>工作总结智能生成智能体 V4</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif; font-size: 14px; color: #303133; background: #f5f7fa; overflow: hidden; }
+html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif; font-size: 14px; color: #303133; background: linear-gradient(180deg, #F4F6F9 0%, #eaf0f8 100%); overflow: hidden; }
 :root {
-  --primary: #1a5cbf; --primary-hover: #1450a8;
-  --primary-light: #e8f1fc; --primary-lighter: #f0f6fd;
+  --primary: #0E4C92; --primary-hover: #1377B5;
+  --primary-light: #e8f1fa; --primary-lighter: #f0f6fd;
+  --primary-dark: #0A3573;
+  --ai-navy: #0A3573; --ai-blue: #0E4C92; --ai-cyan: #13A8A8;
+  --ai-green: #43A047; --ai-glow: 0 0 16px rgba(19,168,168,0.35);
   --border: #e4e7ed; --border-light: #ebeef5;
   --text-primary: #303133; --text-regular: #606266;
   --text-secondary: #909399; --text-placeholder: #c0c4cc;
-  --bg-page: #f5f7fa; --bg-white: #ffffff;
-  --success: #67c23a; --warning: #e6a23c;
-  --danger: #f56c6c; --info: #909399;
+  --bg-page: #F4F6F9; --bg-white: #ffffff;
+  --success: #43A047; --warning: #C08060;
+  --danger: #D9534F; --info: #909399;
   --shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
 }
-.app { display: flex; width: 100%; height: 100vh; overflow: hidden; }
+.app { display: grid; grid-template-columns: 280px 1fr; grid-template-rows: 58px 1fr; width: 100%; height: 100vh; overflow: hidden; }
 
 /* ========== 侧边栏 ========== */
-.sidebar { width: 260px; background: #fff; border-right: 1px solid var(--border-light); display: flex; flex-direction: column; transition: width 0.3s ease; flex-shrink: 0; position: relative; }
+.sidebar { width: 280px; background: #fff; border-right: 1px solid var(--border-light); display: flex; flex-direction: column; transition: width 0.3s ease; flex-shrink: 0; position: relative; grid-column: 1; grid-row: 1 / 3; }
 .sidebar.collapsed { width: 56px; }
 .sidebar.collapsed .sidebar-body, .sidebar.collapsed .btn-new-text, .sidebar.collapsed .sidebar-title-text, .sidebar.collapsed .history-title { display: none; }
 .sidebar.collapsed .btn-new { padding: 0; width: 40px; height: 40px; justify-content: center; margin: 0 auto; }
@@ -29,15 +32,15 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .sidebar.collapsed .sidebar-logo { justify-content: center; }
 .sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
 .sidebar-logo { display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 600; font-size: 15px; }
-.sidebar-logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, #1a5cbf, #2980e8); border-radius: 6px; color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.sidebar-logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); border-radius: 6px; color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; box-shadow: var(--ai-glow); }
 .sidebar-toolbar { padding: 12px 16px; }
-.btn-new { width: 100%; height: 40px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; transition: background 0.2s; }
-.btn-new:hover { background: var(--primary-hover); }
+.btn-new { width: 100%; height: 40px; background: linear-gradient(135deg, var(--ai-blue), var(--primary-hover)); color: #fff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; transition: .25s ease; }
+.btn-new:hover { box-shadow: 0 8px 20px rgba(14,76,146,0.3), var(--ai-glow); }
 .sidebar-body { flex: 1; overflow-y: auto; padding: 0 8px 16px; }
 .history-title { padding: 12px 8px 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-.history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 2px; color: var(--text-regular); font-size: 13px; line-height: 1.4; transition: background 0.15s; display: flex; align-items: center; gap: 8px; position: relative; }
-.history-item:hover { background: var(--bg-page); }
-.history-item.active { background: var(--primary-light); color: var(--primary); font-weight: 500; }
+.history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 2px; color: var(--text-regular); font-size: 13px; line-height: 1.4; transition: all .25s ease; display: flex; align-items: center; gap: 8px; position: relative; }
+  .history-item:hover { background: #eef2f7; transform: translateX(2px); }
+.history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); color: #fff; font-weight: 500; box-shadow: 0 8px 20px rgba(14,76,146,0.25), var(--ai-glow); }
 .history-item .item-icon { flex-shrink: 0; opacity: 0.6; font-size: 14px; }
 .history-item .item-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .history-item .item-delete { opacity: 0; color: var(--text-placeholder); transition: opacity 0.2s; padding: 2px; }
@@ -56,42 +59,53 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .sidebar.collapsed .sidebar-float-toggle { display: flex; }
 
 /* ========== 主区 ========== */
-.main { flex: 1; display: flex; flex-direction: column; background: var(--bg-page); min-width: 0; overflow: hidden; }
-.main-header { padding: 16px 24px; background: #fff; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-.main-title { display: flex; align-items: center; gap: 12px; }
-.main-title-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #1a5cbf, #2980e8); border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-.main-title-text h1 { font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
-.main-title-text p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-.main-header-actions { display: flex; gap: 8px; }
-.btn-header { background: #fff; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; color: var(--text-regular); font-size: 13px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
-.btn-header:hover { border-color: var(--primary); color: var(--primary); }
+.main { flex: 1; display: flex; flex-direction: column; background: var(--bg-page); min-width: 0; overflow: hidden; grid-column: 2; grid-row: 2; }
+.main-header { padding: 16px 24px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; grid-column: 2; grid-row: 1; box-shadow: 0 4px 20px rgba(10,53,115,0.18); }
+  .main-title { display: flex; align-items: center; gap: 12px; }
+  .main-title-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .main-title-text h1 { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.3; }
+  .main-title-text p { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  .main-header-actions { display: flex; gap: 8px; }
+  .btn-header { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 6px; color: #fff; font-size: 13px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+  .btn-header:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.4); color: #fff; }
 
 .content-area { flex: 1; display: flex; overflow: hidden; position: relative; }
-.workspace-left { flex: 1; display: flex; flex-direction: column; transition: flex 0.35s ease; overflow: hidden; min-width: 0; }
-.workspace-right { width: 0; background: #fff; border-left: 1px solid var(--border-light); transition: width 0.35s ease; overflow: hidden; display: flex; flex-direction: column; flex-shrink: 0; }
-.workspace-right.open { width: 55%; }
-.content-area.split .workspace-left { flex: 0 0 45%; }
-.content-area.split.expanded-right .workspace-left { flex: 0 0 25%; }
-.workspace-right.expanded { width: 75%; }
+.workspace-left { order:2; flex:1; display: flex; flex-direction: column; transition: all 0.35s ease; overflow: hidden; min-width: 0; border-left: 1px solid var(--border-light); background: #fff; }
+  .workspace-right { order:1; flex:1; background: #fff; transition: all 0.35s ease; overflow: hidden; display: none; flex-direction: column; }
+  .workspace-right.open { display: flex; }
+  .content-area.split .workspace-left { order:2; flex:0 0 480px; }
+  .content-area.split .workspace-right { order:1; flex:1; display: flex; }
+  .content-area.split.expanded-right .workspace-left { order:2; flex:0 0 480px; }
+  .workspace-right.expanded { order:1; flex:1; }
 
 .workspace-scroll { flex: 1; overflow-y: auto; padding: 24px; }
-.welcome-panel { max-width: 860px; margin: 0 auto 20px; text-align: center; padding: 24px 0 8px; }
-.welcome-title { font-size: 22px; color: var(--text-primary); font-weight: 600; margin-bottom: 8px; }
+.workspace-inner { max-width: 1100px; margin: 0 auto; }
+.welcome-panel { margin: 0 0 20px; text-align: center; padding: 20px 0 8px; }
+.welcome-title { font-size: 22px; color: var(--text-primary); font-weight: 600; margin-bottom: 8px; background: linear-gradient(90deg, #0A3573, #0E4C92, #13A8A8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.welcome-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; vertical-align: middle; margin-right: 10px; }
+.welcome-icon svg { width: 44px; height: 44px; }
 .welcome-desc { color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
 
-.example-guide { max-width: 860px; margin: 0 auto 10px; padding: 8px 14px; background: linear-gradient(90deg, #fffbe6, #fff); border: 1px solid #ffe58f; border-left: 3px solid #faad14; border-radius: 4px; font-size: 12px; color: #7c5a00; display: flex; align-items: center; gap: 6px; }
-.example-guide .close-guide { margin-left: auto; cursor: pointer; color: #b98a00; padding: 0 4px; font-size: 14px; }
-.example-cards { max-width: 860px; margin: 0 auto 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.example-card { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; text-align: left; }
-.example-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-1px); }
-.example-card-title { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-.example-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.example-guide { margin: 0 0 10px; padding: 8px 14px; background: linear-gradient(90deg, var(--primary-lighter), #fff); border: 1px solid #bcd6f5; border-left: 3px solid var(--ai-blue); border-radius: 6px; font-size: 12px; color: var(--text-regular); display: flex; align-items: center; gap: 6px; }
+.example-guide .close-guide { margin-left: auto; cursor: pointer; color: var(--text-secondary); padding: 0 4px; font-size: 14px; }
+.example-guide .close-guide:hover { color: var(--ai-blue); }
+.example-cards { margin: 0 0 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.example-card { background: #fff; border: 1px solid var(--border-light); border-radius: 10px; padding: 18px 20px; cursor: pointer; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; text-align: left; }
+  .example-card:hover { border-color: var(--ai-cyan); box-shadow: 0 8px 24px rgba(14,76,146,.15); transform: translateY(-4px); }
+.example-card-title { font-size: 14px; color: var(--primary); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.example-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
-.input-panel { max-width: 860px; margin: 0 auto; background: #fff; border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
-.selected-template-bar { display: none; align-items: center; gap: 8px; margin-bottom: 8px; padding: 6px 10px; background: var(--primary-lighter); border: 1px solid var(--primary-light); border-radius: 4px; font-size: 12px; }
-.selected-template-bar.show { display: flex; }
-.selected-template-bar .template-tag-name { color: var(--primary); font-weight: 600; }
-.selected-template-bar .template-remove { margin-left: auto; cursor: pointer; color: var(--text-secondary); font-size: 14px; }
+.input-panel { margin: 0; background: #fff; border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+.selected-template-bar { display: none; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px 14px; background: linear-gradient(90deg, #e8f1fa, #d0e6fa, #e8f1fa, #f0f6fd); background-size: 200% 100%; border: 1px solid #b8d4f0; border-left: 4px solid var(--ai-blue); border-radius: 6px; font-size: 13px; position: relative; overflow: hidden; box-shadow: 0 0 12px rgba(14,76,146,0.12), 0 0 24px rgba(19,168,168,0.06); animation: templateGlow 2.5s ease-in-out infinite; }
+.selected-template-bar::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent); animation: templateShimmer 2s ease-in-out infinite; }
+.selected-template-bar::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--ai-blue); border-radius: 6px 0 0 6px; animation: templateBorderPulse 1.8s ease-in-out infinite; }
+@keyframes templateShimmer { 0% { left: -100%; } 100% { left: 120%; } }
+@keyframes templateGlow { 0%, 100% { box-shadow: 0 0 12px rgba(14,76,146,0.12), 0 0 24px rgba(19,168,168,0.06); } 50% { box-shadow: 0 0 18px rgba(14,76,146,0.22), 0 0 36px rgba(19,168,168,0.14); } }
+@keyframes templateBorderPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+.selected-template-bar.show { display: flex; animation: templateBarIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes templateBarIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.selected-template-bar .template-tag-name { color: var(--ai-blue); font-weight: 700; font-size: 14px; background: rgba(14,76,146,0.08); padding: 3px 10px; border-radius: 4px; }
+.selected-template-bar .template-remove { margin-left: auto; cursor: pointer; color: var(--text-secondary); font-size: 16px; padding: 0 4px; }
 .selected-template-bar .template-remove:hover { color: var(--danger); }
 .input-textarea { width: 100%; min-height: 90px; border: none; outline: none; resize: none; font-family: inherit; font-size: 14px; color: var(--text-primary); line-height: 1.6; padding: 4px; }
 .input-textarea::placeholder { color: var(--text-placeholder); }
@@ -103,12 +117,12 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .toolbar-left { display: flex; gap: 6px; }
 .toolbar-btn { background: transparent; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; color: var(--text-regular); font-size: 12px; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
 .toolbar-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lighter); }
-.btn-parse { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
-.btn-parse:hover { background: var(--primary-hover); }
+.btn-parse { background: linear-gradient(135deg, var(--ai-blue), var(--primary-hover)); color: #fff; border: none; padding: 8px 18px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: .25s ease; }
+.btn-parse:hover { box-shadow: 0 8px 20px rgba(14,76,146,0.3), var(--ai-glow); }
 .btn-parse:disabled { background: #a0bee5; cursor: not-allowed; }
 
 /* 表单 */
-.form-panel { max-width: 860px; margin: 20px auto 0; background: #fff; border-radius: 10px; border: 1px solid var(--border-light); overflow: hidden; display: none; }
+.form-panel { margin: 20px 0 0; background: #fff; border-radius: 10px; border: 1px solid var(--border-light); overflow: hidden; display: none; }
 .form-panel.show { display: block; animation: fadeInUp 0.4s ease; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .form-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: var(--primary-lighter); }
@@ -178,7 +192,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
   cursor: pointer;
   user-select: none;
 }
-.category-group.warning .category-group-header { border-left-color: var(--warning); background: #fffbf3; }
+.category-group.warning .category-group-header { border-left-color: var(--warning); background: #fef9f5; }
 .category-group.success .category-group-header { border-left-color: var(--success); background: #f5fbf5; }
 .category-group-collapse-icon { color: var(--text-secondary); font-size: 10px; transition: transform 0.2s; width: 12px; flex-shrink: 0; }
 .category-group.collapsed .category-group-collapse-icon { transform: rotate(-90deg); }
@@ -186,7 +200,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .category-group-title:hover { border-color: var(--primary-light); }
 .category-group-title[contenteditable="true"]:focus { border-color: var(--primary); background: #fff; outline: none; }
 .category-group-badge { background: var(--primary-lighter); color: var(--primary); padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: normal; flex-shrink: 0; }
-.category-group.warning .category-group-badge { background: #fef3e0; color: var(--warning); }
+.category-group.warning .category-group-badge { background: #fef0e8; color: var(--warning); }
 .category-group.success .category-group-badge { background: #eef8ec; color: var(--success); }
 .category-group-dim { color: var(--text-secondary); font-size: 11px; flex-shrink: 0; }
 .category-group-actions { display: flex; gap: 4px; flex-shrink: 0; }
@@ -212,7 +226,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .category-add-group:hover { background: var(--primary-lighter); }
 
 /* 未归类区（新添条目临时区） */
-.uncategorized-notice { padding: 8px 12px; background: #fef3e0; border-left: 3px solid var(--warning); font-size: 12px; color: #7c5a00; margin-top: 8px; border-radius: 0 4px 4px 0; display: none; }
+.uncategorized-notice { padding: 8px 12px; background: var(--primary-lighter); border-left: 3px solid var(--ai-blue); font-size: 12px; color: var(--text-regular); margin-top: 8px; border-radius: 0 6px 6px 0; display: none; }
 .uncategorized-notice.show { display: block; }
 
 .radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 14px; padding: 8px 0; }
@@ -238,17 +252,14 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .form-footer-btns { display: flex; gap: 8px; }
 .btn-default { background: #fff; border: 1px solid var(--border); padding: 8px 16px; border-radius: 4px; color: var(--text-regular); font-size: 13px; cursor: pointer; transition: all 0.2s; }
 .btn-default:hover { border-color: var(--primary); color: var(--primary); }
-.btn-primary { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
-.btn-primary:hover { background: var(--primary-hover); }
+.btn-primary { background: linear-gradient(135deg, var(--ai-blue), var(--primary-hover)); color: #fff; border: none; padding: 8px 18px; border-radius: 10px; font-size: 13px; cursor: pointer; transition: .25s ease; display: flex; align-items: center; gap: 6px; }
+.btn-primary:hover { box-shadow: 0 8px 20px rgba(14,76,146,0.3), var(--ai-glow); }
 .btn-danger { background: var(--danger); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: opacity 0.2s; }
 .btn-danger:hover { opacity: 0.9; }
 
 /* 预览区 */
 .preview-header { padding: 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: #fafcff; flex-shrink: 0; }
 .preview-header-left { display: flex; align-items: center; gap: 10px; }
-.preview-tabs { display: flex; gap: 4px; background: #eef2f7; padding: 3px; border-radius: 6px; }
-.preview-tab { padding: 4px 12px; font-size: 12px; color: var(--text-regular); cursor: pointer; border-radius: 4px; transition: all 0.15s; }
-.preview-tab.active { background: #fff; color: var(--primary); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 .preview-header-actions { display: flex; gap: 6px; align-items: center; }
 .icon-btn { background: transparent; border: 1px solid var(--border); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; color: var(--text-regular); display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.2s; }
 .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
@@ -306,11 +317,13 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
 
-.modal-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.2s ease; }
-.modal-mask.show { display: flex; }
+.modal-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.3s ease; opacity: 0; }
+.modal-mask.show { display: flex; opacity: 1; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal { background: #fff; border-radius: 8px; min-width: 400px; max-width: 90%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.25s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes modalSlideIn { from { transform: translateY(-40px) scale(0.88); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+@keyframes modalSlideOut { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-30px) scale(0.9); opacity: 0; } }
+.modal { background: #fff; border-radius: 10px; min-width: 480px; max-width: 90%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; animation: modalSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 12px 40px rgba(0,0,0,0.18); }
+.modal.closing { animation: modalSlideOut 0.22s ease-in forwards; pointer-events: none; }
 .modal-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
 .modal-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 .modal-close { background: transparent; border: none; cursor: pointer; color: var(--text-secondary); font-size: 18px; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
@@ -322,10 +335,10 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .source-detail-item { padding: 10px 12px; background: #fafcff; border-left: 3px solid var(--primary); border-radius: 0 4px 4px 0; margin-bottom: 10px; }
 .source-detail-file { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
 .source-detail-text { font-size: 13px; color: var(--text-regular); line-height: 1.6; }
-.source-highlight { background: #fff8d3; padding: 0 2px; }
+.source-highlight { background: #d5e8fc; padding: 0 2px; }
 
-.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background: rgba(0,0,0,0.75); color: #fff; border-radius: 4px; font-size: 13px; z-index: 2000; display: flex; align-items: center; gap: 6px; animation: toastIn 0.3s ease; }
-@keyframes toastIn { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background: rgba(14,76,146,0.92); color: #fff; border-radius: 8px; font-size: 13px; z-index: 2000; display: flex; align-items: center; gap: 6px; animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+@keyframes toastIn { from { transform: translate(-50%, -16px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 .toast.success { background: var(--success); }
 .toast.error { background: var(--danger); }
 .toast.info { background: var(--primary); }
@@ -356,7 +369,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .upload-icon { font-size: 32px; margin-bottom: 8px; color: var(--primary); }
 .upload-text { font-size: 14px; margin-bottom: 4px; }
 .upload-hint { font-size: 12px; color: var(--text-secondary); }
-.upload-tips { padding: 10px 12px; background: #fffbe6; border-left: 3px solid #faad14; border-radius: 4px; font-size: 12px; color: #7c5a00; line-height: 1.6; }
+.upload-tips { padding: 10px 12px; background: var(--primary-lighter); border-left: 3px solid var(--ai-blue); border-radius: 4px; font-size: 12px; color: var(--text-regular); line-height: 1.6; }
 
 .loading-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column; gap: 12px; }
 .loading-mask.show { display: flex; }
@@ -379,7 +392,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .history-item .meta-type { color: var(--primary); font-weight: 500; }
 .history-item .meta-status { padding: 0 6px; border-radius: 8px; font-size: 10px; line-height: 1.6; }
 .history-item .meta-status.success { background: #eef8ec; color: var(--success); }
-.history-item .meta-status.warning { background: #fef3e0; color: var(--warning); }
+.history-item .meta-status.warning { background: #fef0e8; color: var(--warning); }
 .history-item .meta-status.info { background: var(--primary-lighter); color: var(--primary); }
 .history-empty { text-align: center; color: var(--text-placeholder); font-size: 12px; padding: 16px 8px; }
 
@@ -388,13 +401,26 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
 .template-readonly-bar .tpl-ro-icon { color: var(--primary); font-size: 15px; }
 .template-readonly-bar .tpl-ro-name { color: var(--text-primary); font-weight: 600; }
 .template-readonly-bar .tpl-ro-lock { margin-left: auto; font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
-.template-readonly-bar .tpl-ro-empty { color: #7c5a00; font-size: 12px; }
+.template-readonly-bar .tpl-ro-empty { color: var(--text-secondary); font-size: 12px; }
 
 /* 自动保存提示 */
 .auto-save-hint { font-size: 12px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.3s; }
 .auto-save-hint.show { opacity: 1; }
 .auto-save-hint.saved { color: var(--success); }
 .form-footer-hint .save-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); margin-right: 4px; }
+
+/* ============ AI 智能体视觉与动效规范 ============ */
+@keyframes blink { 50% { opacity: 0; } }
+.typing-cursor::after { content: '▍'; margin-left: 2px; color: var(--ai-cyan); animation: blink 1s steps(1) infinite; }
+@keyframes dot-bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+.thinking-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ai-cyan); display: inline-block; animation: dot-bounce 1.2s infinite ease-in-out; }
+.thinking-dot:nth-child(2) { animation-delay: .15s; }
+.thinking-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.bubble { animation: fadeUp .3s ease; }
+.ai-gradient-text { background: linear-gradient(90deg, #0E4C92, #13A8A8, #43A047); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.agent-avatar { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow); }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -417,7 +443,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
     <div class="sidebar-body">
       <div class="history-title">历史生成记录</div>
       <div class="history-filters">
-        <input type="text" id="historySearch" class="history-search-input" placeholder="🔍 搜索关键词..." oninput="filterHistory()">
+        <input type="text" id="historySearch" class="history-search-input" placeholder="搜索关键词..." oninput="filterHistory()">
         <input type="date" id="historyDate" class="history-date-input" onchange="filterHistory()" title="按时间筛选">
       </div>
       <div id="historyList"></div>
@@ -435,57 +461,59 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
     <div class="sidebar-float-toggle" onclick="toggleSidebar()" title="展开侧边栏">»</div>
   </aside>
 
-  <!-- 主内容 -->
-  <main class="main">
-    <div class="main-header">
-      <div class="main-title">
-        <div class="main-title-icon">🖋</div>
-        <div class="main-title-text">
-          <h1>工作总结智能生成智能体</h1>
-          <p>基于原始素材智能生成季度/半年/年度/专项工作总结，全程数据可溯源</p>
-        </div>
-      </div>
-      <div class="main-header-actions">
-        <button class="btn-header" onclick="showModal('helpModal')">
-          <span>❓</span><span>使用帮助</span>
-        </button>
+  <!-- 顶栏（跨满） -->
+  <div class="main-header">
+    <div class="main-title">
+      <div class="main-title-icon"><svg viewBox="0 0 36 36" width="36" height="36"><defs><linearGradient id="mtiGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(255,255,255,0.3)"/><stop offset="100%" stop-color="rgba(255,255,255,0.1)"/></linearGradient></defs><rect width="36" height="36" rx="8" fill="url(#mtiGrad)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="18" cy="18" r="4" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.2"/><circle cx="18" cy="18" r="2" fill="rgba(255,255,255,0.7)"/><line x1="18" y1="14" x2="18" y2="8" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/><line x1="18" y1="22" x2="18" y2="28" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/><line x1="14" y1="18" x2="8" y2="18" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/><line x1="22" y1="18" x2="28" y2="18" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/><circle cx="8" cy="18" r="1.5" fill="rgba(255,255,255,0.4)"/><circle cx="28" cy="18" r="1.5" fill="rgba(255,255,255,0.4)"/><circle cx="18" cy="8" r="1.5" fill="rgba(255,255,255,0.4)"/><circle cx="18" cy="28" r="1.5" fill="rgba(255,255,255,0.4)"/></svg></div>
+      <div class="main-title-text">
+        <h1>工作总结智能生成智能体</h1>
+        <p>基于原始素材智能生成季度/半年/年度/专项工作总结，全程数据可溯源</p>
       </div>
     </div>
+    <div class="main-header-actions">
+      <button class="btn-header" onclick="showModal('helpModal')">
+        <span>◉</span><span>使用帮助</span>
+      </button>
+    </div>
+  </div>
 
+  <!-- 主内容 -->
+  <main class="main">
     <div class="content-area" id="contentArea">
       <div class="workspace-left">
         <div class="workspace-scroll">
+          <div class="workspace-inner">
           <div class="welcome-panel" id="welcomePanel">
-            <div class="welcome-title">👋 您好，请上传素材开始生成工作总结</div>
+            <div class="welcome-title"><span class="welcome-icon"><svg viewBox="0 0 44 44"><defs><linearGradient id="wiGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0A3573"/><stop offset="50%" stop-color="#0E4C92"/><stop offset="100%" stop-color="#13A8A8"/></linearGradient><filter id="wiGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="44" height="44" rx="11" fill="url(#wiGrad)" filter="url(#wiGlow)"/><circle cx="22" cy="22" r="5" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/><circle cx="22" cy="22" r="2.5" fill="rgba(255,255,255,0.7)"/><line x1="22" y1="17" x2="22" y2="9" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/><line x1="22" y1="27" x2="22" y2="35" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/><line x1="17" y1="22" x2="9" y2="22" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/><line x1="27" y1="22" x2="35" y2="22" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/><circle cx="9" cy="22" r="2" fill="rgba(255,255,255,0.5)"/><circle cx="35" cy="22" r="2" fill="rgba(255,255,255,0.5)"/><circle cx="22" cy="9" r="2" fill="rgba(255,255,255,0.5)"/><circle cx="22" cy="35" r="2" fill="rgba(255,255,255,0.5)"/></svg></span> 您好，请上传素材开始生成工作总结</div>
             <div class="welcome-desc">支持上传周报、月报、专项报告等文档，或直接用自然语言描述工作情况；<br>系统将自动解析并生成规范的政务工作总结。</div>
           </div>
 
           <div class="example-guide" id="exampleGuide">
-            <span style="font-size:14px">💡</span>
+            <span style="font-size:14px">▸</span>
             <span>第一次使用不知如何填写？您可以点击下方示例试试，一键填入常见场景描述。</span>
             <span class="close-guide" onclick="closeGuide()">✕</span>
           </div>
 
           <div class="example-cards" id="exampleCards">
             <div class="example-card" onclick="applyExample(1)">
-              <div class="example-card-title">💡 季度工作总结</div>
+              <div class="example-card-title">▸ 季度工作总结</div>
               <div class="example-card-desc">帮我生成我科室2026年二季度工作总结，重点体现营商环境、政务服务两大主线。</div>
             </div>
             <div class="example-card" onclick="applyExample(2)">
-              <div class="example-card-title">💡 专项工作汇报</div>
+              <div class="example-card-title">▸ 专项工作汇报</div>
               <div class="example-card-desc">基于附件资料，撰写数字政务改革专项工作汇报，篇幅约2000字。</div>
             </div>
             <div class="example-card" onclick="applyExample(3)">
-              <div class="example-card-title">💡 半年度总结</div>
+              <div class="example-card-title">▸ 半年度总结</div>
               <div class="example-card-desc">整合各处室周月报，形成2026年上半年综合工作总结，突出成效亮点。</div>
             </div>
           </div>
 
           <div class="input-panel">
             <div class="selected-template-bar" id="selectedTemplateBar">
-              <span>📋</span><span>已应用模板：</span>
+              <span style="font-size:16px;color:var(--ai-blue)">✓</span><span style="font-weight:600;color:var(--text-primary)">已应用模板：</span>
               <span class="template-tag-name" id="selectedTemplateName">季度综合工作总结</span>
-              <span style="color:var(--text-secondary);font-size:11px">(将影响生成结构，不与您输入的内容冲突)</span>
+              <span style="color:var(--text-secondary);font-size:11px;margin-left:2px">(将影响生成结构，不与您输入内容冲突)</span>
               <span class="template-remove" onclick="clearSelectedTemplate()">✕</span>
             </div>
             <textarea id="userInput" class="input-textarea" placeholder="请描述本次要生成的工作总结（如：请帮我生成2026年二季度工作总结，重点体现营商环境、政务服务改革方面的成效），或上传相关工作文档..."></textarea>
@@ -556,7 +584,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
                 <input type="text" id="fieldTitle" class="form-input" placeholder="请输入或调整总结标题" value="XX局2026年第二季度综合工作总结" onblur="validateField('fieldTitle')">
                 <div class="form-error" id="err-fieldTitle">标题不能为空</div>
                 <div class="ai-suggest-card" id="titleSuggest">
-                  <div class="suggest-header"><span>💡</span>标题优化建议</div>
+                  <div class="suggest-header"><span>▸</span>标题优化建议</div>
                   <div class="suggest-content">建议调整为「XX局2026年第二季度工作总结报告」，更符合政务公文规范化命名要求。</div>
                   <div class="suggest-actions">
                     <button class="primary" onclick="applySuggest('fieldTitle','XX局2026年第二季度工作总结报告','titleSuggest')">✓ 采纳建议</button>
@@ -580,7 +608,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
                   <input type="text" class="keyword-add-input" id="kwInput" placeholder="+ 输入后回车添加" onkeydown="addKeyword(event)">
                 </div>
                 <div class="ai-suggest-card" id="kwSuggest">
-                  <div class="suggest-header"><span>💡</span>可补充的关键词</div>
+                  <div class="suggest-header"><span>▸</span>可补充的关键词</div>
                   <div class="suggest-content">检测到文档中还多次出现「基层治理」「作风建设」「督查考核」，是否补充？</div>
                   <div class="suggest-actions">
                     <button class="primary" onclick="applyKwSuggest()">✓ 一键补充</button>
@@ -593,7 +621,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
               <div class="form-row">
                 <div class="form-label"><span>总结模板</span><span class="field-hint">模板需在解析前通过上方"选择模板"按钮选定，此处仅展示</span></div>
                 <div class="template-readonly-bar" id="templateReadonlyBar">
-                  <span class="tpl-ro-empty">⚠ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>
+                  <span class="tpl-ro-empty">ⓘ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>
                 </div>
               </div>
 
@@ -617,10 +645,10 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
                   <div class="category-add-group" onclick="addCategoryGroup()">+ 添加重点方面</div>
                 </div>
                 <div class="uncategorized-notice" id="uncatNotice">
-                  ⚠ 有 <strong id="uncatCount">0</strong> 项条目暂未归类，可拖动或编辑到合适的重点方面下。
+                  ⓘ 有 <strong id="uncatCount">0</strong> 项条目暂未归类，可拖动或编辑到合适的重点方面下。
                 </div>
                 <div class="ai-suggest-card" id="itemSuggest">
-                  <div class="suggest-header"><span>💡</span>补充建议</div>
+                  <div class="suggest-header"><span>▸</span>补充建议</div>
                   <div class="suggest-content">检测到文档中还提及「基层治理创新试点」「12345 热线办理提质增效」相关内容，是否补充？</div>
                   <div class="suggest-actions">
                     <button class="primary" onclick="applyItemSuggest()">✓ 一键补充</button>
@@ -656,9 +684,10 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
             <div class="form-footer">
               <div class="form-footer-hint"><span class="save-dot"></span><span id="formAutoSaveHint">系统已自动保存</span></div>
               <div class="form-footer-btns">
-                <button class="btn-primary" onclick="generateOutline()"><span>⚡</span><span>智能生成大纲</span></button>
+                <button class="btn-primary" onclick="generateSummary()"><span>⚡</span><span>智能生成总结</span></button>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -667,22 +696,13 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
       <div class="workspace-right" id="workspaceRight">
         <div class="preview-header">
           <div class="preview-header-left">
-            <div class="preview-tabs">
-              <div class="preview-tab active" id="tabOutline" onclick="switchTab('outline')">📑 大纲结构</div>
-              <div class="preview-tab" id="tabFinal" onclick="switchTab('final')">📄 总结正文</div>
-            </div>
+            <span style="font-size:14px;font-weight:600;color:var(--text-primary)">📄 工作总结</span>
           </div>
           <div class="preview-header-actions">
-            <div id="topActionsOutline" style="display:flex;gap:6px;align-items:center">
-              <button class="icon-btn" onclick="toggleExpand()" title="展开/收起">⇔</button>
-              <button class="preview-header-btn" onclick="backToEdit()"><span>◀</span><span>返回修改</span></button>
-            </div>
-            <div id="topActionsFinal" style="display:none;gap:6px;align-items:center">
-              <button class="preview-header-btn" onclick="switchTab('outline')"><span>◀</span><span>返回大纲</span></button>
-              <button class="preview-header-btn" onclick="doPrint()"><span>🖨</span><span>打印</span></button>
-              <button class="preview-header-btn" onclick="showModal('exportModal')"><span>📥</span><span>导出</span></button>
-              <button class="icon-btn" onclick="toggleExpand()" title="展开/收起">⇔</button>
-            </div>
+            <button class="preview-header-btn" onclick="backToEdit()"><span>◀</span><span>返回修改</span></button>
+            <button class="preview-header-btn" onclick="doPrint()"><span>🖨</span><span>打印</span></button>
+            <button class="preview-header-btn" onclick="showModal('exportModal')"><span>📥</span><span>导出</span></button>
+            <button class="icon-btn" onclick="toggleExpand()" title="展开/收起">⇔</button>
           </div>
         </div>
 
@@ -700,27 +720,17 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
         </div>
 
         <div class="preview-body" id="previewBody">
-          <div id="outlineView" class="outline-doc">
-            <div class="outline-title" contenteditable="true">XX局2026年第二季度综合工作总结</div>
-            <div id="outlineSections"></div>
-            <button class="outline-add-btn" onclick="addSection()">+ 添加章节</button>
-          </div>
-          <div id="finalView" style="display:none">
-            <div class="final-doc" id="finalDoc"></div>
-          </div>
+          <div class="final-doc" id="finalDoc"></div>
         </div>
 
         <div class="preview-footer">
           <div class="preview-footer-hint">
             <span>💾</span>
-            <span id="footerHintText">大纲可直接编辑，确认后生成正式总结</span>
-            <span class="auto-save-hint" id="outlineAutoSaveHint">✓ 已自动保存</span>
-          </div>
-          <div class="preview-footer-btns" id="outlineFooterBtns">
-            <button class="btn-primary" onclick="confirmGenerate()"><span>📝</span><span>确认生成工作总结</span></button>
-          </div>
-          <div class="preview-footer-btns" id="finalFooterBtns" style="display:none">
+            <span id="footerHintText">每处内容均可点击查看溯源</span>
             <span class="auto-save-hint" id="finalAutoSaveHint">✓ 已自动保存</span>
+          </div>
+          <div class="preview-footer-btns" id="finalFooterBtns">
+            <span class="auto-save-hint" id="finalAutoSaveHint2">✓ 已自动保存</span>
           </div>
         </div>
 
@@ -823,7 +833,7 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
         <div class="upload-text">点击选择文件或拖拽文件到此处</div>
         <div class="upload-hint">支持批量上传</div>
       </div>
-      <div class="upload-tips"><strong>⚠ 涉密提示：</strong>请勿上传涉密文件；素材仅本次会话使用。</div>
+      <div class="upload-tips"><strong>ⓘ 涉密提示：</strong>请勿上传涉密文件；素材仅本次会话使用。</div>
     </div>
     <div class="modal-footer">
       <button class="btn-default" onclick="hideModal('uploadModal')">取消</button>
@@ -846,22 +856,8 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
   </div>
 </div>
 
-<div class="modal-mask" id="backEditModal">
-  <div class="modal" style="min-width:380px">
-    <div class="modal-body" style="text-align:center;padding:30px 20px">
-      <div class="warning-icon">!</div>
-      <div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px">确认返回修改？</div>
-      <div style="color:var(--text-secondary);font-size:13px;line-height:1.6">返回后当前大纲将不会保留，需要重新生成。是否继续？</div>
-    </div>
-    <div class="modal-footer" style="justify-content:center">
-      <button class="btn-default" onclick="hideModal('backEditModal')">取消</button>
-      <button class="btn-primary" onclick="confirmBackToEdit()">确认返回</button>
-    </div>
-  </div>
-</div>
-
 <div class="modal-mask" id="exportModal">
-  <div class="modal" style="min-width:400px">
+  <div class="modal" style="min-width:480px">
     <div class="modal-header">
       <div class="modal-title">导出工作总结</div>
       <button class="modal-close" onclick="hideModal('exportModal')">✕</button>
@@ -896,11 +892,11 @@ html, body { height: 100%; font-family: "Microsoft YaHei", "PingFang SC", "Helve
       <p style="margin-bottom:10px"><strong>2. 素材上传</strong>：支持 DOC/DOCX/PDF/PPT/PPTX/XLSX，单次最多上传 10 个文件。</p>
       <p style="margin-bottom:10px"><strong>3. 智能解析</strong>：自动提取工作事项、成果、问题，按重点方面归类展示。</p>
       <p style="margin-bottom:10px"><strong>4. 重点归类</strong>：工作条目按业务逻辑归入重点方面，支持展开/收起一键切换、编辑、增删。</p>
-      <p style="margin-bottom:10px"><strong>5. 自动保存</strong>：表单、大纲、正文全程系统自动保存，无需手动保存草稿。</p>
-      <p style="margin-bottom:10px"><strong>6. 大纲与正文</strong>：大纲可编辑；正文按目标字数流式生成，可停止。"返回修改"会清空当前大纲，需重新生成。</p>
+      <p style="margin-bottom:10px"><strong>5. 自动保存</strong>：表单和总结正文全程系统自动保存，无需手动保存草稿。</p>
+      <p style="margin-bottom:10px"><strong>6. 生成总结</strong>：点击「智能生成总结」直接生成工作总结正文，按目标字数流式输出，可停止。"返回修改"会清空当前内容，需重新生成。</p>
       <p style="margin-bottom:10px"><strong>7. 导出与打印</strong>：导出仅支持 DOCX/PDF；打印为独立按钮，可单独使用；可勾选附带信息溯源报告。</p>
       <p style="margin-bottom:10px"><strong>8. 历史记录</strong>：左侧支持按关键词、时间筛选，每条记录显示总结类型、时间、状态。</p>
-      <p style="color:var(--warning)"><strong>⚠ 特别提示</strong>：系统严格基于素材生成，绝不引入外部信息，全程可溯源。</p>
+      <p style="color:var(--ai-blue)"><strong>ⓘ 特别提示</strong>：系统严格基于素材生成，绝不引入外部信息，全程可溯源。</p>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" onclick="hideModal('helpModal')">我知道了</button>
@@ -1182,9 +1178,19 @@ function showToast(msg, type = 'info') {
 }
 
 function showModal(id) { document.getElementById(id).classList.add('show'); }
-function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+function hideModal(id) {
+  const mask = document.getElementById(id);
+  const modal = mask.querySelector('.modal');
+  if (!modal) { mask.classList.remove('show'); return; }
+  modal.classList.add('closing');
+  modal.addEventListener('animationend', function handler() {
+    modal.removeEventListener('animationend', handler);
+    modal.classList.remove('closing');
+    mask.classList.remove('show');
+  });
+}
 document.querySelectorAll('.modal-mask').forEach(mask => {
-  mask.addEventListener('click', e => { if (e.target === mask) mask.classList.remove('show'); });
+  mask.addEventListener('click', e => { if (e.target === mask) hideModal(mask.id); });
 });
 
 /* 【核心修改2】侧边栏折叠 */
@@ -1242,9 +1248,7 @@ function loadHistory(el, id) {
   renderCategoryList();
   updateTemplateReadonly();
   openPreview();
-  renderOutline();
-  switchTab('final');
-  confirmGenerate();
+  generateSummary();
 }
 function deleteHistory(e, el, id) {
   e.stopPropagation();
@@ -1355,7 +1359,7 @@ function updateTemplateReadonly() {
   if (state.selectedTemplate) {
     bar.innerHTML = `<span class="tpl-ro-icon">📋</span><span class="tpl-ro-name">${state.selectedTemplate.name}</span><span class="tpl-ro-lock">🔒 已锁定（如需更换请返回重新选择）</span>`;
   } else {
-    bar.innerHTML = `<span class="tpl-ro-empty">⚠ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>`;
+    bar.innerHTML = `<span class="tpl-ro-empty">ⓘ 未选择模板（请在解析前点击上方"选择模板"按钮完成选择）</span>`;
   }
 }
 
@@ -1649,11 +1653,9 @@ function resetForm() {
   showToast('已重置', 'info');
 }
 function saveDraft() { showToast('表单草稿已保存', 'success'); }
-function saveOutlineDraft() { showToast('大纲草稿已保存', 'success'); }
-function saveFinalDraft() { showToast('总结草稿已保存', 'success'); }
 
-/* 大纲生成：基于当前的 categoryGroups 生成大纲结构 */
-function generateOutline() {
+/* 智能生成总结：直接生成工作总结 */
+function generateSummary() {
   const typeOk = validateField('fieldType');
   const titleOk = validateField('fieldTitle');
   const dateOk = validateDateRange();
@@ -1662,172 +1664,81 @@ function generateOutline() {
   if (checked === 0) { showToast('请至少勾选一项工作条目', 'error'); return; }
 
   openPreview();
-  switchTab('outline');
-  renderOutline();
+  document.getElementById('finalDoc').innerHTML = '';
+  state.isGenerating = true;
+  document.getElementById('genIndicator').classList.add('show');
+  document.getElementById('wordcountBar').classList.add('show');
+
+  const title = document.getElementById('fieldTitle').value || 'XX工作总结';
+  const type = state.currentType || 'quarterly';
+  const paragraphs = buildParagraphsForType(type, state.targetWordCount, title);
+
+  document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
+
   const mask = document.getElementById('loadingMask');
-  document.getElementById('loadingText').textContent = '正在智能生成大纲...';
+  document.getElementById('loadingText').textContent = '正在智能生成工作总结...';
   mask.classList.add('show');
   setTimeout(() => {
     mask.classList.remove('show');
-    document.querySelector('.outline-title').textContent = document.getElementById('fieldTitle').value;
-    showToast('大纲生成完成', 'success');
+    let idx = 0;
+    const doc = document.getElementById('finalDoc');
+    function writeNext() {
+      if (!state.isGenerating || idx >= paragraphs.length) {
+        state.isGenerating = false;
+        document.getElementById('genIndicator').classList.remove('show');
+        if (idx >= paragraphs.length) { showToast('工作总结生成完成', 'success'); autoSave(); }
+        updateWordCount();
+        return;
+      }
+      const p = paragraphs[idx];
+      const el = document.createElement(p.type);
+      let content = escapeHtml(p.text);
+      if (p.sources) {
+        const sourceCites = p.sources.map(s => `<span class="source-cite" data-file="${s}" onclick="showSourceDetail('${s}')" title="点击查看来源">来源</span>`).join('');
+        content += sourceCites;
+      }
+      el.innerHTML = content;
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.35s';
+      doc.appendChild(el);
+      requestAnimationFrame(() => el.style.opacity = '1');
+      document.getElementById('previewBody').scrollTop = document.getElementById('previewBody').scrollHeight;
+      idx++;
+      updateWordCount(Math.round(idx / paragraphs.length * 100));
+      state.generationTimer = setTimeout(writeNext, 450);
+    }
+    writeNext();
   }, 1200);
 }
 
-function renderOutline() {
-  const container = document.getElementById('outlineSections');
-  document.querySelector('.outline-title').textContent = document.getElementById('fieldTitle').value || 'XX工作总结';
-  // 基于当前归类结构生成大纲
-  const validGroups = state.categoryGroups.filter(g => g.items.some(i => i.checked));
-  container.innerHTML = validGroups.map(g => {
-    const style = g.style === 'warning' ? 'style="border-left-color:var(--warning);background:#fefaf5"' :
-                  g.style === 'success' ? 'style="border-left-color:var(--success);background:#f5fbf5"' : '';
-    return `
-      <div class="outline-section" ${style}>
-        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
-        <div class="outline-section-title" contenteditable="true">${escapeHtml(g.title.replace(/^[一二三四五六七八九十]+、/, ''))}</div>
-        <div class="outline-section-items">
-          ${g.items.filter(i => i.checked).map(item => `
-            <div class="outline-section-item" contenteditable="true">${escapeHtml(item.title)}：${escapeHtml(item.desc.slice(0, 80))}${item.desc.length > 80 ? '...' : ''}</div>
-          `).join('')}
-        </div>
-      </div>`;
-  }).join('');
-  // 添加固定的"存在问题""下一步"段落（若类型需要）
-  const type = state.currentType;
-  const modules = moduleMap[type] || moduleMap.quarterly;
-  const problemModule = modules.find(m => m.checked && (m.name.includes('问题') || m.name.includes('不足') || m.name.includes('短板')));
-  const planModule = modules.find(m => m.checked && (m.name.includes('下') || m.name.includes('打算') || m.name.includes('思路') || m.name.includes('改进') || m.name.includes('建议')));
-  let extra = '';
-  if (problemModule && !validGroups.some(g => g.title.includes('问题') || g.title.includes('不足'))) {
-    extra += `
-      <div class="outline-section" style="border-left-color:var(--warning);background:#fefaf5">
-        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
-        <div class="outline-section-title" contenteditable="true">${problemModule.name}</div>
-        <div class="outline-section-items">
-          <div class="outline-section-item" contenteditable="true">跨部门数据壁垒尚未完全打通</div>
-          <div class="outline-section-item" contenteditable="true">基层窗口服务能力有待提升</div>
-        </div>
-      </div>`;
-  }
-  if (planModule) {
-    extra += `
-      <div class="outline-section" style="border-left-color:var(--success);background:#f5fbf5">
-        <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
-        <div class="outline-section-title" contenteditable="true">${planModule.name}</div>
-        <div class="outline-section-items">
-          <div class="outline-section-item" contenteditable="true">深化重点领域改革</div>
-          <div class="outline-section-item" contenteditable="true">健全常态化机制</div>
-        </div>
-      </div>`;
-  }
-  container.insertAdjacentHTML('beforeend', extra);
-}
-
-function regenerateOutline() {
+function regenerateSummary() {
   const mask = document.getElementById('loadingMask');
-  document.getElementById('loadingText').textContent = '正在重新生成大纲...';
+  document.getElementById('loadingText').textContent = '正在重新生成总结...';
   mask.classList.add('show');
-  setTimeout(() => { renderOutline(); mask.classList.remove('show'); showToast('大纲已重新生成', 'success'); }, 1000);
+  setTimeout(() => { mask.classList.remove('show'); generateSummary(); showToast('总结已重新生成', 'success'); }, 1000);
 }
 
 function openPreview() {
   state.isRightOpen = true;
   document.getElementById('workspaceRight').classList.add('open');
   document.getElementById('contentArea').classList.add('split');
+  document.getElementById('wordcountBar').classList.add('show');
 }
 function closePreview() {
   state.isRightOpen = false; state.isRightExpanded = false;
   document.getElementById('workspaceRight').classList.remove('open', 'expanded');
   document.getElementById('contentArea').classList.remove('split', 'expanded-right');
 }
-/* 返回修改：清空当前大纲（不保留），需重新生成 */
-function backToEdit() { showModal('backEditModal'); }
-function confirmBackToEdit() {
-  hideModal('backEditModal');
-  document.getElementById('outlineSections').innerHTML = '';
+function backToEdit() {
+  if (state.isGenerating) { stopGeneration(); }
+  document.getElementById('finalDoc').innerHTML = '';
   closePreview();
-  showToast('已返回修改，当前大纲需重新生成', 'info');
+  showToast('已返回修改，可重新编辑表单', 'info');
 }
 function toggleExpand() {
   state.isRightExpanded = !state.isRightExpanded;
   document.getElementById('workspaceRight').classList.toggle('expanded', state.isRightExpanded);
   document.getElementById('contentArea').classList.toggle('expanded-right', state.isRightExpanded);
-}
-function switchTab(tab) {
-  state.currentTab = tab;
-  document.getElementById('tabOutline').classList.toggle('active', tab === 'outline');
-  document.getElementById('tabFinal').classList.toggle('active', tab === 'final');
-  document.getElementById('outlineView').style.display = tab === 'outline' ? 'block' : 'none';
-  document.getElementById('finalView').style.display = tab === 'final' ? 'block' : 'none';
-  document.getElementById('outlineFooterBtns').style.display = tab === 'outline' ? 'flex' : 'none';
-  document.getElementById('finalFooterBtns').style.display = tab === 'final' ? 'flex' : 'none';
-  document.getElementById('topActionsOutline').style.display = tab === 'outline' ? 'flex' : 'none';
-  document.getElementById('topActionsFinal').style.display = tab === 'final' ? 'flex' : 'none';
-  document.getElementById('wordcountBar').classList.toggle('show', tab === 'final');
-  document.getElementById('footerHintText').textContent = tab === 'outline' ? '大纲可直接编辑，确认后生成正式总结' : '每处内容均可点击查看溯源';
-  if (tab === 'final') updateWordCount();
-}
-
-function deleteSection(btn) {
-  if (!confirm('确认删除该章节？')) return;
-  btn.closest('.outline-section').remove();
-  showToast('章节已删除', 'info');
-}
-function addSection() {
-  const html = `
-    <div class="outline-section">
-      <div class="outline-section-actions"><button onclick="deleteSection(this)">删除</button></div>
-      <div class="outline-section-title" contenteditable="true">新章节标题</div>
-      <div class="outline-section-items">
-        <div class="outline-section-item" contenteditable="true">要点内容</div>
-      </div>
-    </div>`;
-  document.getElementById('outlineSections').insertAdjacentHTML('beforeend', html);
-}
-
-/* 【核心修改4】按目标字数生成正文 */
-function confirmGenerate() {
-  switchTab('final');
-  document.getElementById('finalDoc').innerHTML = '';
-  state.isGenerating = true;
-  document.getElementById('genIndicator').classList.add('show');
-
-  const title = document.querySelector('.outline-title')?.textContent || document.getElementById('fieldTitle').value || 'XX工作总结';
-  const type = state.currentType || 'quarterly';
-  const paragraphs = buildParagraphsForType(type, state.targetWordCount, title);
-
-  document.getElementById('wcTarget').textContent = `目标 ${state.targetWordCount} 字`;
-
-  let idx = 0;
-  const doc = document.getElementById('finalDoc');
-
-  function writeNext() {
-    if (!state.isGenerating || idx >= paragraphs.length) {
-      state.isGenerating = false;
-      document.getElementById('genIndicator').classList.remove('show');
-      if (idx >= paragraphs.length) { showToast('工作总结生成完成', 'success'); autoSave(); }
-      updateWordCount();
-      return;
-    }
-    const p = paragraphs[idx];
-    const el = document.createElement(p.type);
-    let content = escapeHtml(p.text);
-    if (p.sources) {
-      const sourceCites = p.sources.map(s => `<span class="source-cite" data-file="${s}" onclick="showSourceDetail('${s}')" title="点击查看来源">来源</span>`).join('');
-      content += sourceCites;
-    }
-    el.innerHTML = content;
-    el.style.opacity = '0';
-    el.style.transition = 'opacity 0.35s';
-    doc.appendChild(el);
-    requestAnimationFrame(() => el.style.opacity = '1');
-    document.getElementById('previewBody').scrollTop = document.getElementById('previewBody').scrollHeight;
-    idx++;
-    updateWordCount(Math.round(idx / paragraphs.length * 100));
-    state.generationTimer = setTimeout(writeNext, 450);
-  }
-  writeNext();
 }
 
 /* 【核心修改4】字数统计：精确 + 目标对比反馈 */
@@ -1858,9 +1769,9 @@ function updateWordCount(progress) {
     if (Math.abs(diff) <= tolerance) {
       status.innerHTML = '<span class="wc-status ok">✓ 已达目标</span>';
     } else if (diff < 0) {
-      status.innerHTML = `<span class="wc-status short">⚠ 少 ${-diff} 字</span>`;
-    } else {
-      status.innerHTML = `<span class="wc-status over">⚠ 超 ${diff} 字</span>`;
+      status.innerHTML = `<span class="wc-status short">ⓘ 少 ${-diff} 字</span>`;
+      } else {
+      status.innerHTML = `<span class="wc-status over">ⓘ 超 ${diff} 字</span>`;
     }
     document.getElementById('wcProgress').textContent = `完成度 ${Math.round(percent)}%`;
   }
@@ -1938,7 +1849,7 @@ function buildWordHtml(withSource, title) {
     bodyHtml += clone.outerHTML;
   });
   const sourceCss = withSource
-    ? '.source-cite { color:#1a5cbf; font-size:9pt; font-family:"Microsoft YaHei"; vertical-align:super; }'
+    ? '.source-cite { color:#0E4C92; font-size:9pt; font-family:"Microsoft YaHei"; vertical-align:super; }'
     : '.source-cite { display:none; }';
   const reportHtml = withSource ? buildSourceReportHtml() : '';
   return `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
@@ -1970,7 +1881,7 @@ function doPrint(mode, withSource) {
     bodyHtml += clone.outerHTML;
   });
   const reportHtml = withSource ? buildSourceReportHtml() : '';
-  const citeCss = withSource ? '.source-cite{color:#1a5cbf;font-size:9pt;}' : '.source-cite{display:none;}';
+  const citeCss = withSource ? '.source-cite{color:#0E4C92;font-size:9pt;}' : '.source-cite{display:none;}';
   const w = window.open('', '_blank', 'width=800,height=900');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
 <style>body{font-family:"SimSun",serif;margin:2.5cm 3cm;} h1{text-align:center;font-size:22pt;} h2{font-size:14pt;margin:18pt 0 10pt;} p{text-indent:2em;font-size:12pt;line-height:1.9;margin-bottom:12pt;} ${citeCss}</style>
@@ -1995,7 +1906,7 @@ document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     if (document.activeElement === document.getElementById('userInput')) { parseInput(); e.preventDefault(); }
   }
-  if (e.key === 'Escape') { document.querySelectorAll('.modal-mask.show').forEach(m => m.classList.remove('show')); }
+  if (e.key === 'Escape') { document.querySelectorAll('.modal-mask.show').forEach(m => hideModal(m.id)); }
 });
 
 /* 初始化 */
@@ -2011,3 +1922,6 @@ window.addEventListener('load', () => {
 <script src="handoff-context.js"></script>
 </body>
 </html>
+
+
+

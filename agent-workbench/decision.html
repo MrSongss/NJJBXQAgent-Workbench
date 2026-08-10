@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -9,26 +9,29 @@
        全局设计变量（与平台其它智能体保持一致的政务视觉规范）
        ============================================================ */
     :root {
-      --bg: #eef2f9;
+      --bg: #F4F6F9;
       --panel: #ffffff;
       --line: #e2e8f3;
       --line-soft: #eef1f7;
-      --text: #1b2436;
+      --text: #333639;
       --muted: #75809a;
-      --primary: #2455e6;
-      --primary-dark: #1740b8;
-      --primary-soft: #eef4ff;
-      --cyan: #0b8fa8;
-      --green: #10876a;
+      --primary: #0E4C92;
+      --primary-dark: #0A3573;
+      --primary-soft: #e8f1fa;
+      --cyan: #13A8A8;
+      --green: #43A047;
       --green-soft: #e8f7f1;
-      --red: #e0342a;
+      --red: #D9534F;
       --red-soft: #fdecea;
-      --orange: #d07a00;
+      --orange: #F0AD4E;
       --orange-soft: #fff4e0;
       --purple: #6a52d6;
       --purple-soft: #efecfd;
-      --shadow: 0 16px 42px rgba(21, 32, 58, 0.09);
-      --shadow-sm: 0 8px 20px rgba(21, 32, 58, 0.06);
+      --ai-navy: #0A3573; --ai-blue: #0E4C92; --ai-cyan: #13A8A8; --ai-green: #43A047;
+      --ai-glow: 0 0 16px rgba(19,168,168,0.35);
+      --primary-hover: #1377B5;
+      --shadow: 0 16px 42px rgba(10, 53, 115, 0.09);
+      --shadow-sm: 0 8px 20px rgba(10, 53, 115, 0.06);
     }
 
     * { box-sizing: border-box; }
@@ -40,7 +43,8 @@
       overflow: hidden;
       color: var(--text);
       background:
-        radial-gradient(circle at 78% -4%, rgba(36, 85, 230, 0.10), transparent 30%),
+        radial-gradient(circle at 78% -4%, rgba(19,168,168,0.12), transparent 30%),
+        radial-gradient(circle at 12% 100%, rgba(14,76,146,0.08), transparent 35%),
         linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
       font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
     }
@@ -49,64 +53,126 @@
     button { border: 0; background: none; color: inherit; cursor: pointer; }
     a { color: inherit; text-decoration: none; }
 
-    .app { display: grid; grid-template-columns: 208px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
+    .app { display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 58px 1fr; height: 100vh; transition: grid-template-columns .3s ease; }
+    .app.sidebar-collapsed { grid-template-columns: 56px 1fr; }
     .topbar { grid-column: 1 / -1; grid-row: 1; }
 
-    /* ============ 左侧全局导航 ============ */
-    .leftnav { grid-column: 1; grid-row: 2; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px; background: rgba(255, 255, 255, 0.82); border-right: 1px solid var(--line); backdrop-filter: blur(8px); }
-    .leftnav .nav-cap { margin: 4px 8px 6px; color: #97a2b8; font-size: 11px; font-weight: 800; letter-spacing: .6px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 13px; border-radius: 11px; color: #46536e; font-weight: 600; transition: .16s; text-align: left; white-space: nowrap; }
-    .nav-item .ic { width: 20px; text-align: center; font-size: 16px; }
-    .nav-item:hover { color: var(--primary); background: #fff; }
-    .nav-item.active { color: #fff; background: var(--primary); box-shadow: 0 8px 16px rgba(36, 85, 230, 0.22); }
+    /* ============ 左侧侧边栏 ============ */
+    .sidebar { width: 300px; background: #fafbfc; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; transition: width .3s ease; position: relative; grid-column: 1; grid-row: 1 / 3; }
+    .sidebar.collapsed { width: 56px; }
+    .sidebar-header { padding: 20px 16px 16px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; box-shadow: 0 4px 20px rgba(10,53,115,0.18); }
+    .sidebar.collapsed .sidebar-header { padding: 20px 8px 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1)); border: 1px solid rgba(255,255,255,0.3); box-shadow: var(--ai-glow); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 16px; flex-shrink: 0; }
+    .logo-text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
+    .sidebar.collapsed .logo-text { display: none; }
+    .sidebar.collapsed .logo { justify-content: center; }
+    .btn-new { width: 100%; padding: 10px 12px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .2s; white-space: nowrap; overflow: hidden; }
+    .btn-new:hover { background: var(--primary-hover); }
+    .sidebar.collapsed .btn-new { padding: 10px 0; }
+    .sidebar.collapsed .btn-new .btn-text { display: none; }
+
+    .filter-box { padding: 12px 16px; border-bottom: 1px solid var(--border-light); display: flex; flex-direction: column; gap: 8px; }
+    .sidebar.collapsed .filter-box { display: none; }
+    .search-wrap { position: relative; }
+    .search-input { width: 100%; padding: 7px 12px 7px 30px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-main); background: #fff; transition: border-color .2s; }
+    .search-input:focus { outline: none; border-color: var(--primary); }
+    .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 13px; pointer-events: none; }
+    .search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 14px; display: none; }
+    .search-clear:hover { color: var(--danger); }
+    .time-filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .time-chip { padding: 3px 9px; font-size: 12px; color: var(--text-regular); background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .time-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .time-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .sidebar-section-title { padding: 14px 16px 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; white-space: nowrap; display: flex; align-items: center; justify-content: space-between; }
+    .sidebar.collapsed .sidebar-section-title { text-align: center; padding: 14px 4px 8px; font-size: 10px; }
+    .record-count { font-size: 11px; color: var(--text-secondary); font-weight: normal; }
+    .history-list { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 8px 16px; }
+    .history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 4px; transition: .25s ease; position: relative; }
+    .history-item:hover { background: #eef2f7; transform: translateX(2px); }
+    .history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: 0 8px 20px rgba(14,76,146,0.25), var(--ai-glow); }
+    .history-item.active .history-title { color: #fff; }
+    .history-title { font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+    .history-meta { font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .history-tag { display: inline-block; padding: 1px 6px; background: #f0f0f0; border-radius: 3px; font-size: 11px; color: var(--text-regular); }
+    .history-status { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+    .history-status.s-draft { background: #fff7e6; color: #d48806; }
+    .history-status.s-submitted { background: #e6f4ff; color: #0958d9; }
+    .history-status.s-review { background: #fff2e8; color: #d46b08; }
+    .history-status.s-exported { background: #f6ffed; color: #2e7d32; }
+    .history-step { display: inline-block; padding: 1px 5px; background: #f0f0f0; border-radius: 3px; font-size: 10px; color: #909399; }
+    .history-time { font-size: 11px; color: var(--text-secondary); margin-left: auto; }
+    .sidebar.collapsed .history-item { padding: 10px 4px; text-align: center; }
+    .sidebar.collapsed .history-title, .sidebar.collapsed .history-meta, .sidebar.collapsed .history-time { display: none; }
+    .sidebar.collapsed .history-item::after { content: attr(data-abbr); display: inline-block; padding: 3px 6px; background: #e6f4ff; color: #0958d9; border-radius: 3px; font-size: 11px; }
+    .sidebar.collapsed .history-item:hover::before { content: attr(data-full); position: absolute; left: 60px; top: 50%; transform: translateY(-50%); background: #303133; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 12px; white-space: nowrap; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
+    .sidebar.collapsed .sidebar-footer { padding: 12px 8px; justify-content: center; }
+    .sidebar.collapsed .user-info { display: none; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #d9dcdf; color: var(--text-regular); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-name { font-size: 13px; color: var(--text-main); white-space: nowrap; }
+    .user-dept { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+    .collapse-btn { position: absolute; right: -12px; top: 20px; width: 24px; height: 24px; background: #fff; border: 1px solid var(--border); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-regular); font-size: 12px; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,.06); transition: all .2s; }
+    .collapse-btn:hover { color: var(--primary); border-color: var(--primary); }
+    .collapse-icon { transition: transform .3s; }
+    .sidebar.collapsed .collapse-icon { transform: rotate(180deg); }
+
+    /* ============ 主内容区 ============ */
+    .main-container { grid-column: 2; grid-row: 2; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
 
     /* ============ 顶栏 ============ */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 18px 0 20px;
-      background: rgba(255, 255, 255, 0.92);
-      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8);
+      border-bottom: none;
+      box-shadow: 0 4px 20px rgba(10,53,115,0.18);
       backdrop-filter: blur(12px);
       z-index: 5;
     }
-    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #16336f; white-space: nowrap; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #fff; white-space: nowrap; }
     .brand-mark {
-      width: 32px; height: 32px; display: grid; place-items: center;
-      border-radius: 9px; color: #fff; font-size: 12px; font-weight: 800;
-      background: linear-gradient(135deg, var(--primary), var(--cyan));
-      box-shadow: 0 8px 18px rgba(36, 85, 230, 0.28);
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 50%; color: #fff; flex: none;
+      background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
+      box-shadow: var(--ai-glow), 0 8px 18px rgba(14, 76, 146, 0.28);
     }
-    .brand small { display: block; font-size: 11px; font-weight: 600; color: #7d8aa6; margin-top: 1px; }
+    .brand small { display: block; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); margin-top: 1px; }
     .top-actions { display: flex; align-items: center; gap: 8px; }
+    .topbar .icon-btn { color: #fff; background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.22); }
+    .topbar .icon-btn:hover { background: rgba(255,255,255,0.28); color: #fff; border-color: rgba(255,255,255,0.4); }
+    .topbar .safe-mode { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.28); }
     .safe-mode { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 11px; border-radius: 9px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; }
 
     /* ============ 通用控件 ============ */
     .btn, .icon-btn, .primary-btn, .danger-btn, .ghost-btn {
       height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-      border-radius: 9px; border: 1px solid var(--line); background: #fff; color: #3a4761;
-      transition: .16s; white-space: nowrap; font-weight: 600;
+      border-radius: 10px; border: 1px solid var(--line); background: #fff; color: #3a4761;
+      transition: .25s ease; white-space: nowrap; font-weight: 600;
     }
     .btn { padding: 0 12px; }
     .icon-btn { width: 34px; }
-    .primary-btn { padding: 0 15px; border-color: var(--primary); color: #fff; background: var(--primary); box-shadow: 0 8px 16px rgba(36, 85, 230, 0.2); }
+    .primary-btn { padding: 0 15px; border-color: transparent; color: #fff; background: linear-gradient(135deg, var(--ai-blue), var(--primary-hover)); box-shadow: 0 8px 16px rgba(14, 76, 146, 0.2); }
     .ghost-btn { padding: 0 12px; background: #f6f8fd; }
     .danger-btn { padding: 0 12px; border-color: #f6ccc7; color: var(--red); background: #fff7f6; }
-    .btn:hover, .icon-btn:hover, .ghost-btn:hover { color: var(--primary); border-color: rgba(36, 85, 230, 0.4); background: var(--primary-soft); }
-    .primary-btn:hover { background: var(--primary-dark); }
+    .btn:hover, .icon-btn:hover, .ghost-btn:hover { color: var(--primary); border-color: rgba(14, 76, 146, 0.4); background: var(--primary-soft); }
+    .primary-btn:hover { background: var(--primary-dark); box-shadow: 0 8px 20px rgba(14,76,146,0.3), var(--ai-glow); }
     .primary-btn:disabled { background: #b9c4de; border-color: #b9c4de; box-shadow: none; cursor: not-allowed; }
     .danger-btn:hover { background: #fdece9; }
     .btn.sm, .mini-btn { height: 30px; padding: 0 10px; font-size: 13px; }
     .mini-btn { border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #4a5568; }
-    .mini-btn:hover { color: var(--primary); border-color: rgba(36, 85, 230, 0.36); background: var(--primary-soft); }
+    .mini-btn:hover { color: var(--primary); border-color: rgba(14, 76, 146, 0.36); background: var(--primary-soft); }
     .select { height: 34px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #3c4658; padding: 0 10px; outline: none; }
-    .select:focus { border-color: rgba(36, 85, 230, 0.5); }
+    .select:focus { border-color: rgba(14, 76, 146, 0.5); }
 
     /* ============ 视图容器 ============ */
-    .view { display: none; min-height: 0; height: 100%; grid-column: 2; grid-row: 2; }
-    .view.active { display: block; }
+    .view { display: none; flex: 1; min-height: 0; overflow: hidden; }
+    .view.active { display: flex; flex-direction: column; }
     .page-scroll { height: 100%; overflow: auto; padding: 22px 26px 40px; }
     .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-    .page-title { font-size: 21px; font-weight: 800; color: #16233f; }
+    .page-title { font-size: 21px; font-weight: 800; background: linear-gradient(90deg, #0A3573, #0E4C92, #13A8A8); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .page-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
     .toolbar-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -120,12 +186,12 @@
     /* 流程步骤条（来源于泳道流程图） */
     .flowbar { display: flex; align-items: center; gap: 0; padding: 10px 22px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
     .flow-step { display: flex; align-items: center; }
-    .flow-node { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 13px; font-weight: 700; cursor: pointer; transition: .16s; border: 1px solid transparent; white-space: nowrap; }
+    .flow-node { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 13px; font-weight: 700; cursor: pointer; transition: .25s ease; border: 1px solid transparent; white-space: nowrap; }
     .flow-node .n { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: #cfd8ea; color: #fff; font-size: 11px; }
-    .flow-node:hover { background: var(--primary-soft); color: var(--primary); }
+    .flow-node:hover { background: var(--primary-soft); color: var(--primary); transform: translateY(-1px); }
     .flow-node.done { background: var(--green-soft); color: var(--green); }
     .flow-node.done .n { background: var(--green); }
-    .flow-node.current { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 6px 14px rgba(36,85,230,.24); }
+    .flow-node.current { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(19,168,168,0.25), var(--ai-glow); }
     .flow-node.current .n { background: rgba(255,255,255,0.35); }
     .flow-arrow { width: 22px; height: 1px; background: #d5deee; margin: 0 3px; position: relative; flex: none; }
     .flow-arrow::after { content: "›"; position: absolute; right: -3px; top: -11px; color: #b6c1d8; }
@@ -138,14 +204,14 @@
     .stage-actions .right-group { display: flex; gap: 10px; }
 
     /* ============ 卡片 ============ */
-    .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); margin-bottom: 18px; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); margin-bottom: 18px; transition: transform .25s ease, box-shadow .25s ease; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 42px rgba(10,53,115,0.13); }
     .card:last-child { margin-bottom: 0; }
     .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line-soft); }
     .card-title { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px; }
     .card-title .badge-step { font-size: 11px; font-weight: 700; color: var(--primary); background: var(--primary-soft); border-radius: 6px; padding: 2px 7px; }
     .card-body { padding: 16px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
     /* ============ 表单 ============ */
@@ -159,7 +225,7 @@
       width: 100%; height: 38px; padding: 0 11px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: #fff; color: #2a3550; transition: .15s;
     }
     .field textarea { height: auto; min-height: 78px; padding: 9px 11px; resize: vertical; line-height: 1.6; }
-    .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(36, 85, 230, 0.55); box-shadow: 0 0 0 3px rgba(36, 85, 230, 0.09); }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(14, 76, 146, 0.55); box-shadow: 0 0 0 3px rgba(14, 76, 146, 0.09); }
     .field.err input, .field.err select, .field.err textarea { border-color: var(--red); background: #fff8f7; }
     .field .err-msg { display: none; font-size: 12px; color: var(--red); }
     .field.err .err-msg { display: block; }
@@ -170,12 +236,12 @@
     .vote-cell { display: flex; flex-direction: column; gap: 5px; }
     .vote-cell span { font-size: 12px; color: #6a7690; font-weight: 600; }
     .vote-cell input { height: 36px; text-align: center; border: 1px solid var(--line); border-radius: 9px; outline: none; }
-    .vote-cell input:focus { border-color: rgba(36,85,230,.55); }
+    .vote-cell input:focus { border-color: rgba(14,76,146,.55); }
 
     /* 单选/复选 */
     .radio-row, .check-row { display: flex; flex-wrap: wrap; gap: 10px 18px; }
     .opt { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #46536e; font-size: 13.5px; user-select: none; padding: 6px 12px; border: 1px solid var(--line); border-radius: 9px; transition: .15s; }
-    .opt:hover { border-color: rgba(36,85,230,.4); background: var(--primary-soft); }
+    .opt:hover { border-color: rgba(14,76,146,.4); background: var(--primary-soft); }
     .opt .rd { width: 17px; height: 17px; border-radius: 50%; border: 2px solid #c4cde0; display: grid; place-items: center; transition: .15s; flex: none; }
     .opt .rd::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); transform: scale(0); transition: .15s; }
     .opt.on { border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dark); }
@@ -208,13 +274,14 @@
     .proc-line .pl-tag { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--muted); }
 
     /* 缺失要素补录 */
-    .miss-item { display: grid; grid-template-columns: 150px 1fr 90px; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px dashed var(--line-soft); }
+    .miss-item { display: flex; flex-direction: column; gap: 7px; padding: 13px 0; border-bottom: 1px dashed var(--line-soft); }
     .miss-item:last-child { border-bottom: 0; }
+    .miss-item .m-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
     .miss-item .m-name { font-weight: 700; color: #33405c; font-size: 13.5px; }
     .miss-item .m-name small { display: block; color: #98a2b3; font-weight: 500; font-size: 11.5px; margin-top: 2px; }
     .miss-item input, .miss-item select { height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 9px; outline: none; width: 100%; }
-    .miss-item input:focus { border-color: rgba(36,85,230,.55); }
-    .miss-item .m-state { text-align: right; }
+    .miss-item input:focus, .miss-item select:focus { border-color: rgba(14,76,146,.55); box-shadow: 0 0 0 3px rgba(14,76,146,.09); }
+    .miss-item .m-state { text-align: right; flex: none; }
 
     /* ============ 要素抽取表 ============ */
     .elem-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -225,7 +292,7 @@
     .elem-val { line-height: 1.6; }
     .elem-val[contenteditable=true] { outline: none; border-radius: 6px; padding: 3px 6px; transition: .15s; }
     .elem-val[contenteditable=true]:hover { background: #f5f8ff; }
-    .elem-val[contenteditable=true]:focus { background: #fff; box-shadow: 0 0 0 2px rgba(36,85,230,.25); }
+    .elem-val[contenteditable=true]:focus { background: #fff; box-shadow: 0 0 0 2px rgba(14,76,146,.25); }
     .conf { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12.5px; }
     .conf .cbar { width: 54px; height: 6px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
     .conf .cbar i { display: block; height: 100%; border-radius: 999px; }
@@ -241,7 +308,7 @@
     .doctype-reco .rc-info .l2 { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
     .doctype-switch { display: flex; gap: 10px; margin-top: 14px; }
     .doctype-switch .dt-opt { flex: 1; text-align: center; padding: 12px; border: 1.5px solid var(--line); border-radius: 11px; cursor: pointer; transition: .16s; }
-    .doctype-switch .dt-opt:hover { border-color: rgba(36,85,230,.5); background: var(--primary-soft); }
+    .doctype-switch .dt-opt:hover { border-color: rgba(14,76,146,.5); background: var(--primary-soft); }
     .doctype-switch .dt-opt.on { border-color: var(--primary); background: var(--primary-soft); box-shadow: var(--shadow-sm); }
     .doctype-switch .dt-opt .dt-name { font-weight: 800; font-size: 16px; color: #28324c; }
     .doctype-switch .dt-opt.on .dt-name { color: var(--primary-dark); }
@@ -267,24 +334,15 @@
     .side-block { margin-bottom: 16px; }
     .side-block .sb-title { font-size: 13px; font-weight: 800; color: #74809a; letter-spacing: .4px; margin: 0 2px 9px; }
     .title-opt { border: 1px solid var(--line); border-radius: 11px; padding: 11px 12px; margin-bottom: 9px; cursor: pointer; transition: .16s; background: #fff; }
-    .title-opt:hover { border-color: rgba(36,85,230,.5); background: var(--primary-soft); }
+    .title-opt:hover { border-color: rgba(14,76,146,.5); background: var(--primary-soft); }
     .title-opt.on { border-color: var(--primary); background: var(--primary-soft); }
     .title-opt .to-txt { font-size: 13.5px; color: #33405c; line-height: 1.55; font-weight: 600; }
     .title-opt .to-tag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 5px; }
     .title-opt.on .to-tag { color: var(--primary); }
 
     /* ============ 合规校验面板 ============ */
-    .score-ring { display: flex; align-items: center; gap: 16px; }
-    .ring { width: 92px; height: 92px; border-radius: 50%; position: relative; flex: none; }
-    .ring::before { content: ""; position: absolute; inset: 11px; border-radius: 50%; background: #fff; }
-    .ring .rc { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
-    .ring .rc b { font-size: 24px; color: #1b2947; } .ring .rc span { font-size: 11px; color: var(--muted); }
-    .score-meta { font-size: 13px; color: #55617d; line-height: 1.9; }
-    .score-meta .sm-row { display: flex; align-items: center; gap: 8px; }
-    .score-meta .dot { width: 8px; height: 8px; border-radius: 50%; }
-
     .check-card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 12px; background: #fbfcff; margin-bottom: 10px; transition: .16s; }
-    .check-card:hover { border-color: rgba(36,85,230,.4); box-shadow: var(--shadow-sm); }
+    .check-card:hover { border-color: rgba(14,76,146,.4); box-shadow: var(--shadow-sm); }
     .check-card.resolved { opacity: .55; }
     .cc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
     .cc-lv { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
@@ -307,11 +365,11 @@
     .progress-box { padding: 14px 16px; }
     .pg-lbl { display: flex; justify-content: space-between; font-size: 13px; color: #6a7690; margin-bottom: 8px; }
     .pg-bar { height: 9px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
-    .pg-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--cyan)); transition: width .25s; }
+    .pg-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ai-blue), var(--ai-cyan), var(--ai-green)); transition: width .25s; }
 
     /* ============ 输出交付 ============ */
     .out-card { border: 1px solid var(--line); border-radius: 13px; padding: 16px; background: #fff; transition: .16s; }
-    .out-card:hover { box-shadow: var(--shadow-sm); border-color: rgba(36,85,230,.35); }
+    .out-card:hover { box-shadow: var(--shadow-sm); border-color: rgba(14,76,146,.35); }
     .out-card .oc-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 21px; }
     .out-card .oc-name { font-weight: 800; color: #28324c; margin: 10px 0 4px; }
     .out-card .oc-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; min-height: 40px; }
@@ -330,7 +388,7 @@
     .flow-track .ft-node.done::before { background: var(--green); }
     .flow-track .ft-node .ft-dot { position: relative; z-index: 1; }
 
-    /* ============ 表格（历史/模板/规则） ============ */
+    /* ============ 表格 ============ */
     .tbl-wrap { overflow: auto; }
     table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     table.tbl th { text-align: left; padding: 11px 12px; color: #6a7690; font-weight: 700; background: #f7f9fd; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; }
@@ -351,53 +409,24 @@
     .row-act a.danger { color: var(--red); }
     .note-strip { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; background: var(--orange-soft); color: #9a6a00; font-size: 13px; margin-bottom: 14px; }
 
-    /* 规则/模板左侧导航 */
-    .rule-layout { display: grid; grid-template-columns: 210px 1fr; gap: 16px; }
-    .rule-nav { display: grid; gap: 4px; align-content: start; }
-    .rule-nav button { text-align: left; padding: 11px 12px; border-radius: 10px; color: #46536e; font-weight: 700; transition: .16s; display: flex; align-items: center; justify-content: space-between; }
-    .rule-nav button:hover { background: #fff; color: var(--primary); }
-    .rule-nav button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
-    .rule-nav button .badge { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: #eef2fb; color: #6b7690; }
-    .rule-nav button.active .badge { background: rgba(255,255,255,0.24); color: #fff; }
-
-    /* KPI / 图表 */
-    .kpi { padding: 16px 18px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
-    .kpi .k-label { color: var(--muted); font-size: 13px; }
-    .kpi .k-value { font-size: 28px; font-weight: 900; margin: 6px 0 3px; color: #1b2947; }
-    .kpi .k-delta { font-size: 12px; font-weight: 700; }
-    .kpi .k-delta.up { color: var(--green); } .kpi .k-delta.down { color: var(--red); }
-    .kpi .k-ico { position: absolute; right: 14px; top: 14px; width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; }
-    .bars { display: grid; gap: 12px; }
-    .bar-row { display: grid; grid-template-columns: 96px 1fr 48px; align-items: center; gap: 10px; font-size: 13px; }
-    .bar-track { height: 12px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 999px; }
-    .legend { display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #55617d; }
-    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
-    .donut-wrap { display: flex; align-items: center; gap: 22px; }
-    .donut { width: 150px; height: 150px; border-radius: 50%; position: relative; flex: none; }
-    .donut::before { content: ""; position: absolute; inset: 30px; border-radius: 50%; background: #fff; }
-    .donut .c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
-    .donut .c b { font-size: 24px; color: #1b2947; } .donut .c span { font-size: 12px; color: var(--muted); }
-
-    /* 设置 */
-    .set-group { padding: 18px 4px; border-bottom: 1px solid var(--line-soft); }
-    .set-group:last-child { border-bottom: 0; }
-    .set-label { font-weight: 800; margin-bottom: 12px; color: #1f2b45; }
     .check-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; color: #46536e; font-size: 14px; border-bottom: 1px dashed var(--line-soft); }
     .toggle { width: 40px; height: 23px; padding: 2px; border-radius: 999px; background: #d3dbea; transition: .16s; flex: none; }
-    .toggle::after { content: ""; display: block; width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(21,32,58,.2); transition: .16s; }
+    .toggle::after { content: ""; display: block; width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(10,53,115,.2); transition: .16s; }
     .toggle.on { background: var(--primary); } .toggle.on::after { transform: translateX(17px); }
 
     /* ============ 弹窗 / 提示 ============ */
-    .modal-mask { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(16, 24, 45, 0.4); backdrop-filter: blur(4px); }
-    .modal-mask.show { display: flex; }
-    .modal { width: min(600px, calc(100vw - 40px)); max-height: calc(100vh - 60px); display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28); }
+    .modal-mask { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(16, 24, 45, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: opacity .3s ease; opacity: 0; }
+    .modal-mask.show { display: flex; opacity: 1; }
+    .modal { width: min(600px, calc(100vw - 40px)); max-height: calc(100vh - 60px); display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 12px 40px rgba(0,0,0,.18); animation: modalIn .4s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes modalIn { from { transform: translateY(-40px) scale(.88); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes modalOut { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-30px) scale(.9); opacity: 0; } }
+    .modal.closing { animation: modalOut .22s ease-in forwards; pointer-events: none; }
     .modal.wide { width: min(880px, calc(100vw - 40px)); }
     .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 18px; border-bottom: 1px solid var(--line); font-weight: 800; font-size: 15px; }
     .modal-body { padding: 18px; color: #46536e; line-height: 1.75; overflow: auto; }
     .modal-body .field { margin-bottom: 14px; }
     .modal-body textarea { width: 100%; min-height: 92px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; outline: none; resize: vertical; }
-    .modal-body textarea:focus { border-color: rgba(36,85,230,.5); box-shadow: 0 0 0 3px rgba(36,85,230,.08); }
+    .modal-body textarea:focus { border-color: rgba(14,76,146,.5); box-shadow: 0 0 0 3px rgba(14,76,146,.08); }
     .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); }
     .steps { display: flex; align-items: center; gap: 0; margin-bottom: 16px; }
     .steps .s { display: flex; align-items: center; gap: 8px; }
@@ -406,13 +435,72 @@
     .steps .s .t { font-size: 13px; color: #6a7690; font-weight: 700; } .steps .s.active .t { color: var(--primary); }
     .steps .bar { width: 34px; height: 2px; background: #e2e8f3; margin: 0 8px; }
 
-    .toast { position: fixed; right: 24px; top: 70px; z-index: 60; display: none; max-width: 380px; padding: 12px 15px; border-radius: 11px; color: #fff; background: rgba(23, 32, 51, 0.95); box-shadow: 0 16px 36px rgba(23, 32, 51, 0.22); font-size: 14px; }
-    .toast.show { display: block; animation: slideIn .2s ease; }
+    .toast { position: fixed; top: 24px; left: 50%; z-index: 2000; max-width: 380px; padding: 10px 20px; border-radius: 10px; color: #fff; background: rgba(23, 32, 51, 0.95); box-shadow: 0 6px 20px rgba(0,0,0,.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); font-size: 13px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-50%) translateY(-16px); transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1), visibility .3s ease; }
+    .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
     .hidden-input { display: none; }
     ::-webkit-scrollbar { width: 9px; height: 9px; }
     ::-webkit-scrollbar-thumb { background: #cfd8e8; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #b7c2d8; }
+
+    /* ============ AI 智能体视觉与动效规范 ============ */
+    @keyframes blink { 50% { opacity: 0; } }
+    .typing-cursor::after { content: '▍'; margin-left: 2px; color: var(--ai-cyan); animation: blink 1s steps(1) infinite; }
+    @keyframes dot-bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+    .thinking-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ai-cyan); display: inline-block; animation: dot-bounce 1.2s infinite ease-in-out; }
+    .thinking-dot:nth-child(2) { animation-delay: .15s; }
+    .thinking-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .bubble { animation: fadeUp .3s ease; }
+    .ai-gradient-text { background: linear-gradient(90deg, #0E4C92, #13A8A8, #43A047); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .ai-gradient-text-light { background: linear-gradient(90deg, #ffffff, #9fe9e6, #a7e8a3); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .agent-avatar { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow); }
+    .agent-avatar .ic-svg, .brand-mark .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    /* 智能体卡片 hover：上浮 + 发光 + 边框转青蓝 */
+    .agent-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .agent-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,76,146,.15); border-color: var(--ai-cyan); }
+
+    /* —— AI 状态条（深色玻璃拟态，体现科技层次感） —— */
+    .ai-status-bar { position: relative; display: flex; align-items: center; gap: 13px; padding: 11px 22px; background: linear-gradient(90deg, rgba(10,53,115,.94), rgba(14,76,146,.9) 60%, rgba(19,168,168,.86)); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(19,168,168,.22); overflow: hidden; }
+    .ai-status-bar::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 6% 50%, rgba(19,168,168,.22), transparent 42%), radial-gradient(circle at 94% 50%, rgba(67,160,71,.16), transparent 42%); pointer-events: none; }
+    .ai-status-bar .as-avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; position: relative; z-index: 1; }
+    .ai-status-bar .as-info { position: relative; z-index: 1; line-height: 1.3; flex: 1; min-width: 0; }
+    .ai-status-bar .as-name { font-weight: 800; font-size: 14px; color: #fff; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ai-status-bar .as-state { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.72); margin-top: 2px; }
+    .ai-status-bar .as-right { margin-left: auto; position: relative; z-index: 1; display: flex; align-items: center; gap: 9px; }
+    .ai-status-bar .as-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: rgba(255,255,255,.14); color: #d7f6f3; font-size: 12px; font-weight: 700; border: 1px solid rgba(19,168,168,.4); }
+    .ai-status-bar .as-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ai-cyan); box-shadow: 0 0 8px var(--ai-cyan); }
+    .ai-status-bar .as-pill.gen .dot { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+    /* —— 思考气泡（生成 / 校验中） —— */
+    .ai-thinking-bubble { display: flex; align-items: center; gap: 11px; padding: 13px 16px; border-radius: 13px; background: linear-gradient(135deg,#f4f8ff,#fff); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .ai-thinking-bubble .atb-avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+    .ai-thinking-bubble .atb-avatar .ic-svg { width: 58%; height: 58%; }
+    .ai-thinking-bubble .atb-txt { font-size: 13.5px; color: #46536e; font-weight: 600; }
+    .ai-thinking-bubble .atb-dots { display: inline-flex; gap: 4px; align-items: center; margin-left: 4px; }
+
+    /* —— AI 完成提示气泡 —— */
+    .ai-done-bubble { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 9px 14px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; border: 1px solid rgba(67,160,71,.3); }
+
+    /* —— 引用来源卡片（RAG 可溯源） —— */
+    .source-card { border: 1px solid var(--line); border-radius: 13px; background: #fff; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .source-card .sc-head { display: flex; align-items: center; gap: 8px; padding: 12px 15px; background: linear-gradient(135deg,#f7f9fd,#fff); border-bottom: 1px solid var(--line-soft); font-weight: 800; font-size: 13.5px; color: #33405c; }
+    .source-card .sc-head .sc-tag { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--cyan); background: rgba(19,168,168,.1); padding: 2px 9px; border-radius: 999px; }
+    .source-item { display: flex; gap: 11px; padding: 12px 15px; border-bottom: 1px solid var(--line-soft); cursor: pointer; transition: background .15s; }
+    .source-item:last-child { border-bottom: 0; }
+    .source-item:hover { background: #f7faff; }
+    .source-item .si-ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); font-size: 14px; flex: none; }
+    .source-item .si-main { flex: 1; min-width: 0; }
+    .source-item .si-name { font-weight: 700; font-size: 13px; color: #28324c; }
+    .source-item .si-no { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+    .source-item .si-detail { display: none; margin-top: 8px; font-size: 12.5px; color: #55617d; line-height: 1.7; padding: 9px 11px; background: #f7f9fd; border-radius: 8px; border-left: 3px solid var(--cyan); }
+    .source-item.open .si-detail { display: block; animation: fadeUp .25s ease; }
+    .source-item .si-arrow { color: #b0b9cc; font-size: 12px; transition: transform .2s; flex: none; align-self: center; }
+    .source-item.open .si-arrow { transform: rotate(90deg); color: var(--cyan); }
+
+    /* 流式生成：每段淡入 */
+    .doc-page .seg { animation: fadeUp .3s ease; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
   </style>
 </head>
 <body>
@@ -420,7 +508,7 @@
     <!-- ===================== 顶栏 ===================== -->
     <header class="topbar">
       <div class="brand">
-        <span class="brand-mark">政AI</span>
+        <span class="brand-mark agent-avatar"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></span>
         <span>决定决议智能生成<small>江北新区政务AI智能体 · 公文生成系统</small></span>
       </div>
       <div class="top-actions">
@@ -430,27 +518,43 @@
       </div>
     </header>
 
-    <!-- ===================== 左侧导航 ===================== -->
-    <aside class="leftnav">
-      <div class="nav-cap">功能菜单</div>
-      <button class="nav-item active" data-view="generate"><span class="ic">📝</span>决定决议生成</button>
-      <button class="nav-item" data-view="templates"><span class="ic">📄</span>文种模板库</button>
-      <button class="nav-item" data-view="rules"><span class="ic">📚</span>程序规则库</button>
-      <button class="nav-item" data-view="settings"><span class="ic">⚙</span>生成设置</button>
-      <button class="nav-item" data-view="history"><span class="ic">🕑</span>历史记录</button>
-      <button class="nav-item" data-view="stats"><span class="ic">📊</span>统计报表</button>
+    <!-- ===================== 左侧边栏 ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <button class="collapse-btn" id="collapseBtn"><span class="collapse-icon">◀</span></button>
+      <div class="sidebar-header">
+        <div class="logo"><div class="logo-icon">决</div><span class="logo-text">决定决议生成</span></div>
+        <button class="btn-new" id="btnNewTask"><span>+</span><span class="btn-text">新建决定决议</span></button>
+      </div>
+      <div class="filter-box">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索历史记录..." /><span class="search-clear" id="searchClear">✕</span></div>
+        <div class="time-filter-row" id="timeFilterRow">
+          <span class="time-chip active" data-range="all">全部</span>
+          <span class="time-chip" data-range="7d">近7天</span>
+          <span class="time-chip" data-range="30d">近30天</span>
+        </div>
+      </div>
+      <div class="sidebar-section-title"><span>历史生成记录</span><span class="record-count" id="recordCount">0 条</span></div>
+      <div class="history-list" id="historyList"></div>
+      <div class="sidebar-footer">
+        <div class="user-avatar">政</div>
+        <div class="user-info"><div class="user-name">政务用户</div><div class="user-dept">南京江北新区管委会</div></div>
+      </div>
     </aside>
 
-    <!-- ===================== 视图：决定决议生成 ===================== -->
+    <!-- ===================== 主内容区 ===================== -->
+    <div class="main-container">
     <div class="view active" id="view-generate">
-      <!-- 工具条 -->
-      <section class="gen-toolbar">
-        <div class="t-left">
-          <button class="primary-btn" data-action="newTask">＋ 新建生成任务</button>
-          <span class="task-name" id="taskName">未创建生成任务</span>
-          <span class="task-meta" id="taskMeta"></span>
+      <!-- 顶部智能体工作条（深色玻璃拟态，融合任务信息与生成状态） -->
+      <section class="ai-status-bar">
+        <span class="as-avatar agent-avatar"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></span>
+        <div class="as-info">
+          <div class="as-name" id="taskName">未创建生成任务</div>
+          <div class="as-state" id="asState">将依 GB/T9704 规范生成决议公文</div>
         </div>
-        <span class="task-meta">📌 填写事项信息，逐步点「下一步」即可自动生成决定/决议公文并完成合规校验</span>
+        <div class="as-right">
+          <span class="as-pill" id="asPill"><span class="dot"></span><span id="asPillTxt">就绪</span></span>
+          <button class="primary-btn" data-action="newTask">＋ 新建</button>
+        </div>
       </section>
 
       <!-- 流程步骤条（对应业务流程图七个环节，合并为六步） -->
@@ -617,7 +721,7 @@
                 <div class="card-head"><div class="card-title">解析概况</div></div>
                 <div class="card-body" style="font-size:13.5px;color:#55617d;line-height:2;">
                   <div>📄 解析文件：<b>3</b> 份（会议记录/表决单/政策依据）</div>
-                  <div>🔤 解析字数：<b>1,860</b> 字 · 解析成功率 <b style="color:var(--green);">98%</b></div>
+                  <div>🔤 解析字数：<b>1,860</b> 字 · 涉及法定要素 <b>11</b> 项</div>
                   <div>🧩 结构化要素：<b>已识别 9 / 11</b> 项</div>
                   <div>⏱ 预计生成耗时：<b>约 8 秒</b></div>
                 </div>
@@ -648,12 +752,12 @@
               <div class="card">
                 <div class="card-head"><div class="card-title">文种类型识别</div></div>
                 <div class="card-body">
-                  <div class="doctype-card">
+                  <div class="doctype-card agent-card">
                     <div class="doctype-reco">
                       <div class="big" id="recoBig">决议</div>
                       <div class="rc-info">
                         <div class="l1">推荐文种：<span id="recoName">决议</span>（会议审议类）</div>
-                        <div class="l2">识别置信度 <b id="recoConf" style="color:var(--green);">92%</b> · 权限层级：党工委全会审议决策</div>
+                        <div class="l2">权限层级：党工委全会审议决策 · 文种来源：智能匹配（可人工切换）</div>
                       </div>
                     </div>
                     <div class="doctype-switch" data-doctype-switch>
@@ -701,11 +805,12 @@
                   <span class="hint" id="docHint">公文初稿 · 可直接点击正文修改</span>
                   <div style="display:flex;gap:8px;">
                     <button class="mini-btn" data-action="regen">↻ 重新生成</button>
-                    <button class="mini-btn" data-action="toggleSimple">切换精简版</button>
+                    <button class="mini-btn" id="btnToggleSimple" data-action="toggleSimple">切换精简版</button>
                   </div>
                 </div>
                 <article class="doc-page" id="docPage" contenteditable="true"></article>
               </div>
+              <div id="sourceBox"></div>
             </div>
             <div>
               <div class="side-block">
@@ -761,13 +866,10 @@
                   <div class="pg-bar"><i id="pgBar"></i></div>
                 </div>
                 <div class="card-body">
-                  <div class="score-ring" style="margin-bottom:16px;">
-                    <div class="ring" id="scoreRing"><div class="rc"><div><b id="scoreVal">—</b><br><span>合规评分</span></div></div></div>
-                    <div class="score-meta">
-                      <div class="sm-row"><span class="dot" style="background:var(--red);"></span>阻断项 <b id="cntBlock">0</b> 项（须整改）</div>
-                      <div class="sm-row"><span class="dot" style="background:var(--orange);"></span>提醒项 <b id="cntWarn">0</b> 项（建议优化）</div>
-                      <div class="sm-row"><span class="dot" style="background:var(--green);"></span>通过项 <b id="cntPass">0</b> 项</div>
-                    </div>
+                  <div class="check-stats" style="display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap;">
+                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;"></span>阻断项 <b id="cntBlock">0</b> 项（须整改）</div>
+                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;"></span>提醒项 <b id="cntWarn">0</b> 项（建议优化）</div>
+                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>通过项 <b id="cntPass">0</b> 项</div>
                   </div>
                   <div id="checkList"></div>
                 </div>
@@ -792,25 +894,25 @@
             </div>
             <div class="card-body">
               <div class="grid-4">
-                <div class="out-card" data-out="正式稿">
+                <div class="out-card agent-card" data-out="正式稿">
                   <div class="oc-ic" style="background:var(--primary-soft);color:var(--primary);">📃</div>
                   <div class="oc-name">正式版决议公文</div>
                   <div class="oc-desc">含标准版头、标题、通过说明、正文与落款，符合GB/T9704格式。</div>
                   <div class="oc-foot"><span class="oc-size">Word · 约 1.1MB</span><button class="btn sm" data-action="exportOne" data-doc="正式版决议公文">下载</button></div>
                 </div>
-                <div class="out-card" data-out="精简稿">
+                <div class="out-card agent-card" data-out="精简稿">
                   <div class="oc-ic" style="background:var(--green-soft);color:var(--green);">📋</div>
                   <div class="oc-name">精简版公文</div>
                   <div class="oc-desc">提炼核心决定事项与执行要求，适配内部流转与快速传阅。</div>
                   <div class="oc-foot"><span class="oc-size">Word · 约 320KB</span><button class="btn sm" data-action="exportOne" data-doc="精简版公文">下载</button></div>
                 </div>
-                <div class="out-card" data-out="校验报告">
+                <div class="out-card agent-card" data-out="校验报告">
                   <div class="oc-ic" style="background:var(--orange-soft);color:var(--orange);">🔍</div>
                   <div class="oc-name">合规校验报告</div>
                   <div class="oc-desc">程序/权限/表决/格式/政策依据校验结论、问题定位与修改指引。</div>
                   <div class="oc-foot"><span class="oc-size">PDF · 约 480KB</span><button class="btn sm" data-action="exportOne" data-doc="合规校验报告">下载</button></div>
                 </div>
-                <div class="out-card" data-out="修改指引">
+                <div class="out-card agent-card" data-out="修改指引">
                   <div class="oc-ic" style="background:var(--purple-soft);color:var(--purple);">📝</div>
                   <div class="oc-name">修改指引清单</div>
                   <div class="oc-desc">逐条列出建议优化项与依据，供人工复核与后续完善参考。</div>
@@ -855,215 +957,6 @@
         </section>
       </div>
     </div>
-
-    <!-- ===================== 视图：文种模板库 ===================== -->
-    <div class="view" id="view-templates">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">文种模板库</div>
-            <div class="page-sub">维护决定、决议各文种的要素结构与版式范式，用于结构生成与格式匹配</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="importTpl">⬆ 导入模板</button>
-            <button class="primary-btn" data-action="addTpl">＋ 新增模板</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head"><div class="card-title">模板清单 <span class="page-sub" style="margin:0;font-weight:500;">（共 <span id="tplCount">6</span> 个）</span></div></div>
-          <div class="tbl-wrap"><table class="tbl" id="tplTable"></table></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：程序规则库 ===================== -->
-    <div class="view" id="view-rules">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">程序规则库</div>
-            <div class="page-sub">维护权限、议事、表决、格式与政策依据规则，支撑法定程序与格式合规校验引擎的判定标准</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="importRule">⬆ 导入规则</button>
-            <button class="btn" data-action="exportRule">⬇ 导出规则</button>
-            <button class="primary-btn" data-action="addRule">＋ 添加规则</button>
-          </div>
-        </div>
-        <div class="rule-layout">
-          <nav class="rule-nav" id="ruleNav"></nav>
-          <div class="card">
-            <div class="card-head">
-              <div class="card-title" id="ruleCatTitle">权限层级规则</div>
-              <div class="toolbar-inline">
-                <div class="field" style="width:210px;"><input id="ruleSearch" type="text" placeholder="⌕ 搜索规则名称 / 编号" style="height:34px;"></div>
-                <button class="danger-btn sm" data-action="batchDelRule">批量删除</button>
-              </div>
-            </div>
-            <div class="card-body" style="padding-top:12px;">
-              <div class="note-strip" id="ruleNote"></div>
-              <div class="tbl-wrap"><table class="tbl" id="ruleTable"></table></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：生成设置 ===================== -->
-    <div class="view" id="view-settings">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">生成设置</div>
-            <div class="page-sub">配置文种识别策略、校验强度、格式规范与安全留痕，设置将应用于后续所有生成任务</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="resetSettings">恢复默认</button>
-            <button class="primary-btn" data-action="saveSettings">保存设置</button>
-          </div>
-        </div>
-        <div class="grid-2" style="align-items:start;">
-          <div class="card">
-            <div class="card-head"><div class="card-title">核心生成策略</div></div>
-            <div class="card-body">
-              <div class="set-group">
-                <div class="set-label">文种识别策略</div>
-                <div class="radio-row" data-radio="reco">
-                  <span class="opt on" data-val="智能推荐"><span class="rd"></span>智能推荐 + 人工确认</span>
-                  <span class="opt" data-val="人工优先"><span class="rd"></span>人工选择优先</span>
-                </div>
-              </div>
-              <div class="set-group">
-                <div class="set-label">文种置信度阈值（低于阈值进入人工确认）</div>
-                <div class="radio-row" data-radio="thres">
-                  <span class="opt" data-val="80"><span class="rd"></span>80%</span>
-                  <span class="opt on" data-val="85"><span class="rd"></span>85%</span>
-                  <span class="opt" data-val="90"><span class="rd"></span>90%</span>
-                </div>
-              </div>
-              <div class="set-group">
-                <div class="set-label">合规校验强度</div>
-                <div class="radio-row" data-radio="strict">
-                  <span class="opt" data-val="标准"><span class="rd"></span>标准（仅提示关键问题）</span>
-                  <span class="opt on" data-val="严格"><span class="rd"></span>严格（阻断项须整改后方可导出）</span>
-                </div>
-              </div>
-              <div class="set-group">
-                <div class="set-label">大模型生成</div>
-                <div class="radio-row" data-radio="llm">
-                  <span class="opt on" data-val="使用"><span class="rd"></span>使用（语义级正文润色与逻辑排序）</span>
-                  <span class="opt" data-val="禁用"><span class="rd"></span>禁用（仅规则模板填充）</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="display:grid;gap:16px;align-content:start;">
-            <div class="card">
-              <div class="card-head"><div class="card-title">格式规范与专项校验</div></div>
-              <div class="card-body" style="padding:6px 16px 12px;">
-                <div class="check-item"><span>公文格式校验（GB/T9704-2012）</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item"><span>法定权限层级校验</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item"><span>议事规则与表决程序校验</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item"><span>表决比例合规校验</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item"><span>政策依据文号 / 时效核验</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item" style="border-bottom:0;"><span>执行主体与时限完整性校验</span><button class="toggle on" data-action="toggle"></button></div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-head"><div class="card-title">安全与留痕</div></div>
-              <div class="card-body" style="padding:6px 16px 12px;">
-                <div class="check-item"><span>安全模式（材料不出域、本地化处理）</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item"><span>生成审计留痕（记录生成/修改/校验/导出）</span><button class="toggle on" data-action="toggle"></button></div>
-                <div class="check-item" style="border-bottom:0;"><span>默认密级</span>
-                  <select class="select" style="height:30px;"><option>非涉密</option><option>内部</option><option>秘密</option></select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：历史记录 ===================== -->
-    <div class="view" id="view-history">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">历史生成记录</div>
-            <div class="page-sub">查看历次决定决议生成任务的处理留痕，可回看公文、下载成果或发起复用生成</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="exportHistory">⬇ 导出台账</button>
-          </div>
-        </div>
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-body" style="padding:14px 16px;">
-            <div class="toolbar-inline">
-              <select class="select" id="hType"><option>全部文种</option><option>决议</option><option>决定</option></select>
-              <select class="select" id="hStatus"><option>全部状态</option><option>已归档</option><option>待审核</option><option>生成中</option></select>
-              <select class="select" id="hRange"><option>近7天</option><option>近30天</option><option>近90天</option><option>全部</option></select>
-              <div class="field" style="width:240px;"><input id="hSearch" type="text" placeholder="⌕ 搜索事项名称 / 经办人" style="height:34px;"></div>
-              <button class="btn" data-action="historyFilter">筛选</button>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head"><div class="card-title">生成任务台账 <span class="page-sub" style="margin:0;font-weight:500;">（共 <span id="hCount">7</span> 条）</span></div></div>
-          <div class="tbl-wrap"><table class="tbl" id="historyTable"></table></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：统计报表 ===================== -->
-    <div class="view" id="view-stats">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">统计报表</div>
-            <div class="page-sub">决定决议生成运行概况 · 统计周期：2026-04-01 至 2026-07-10</div>
-          </div>
-          <div class="toolbar-inline">
-            <select class="select" id="statRange"><option>本季度</option><option>本月</option><option>本年</option></select>
-            <button class="btn" data-action="exportStat">⬇ 导出报表</button>
-          </div>
-        </div>
-        <div class="grid-4" style="margin-bottom:16px;">
-          <div class="kpi"><div class="k-ico" style="background:var(--primary-soft);color:var(--primary);">📝</div><div class="k-label">累计生成公文</div><div class="k-value">386</div><div class="k-delta up">▲ 15.2% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--green-soft);color:var(--green);">✓</div><div class="k-label">一次校验通过率</div><div class="k-value">88.6%</div><div class="k-delta up">▲ 4.7% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--cyan);color:#fff;">🎯</div><div class="k-label">文种识别准确率</div><div class="k-value">95.3%</div><div class="k-delta up">▲ 1.8% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--orange-soft);color:var(--orange);">⏱</div><div class="k-label">平均生成时长</div><div class="k-value">6<span style="font-size:15px;">分钟/篇</span></div><div class="k-delta down">▼ 62% 更快</div></div>
-        </div>
-        <div class="grid-2" style="margin-bottom:16px;align-items:start;">
-          <div class="card">
-            <div class="card-head"><div class="card-title">文种与场景分布</div><span class="page-sub" style="margin:0;">近90天</span></div>
-            <div class="card-body"><div class="bars" id="statBars"></div></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><div class="card-title">校验问题等级占比</div><span class="page-sub" style="margin:0;">按问题数</span></div>
-            <div class="card-body">
-              <div class="donut-wrap">
-                <div class="donut" id="statDonut"><div class="c"><div><b>1,247</b><br><span>问题总数</span></div></div></div>
-                <div class="legend">
-                  <div><i style="background:var(--red);"></i>阻断项　212 项（17%）</div>
-                  <div><i style="background:var(--orange);"></i>提醒项　586 项（47%）</div>
-                  <div><i style="background:var(--green);"></i>通过项　449 项（36%）</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="grid-2" style="align-items:start;">
-          <div class="card">
-            <div class="card-head"><div class="card-title">月度生成量趋势</div><span class="page-sub" style="margin:0;">篇 / 月</span></div>
-            <div class="card-body"><div id="statTrend"></div></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><div class="card-title">高频校验问题 Top 6</div><span class="page-sub" style="margin:0;">出现次数</span></div>
-            <div class="card-body"><div class="bars" id="statTop"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- ===================== 共享组件 ===================== -->
@@ -1078,6 +971,7 @@
         <button class="primary-btn" id="modalOk">确认</button>
       </div>
     </div>
+  </div>
   </div>
 
   <script>
@@ -1105,9 +999,21 @@
       modalOk.textContent = opts.okText || "确认";
       modalBox.classList.toggle("wide", !!opts.wide);
       modalOk.onclick = onOk || closeModal;
+      modalBox.classList.remove("closing");
       modalMask.classList.add("show");
     }
-    function closeModal() { modalMask.classList.remove("show"); }
+    function closeModal() {
+      const modal = modalBox;
+      if (!modal) { modalMask.classList.remove("show"); return; }
+      modal.classList.add("closing");
+      const handler = (e) => {
+        if (e.animationName !== "modalOut") return;
+        modal.removeEventListener("animationend", handler);
+        modal.classList.remove("closing");
+        modalMask.classList.remove("show");
+      };
+      modal.addEventListener("animationend", handler);
+    }
 
     /* ============================================================
        全局状态
@@ -1124,7 +1030,9 @@
       showExec: true,        // 生成配置：自动生成执行主体/时限
       chosenTitle: null,     // 已套用的标题建议
       ruleCat: "auth",
-      checked: false
+      checked: false,
+      generating: false,     // 公文流式生成中
+      streamTimer: null      // 流式生成定时器（用于中断）
     };
 
     /* ============================================================
@@ -1173,7 +1081,7 @@
       $$(".field.err").forEach(f => f.classList.remove("err"));
       state.taskLoaded = true;
       $("#taskName").textContent = SAMPLE.title;
-      $("#taskMeta").textContent = "· 决策主体：" + SAMPLE.subject + " · 密级：非涉密";
+      $("#asState").textContent = "· 决策主体：" + SAMPLE.subject + " · 密级：非涉密";
     }
     function readForm() {
       return {
@@ -1267,19 +1175,18 @@
     }
     // 缺失要素补录
     const missItems = [
-      { name: "表决结果表述", note: "正文需完整体现票数", type: "input", ph: "如：赞成10票，一致通过", filled: false },
-      { name: "落款机关全称", note: "疑似简称，请核对", type: "select", opts: ["中共南京江北新区工作委员会", "南京江北新区综合办公室"], filled: false },
-      { name: "执行时限", note: "建议明确施行日期", type: "input", ph: "如：自2026年8月1日起施行", filled: false }
+      { name: "表决结果表述", note: "正文需完整体现票数", type: "input", ph: "如：赞成10票，一致通过", val: "赞成10票，一致通过", filled: false },
+      { name: "落款机关全称", note: "疑似简称，请核对", type: "select", opts: ["中共南京江北新区工作委员会", "南京江北新区综合办公室"], val: "", filled: false },
+      { name: "执行时限", note: "建议明确施行日期", type: "input", ph: "如：自2026年8月1日起施行", val: "自2026年8月1日起施行", filled: false }
     ];
     function renderMiss() {
       $("#missList").innerHTML = missItems.map((m, i) => {
         const ctrl = m.type === "select"
-          ? `<select data-miss="${i}">${m.opts.map(o => `<option>${o}</option>`).join("")}</select>`
-          : `<input data-miss="${i}" placeholder="${m.ph}" value="${m.type === 'input' && i === 0 ? '赞成10票，一致通过' : (i === 2 ? '自2026年8月1日起施行' : '')}">`;
+          ? `<select data-miss="${i}"><option value="">请选择落款机关</option>${m.opts.map(o => `<option ${o === m.val ? "selected" : ""}>${o}</option>`).join("")}</select>`
+          : `<input data-miss="${i}" placeholder="${m.ph}" value="${m.val || ""}">`;
         return `<div class="miss-item">
-          <div class="m-name">${m.name}<small>${m.note}</small></div>
+          <div class="m-head"><div class="m-name">${m.name}<small>${m.note}</small></div><div class="m-state">${m.filled ? '<span class="tag done">✓ 已补</span>' : '<span class="tag mid">待补</span>'}</div></div>
           ${ctrl}
-          <div class="m-state">${m.filled ? '<span class="tag done">✓ 已补</span>' : '<span class="tag mid">待补</span>'}</div>
         </div>`;
       }).join("");
     }
@@ -1291,22 +1198,20 @@
       const f = readForm();
       const total = f.should || "11", actual = f.actual || "10", agree = (f.agree || "10 / 0").split("/")[0].trim();
       return [
-        { name: "决策依据", val: f.basis || SAMPLE.basis, conf: 95 },
-        { name: "审议程序", val: (f.meeting || SAMPLE.meeting) + "审议", conf: 93 },
-        { name: "表决情况", val: `应到${total}人，实到${actual}人，赞成${agree}票、反对0票、弃权0票`, conf: 88 },
-        { name: "决定事项", val: f.matter || SAMPLE.matter, conf: 90 },
-        { name: "执行要求", val: "各相关部门抓好落实，管委会办公室负责督促检查、跟踪问效", conf: 85 }
+        { name: "决策依据", val: f.basis || SAMPLE.basis },
+        { name: "审议程序", val: (f.meeting || SAMPLE.meeting) + "审议" },
+        { name: "表决情况", val: `应到${total}人，实到${actual}人，赞成${agree}票、反对0票、弃权0票` },
+        { name: "决定事项", val: f.matter || SAMPLE.matter },
+        { name: "执行要求", val: "各相关部门抓好落实，管委会办公室负责督促检查、跟踪问效" }
       ];
     }
     function renderElemTable() {
       const data = elementData();
-      const head = "<thead><tr><th style='width:96px;'>法定要素</th><th>抽取内容（可编辑）</th><th style='width:120px;'>置信度</th></tr></thead>";
+      const head = "<thead><tr><th style='width:96px;'>法定要素</th><th>抽取内容（可编辑）</th></tr></thead>";
       const body = data.map(d => {
-        const cls = d.conf >= 90 ? "hi" : "mid";
         return `<tr>
           <td class="elem-name">${d.name}</td>
           <td class="elem-val" contenteditable="true">${d.val}</td>
-          <td><span class="conf ${cls}"><span class="cbar"><i style="width:${d.conf}%;"></i></span>${d.conf}%</span></td>
         </tr>`;
       }).join("");
       $("#elemTable").innerHTML = head + "<tbody>" + body + "</tbody>";
@@ -1368,9 +1273,120 @@
         <p class="right" style="margin-top:24px;">${subject}</p>
         <p class="right"><span class="mark mark-mid" data-check="c2">${dateCn}</span></p>`;
     }
+    function updateSimpleBtn() {
+      const btn = $("#btnToggleSimple");
+      if (btn) btn.textContent = state.simpleView ? "切换完整版" : "切换精简版";
+    }
     function renderDoc() {
       $("#docPage").innerHTML = buildDoc();
       $("#docHint").textContent = state.simpleView ? "精简版公文 · 提炼核心事项" : "公文初稿 · 可直接点击正文修改";
+      updateSimpleBtn();
+    }
+
+    /* 智能体内联机器人图标（供动态生成的气泡/状态复用） */
+    const BOT_SVG = '<svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg>';
+
+    /* AI 状态条：随步骤联动智能体状态文案与徽章 */
+    const STEP_STATUS = {
+      1: { state: "正在录入决策事项材料，提取法定要素", pill: "录入中", gen: false },
+      2: { state: "正在解析材料、标准化与补全核心要素", pill: "解析中", gen: true },
+      3: { state: "正在抽取法定要素并识别文种类型", pill: "识别中", gen: true },
+      4: { state: "正在依 GB/T9704 规范生成决议公文", pill: "生成中", gen: true },
+      5: { state: "正在进行法定程序与格式合规校验", pill: "校验中", gen: true },
+      6: { state: "公文成果已生成，可导出交付与归档", pill: "已完成", gen: false }
+    };
+    function updateAIStatus(step) {
+      const s = STEP_STATUS[step] || STEP_STATUS[1];
+      $("#asPillTxt").textContent = s.pill;
+      $("#asPill").classList.toggle("gen", !!s.gen);
+    }
+
+    /* 思考气泡 HTML */
+    function thinkingBubble(text) {
+      return '<div class="ai-thinking-bubble bubble">' +
+        '<span class="atb-avatar agent-avatar">' + BOT_SVG + '</span>' +
+        '<span class="atb-txt">' + text + '</span>' +
+        '<span class="atb-dots"><span class="thinking-dot"></span><span class="thinking-dot"></span><span class="thinking-dot"></span></span>' +
+        '</div>';
+    }
+
+    /* 生成中相关控件禁用/恢复 */
+    function setGenButtonsDisabled(disabled) {
+      $$("#stage-4 [data-action='regen'], #stage-4 [data-action='toggleSimple'], #stage-4 [data-action='toStep3'], #stage-4 [data-action='toStep5'], #stage-4 [data-action='cfgToggle'], [data-action='newTask']").forEach(b => { b.disabled = disabled; });
+      const tpl = $("#tplSelect"); if (tpl) tpl.disabled = disabled;
+    }
+
+    /* 公文生成：思考态 → 分段流式注入 → 完成（三段式，对应提示词"流式输出""思考状态"） */
+    function renderDocStreaming() {
+      if (state.generating) return;
+      state.generating = true;
+      clearTimeout(state.streamTimer);
+      setGenButtonsDisabled(true);
+      const doc = $("#docPage");
+      const sourceBox = $("#sourceBox");
+      doc.contentEditable = "false";
+      $("#docHint").textContent = "智能体正在生成公文…";
+      // 1. 思考态
+      doc.innerHTML = thinkingBubble("智能体正在构思公文");
+      if (sourceBox) sourceBox.innerHTML = "";
+      // 2. 思考结束后分段流式注入（分段避免逐字截断 HTML 标签）
+      state.streamTimer = setTimeout(() => {
+        const tmp = document.createElement("div");
+        tmp.innerHTML = buildDoc();
+        const segs = Array.from(tmp.childNodes).filter(n => n.nodeType === 1 || (n.nodeType === 3 && n.textContent.trim()));
+        doc.innerHTML = "";
+        let i = 0;
+        const step = () => {
+          if (i >= segs.length) {
+            // 3. 完成：移除末尾光标 + 完成提示气泡 + 引用来源卡片
+            state.streamTimer = setTimeout(() => {
+              const cursor = doc.querySelector(".typing-cursor");
+              if (cursor) cursor.classList.remove("typing-cursor");
+              const done = document.createElement("div");
+              done.className = "ai-done-bubble bubble";
+              done.innerHTML = '<svg class="ic-svg" viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M20 6 9 17l-5-5"/></svg>公文初稿已生成 · 可直接点击正文修改';
+              doc.appendChild(done);
+              doc.contentEditable = "true";
+              $("#docHint").textContent = state.simpleView ? "精简版公文 · 提炼核心事项" : "公文初稿 · 可直接点击正文修改";
+              updateSimpleBtn();
+              renderSources(sourceBox);
+              state.generating = false;
+              setGenButtonsDisabled(false);
+              showToast("公文已生成");
+            }, 700);
+            return;
+          }
+          const seg = segs[i];
+          if (seg.classList) {
+            seg.classList.add("seg");
+            if (i === segs.length - 1) seg.classList.add("typing-cursor");
+          }
+          doc.appendChild(seg);
+          doc.scrollTop = doc.scrollHeight;
+          i++;
+          state.streamTimer = setTimeout(step, 260);
+        };
+        step();
+      }, 1000);
+    }
+
+    /* 引用来源卡片（RAG 可溯源），渲染在公文下方 —— 复用政策法规库数据 */
+    const docSources = [
+      { name: "党政机关公文格式", no: "GB/T 9704—2012", detail: "规定公文版头、标题三要素、正文层次序数、落款与成文日期等版式要素。本公文的红头版头、标题结构、成文日期阿拉伯数字用法均依此校验。" },
+      { name: "党政机关公文处理工作条例", no: "中办发〔2012〕14号", detail: "明确决议、决定等文种的适用情形与处理流程；引用公文应标注发文机关、标题及文号，便于追溯。" },
+      { name: "中国共产党工作机关条例（试行）", no: "中发〔2017〕33号", detail: "规范党委工作机关议事决策程序、集体讨论与表决要求，为本决议审议程序的合规性提供依据。" },
+      { name: "南京江北新区议事规则", no: "宁新区委〔2021〕5号", detail: "重大事项须经党工委全会审议、过半数通过，公文中须载明表决方式与表决情况，作为程序合规校验基准。" }
+    ];
+    function renderSources(box) {
+      if (!box) return;
+      const items = docSources.map((s, i) =>
+        '<div class="source-item bubble" data-source="' + i + '">' +
+          '<span class="si-ic">📜</span>' +
+          '<div class="si-main"><div class="si-name">' + s.name + '</div><div class="si-no">' + s.no + ' · 现行有效</div>' +
+            '<div class="si-detail">' + s.detail + '</div></div>' +
+          '<span class="si-arrow">›</span>' +
+        '</div>').join("");
+      box.innerHTML = '<div class="source-card bubble"><div class="sc-head">📚 知识来源<span class="sc-tag">RAG 可溯源 · ' + docSources.length + ' 条</span></div>' + items + '</div>';
     }
     // 标题建议
     const titleOptions = [
@@ -1423,7 +1439,7 @@
     function checkCard(c) {
       const lvName = { block: "阻断项", warn: "提醒项", pass: "通过项" }[c.level];
       const canFix = c.level !== "pass";
-      return `<div class="check-card ${c.resolved ? "resolved" : ""}" data-check-card="${c.id}">
+      return `<div class="check-card agent-card ${c.resolved ? "resolved" : ""}" data-check-card="${c.id}">
         <div class="cc-head">
           <span class="cc-lv ${c.level}">${lvName}</span>
           <span class="cc-dim">${c.dim}</span>
@@ -1451,11 +1467,6 @@
       $("#cntBlock").textContent = block;
       $("#cntWarn").textContent = warn;
       $("#cntPass").textContent = pass;
-      // 合规评分：基准满分，阻断项-15，提醒项-4
-      const score = Math.max(40, 100 - block * 15 - warn * 4);
-      $("#scoreVal").textContent = score;
-      const ringColor = block > 0 ? "var(--red)" : (warn > 0 ? "var(--orange)" : "var(--green)");
-      $("#scoreRing").style.background = `conic-gradient(${ringColor} 0 ${score}%, #eef2f9 ${score}% 100%)`;
       $("#checkSummary").innerHTML = block > 0
         ? `<span style="color:var(--red);font-weight:700;">存在 ${block} 项阻断项，须整改后导出</span>`
         : `<span style="color:var(--green);font-weight:700;">校验通过，可进入输出交付</span>`;
@@ -1501,16 +1512,24 @@
       $("#docPageCheck").innerHTML = buildDoc();
       const prog = $("#checkProgress"), bar = $("#pgBar"), pct = $("#pgPct"), lbl = $("#pgLbl");
       prog.style.display = "block"; bar.style.width = "0%";
-      $("#checkList").innerHTML = "";
+      // 思考态：校验进行中
+      $("#checkList").innerHTML = thinkingBubble("智能体正在合规校验");
       const stages = [[18, "校验法定权限层级…"], [42, "校验议事规则与表决程序…"], [66, "校验公文格式规范…"], [86, "核验政策依据文号与时效…"], [100, "生成问题清单与修改指引…"]];
       let i = 0;
       const t = setInterval(() => {
         if (i >= stages.length) {
           clearInterval(t);
-          setTimeout(() => { prog.style.display = "none"; }, 350);
-          state.checked = true;
-          renderChecks();
-          showToast("合规校验完成，已生成问题清单");
+          setTimeout(() => {
+            prog.style.display = "none";
+            state.checked = true;
+            renderChecks();
+            // 结果卡片依次淡入上浮
+            $$("#checkList .check-card").forEach((c, idx) => {
+              c.style.opacity = "0";
+              setTimeout(() => { c.classList.add("bubble"); c.style.opacity = ""; }, idx * 90);
+            });
+            showToast("合规校验完成，已生成问题清单");
+          }, 350);
           return;
         }
         bar.style.width = stages[i][0] + "%"; pct.textContent = stages[i][0] + "%"; lbl.textContent = stages[i][1];
@@ -1523,6 +1542,7 @@
        ============================================================ */
     function goStep(n, opts) {
       opts = opts || {};
+      if (state.generating && n !== 4) { showToast("公文生成中，请稍候"); return; }
       if (n > state.maxStep && !opts.unlock) { showToast("请先完成当前步骤"); return; }
       state.step = n;
       if (n > state.maxStep) state.maxStep = n;
@@ -1532,10 +1552,12 @@
         node.classList.toggle("done", f < n);
         node.classList.toggle("current", f === n);
       });
+      // AI 状态条联动
+      updateAIStatus(n);
       // 各步骤进入时渲染
       if (n === 2) { renderProc(); renderNormTable(); renderMiss(); }
       if (n === 3) { renderElemTable(); }
-      if (n === 4) { renderTitleOpts(); renderDoc(); }
+      if (n === 4) { renderTitleOpts(); renderDocStreaming(); }
       if (n === 5) { runCheck(); }
       if (n === 6) { applyOutputPrefs(); }
       $(".stage-scroll").scrollTop = 0;
@@ -1548,6 +1570,7 @@
       resetForm();
       state.taskLoaded = false;
       state.simpleView = false;
+      updateSimpleBtn();
       state.showRedHead = true; state.orderMatters = true; state.showExec = true;
       state.chosenTitle = null; state.checked = false; state.maxStep = 1;
       checks.forEach(c => c.resolved = false);
@@ -1555,156 +1578,182 @@
       $$("#stage-4 [data-cfg]").forEach(tg => tg.classList.add("on"));
       setDocType("决议");
       $("#taskName").textContent = "未创建生成任务";
-      $("#taskMeta").textContent = "";
+      $("#asState").textContent = "将依 GB/T9704 规范生成决议公文";
       goStep(1, { unlock: true });
       showToast("已新建生成任务，请填写事项信息");
     }
 
+    
+
+    
+
+    
+
     /* ============================================================
-       文种模板库
+       侧边栏折叠
        ============================================================ */
-    const templates = [
-      ["党委决议标准模板", "决议", "版头·标题·通过说明·正文·落款·日期", "党工委/党委", "2026-06-28", "启用"],
-      ["政府决定标准模板", "决定", "版头·标题·正文·落款·成文日期", "管委会/政府", "2026-06-25", "启用"],
-      ["人事任免决定模板", "决定", "标题·任免事项·依据·落款", "党工委/组织", "2026-06-20", "启用"],
-      ["表彰奖惩决定模板", "决定", "标题·表彰依据·表彰事项·要求·落款", "综合部门", "2026-06-18", "启用"],
-      ["会议审议决议模板", "决议", "标题·会议概况·审议意见·决议事项·落款", "各委办局", "2026-06-15", "启用"],
-      ["重大事项决策决议模板", "决议", "标题·背景·决议事项·执行要求·落款", "党工委", "2026-06-10", "启用"]
-    ];
-    function renderTemplates() {
-      $("#tplCount").textContent = templates.length;
-      const head = "<thead><tr><th>模板名称</th><th>文种</th><th>要素结构</th><th>适用范围</th><th>更新时间</th><th>状态</th><th style='width:150px;'>操作</th></tr></thead>";
-      const body = templates.map((t, i) => `<tr>
-        <td style="font-weight:700;color:#28324c;">${t[0]}</td>
-        <td><span class="tag ${t[1] === "决议" ? "low" : "doing"}">${t[1]}</span></td>
-        <td style="color:#55617d;">${t[2]}</td><td>${t[3]}</td><td>${t[4]}</td>
-        <td><span class="tag done">${t[5]}</span></td>
-        <td class="row-act"><a data-action="previewTpl" data-i="${i}">预览</a><a data-action="editTpl" data-i="${i}">编辑</a><a class="danger" data-action="delTpl" data-i="${i}">停用</a></td>
-      </tr>`).join("");
-      $("#tplTable").innerHTML = head + "<tbody>" + body + "</tbody>";
+    function toggleSidebar() {
+      const app = document.querySelector(".app");
+      const sidebar = document.getElementById("sidebar");
+      app.classList.toggle("sidebar-collapsed");
+      sidebar.classList.toggle("collapsed");
     }
 
     /* ============================================================
-       程序规则库
+       新建任务
        ============================================================ */
-    const ruleCats = [
-      { key: "auth", name: "权限层级规则", icon: "①", note: "ℹ 权限规则用于校验决策主体是否具备对应事项的决策/审议权限。",
-        cols: ["序号", "规则名称", "适用主体", "状态", "操作"],
-        rows: [["1", "重大事项须经党工委全会审议", "党工委", "启用", ""], ["2", "一般行政事项由主任办公会决定", "管委会", "启用", ""], ["3", "人事任免按干部管理权限审批", "组织人事", "启用", ""]] },
-      { key: "meeting", name: "议事规则库", icon: "②", note: "ℹ 议事规则用于校验会议召开、审议程序与出席人数是否合规。",
-        cols: ["序号", "规则名称", "风险级别", "状态", "操作"],
-        rows: [["1", "会议出席人数须达法定人数", "高", "启用", ""], ["2", "重大事项须经集体讨论", "高", "启用", ""], ["3", "回避事项须记录留痕", "中", "启用", ""]] },
-      { key: "vote", name: "表决程序规则", icon: "③", note: "⚠ 表决规则用于校验表决方式、票数与通过比例是否满足规定。",
-        cols: ["序号", "规则名称", "通过比例", "状态", "操作"],
-        rows: [["1", "重大事项须过半数通过", "＞1/2", "启用", ""], ["2", "重要人事任免须2/3以上", "≥2/3", "启用", ""], ["3", "正文须载明表决情况", "—", "启用", ""]] },
-      { key: "format", name: "格式规范规则", icon: "④", note: "ℹ 格式规则依据GB/T9704-2012校验公文版式要素。",
-        cols: ["序号", "规则名称", "适用文种", "状态", "操作"],
-        rows: [["1", "标题三要素完整（机关+事由+文种）", "通用", "启用", ""], ["2", "决议须标注通过会议与日期", "决议", "启用", ""], ["3", "成文日期使用阿拉伯数字", "通用", "启用", ""], ["4", "结构层次序数（一、（一）、1.）", "通用", "启用", ""], ["5", "落款机关与成文日期格式", "通用", "启用", ""]] },
-      { key: "policy", name: "政策法规库", icon: "⑤", note: "ℹ 政策库用于核验引用依据的名称、文号与时效。",
-        cols: ["序号", "文件名称", "文号", "时效", "操作"],
-        rows: [["1", "党政机关公文处理工作条例", "中办发〔2012〕14号", "现行有效", ""], ["2", "党政机关公文格式", "GB/T 9704—2012", "现行有效", ""], ["3", "中国共产党工作机关条例（试行）", "中发〔2017〕33号", "现行有效", ""], ["4", "南京江北新区议事规则", "宁新区委〔2021〕5号", "现行有效", ""]] }
-    ];
-    function renderRuleNav() {
-      $("#ruleNav").innerHTML = ruleCats.map(c =>
-        `<button data-rule-cat="${c.key}" class="${c.key === state.ruleCat ? "active" : ""}">
-          <span>${c.icon} ${c.name}</span><span class="badge">${c.rows.length}</span></button>`).join("");
-    }
-    function renderRuleTable() {
-      const c = ruleCats.find(x => x.key === state.ruleCat);
-      $("#ruleCatTitle").textContent = c.name;
-      $("#ruleNote").innerHTML = c.note;
-      const head = "<thead><tr><th style='width:36px;'><input type='checkbox' data-action='checkAllRule'></th>" +
-        c.cols.map((col, i) => `<th${i === c.cols.length - 1 ? " style='width:120px;'" : ""}>${col}</th>`).join("") + "</tr></thead>";
-      const body = c.rows.map((r, ri) => {
-        const cells = r.slice(0, c.cols.length - 1).map((v, ci) => {
-          // 状态/级别列着色
-          if (ci === c.cols.length - 2 && ["启用", "现行有效"].includes(v)) return `<td><span class="tag done">${v}</span></td>`;
-          if (v === "高") return `<td><span class="tag high">高</span></td>`;
-          if (v === "中") return `<td><span class="tag mid">中</span></td>`;
-          return `<td>${v}</td>`;
-        }).join("");
-        return `<tr><td><input type='checkbox' class='rule-row-chk'></td>${cells}
-          <td class="row-act"><a data-action="editRule" data-ri="${ri}">编辑</a><a class="danger" data-action="delRule" data-ri="${ri}">删除</a></td></tr>`;
-      }).join("");
-      $("#ruleTable").innerHTML = head + "<tbody>" + body + "</tbody>";
+    function newTask() {
+      newTaskFlow();
     }
 
     /* ============================================================
-       历史记录
+       侧边栏历史记录
        ============================================================ */
-    const history = [
-      ["审议《促进先进制造业高质量发展若干政策措施》", "决议", "非涉密", "2026-07-08 15:20", 92, "待审核", "wait"],
-      ["关于表彰2025年度优化营商环境先进集体的决定", "决定", "非涉密", "2026-07-06 10:05", 96, "已归档", "done"],
-      ["关于同意《政务数据共享管理办法》的决议", "决议", "内部", "2026-07-04 14:32", 90, "已归档", "done"],
-      ["关于任免李某某等同志职务的决定", "决定", "秘密", "2026-07-03 09:15", 94, "已归档", "done"],
-      ["关于印发2026年重点工作任务分解的决定", "决定", "内部", "2026-07-01 16:48", 88, "已归档", "done"],
-      ["关于成立专项工作领导小组的决定", "决定", "非涉密", "2026-06-28 11:20", 91, "已归档", "done"],
-      ["关于《营商环境优化实施方案》的决议", "决议", "非涉密", "2026-06-25 09:40", 0, "生成中", "doing"]
-    ];
-    function renderHistory(rows) {
-      rows = rows || history;
-      $("#hCount").textContent = rows.length;
-      const head = "<thead><tr><th>事项名称</th><th>文种</th><th>密级</th><th>生成时间</th><th>合规评分</th><th>状态</th><th style='width:180px;'>操作</th></tr></thead>";
-      const body = rows.map(r => `<tr>
-        <td style="font-weight:700;color:#28324c;">${r[0]}</td>
-        <td><span class="tag ${r[1] === "决议" ? "low" : "doing"}">${r[1]}</span></td>
-        <td><span class="pill ${r[2] === "非涉密" ? "normal" : "secret"}">${r[2]}</span></td>
-        <td>${r[3]}</td>
-        <td>${r[4] ? `<b style="color:${r[4] >= 90 ? 'var(--green)' : 'var(--orange)'};">${r[4]}</b>` : "—"}</td>
-        <td><span class="tag ${r[6]}">${r[5]}</span></td>
-        <td class="row-act"><a data-action="viewDoc" data-doc="${r[0]}">查看</a><a data-action="downloadDoc" data-doc="${r[0]}">成果</a><a data-action="reuseDoc" data-doc="${r[0]}">复用生成</a></td>
-      </tr>`).join("");
-      $("#historyTable").innerHTML = head + "<tbody>" + body + "</tbody>";
-    }
+    // status: draft(草稿·可继续编辑) / submitted(已提交·等待审核) / review(待审核) / exported(已归档)
+    const HISTORY_DATA = {
+      h1: { title: "审议《促进先进制造业高质量发展若干政策措施》", type: "决议", typeAbbr: "决", timeDisplay: "今天 15:20", dateIso: "2026-07-08", status: "review", step: 5,
+        formData: { title: "审议《促进先进制造业高质量发展若干政策措施》", subject: "中共南京江北新区工作委员会", meeting: "党工委2026年第7次全体会议", date: "2026-07-08", cat: "重大事项决策", matter: "审议由经济发展局起草的《促进先进制造业高质量发展若干政策措施（草案）》，涵盖产业扶持、人才引进、用地保障等三个方面共18条具体措施。", voteWay: "无记名投票", should: "25", actual: "25", agree: "23", abstain: "2", basis: "《江北新区先进制造业发展规划（2024-2028）》", bg: "为贯彻落实省市关于推动制造业高质量发展的决策部署，加快构建具有江北新区特色的现代产业体系，经济发展局起草了《促进先进制造业高质量发展若干政策措施（草案）》。", secret: "非涉密" } },
+      h2: { title: "关于表彰2025年度优化营商环境先进集体的决定", type: "决定", typeAbbr: "定", timeDisplay: "07-06 10:05", dateIso: "2026-07-06", status: "exported", step: 6,
+        formData: { title: "关于表彰2025年度优化营商环境先进集体的决定", subject: "南京江北新区管理委员会", meeting: "主任办公会2026年第12次会议", date: "2026-07-06", cat: "表彰奖惩", matter: "授予经济发展局、行政审批局、市场监管局等6家单位\u201c2025年度优化营商环境先进集体\u201d称号，以表彰其在推进\u201c放管服\u201d改革、优化营商环境工作中取得的突出成效。", voteWay: "举手表决", should: "15", actual: "15", agree: "15", abstain: "0", basis: "《南京江北新区优化营商环境考核办法（试行）》", bg: "2025年度优化营商环境考核工作已全部完成，根据考核结果，拟对表现突出的先进集体予以表彰。", secret: "非涉密" } },
+      h3: { title: "关于同意《政务数据共享管理办法》的决议", type: "决议", typeAbbr: "决", timeDisplay: "07-04 14:32", dateIso: "2026-07-04", status: "exported", step: 6,
+        formData: { title: "关于同意《政务数据共享管理办法》的决议", subject: "中共南京江北新区工作委员会", meeting: "党工委2026年第6次全体会议", date: "2026-07-04", cat: "制度文件修订审议", matter: "审议并原则同意《江北新区政务数据共享管理办法（送审稿）》，要求大数据管理局根据会议审议意见进一步修改完善后按程序发布实施。", voteWay: "无记名投票", should: "25", actual: "24", agree: "22", abstain: "2", basis: "《江苏省政务数据共享管理办法》", bg: "为加快推进政务数据共享开放，提升政府治理能力现代化水平，大数据管理局起草了《政务数据共享管理办法（送审稿）》。", secret: "内部" } },
+      h4: { title: "关于任免李某某等同志职务的决定", type: "决定", typeAbbr: "定", timeDisplay: "07-03 09:15", dateIso: "2026-07-03", status: "exported", step: 6,
+        formData: { title: "关于任免李某某等同志职务的决定", subject: "中共南京江北新区工作委员会", meeting: "党工委2026年第6次全体会议", date: "2026-07-03", cat: "人事任免", matter: "根据工作需要，经党工委研究决定：任命李某某同志为经济发展局副局长（正处级），免去其科技创新局副局长职务。", voteWay: "无记名投票", should: "25", actual: "25", agree: "24", abstain: "1", basis: "《党政领导干部选拔任用工作条例》", bg: "因工作需要，经组织部门考察推荐，拟对相关同志职务进行调整。", secret: "秘密" } },
+      h5: { title: "关于印发2026年重点工作任务分解的决定", type: "决定", typeAbbr: "定", timeDisplay: "07-01 16:48", dateIso: "2026-07-01", status: "submitted", step: 5,
+        formData: { title: "关于印发2026年重点工作任务分解的决定", subject: "南京江北新区管理委员会", meeting: "主任办公会2026年第11次会议", date: "2026-07-01", cat: "重点工作部署", matter: "审议通过《2026年度重点工作任务分解方案》，将全年重点工作分解为6大类28项具体任务，明确牵头单位、责任人和完成时限。", voteWay: "举手表决", should: "15", actual: "14", agree: "14", abstain: "0", basis: "《江北新区2026年工作要点》", bg: "为全面贯彻落实年度工作部署，确保各项重点工作任务有序推进、按期完成，办公室起草了《2026年度重点工作任务分解方案》。", secret: "非涉密" } },
+      h6: { title: "关于成立专项工作领导小组的决定", type: "决定", typeAbbr: "定", timeDisplay: "06-28 11:20", dateIso: "2026-06-28", status: "draft", step: 3,
+        formData: { title: "关于成立专项工作领导小组的决定", subject: "南京江北新区管理委员会", meeting: "", date: "2026-06-28", cat: "重点工作部署", matter: "为加快推进江北新区智慧城市建设，决定成立智慧城市建设工作领导小组。", voteWay: "", should: "", actual: "", agree: "", abstain: "", basis: "", bg: "", secret: "非涉密" } },
+      h7: { title: "关于《营商环境优化实施方案》的决议", type: "决议", typeAbbr: "决", timeDisplay: "06-25 09:40", dateIso: "2026-06-25", status: "draft", step: 1,
+        formData: { title: "关于《营商环境优化实施方案》的决议", subject: "", meeting: "", date: "", cat: "", matter: "", voteWay: "", should: "", actual: "", agree: "", abstain: "", basis: "", bg: "", secret: "非涉密" } }
+    };
+    let historyOrder = ["h1", "h2", "h3", "h4", "h5", "h6", "h7"];
+    let currentTimeRange = "all";
+    const TODAY = new Date("2026-07-10");
 
-    /* ============================================================
-       统计报表
-       ============================================================ */
-    function renderStats() {
-      const typeData = [
-        { n: "决议·会议审议", v: 142, c: "#2455e6" }, { n: "决定·决策部署", v: 118, c: "#0b8fa8" },
-        { n: "决定·表彰奖惩", v: 64, c: "#10876a" }, { n: "决定·人事任免", v: 38, c: "#6a52d6" },
-        { n: "决议·重大事项", v: 24, c: "#d07a00" }
-      ];
-      const max = Math.max.apply(null, typeData.map(d => d.v));
-      $("#statBars").innerHTML = typeData.map(d =>
-        `<div class="bar-row"><span>${d.n}</span><div class="bar-track"><div class="bar-fill" style="width:${(d.v / max * 100).toFixed(0)}%;background:${d.c};"></div></div><span style="text-align:right;font-weight:700;">${d.v}</span></div>`).join("");
-      $("#statDonut").style.background = "conic-gradient(var(--red) 0 17%, var(--orange) 17% 64%, var(--green) 64% 100%)";
-      const top = [["表决情况缺失", 168], ["成文日期数字用法", 142], ["执行时限不明确", 121], ["政策文号缺失", 98], ["落款机关简称", 87], ["标题文种误用", 64]];
-      const tmax = top[0][1];
-      $("#statTop").innerHTML = top.map(t =>
-        `<div class="bar-row"><span>${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${(t[1] / tmax * 100).toFixed(0)}%;background:linear-gradient(90deg,#2455e6,#0b8fa8);"></div></div><span style="text-align:right;font-weight:700;">${t[1]}</span></div>`).join("");
-      // 趋势 svg
-      const vals = [42, 51, 58, 63, 69, 74, 29];
-      const labels = ["1月", "2月", "3月", "4月", "5月", "6月", "7月"];
-      const W = 460, H = 180, pad = 28, vmax = 80;
-      const pts = vals.map((v, i) => {
-        const x = pad + i * ((W - pad * 2) / (vals.length - 1));
-        const y = H - pad - (v / vmax) * (H - pad * 2);
-        return [x, y];
+    const STATUS_MAP = {
+      draft: { text: "草稿", cls: "s-draft" },
+      submitted: { text: "已提交", cls: "s-submitted" },
+      review: { text: "待审核", cls: "s-review" },
+      exported: { text: "已归档", cls: "s-exported" }
+    };
+
+    const STEP_LABELS = { 1: "事项信息", 2: "程序合规", 3: "要素抽取", 4: "公文生成", 5: "合规校验", 6: "导出归档" };
+
+    function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+    function renderHistoryList() {
+      const list = document.getElementById("historyList");
+      const countEl = document.getElementById("recordCount");
+      let visibleCount = 0;
+      const kw = (document.getElementById("historySearch").value || "").trim().toLowerCase();
+      const typeCls = { "决议": "zhishi", "决定": "shiwu" };
+      list.innerHTML = "";
+      historyOrder.forEach(id => {
+        const data = HISTORY_DATA[id];
+        if (!data) return;
+        const st = STATUS_MAP[data.status] || STATUS_MAP.exported;
+        const tc = typeCls[data.type] || "shiwu";
+        // 关键词过滤
+        if (kw && !data.title.toLowerCase().includes(kw) && !data.type.includes(kw)) return;
+        // 时间过滤
+        const itemDate = new Date(data.dateIso);
+        if (currentTimeRange === "7d") {
+          const diff = (TODAY - itemDate) / (1000 * 60 * 60 * 24);
+          if (diff < 0 || diff > 6) return;
+        } else if (currentTimeRange === "30d") {
+          const diff = (TODAY - itemDate) / (1000 * 60 * 60 * 24);
+          if (diff < 0 || diff > 29) return;
+        }
+        visibleCount++;
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.setAttribute("data-id", id);
+        div.setAttribute("data-abbr", data.typeAbbr);
+        div.setAttribute("data-full", data.title);
+        div.innerHTML =
+          '<div class="history-title">' + escapeHtml(data.title) + '</div>' +
+          '<div class="history-meta">' +
+            '<span class="history-tag ' + tc + '">' + data.type + '</span>' +
+            '<span class="history-status ' + st.cls + '">' + st.text + '</span>' +
+            (data.step && data.status !== "exported" ? '<span class="history-step">第' + data.step + '步</span>' : '') +
+            '<span class="history-time">' + data.timeDisplay + '</span>' +
+          '</div>';
+        list.appendChild(div);
       });
-      const line = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
-      const area = `${pad},${H - pad} ` + line + ` ${W - pad},${H - pad}`;
-      const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#2455e6"/>`).join("");
-      const lab = labels.map((l, i) => `<text x="${pts[i][0].toFixed(1)}" y="${H - 8}" font-size="11" fill="#8b95a7" text-anchor="middle">${l}</text>`).join("");
-      const vlab = pts.map((p, i) => `<text x="${p[0].toFixed(1)}" y="${(p[1] - 8).toFixed(1)}" font-size="10" fill="#55617d" text-anchor="middle">${vals[i]}</text>`).join("");
-      $("#statTrend").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
-        <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(36,85,230,.22)"/><stop offset="1" stop-color="rgba(36,85,230,0)"/></linearGradient></defs>
-        <polygon points="${area}" fill="url(#ga)"/><polyline points="${line}" fill="none" stroke="#2455e6" stroke-width="2.5"/>${dots}${lab}${vlab}
-      </svg>`;
+      countEl.textContent = visibleCount + " 条";
+      document.getElementById("searchClear").style.display = kw ? "block" : "none";
     }
 
-    /* ============================================================
-       视图切换
-       ============================================================ */
-    function switchView(v) {
-      state.view = v;
-      $$(".view").forEach(el => el.classList.toggle("active", el.id === "view-" + v));
-      $$(".nav-item").forEach(t => t.classList.toggle("active", t.dataset.view === v));
-      if (v === "templates") renderTemplates();
-      if (v === "rules") { renderRuleNav(); renderRuleTable(); }
-      if (v === "history") renderHistory();
-      if (v === "stats") renderStats();
+    function selectHistoryItem(el) {
+      const id = el.getAttribute("data-id");
+      const data = HISTORY_DATA[id];
+      if (!data) { showToast("未找到该历史记录"); return; }
+      document.querySelectorAll("#historyList .history-item").forEach(item => item.classList.remove("active"));
+      el.classList.add("active");
+      // 加载历史任务数据到生成视图
+      state.docType = data.type;
+      setDocType(state.docType);
+      state.taskLoaded = true;
+      // 恢复表单数据
+      const fd = data.formData || {};
+      $("#f-title").value = fd.title || data.title;
+      if (fd.subject) $("#f-subject").value = fd.subject;
+      if (fd.meeting) $("#f-meeting").value = fd.meeting;
+      if (fd.date) $("#f-date").value = fd.date;
+      if (fd.cat) $("#f-cat").value = fd.cat;
+      if (fd.matter) $("#f-matter").value = fd.matter;
+      if (fd.voteWay) $("#v-way").value = fd.voteWay;
+      if (fd.should) $("#v-should").value = fd.should;
+      if (fd.actual) $("#v-actual").value = fd.actual;
+      if (fd.agree) $("#v-agree").value = fd.agree;
+      if (fd.abstain) $("#v-abstain").value = fd.abstain;
+      if (fd.basis) $("#f-basis").value = fd.basis;
+      if (fd.bg) $("#f-bg").value = fd.bg;
+      // 密级
+      if (fd.secret) {
+        $$(".radio-row[data-radio=secret] .opt").forEach(opt => {
+          opt.classList.toggle("on", opt.dataset.val === fd.secret);
+        });
+      }
+      // 更新顶部状态栏
+      $("#taskName").textContent = fd.title || data.title;
+      $("#asState").textContent = "· 文种：" + data.type + " · 状态：" + (STATUS_MAP[data.status] || {}).text + " · 密级：" + (fd.secret || "非涉密");
+      // 跳转到对应步骤
+      const targetStep = data.step || 1;
+      const st = STATUS_MAP[data.status] || {};
+      if (data.status === "exported") {
+        // 已归档：解锁全部步骤，跳到第6步查看结果
+        state.maxStep = 6;
+        goStep(6, { unlock: true });
+        showToast("已加载归档记录：" + data.title.substring(0, 18) + "...");
+      } else if (data.status === "review" || data.status === "submitted") {
+        // 待审核/已提交：解锁到步骤5
+        state.maxStep = 5;
+        goStep(5, { unlock: true });
+        showToast("已加载「" + st.text + "」记录，可继续审核");
+      } else {
+        // 草稿：解锁到保存时的步骤，继续编辑
+        state.maxStep = targetStep;
+        goStep(targetStep, { unlock: true });
+        showToast("已恢复草稿（第" + targetStep + "步·" + (STEP_LABELS[targetStep] || "") + "），可继续编辑");
+      }
+      $$(".field.err").forEach(f => f.classList.remove("err"));
+    }
+
+    function filterHistory() {
+      renderHistoryList();
+    }
+
+    function clearSearch() {
+      document.getElementById("historySearch").value = "";
+      renderHistoryList();
+    }
+
+    function setTimeFilter(range, el) {
+      document.querySelectorAll("#timeFilterRow .time-chip").forEach(c => c.classList.remove("active"));
+      el.classList.add("active");
+      currentTimeRange = range;
+      renderHistoryList();
     }
 
     /* ============================================================
@@ -1713,14 +1762,15 @@
     function reportHtml(docName) {
       const block = checks.filter(c => c.level === "block").length;
       const warn = checks.filter(c => c.level === "warn").length;
+      const pass = checks.filter(c => c.level === "pass").length;
       const items = checks.filter(c => c.level !== "pass");
       return `<div style="line-height:1.9;">
         <div style="font-weight:800;font-size:16px;color:#1b2947;margin-bottom:8px;">《${docName || SAMPLE.title}》合规校验报告</div>
         <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">生成时间：2026-07-08 15:20 · 经办人：综合办公室 · 密级：非涉密 · 文种：决议 · 引擎：决定决议生成智能体 v1.0</div>
         <div class="grid-4" style="margin-bottom:14px;">
-          <div class="kpi" style="box-shadow:none;"><div class="k-label">合规评分</div><div class="k-value" style="font-size:22px;color:var(--primary);">${$("#scoreVal").textContent}</div></div>
           <div class="kpi" style="box-shadow:none;"><div class="k-label">阻断项</div><div class="k-value" style="font-size:22px;color:var(--red);">${block}</div></div>
           <div class="kpi" style="box-shadow:none;"><div class="k-label">提醒项</div><div class="k-value" style="font-size:22px;color:var(--orange);">${warn}</div></div>
+          <div class="kpi" style="box-shadow:none;"><div class="k-label">通过项</div><div class="k-value" style="font-size:22px;color:var(--green);">${pass}</div></div>
           <div class="kpi" style="box-shadow:none;"><div class="k-label">文种识别</div><div class="k-value" style="font-size:22px;color:var(--green);">决议</div></div>
         </div>
         <table class="tbl"><thead><tr><th>规则编号</th><th>校验维度</th><th>问题描述</th><th>等级</th></tr></thead><tbody>
@@ -1795,15 +1845,14 @@
        事件委托：全局点击
        ============================================================ */
     document.body.addEventListener("click", (e) => {
-      const t = e.target.closest("[data-action],[data-view],[data-step],[data-rule-cat],[data-title-opt],[data-dt],[data-del-file]");
+      const t = e.target.closest("[data-action],[data-view],[data-step],[data-rule-cat],[data-title-opt],[data-dt],[data-del-file],[data-source]");
       if (!t) return;
+      // 引用来源卡片展开/收起
+      if (t.dataset.source !== undefined) { t.classList.toggle("open"); return; }
 
       // 顶部/左侧导航
-      if (t.dataset.view) { switchView(t.dataset.view); return; }
       // 步骤条点击
       if (t.dataset.step) { goStep(+t.dataset.step); return; }
-      // 规则分类
-      if (t.dataset.ruleCat) { state.ruleCat = t.dataset.ruleCat; renderRuleNav(); renderRuleTable(); return; }
       // 标题建议套用 —— 即时更新公文标题
       if (t.dataset.titleOpt !== undefined) {
         const idx = +t.dataset.titleOpt;
@@ -1831,7 +1880,7 @@
           if (!validateForm()) { showToast("请完善必填项后继续"); break; }
           state.taskLoaded = true;
           $("#taskName").textContent = readForm().title;
-          $("#taskMeta").textContent = "· 决策主体：" + readForm().subject + " · 密级：" + readForm().secret;
+          $("#asState").textContent = "· 决策主体：" + readForm().subject + " · 密级：" + readForm().secret;
           goStep(2, { unlock: true });
           break;
         case "reparse": renderProc(); showToast("已重新解析并补全核心要素"); break;
@@ -1844,10 +1893,9 @@
           break;
         case "toStep4": goStep(4, { unlock: true }); break;
         case "regen":
-          $("#docHint").textContent = "正在重新生成…";
-          setTimeout(() => { renderDoc(); showToast("公文已重新生成"); }, 500);
+          renderDocStreaming();
           break;
-        case "toggleSimple": state.simpleView = !state.simpleView; renderDoc(); showToast(state.simpleView ? "已切换为精简版" : "已切换为正式版"); break;
+        case "toggleSimple": state.simpleView = !state.simpleView; renderDoc(); showToast(state.simpleView ? "已切换为精简版" : "已切换为完整版"); break;
         case "cfgToggle": {
           t.classList.toggle("on");
           const on = t.classList.contains("on"), cfg = t.dataset.cfg;
@@ -1887,88 +1935,8 @@
             <div style="font-size:44px;color:var(--green);">✓</div>
             <div style="font-weight:800;font-size:16px;margin:8px 0;">生成任务已完成并归档</div>
             <div style="color:var(--muted);font-size:13.5px;line-height:1.7;">归档编号：NJXQ-JY-2026-0708 · 版本 V1.0<br>本次生成、修改、校验、导出记录已完整留痕。</div>
-          </div>`, () => { closeModal(); switchView("history"); }, { okText: "查看历史记录" });
+          </div>`, () => { closeModal(); showToast("生成任务已完成并归档"); }, { okText: "我知道了" });
           break;
-        /* ---- 模板 ---- */
-        case "addTpl": openModal("新增文种模板", `<div class="field"><label style="font-weight:700;">模板名称</label><input type="text" placeholder="请输入模板名称" style="width:100%;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 11px;margin-top:6px;"></div><div class="field"><label style="font-weight:700;">要素结构</label><textarea placeholder="如：版头·标题·通过说明·正文·落款·日期"></textarea></div>`, () => { closeModal(); showToast("模板已新增"); }); break;
-        case "previewTpl": openModal("模板预览 · " + templates[+t.dataset.i][0], `<div style="line-height:2;color:#37425c;">要素结构：${templates[+t.dataset.i][2]}<br>适用范围：${templates[+t.dataset.i][3]}<br>文种：${templates[+t.dataset.i][1]}<br><br><div style="padding:12px;background:#f7f9fd;border-radius:10px;color:var(--muted);font-size:13px;">该模板定义了对应文种的版头、标题范式、正文层次结构与落款格式，将在「公文生成」环节按此结构生成初稿。</div></div>`, null, { hideFooter: true }); break;
-        case "editTpl": showToast("进入模板编辑：" + templates[+t.dataset.i][0]); break;
-        case "delTpl": openModal("停用模板", `确认停用「${templates[+t.dataset.i][0]}」？停用后新任务将不再默认套用该模板。`, () => { closeModal(); showToast("模板已停用"); }); break;
-        case "importTpl": showToast("模板导入成功（示例：新增 2 个）"); break;
-        /* ---- 规则 ---- */
-        case "addRule": {
-          const c = ruleCats.find(x => x.key === state.ruleCat);
-          const fields = c.cols.slice(1, c.cols.length - 1).map((col, i) =>
-            `<div class="field"><label style="font-weight:700;">${col}</label><input type="text" id="rf-${i}" placeholder="请输入${col}" style="width:100%;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 11px;margin-top:6px;"></div>`).join("");
-          openModal("添加规则 · " + c.name, fields, () => {
-            const vals = c.cols.slice(1, c.cols.length - 1).map((col, i) => ($("#rf-" + i).value || "").trim());
-            if (vals.some(v => !v)) { showToast("请完整填写"); return; }
-            c.rows.push([String(c.rows.length + 1)].concat(vals).concat([""]));
-            renderRuleNav(); renderRuleTable(); closeModal(); showToast("规则已添加");
-          });
-          break;
-        }
-        case "editRule": {
-          const c = ruleCats.find(x => x.key === state.ruleCat);
-          const row = c.rows[+t.dataset.ri];
-          const fields = c.cols.slice(1, c.cols.length - 1).map((col, i) =>
-            `<div class="field"><label style="font-weight:700;">${col}</label><input type="text" id="rf-${i}" value="${row[i + 1] || ""}" style="width:100%;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 11px;margin-top:6px;"></div>`).join("");
-          openModal("编辑规则 · " + c.name, fields, () => {
-            c.cols.slice(1, c.cols.length - 1).forEach((col, i) => { row[i + 1] = ($("#rf-" + i).value || "").trim(); });
-            renderRuleTable(); closeModal(); showToast("规则已更新");
-          });
-          break;
-        }
-        case "delRule": {
-          const c = ruleCats.find(x => x.key === state.ruleCat);
-          openModal("删除规则", `确认删除「${c.rows[+t.dataset.ri][1]}」？删除后合规校验将不再依据该规则。`, () => {
-            c.rows.splice(+t.dataset.ri, 1); renderRuleNav(); renderRuleTable(); closeModal(); showToast("规则已删除");
-          });
-          break;
-        }
-        case "checkAllRule": { const on = t.checked; $$(".rule-row-chk").forEach(cb => cb.checked = on); break; }
-        case "batchDelRule": {
-          const c = ruleCats.find(x => x.key === state.ruleCat);
-          const idx = $$(".rule-row-chk").map((cb, i) => cb.checked ? i : -1).filter(i => i >= 0);
-          if (!idx.length) { showToast("请先勾选要删除的规则"); break; }
-          openModal("批量删除", `确认删除选中的 ${idx.length} 条规则？`, () => {
-            c.rows = c.rows.filter((_, i) => idx.indexOf(i) < 0);
-            renderRuleNav(); renderRuleTable(); closeModal(); showToast("已删除 " + idx.length + " 条");
-          });
-          break;
-        }
-        case "importRule": openModal("导入规则", `<div class="field"><label style="font-weight:700;">选择文件（支持 .xlsx / .csv）</label><button class="btn" onclick="document.getElementById('fileInput').click()" style="margin-top:8px;">📁 选择文件</button></div><div style="color:var(--muted);font-size:13px;">导入的规则将进入待复核状态，关键规则支持双人复核。</div>`, () => { closeModal(); showToast("规则导入成功（示例：新增 6 条）"); }); break;
-        case "exportRule": showToast("当前规则库已导出为 Excel"); break;
-        /* ---- 设置 ---- */
-        case "saveSettings": showToast("生成设置已保存并生效"); break;
-        case "resetSettings": openModal("恢复默认", "确认将所有生成设置恢复为系统默认值？", () => { closeModal(); showToast("已恢复默认设置"); }); break;
-        case "toggle": t.classList.toggle("on"); showToast("设置项已更新"); break;
-        /* ---- 历史 ---- */
-        case "historyFilter": {
-          const type = $("#hType").value, status = $("#hStatus").value, kw = ($("#hSearch").value || "").trim();
-          const rows = history.filter(r =>
-            (type === "全部文种" || r[1] === type) &&
-            (status === "全部状态" || r[5] === status) &&
-            (!kw || r[0].indexOf(kw) >= 0));
-          renderHistory(rows); showToast("已筛选，共 " + rows.length + " 条");
-          break;
-        }
-        case "viewDoc": openModal("公文查看 · " + t.dataset.doc, `<div style="border:1px solid var(--line);border-radius:10px;padding:24px 30px;font-family:'FangSong','仿宋',serif;line-height:2;color:#1f2937;">
-          <div style="text-align:center;color:var(--red);font-family:'SimHei','黑体';font-size:20px;font-weight:700;border-bottom:2px solid var(--red);padding-bottom:6px;margin-bottom:18px;">中共南京江北新区工作委员会文件</div>
-          <div style="text-align:center;font-family:'SimHei','黑体';font-size:18px;font-weight:700;margin-bottom:6px;">${t.dataset.doc}</div>
-          <div style="text-align:center;font-size:13px;color:#4b5563;margin-bottom:16px;">（2026年7月8日 党工委2026年第7次全体会议通过）</div>
-          <p style="text-indent:2em;">会议审议了相关事项，经充分讨论作出决议……（此处为公文正文，实际以生成结果为准）</p>
-          <p style="text-align:right;">中共南京江北新区工作委员会</p>
-          <p style="text-align:right;">2026年7月8日</p>
-        </div>`, null, { wide: true, hideFooter: true }); break;
-        case "downloadDoc": openModal("下载成果 · " + t.dataset.doc, `<div style="display:grid;gap:10px;">
-          <div style="padding:11px;border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;align-items:center;">📃 正式版决议公文.docx <button class="btn sm" onclick="document.getElementById('modalMask').classList.remove('show')">下载</button></div>
-          <div style="padding:11px;border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;align-items:center;">📋 精简版公文.docx <button class="btn sm" onclick="document.getElementById('modalMask').classList.remove('show')">下载</button></div>
-          <div style="padding:11px;border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;align-items:center;">🔍 合规校验报告.pdf <button class="btn sm" onclick="document.getElementById('modalMask').classList.remove('show')">下载</button></div>
-        </div>`, null, { hideFooter: true }); break;
-        case "reuseDoc": switchView("generate"); fillSample(); goStep(1, { unlock: true }); showToast("已复用生成：" + t.dataset.doc); break;
-        case "exportHistory": showToast("生成台账已导出为 Excel"); break;
-        case "exportStat": showToast("统计报表已导出（PDF）"); break;
         /* ---- 顶部 ---- */
         case "message": openModal("消息通知", `<div style="display:grid;gap:10px;">
           <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">📌 「促进先进制造业若干政策措施」决议待部门审核</div>
@@ -1995,7 +1963,7 @@
         // 密级切换即时反映到任务信息栏
         if (radio.dataset.radio === "secret") {
           const f = readForm();
-          $("#taskMeta").textContent = "· 决策主体：" + (f.subject || "—") + " · 密级：" + f.secret;
+          $("#asState").textContent = "· 决策主体：" + (f.subject || "—") + " · 密级：" + f.secret;
         }
       }
       else if (check) { opt.classList.toggle("on"); }
@@ -2009,6 +1977,7 @@
       const el = e.target.closest("[data-miss]");
       if (!el) return;
       const i = +el.dataset.miss;
+      missItems[i].val = el.value;
       missItems[i].filled = !!(el.value || "").trim();
       renderMiss();
     });
@@ -2018,7 +1987,7 @@
       const m = e.target.closest(".mark");
       if (!m) return;
       const id = m.dataset.check;
-      $$(".check-card").forEach(c => c.style.outline = c.dataset.checkCard === id ? "2px solid rgba(36,85,230,.4)" : "none");
+      $$(".check-card").forEach(c => c.style.outline = c.dataset.checkCard === id ? "2px solid rgba(14,76,146,.4)" : "none");
       const card = $(`.check-card[data-check-card="${id}"]`);
       if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
     });
@@ -2030,7 +1999,7 @@
       if (m) {
         m.scrollIntoView({ behavior: "smooth", block: "center" });
         const orig = m.style.boxShadow;
-        m.style.boxShadow = "0 0 0 4px rgba(36,85,230,.28)";
+        m.style.boxShadow = "0 0 0 4px rgba(14,76,146,.28)";
         setTimeout(() => m.style.boxShadow = orig, 1200);
       }
     });
@@ -2069,9 +2038,33 @@
       showToast("已套用「" + this.value + "」，公文文种：" + state.docType);
     });
     renderFileChips();
+    renderHistoryList();
     goStep(1, { unlock: true });
+
+    /* ---- 侧边栏事件监听 ---- */
+    // 折叠按钮
+    $("#collapseBtn").addEventListener("click", toggleSidebar);
+    // 新建任务按钮
+    $("#btnNewTask").addEventListener("click", newTask);
+    // 搜索框
+    $("#historySearch").addEventListener("input", filterHistory);
+    // 清除搜索
+    $("#searchClear").addEventListener("click", clearSearch);
+    // 时间筛选芯片
+    $$("#timeFilterRow .time-chip").forEach(chip => {
+      chip.addEventListener("click", function () {
+        setTimeFilter(this.dataset.range, this);
+      });
+    });
+    // 历史列表点击（事件委托）
+    $("#historyList").addEventListener("click", function (e) {
+      const item = e.target.closest(".history-item");
+      if (item) selectHistoryItem(item);
+    });
   })();
   </script>
 <script src="handoff-context.js"></script>
 </body>
 </html>
+
+

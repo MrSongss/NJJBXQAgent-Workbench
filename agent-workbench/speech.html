@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -21,11 +21,12 @@
   :root{
     --ai-navy:#0A3573; --ai-blue:#0E4C92; --ai-cyan:#13A8A8; --ai-green:#43A047;
     --ai-glow:0 0 16px rgba(19,168,168,.35);
+    --primary-hover:#1377B5;
     --bg:#F4F6F9; --card:#ffffff; --text:#333639; --text-2:#5a6b85; --text-3:#909aad;
     --border:#e4e7ed; --border-2:#eef2f7;
   }
   *{box-sizing:border-box;}
-  body{margin:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);}
+  body{margin:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 78% -4%,rgba(19,168,168,.12),transparent 30%),radial-gradient(circle at 12% 100%,rgba(14,76,146,.08),transparent 35%),var(--bg);color:var(--text);}
   .icon{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;vertical-align:-0.125em;}
 
   /* AI 动效 */
@@ -45,43 +46,45 @@
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
   /* 布局 */
-  .app-container{display:flex;height:100vh;width:100vw;overflow:hidden;}
+  .app-container{display:grid;grid-template-columns: 260px 1fr;grid-template-rows:58px 1fr;height:100vh;width:100vw;overflow:hidden;}
 
   /* 侧边栏 */
-  .sidebar{width:248px;background:linear-gradient(180deg,#0A3573 0%,#0E4C92 100%);color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:relative;transition:width .3s ease;}
+  .sidebar{width: 260px;background:#fff;color:var(--text-main);display:flex;flex-direction:column;flex-shrink:0;position:relative;transition:width .3s ease;grid-column:1;grid-row:1/3;border-right:1px solid var(--border-light);}
   .sidebar.collapsed{width:60px;}
   .sidebar.collapsed .sidebar-header,.sidebar.collapsed .sidebar-section-title,.sidebar.collapsed .history-filter,.sidebar.collapsed .history-list,.sidebar.collapsed .sidebar-footer .user-info{display:none;}
   .sidebar.collapsed .sidebar-collapsed-logo{display:flex;}
   .sidebar-collapsed-logo{display:none;justify-content:center;padding:18px 0;}
   .sidebar-toggle{position:absolute;top:22px;right:-12px;width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
   .sidebar-toggle:hover{background:var(--ai-blue);color:#fff;border-color:var(--ai-blue);}
-  .sidebar-header{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12);}
-  .sidebar-logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;margin-bottom:14px;}
+  .sidebar-header{padding:18px 16px 14px;background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);border-bottom:none;box-shadow:0 4px 20px rgba(10,53,115,0.18);}
+  .sidebar-logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;margin-bottom:14px;color:#fff;}
   .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--ai-cyan),#2BBDBD);border-radius:6px;color:#fff;font-weight:700;text-align:center;line-height:30px;font-size:15px;flex-shrink:0;}
-  .sidebar-section-title{padding:14px 16px 6px;font-size:12px;color:rgba(255,255,255,.55);}
+  .sidebar-section-title{padding:14px 16px 8px;font-size:12px;color:var(--text-secondary);font-weight:500;}
   .history-filter{padding:0 12px 8px;display:flex;flex-direction:column;gap:6px;}
-  .history-list{flex:1;overflow-y:auto;padding:0 8px;}
-  .history-list::-webkit-scrollbar{width:4px;}.history-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px;}
-  .history-item{padding:10px 12px;margin-bottom:4px;border-radius:6px;cursor:pointer;transition:background .2s;font-size:13px;color:rgba(255,255,255,.85);display:flex;flex-direction:column;gap:4px;}
-  .history-item:hover{background:rgba(255,255,255,.08);}
-  .history-item.active{background:rgba(19,168,168,.22);border-left:3px solid var(--ai-cyan);}
-  .history-item-title{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .history-item-time{font-size:11px;color:rgba(255,255,255,.45);}
+  .history-list{flex:1;overflow-y:auto;padding:0 8px 16px;}
+  .history-list::-webkit-scrollbar{width:4px;}.history-list::-webkit-scrollbar-thumb{background:#d7dfea;border-radius:2px;}
+  .history-item{padding:10px 12px;margin-bottom:4px;border-radius:6px;cursor:pointer;transition:all .25s ease;font-size:13px;color:var(--text-main);display:flex;flex-direction:column;gap:4px;}
+  .history-item:hover{background:#eef2f7;transform:translateX(2px);}
+  .history-item.active{background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));box-shadow:0 8px 20px rgba(14,76,146,0.25),var(--ai-glow);color:#fff;}
+  .history-item-title{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-main);}
+  .history-item.active .history-item-title{color:#fff;}
+  .history-item-time{font-size:11px;color:var(--text-secondary);}
+  .history-item.active .history-item-time{color:rgba(255,255,255,.7);}
   .history-status{display:inline-block;align-self:flex-start;padding:1px 7px;font-size:10px;border-radius:9px;line-height:16px;margin-top:2px;font-weight:500;}
-  .st-draft{background:rgba(255,255,255,.15);color:#cfd8e6;}
-  .st-outline{background:rgba(19,168,168,.3);color:#9fe9e9;}
-  .st-speech{background:rgba(67,160,71,.3);color:#bfe9c1;}
-  .st-edited{background:rgba(240,173,78,.3);color:#ffe2b0;}
-  .st-exported{background:rgba(156,120,216,.35);color:#dcc8ff;}
-  .history-empty{padding:30px 12px;text-align:center;color:rgba(255,255,255,.4);font-size:12px;}
-  .sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:8px;}
+  .st-draft{background:#f0f0f0;color:#909399;}
+  .st-outline{background:#e6f4ff;color:#0958d9;}
+  .st-speech{background:#eaf8f1;color:#2e7d32;}
+  .st-edited{background:#fff7e6;color:#d48806;}
+  .st-exported{background:#f9f0ff;color:#722ed1;}
+  .history-empty{padding:30px 12px;text-align:center;color:var(--text-secondary);font-size:12px;}
+  .sidebar-footer{padding:12px 16px;border-top:1px solid var(--border-light);font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;background:#fff;}
   .user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ai-cyan),var(--ai-green));color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;}
 
   /* 主区 */
-  .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
-  .top-bar{height:60px;background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;color:#fff;}
+  .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);grid-column:2;grid-row:2;}
+  .top-bar{height:58px;background:linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8);border-bottom:none;box-shadow:0 4px 20px rgba(10,53,115,.18);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;color:#fff;grid-column:2;grid-row:1;}
   .top-bar-left{display:flex;align-items:center;gap:12px;}
-  .top-bar-icon{width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;}
+  .top-bar-icon{width:36px;height:36px;background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.1));border:1px solid rgba(255,255,255,.3);box-shadow:var(--ai-glow);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;}
   .top-bar-title{font-size:17px;font-weight:600;}
   .top-bar-desc{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px;}
   .top-bar-right{display:flex;align-items:center;gap:14px;}
@@ -96,12 +99,14 @@
 
   /* 使用视图 */
   .use-view{display:flex;flex:1;min-width:0;overflow:hidden;}
-  .operation-area{flex:1;display:flex;flex-direction:column;min-width:0;transition:all .4s ease;border-right:1px solid var(--border);background:#fff;}
-  .operation-area.shrunk{flex:0 0 470px;}
+  .operation-area{order:2;flex:1;display:flex;flex-direction:column;min-width:0;transition:all .4s ease;border-left:1px solid var(--border);background:#fff;overflow:hidden;}
+  .operation-area.shrunk{order:2;flex:0 0 440px;}
   .form-container{flex:1;overflow-y:auto;padding:20px 28px;}
   .form-container::-webkit-scrollbar{width:6px;}.form-container::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
   .smart-input-box{background:linear-gradient(135deg,#e8f4fd 0%,#e8f8f8 100%);border:1px solid #b8dde0;border-radius:8px;padding:14px;margin-bottom:18px;}
+  .smart-input-divider{height:1px;background:linear-gradient(90deg,transparent,#b8dde0,transparent);margin:14px 0;}
+  .smart-ref-header{font-size:14px;font-weight:600;color:#333639;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
   .smart-input-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
   .smart-input-title{font-size:13px;font-weight:600;color:var(--ai-blue);display:flex;align-items:center;gap:6px;}
   .smart-tag{display:inline-block;padding:1px 6px;background:linear-gradient(90deg,var(--ai-blue),var(--ai-cyan));color:#fff;font-size:10px;border-radius:3px;margin-left:4px;}
@@ -126,7 +131,7 @@
   .radio-item{padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-2);cursor:pointer;transition:all .2s;background:#fff;user-select:none;}
   .radio-item:hover{border-color:var(--ai-blue);color:var(--ai-blue);}
   .radio-item.selected{border-color:var(--ai-blue);background:var(--ai-blue);color:#fff;}
-  .duration-custom{display:flex;align-items:center;gap:4px;}
+  .duration-custom{display:flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0}
   .duration-custom-input{width:60px;}
   .duration-custom-label{font-size:12px;color:var(--text-2);}
 
@@ -168,9 +173,10 @@
   .auto-save-indicator.saving{color:#b7791f;}
 
   /* 预览区 */
-  .preview-area{flex:1;display:none;flex-direction:column;min-width:0;background:var(--bg);position:relative;transition:all .4s ease;}
+  .preview-area{order:1;flex:1;display:none;flex-direction:column;min-width:0;background:var(--bg);position:relative;transition:all .4s ease;}
   .preview-area.show{display:flex;}
-  .preview-area.collapsed{flex:0 0 40px;}
+  .preview-area:not(.show){display:none;}
+  .preview-area.collapsed{order:1;flex:0 0 40px;}
   .preview-area.collapsed .preview-header,.preview-area.collapsed .preview-body{display:none;}
   .preview-area.collapsed .preview-collapse-strip{display:flex;}
   .preview-collapse-strip{display:none;width:40px;height:100%;background:#fff;border-left:1px solid var(--border);flex-direction:column;align-items:center;padding-top:20px;cursor:pointer;}
@@ -246,7 +252,7 @@
   .generating-step.done .gen-step-icon{background:var(--ai-green);border-color:var(--ai-green);color:#fff;}
 
   /* 政策面板 */
-  .policy-panel{position:absolute;top:16px;right:24px;width:300px;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 16px rgba(14,76,146,.12);max-height:400px;overflow-y:auto;z-index:10;}
+  .policy-panel{position:absolute;top:16px;right:24px;width:300px;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 16px rgba(14,76,146,.12);max-height:440px;overflow-y:auto;z-index:10;}
   .policy-panel-header{padding:12px 16px;border-bottom:1px solid var(--border-2);display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--ai-blue);background:#f4f8fd;}
   .policy-panel-close{cursor:pointer;color:var(--text-3);font-size:16px;}
   .policy-item{padding:10px 16px;border-bottom:1px solid #f4f7fb;font-size:12px;cursor:pointer;transition:background .2s;}
@@ -257,7 +263,7 @@
   .policy-item-hint{color:var(--ai-blue);font-size:11px;margin-top:4px;}
 
   /* 编辑模式 */
-  .edit-split{display:flex;gap:16px;width:100%;max-width:1400px;align-items:flex-start;}
+  .edit-split{display:flex;gap:16px;width:100%;max-width:1440px;align-items:flex-start;}
   .edit-pane{flex:1;min-width:0;background:#fff;border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;overflow:hidden;}
   .edit-pane-header{padding:10px 14px;background:#f4f8fd;border-bottom:1px solid var(--border-2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
   .edit-pane-tag{font-size:13px;font-weight:600;padding:2px 8px;border-radius:4px;}
@@ -368,13 +374,13 @@ const app = createApp({
 
     /* ========== 常量数据 ========== */
     const SPEAKER_DB = [
-      { name:'李强', pinyin:'liqiang', title:'市委副书记、市长' },
-      { name:'王芳', pinyin:'wangfang', title:'市委常委、常务副市长' },
-      { name:'张伟', pinyin:'zhangwei', title:'市委副书记' },
-      { name:'刘明', pinyin:'liuming', title:'市委常委、宣传部部长' },
-      { name:'陈红', pinyin:'chenhong', title:'副市长' },
-      { name:'赵磊', pinyin:'zhaolei', title:'市政府秘书长' },
-      { name:'孙华', pinyin:'sunhua', title:'市委常委、组织部部长' }
+      { name:'李强', pinyin:'liqiang', title:'市委副书记、市长', corpusCount:28, sceneCount:6, version:'V3.2', confidence:'高', updated:'2026-07-18' },
+      { name:'王芳', pinyin:'wangfang', title:'市委常委、常务副市长', corpusCount:19, sceneCount:5, version:'V2.6', confidence:'高', updated:'2026-07-12' },
+      { name:'张伟', pinyin:'zhangwei', title:'市委副书记', corpusCount:16, sceneCount:4, version:'V2.3', confidence:'中高', updated:'2026-06-30' },
+      { name:'刘明', pinyin:'liuming', title:'市委常委、宣传部部长', corpusCount:22, sceneCount:5, version:'V2.8', confidence:'高', updated:'2026-07-09' },
+      { name:'陈红', pinyin:'chenhong', title:'副市长', corpusCount:14, sceneCount:4, version:'V2.1', confidence:'中高', updated:'2026-06-26' },
+      { name:'赵磊', pinyin:'zhaolei', title:'市政府秘书长', corpusCount:17, sceneCount:5, version:'V2.4', confidence:'高', updated:'2026-07-03' },
+      { name:'孙华', pinyin:'sunhua', title:'市委常委、组织部部长', corpusCount:15, sceneCount:4, version:'V2.2', confidence:'中高', updated:'2026-06-28' }
     ];
     const OCCASION_OPTIONS = [
       {label:'专题工作汇报', value:'向上汇报'},
@@ -416,10 +422,10 @@ const app = createApp({
 
     function getPolicyRefs(){
       return [
-        {text:'习近平总书记关于相关工作的重要论述精神',source:'《习近平谈治国理政》第四卷',fullTitle:'深入学习贯彻习近平总书记重要讲话精神',type:'权威论述',docNo:'—',excerpt:'要坚持用习近平新时代中国特色社会主义思想武装头脑、指导实践、推动工作，深刻领会其核心要义、精神实质、丰富内涵、实践要求，切实做到学思用贯通、知信行统一，把学习成效转化为推动事业发展的实际行动。'},
-        {text:'党的二十届三中全会精神',source:'中国共产党第二十届中央委员会第三次全体会议公报',fullTitle:'党的二十届三中全会《决定》',type:'政策文件',docNo:'二十届三中全会审议通过',excerpt:'进一步全面深化改革，必须以经济体制改革为牵引，以促进社会公平正义、增进人民福祉为出发点和落脚点，更加注重系统集成，更加注重突出重点，更加注重改革实效，推动生产关系和生产力、上层建筑和经济基础更好相适应，为中国式现代化提供强大动力和制度保障。'},
-        {text:'推动高质量发展的战略部署',source:'《中共中央关于制定国民经济和社会发展规划的建议》',fullTitle:'国务院关于推动高质量发展的指导意见',type:'政策文件',docNo:'国发〔相关〕号',excerpt:'高质量发展是全面建设社会主义现代化国家的首要任务。必须完整、准确、全面贯彻新发展理念，坚持社会主义市场经济改革方向，坚持高水平对外开放，加快构建以国内大循环为主体、国内国际双循环相互促进的新发展格局，推动经济实现质的有效提升和量的合理增长。'},
-        {text:'"空谈误国、实干兴邦"',source:'习近平总书记重要讲话',fullTitle:'习近平总书记系列重要讲话金句',type:'核心金句',docNo:'—',excerpt:'空谈误国，实干兴邦。我们要脚踏实地、埋头苦干，用我们的实际行动为实现中华民族伟大复兴的中国梦作出应有的贡献，决不能停留在口头上、文件中，更不能搞形式主义、官僚主义，要以钉钉子精神抓好各项工作的落实。'}
+        {text:'本次任务明确的工作要求',source:'用户需求描述',fullTitle:'本次发言稿任务要素',type:'任务依据',docNo:'—',excerpt:'仅使用用户在本次任务中明确提供的主题、场合、听众、讲话人、时长和核心要点。'},
+        {text:'用户上传的参考资料',source:'本次任务附件',fullTitle:'本次任务参考资料',type:'任务资料',docNo:'—',excerpt:'上传材料仅服务本次生成，不自动进入讲话人风格档案，也不用于训练共享模型。'},
+        {text:'部门已发布的讲话人风格档案',source:'部门配置',fullTitle:'讲话人五维风格画像',type:'风格依据',docNo:'版本受控',excerpt:'使用部门管理员基于经授权历史材料发布的风格画像，不直接拼接历史原文。'},
+        {text:'缺失事实使用 XX 占位',source:'生成安全策略',fullTitle:'事实信息缺失处理规则',type:'安全规则',docNo:'—',excerpt:'本期不自动检索政策和事实材料；对未提供的时间、数据、项目名称和政策依据使用 XX 占位，待用户核实补充。'}
       ];
     }
 
@@ -493,15 +499,15 @@ const app = createApp({
     const SCOPE_TIPS = {
       global:'由系统管理员在统一门户配置中心维护，全区所有委办局共用。委办局用户仅可查看，不可修改；如需新增或调整，请联系系统管理员。',
       dept:'由本委办局维护，同部门用户共用。可新增、编辑、启用/停用本部门特色配置，不影响其他部门。',
-      private:'仅本人可见可用。本场景下上传的参考资料、提取的讲话人风格语料、自定义字段/模板/规则、个人偏好等，大模型学习后不与任何人共享。'
+      private:'普通用户仅可保存一个“常用讲话人”偏好。本次上传资料只服务当前任务，不进入讲话人风格档案，也不用于训练共享模型。'
     };
     const CONFIG_DATA = reactive({
       field:{
         global:[
           {name:'讲话主题',key:'theme',type:'单行文本',required:true,enabled:true,builtin:true,options:''},
-          {name:'会议场合',key:'occasion',type:'下拉单选',required:true,enabled:true,builtin:true,options:'6类场合'},
-          {name:'听众类型',key:'audience',type:'下拉多选',required:true,enabled:true,builtin:true,options:'6类听众'},
-          {name:'时长要求',key:'duration',type:'单选+自定义',required:true,enabled:true,builtin:true,options:''},
+          {name:'会议场合',key:'occasion',type:'下拉单选',required:false,enabled:true,builtin:true,options:'可自动判断'},
+          {name:'听众类型',key:'audience',type:'下拉多选',required:false,enabled:true,builtin:true,options:'可自动判断'},
+          {name:'时长要求',key:'duration',type:'单选+自定义',required:false,enabled:true,builtin:true,options:'默认10分钟'},
           {name:'核心内容要点',key:'keyPoints',type:'长文本',required:false,enabled:true,builtin:true,options:''},
           {name:'讲话人姓名',key:'speakerName',type:'文本+自动补全',required:false,enabled:true,builtin:true,options:''},
           {name:'讲话人职务',key:'speakerTitle',type:'文本(自动带出)',required:false,enabled:true,builtin:true,options:''},
@@ -514,7 +520,7 @@ const app = createApp({
           {name:'涉及学区',key:'schoolDistrict',type:'单行文本',required:false,enabled:false,builtin:false,options:''}
         ],
         private:[
-          {name:'个人常用开场白',key:'myOpening',type:'长文本',required:false,enabled:true,builtin:false,options:''}
+          {name:'常用讲话人',key:'commonSpeaker',type:'讲话人选择',required:false,enabled:true,builtin:false,options:'仅保存姓名与当前有效档案版本'}
         ]
       },
       template:{
@@ -553,8 +559,7 @@ const app = createApp({
           {name:'"五育并举"',type:'权威表述',source:'全国教育大会',enabled:true,builtin:false,note:''}
         ],
         private:[
-          {name:'我的讲话稿汇编（2024-2026）',type:'用户语料',source:'本人上传 DOCX',enabled:true,builtin:false,note:'大模型学习后仅本人可用，不进入部门/全局池'},
-          {name:'局长个人风格档案',type:'风格语料',source:'系统从历史讲话提取',enabled:true,builtin:false,note:'默认本次会话私有，可另存为部门/全局风格档案以共享'}
+          {name:'本次任务参考资料',type:'任务资料',source:'当前任务上传',enabled:true,builtin:false,note:'任务结束后按平台留存策略处理，不进入讲话人风格档案'}
         ]
       },
       rule:{
@@ -746,11 +751,13 @@ const app = createApp({
       if(!name){styleData.value=null;return;}
       styleLoading.value=true;
       speakerTimer=setTimeout(function(){
-        styleData.value={speaker:name,corpusCount:12,cards:[
-          {label:'词汇偏好',content:'常用"深入贯彻"、"扎实推进"、"切实抓好"、"持续发力"、"真抓实干"等表述'},
-          {label:'句式结构',content:'偏好"三段式"排比句(如"...要...；...要...；...要...")，常用"一是、二是、三是"分点陈述'},
-          {label:'修辞习惯',content:'善用比喻和引用，常引经典诗词、名人金句提升感染力'},
-          {label:'表达特色',content:'开场简洁有力，主体条理清晰，结尾富有号召力；语言务实，注重实效导向'}
+        const profile=SPEAKER_DB.find(function(item){return item.name===name;})||{name:name,title:formData.speakerTitle,corpusCount:0,sceneCount:0,version:'本次临时',confidence:'待确认',updated:'—'};
+        styleData.value={speaker:name,corpusCount:profile.corpusCount,sceneCount:profile.sceneCount,version:profile.version,confidence:profile.confidence,updated:profile.updated,cards:[
+          {label:'场景策略',content:'部署类突出任务和责任，汇报类突出成效与问题，致辞类突出欢迎、合作与祝愿'},
+          {label:'受众策略',content:'面向干部强调落实，面向企业强调服务，面向公众强调获得感；避免同一口径套用所有听众'},
+          {label:'结构逻辑',content:'开场点题，主体按“一是、二是、三是”推进，结尾形成明确行动号召'},
+          {label:'语言表达',content:'偏好“深入贯彻、扎实推进、切实抓好、持续发力”等稳健政务表达，减少空泛堆砌'},
+          {label:'语气节奏',content:'整体庄重务实，长短句交替；关键部署使用短句和排比增强力度'}
         ]};
         styleLoading.value=false;
       },1200);
@@ -784,14 +791,15 @@ const app = createApp({
     function validateForm(){
       let valid=true;clearErrors();
       if(!formData.theme.trim()){errors.theme=true;valid=false;}
-      if(!formData.occasion){errors.occasion=true;valid=false;}
-      if(!formData.audience.length){errors.audience=true;valid=false;}
       return valid;
     }
 
     /* ========== 生成提纲 ========== */
     function generateOutline(){
-      if(!validateForm()){showToast('请完善必填项','error');return;}
+      if(!validateForm()){showToast('请填写讲话主题','error');return;}
+      if(!formData.occasion)formData.occasion='内部动员';
+      if(!formData.audience.length)formData.audience=['党政干部'];
+      if(!formData.duration)formData.duration='short';
       if(!currentHistoryId.value||!getRecord(currentHistoryId.value)){
         const newId='h_'+Date.now();
         HISTORY_DATA.value.unshift({id:newId,title:formData.theme||'新建发言稿',timeDisplay:'刚刚 · 草稿',date:fmtDate(new Date()),occasion:'',status:'draft',formData:{},outlineData:null,policyList:[],speechHtml:null,step:1});
@@ -805,9 +813,9 @@ const app = createApp({
     }
     function runGeneratingSteps(type){
       const steps=type==='outline'?[
-        '解析发言要素并结构化','检索政务政策知识库','匹配讲话人语料风格特征','自适应规划结构框架','输出详细提纲'
+        '解析讲话主题与已知要素','自动判断场景、听众与默认篇幅','匹配已发布的讲话人风格档案','应用五维风格画像规划结构','输出可编辑详细提纲'
       ]:[
-        '组装提纲、政策依据、风格提示词','注入场景表达策略约束','按提纲逐段展开生成正文','政策依据自动嵌入并标注来源','按党政公文规范排版输出'
+        '组装提纲、任务资料与风格画像','注入场景和受众表达策略','按提纲逐段展开生成正文','缺失事实信息使用 XX 占位','按党政公文规范排版输出'
       ];
       generatingSteps.value=steps.map(function(s,i){return {label:s,state:i===0?'active':'pending'};});
       let i=0;
@@ -1019,7 +1027,7 @@ const app = createApp({
       const cat=configState.category;
       if(cat==='field')return '您自定义的字段值仅保存于本人账户，不会进入部门或全局共用池。';
       if(cat==='template')return '您上传或创建的私有模板，仅本人在生成发言稿时可选用，不与同部门或其他用户共享。';
-      if(cat==='knowledge')return '<ul><li>您上传的参考资料（DOCX/PDF/TXT），解析学习后形成的知识片段仅本人可用；</li><li>输入特定讲话人后提取的"风格提示词"默认本次会话私有，可另存为部门/全局风格档案以共享；</li><li>个人语料不用于训练共享模型，不泄露给其他用户。</li></ul>';
+      if(cat==='knowledge')return '<ul><li>普通用户上传的 DOCX/PDF/TXT 只作为本次任务参考资料；</li><li>讲话人风格档案由部门管理员维护、版本化发布，普通用户不能训练或提升为共享档案；</li><li>本期不自动检索政策事实，缺失信息使用 XX 占位并提示核实。</li></ul>';
       if(cat==='rule')return '您个人偏好规则仅影响您本人生成的发言稿，不影响部门或全局生成结果。';
       return '';
     }
@@ -1038,8 +1046,7 @@ const app = createApp({
     /* ========== 初始化 ========== */
     onMounted(function(){
       initHistoryData();
-      currentHistoryId.value='h1';
-      loadHistory('h1');
+      doNewDraft();
     });
 
     return {
@@ -1108,21 +1115,22 @@ const app = createApp({
         </div>
       </aside>
 
-      <!-- 主区 -->
-      <main class="main-content">
-        <div class="top-bar">
-          <div class="top-bar-left">
-            <span class="top-bar-icon">📝</span>
-            <div>
-              <div class="top-bar-title">发言稿智能生成智能体</div>
-              <div class="top-bar-desc">要素解析 · 政策检索 · 风格匹配 · 提纲编辑 · 规范排版</div>
-            </div>
-          </div>
-          <div class="top-bar-right">
-            <span class="help-entry" @click="helpShow=true"><span>❓</span><span>使用说明</span></span>
+      <!-- 顶栏（跨满） -->
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <span class="top-bar-icon">📝</span>
+          <div>
+            <div class="top-bar-title">发言稿智能生成智能体</div>
+            <div class="top-bar-desc">主题输入 · 场景推断 · 风格档案匹配 · 提纲编辑 · 规范排版</div>
           </div>
         </div>
+        <div class="top-bar-right">
+          <span class="help-entry" @click="helpShow=true"><span>❓</span><span>使用说明</span></span>
+        </div>
+      </div>
 
+      <!-- 主区 -->
+      <main class="main-content">
         <div class="content-wrap">
           <!-- 使用视图 -->
           <div v-if="viewMode==='use'" class="use-view" style="flex:1;display:flex;min-width:0;overflow:hidden;">
@@ -1135,15 +1143,30 @@ const app = createApp({
                     <n-button size="tiny" @click="clearSmartInput">清空</n-button>
                   </div>
                   <n-input v-model:value="smartInput" type="textarea" :autosize="{minRows:2,maxRows:5}" placeholder="示例：帮我写一份市长李强在明天全市数字经济发展大会上的讲话稿，面向企业代表和党政干部，时长约20分钟，重点讲上半年成绩、下阶段部署和政策支持。" />
-                  <div class="smart-input-actions">
-                    <div class="smart-input-tip"><span>💡 用自然语言描述需求，系统自动解析并填充下方表单</span><span class="smart-input-example" @click="fillExample">试用示例</span></div>
+                  <div class="smart-input-tip" style="margin-bottom:8px"><span>💡 用自然语言描述需求，系统自动解析并填充下方表单</span><span class="smart-input-example" @click="fillExample">试用示例</span></div>
+                  <div class="smart-input-divider"></div>
+                  <div class="smart-ref-section">
+                  <div class="smart-ref-header"><span>📎</span><span>本次任务参考资料</span><span style="font-weight:normal;font-size:12px;color:#909aad">（可选，不进入风格档案）</span></div>
+                    <div class="upload-area" @click="triggerUpload" style="background:#fff;border:1px dashed #c4d8e0;">
+                      <div class="upload-icon">⬆</div>
+                      <div class="upload-text">点击上传或拖拽文件到此处，支持 <strong>DOCX / PDF / TXT</strong> 格式</div>
+                      <input id="fileInputRef" type="file" style="display:none" multiple accept=".docx,.pdf,.txt" @change="handleUpload" />
+                    </div>
+                    <div class="upload-file-list">
+                      <div v-for="(f,i) in fileList" :key="i" class="upload-file-item">
+                        <span>📎 {{ f.name }} <span style="color:#909aad">({{ formatFileSize(f.size) }})</span></span>
+                        <span class="file-remove" @click="removeFile(i)">×</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="smart-input-actions" style="margin-top:10px;justify-content:flex-end">
                     <n-button size="small" type="primary" @click="parseSmartInput"><span>✨</span>&nbsp;智能解析并填单</n-button>
                   </div>
                 </div>
 
                 <!-- 基本要素 -->
                 <n-card class="form-section" :bordered="false" size="small">
-                  <template #header><span style="font-size:14px;font-weight:600;color:#333639">基本要素</span></template>
+                  <template #header><span style="font-size:14px;font-weight:600;color:#333639">基本要素 <span style="font-weight:normal;font-size:12px;color:#43A047">只需填写主题即可生成</span></span></template>
                   <div class="form-row">
                     <div class="form-item full">
                       <div class="form-label"><span class="form-label-left"><span class="required">讲话主题</span></span></div>
@@ -1152,12 +1175,12 @@ const app = createApp({
                   </div>
                   <div class="form-row">
                     <div class="form-item">
-                      <div class="form-label"><span class="form-label-left"><span class="required">会议场合</span></span></div>
-                      <n-select v-model:value="formData.occasion" :options="OCCASION_OPTIONS" placeholder="请选择场合" :status="errors.occasion?'error':undefined" @update:value="markAutoSave" />
+                      <div class="form-label"><span class="form-label-left">会议场合<span style="font-size:12px;color:#a0aac0">（可自动判断）</span></span></div>
+                      <n-select v-model:value="formData.occasion" :options="OCCASION_OPTIONS" placeholder="不选择则根据主题自动判断" @update:value="markAutoSave" />
                     </div>
                     <div class="form-item">
-                      <div class="form-label"><span class="form-label-left"><span class="required">听众类型</span><span style="font-size:12px;color:#a0aac0">(支持多选)</span></span></div>
-                      <n-select v-model:value="formData.audience" multiple :options="AUDIENCE_OPTIONS.map(function(a){return {label:a,value:a}})" placeholder="请选择听众" :status="errors.audience?'error':undefined" @update:value="markAutoSave" />
+                      <div class="form-label"><span class="form-label-left">听众类型<span style="font-size:12px;color:#a0aac0">（可自动判断，支持多选）</span></span></div>
+                      <n-select v-model:value="formData.audience" multiple :options="AUDIENCE_OPTIONS.map(function(a){return {label:a,value:a}})" placeholder="不选择则按政务场景自动判断" @update:value="markAutoSave" />
                     </div>
                   </div>
                   <div class="form-row">
@@ -1187,7 +1210,7 @@ const app = createApp({
 
                 <!-- 讲话人风格 -->
                 <n-card class="form-section" :bordered="false" size="small">
-                  <template #header><span style="font-size:14px;font-weight:600;color:#333639">讲话人风格</span></template>
+                  <template #header><span style="font-size:14px;font-weight:600;color:#333639">讲话人风格档案 <span style="font-weight:normal;font-size:12px;color:#909aad">（普通用户只选择）</span></span></template>
                   <div class="form-row">
                     <div class="form-item">
                       <div class="form-label"><span class="form-label-left">讲话人姓名<span style="font-size:12px;color:#a0aac0">(可选)</span></span></div>
@@ -1208,9 +1231,9 @@ const app = createApp({
                     </div>
                   </div>
                   <div class="style-prompt-box">
-                    <div class="style-prompt-header"><span class="style-prompt-badge"></span>风格提示词（只读）</div>
-                    <div v-if="styleLoading" class="style-prompt-loading">正在检索历史语料<span class="thinking-dot" style="margin-left:4px"></span><span class="thinking-dot" style="margin-left:2px"></span><span class="thinking-dot" style="margin-left:2px"></span></div>
-                    <div v-else-if="!styleData" class="style-prompt-empty">选择讲话人后，系统将自动分析其历史文风</div>
+                    <div class="style-prompt-header"><span class="style-prompt-badge"></span>部门已发布的五维风格画像（只读）</div>
+                    <div v-if="styleLoading" class="style-prompt-loading">正在匹配讲话人风格档案<span class="thinking-dot" style="margin-left:4px"></span><span class="thinking-dot" style="margin-left:2px"></span><span class="thinking-dot" style="margin-left:2px"></span></div>
+                    <div v-else-if="!styleData" class="style-prompt-empty">选择讲话人后，自动带入部门管理员发布的有效风格档案</div>
                     <div v-else>
                       <div class="style-prompt-cards">
                         <div v-for="(c,i) in styleData.cards" :key="i" class="style-prompt-card">
@@ -1218,28 +1241,13 @@ const app = createApp({
                           <div class="style-prompt-card-content">{{ c.content }}</div>
                         </div>
                       </div>
-                      <div class="style-prompt-summary">✓ 已分析 <strong>{{ styleData.speaker }}</strong> 的 <strong>{{ styleData.corpusCount }}</strong> 篇历史讲话稿（语料更新后自动重算）</div>
+                      <div class="style-prompt-summary">✓ <strong>{{ styleData.speaker }}</strong> · 档案 {{ styleData.version }} · {{ styleData.corpusCount }} 篇授权材料 / {{ styleData.sceneCount }} 类场景 · 置信度 {{ styleData.confidence }} · 更新于 {{ styleData.updated }}</div>
                     </div>
-                    <div class="style-prompt-note">📌 风格提示词来源于该领导的历史讲话稿，仅当历史讲话稿有更新时才会变化，不支持人工编辑。</div>
+                    <div class="style-prompt-note">📌 档案由部门管理员基于经授权材料维护并版本化发布；普通用户不能上传语料训练或改写画像，只能在不同讲话人之间切换。</div>
                   </div>
                 </n-card>
 
-                <!-- 参考资料 -->
-                <n-card class="form-section" :bordered="false" size="small">
-                  <template #header><span style="font-size:14px;font-weight:600;color:#333639">参考资料 <span style="font-weight:normal;font-size:12px;color:#909aad">(可选)</span></span></template>
-                  <div class="upload-area" @click="triggerUpload">
-                    <div class="upload-icon">⬆</div>
-                    <div class="upload-text">点击上传或拖拽文件到此处，支持 <strong>DOCX / PDF / TXT</strong> 格式</div>
-                    <input id="fileInputRef" type="file" style="display:none" multiple accept=".docx,.pdf,.txt" @change="handleUpload" />
-                  </div>
-                  <div class="upload-file-list">
-                    <div v-for="(f,i) in fileList" :key="i" class="upload-file-item">
-                      <span>📎 {{ f.name }} <span style="color:#909aad">({{ formatFileSize(f.size) }})</span></span>
-                      <span class="file-remove" @click="removeFile(i)">×</span>
-                    </div>
-                  </div>
-                </n-card>
-              </div>
+                </div>
               <div class="action-bar">
                 <span class="auto-save-indicator" :class="{saving:autoSaveSaving}">
                   <span class="auto-save-dot"></span><span>{{ autoSaveText }}</span>
@@ -1273,12 +1281,12 @@ const app = createApp({
                 </div>
                 <div class="preview-actions">
                   <template v-if="previewMode==='outline'">
-                    <n-button size="small" @click="togglePolicyPanel">📋 政策依据</n-button>
+                    <n-button size="small" @click="togglePolicyPanel">📋 生成依据</n-button>
                     <n-button size="small" @click="backToForm">‹ 返回修改</n-button>
                   </template>
                   <template v-else-if="previewMode==='speech'">
                     <n-button size="small" @click="backToOutline">‹ 返回提纲</n-button>
-                    <n-button size="small" @click="togglePolicyPanel">📋 政策依据</n-button>
+                    <n-button size="small" @click="togglePolicyPanel">📋 生成依据</n-button>
                     <n-button size="small" @click="enterEditMode">✎ 编辑</n-button>
                     <n-dropdown placement="bottom-end" :options="[{label:'导出为 DOCX',key:'docx'},{label:'导出为 PDF',key:'pdf'}]" @select="exportFile">
                       <n-button size="small" type="primary">↓ 导出</n-button>
@@ -1292,12 +1300,12 @@ const app = createApp({
                 </div>
               </div>
               <div class="policy-panel" v-show="policyPanelShow">
-                <div class="policy-panel-header"><span>关联政策依据</span><span class="policy-panel-close" @click="togglePolicyPanel">×</span></div>
+                <div class="policy-panel-header"><span>本次生成依据</span><span class="policy-panel-close" @click="togglePolicyPanel">×</span></div>
                 <div>
                   <div v-for="(p,i) in policyList" :key="i" class="policy-item" @click="showPolicyDetail(i)">
                     <div class="policy-item-title">{{ i+1 }}. {{ p.fullTitle }}</div>
                     <div class="policy-item-source">来源：{{ p.source }}</div>
-                    <div class="policy-item-hint">📖 点击查看原文详情</div>
+                    <div class="policy-item-hint">📖 点击查看依据说明</div>
                   </div>
                 </div>
               </div>
@@ -1317,14 +1325,14 @@ const app = createApp({
                 <div v-else-if="previewMode==='outline'" class="outline-container">
                   <div class="outline-header">
                     <div class="outline-title-main">{{ formData.theme }} - 详细提纲</div>
-                    <div class="outline-title-sub">系统已根据场景、听众类型、政策依据和文风特征自动规划以下结构，您可自由编辑调整</div>
+                    <div class="outline-title-sub">系统已根据讲话主题自动判断场景与听众，并结合已发布风格档案规划结构，您可自由编辑调整</div>
                   </div>
                   <div class="outline-meta">
                     <span v-if="formData.speakerName"><strong>讲话人：</strong>{{ formData.speakerTitle }} {{ formData.speakerName }}　</span>
                     <strong>场合：</strong>{{ OCCASION_OPTIONS.find(function(o){return o.value===formData.occasion})?.label || formData.occasion }}
                     <strong>听众：</strong>{{ formData.audience.join('、') }}
                     <strong>时长：</strong>{{ durationText }}<br>
-                    <strong>关联政策：</strong>已匹配 <span style="color:#c62828">{{ policyList.length }}</span> 条政策依据，将在正文中自动嵌入并标注来源
+                    <strong>生成依据：</strong>已使用 <span style="color:#0E4C92">{{ policyList.length }}</span> 类任务依据；缺失事实使用 XX 占位
                   </div>
                   <div>
                     <div v-for="(sec,idx) in outlineData.sections" :key="idx" class="outline-section">
@@ -1381,18 +1389,18 @@ const app = createApp({
     <n-modal v-model:show="helpShow" preset="card" title="使用说明" style="width:680px;max-width:90vw">
       <div style="font-size:13px;color:#5a6b85;line-height:1.9">
         <div style="font-weight:600;color:#0E4C92;margin:8px 0;border-left:3px solid #0E4C92;padding-left:8px">📘 使用流程</div>
-        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>1. 填写基本要素：</strong>输入讲话主题、选择会议场合和听众类型（可多选）、设置时长，其余字段可选。也可使用"一句话生成"自动解析回填。</div>
-        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>2. 选择讲话人：</strong>输入姓名从库中自动匹配并带出职务、分析历史文风。风格提示词只读，仅语料更新时变化。</div>
+        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>1. 输入讲话主题：</strong>只填主题也能生成；场合、听众和默认 10 分钟篇幅会自动判断，其他信息可后续补充。</div>
+        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>2. 选择讲话人：</strong>从部门已发布档案中选择并带出职务和五维风格画像；普通用户无需上传语料或训练模型。</div>
         <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>3. 确认提纲：</strong>先生成详细提纲，支持修改标题、增删要点、调整顺序，满意后再生成正式发言稿。</div>
-        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>4. 预览与输出：</strong>严格党政公文排版，可预览、编辑（前后对比）、导出 DOCX/PDF、打印。政策依据可点击查看原文。</div>
+        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>4. 预览与输出：</strong>按政务文稿规范排版，可预览、编辑（前后对比）、导出 DOCX/PDF、打印；未确认事实以 XX 标记。</div>
         <div style="font-weight:600;color:#0E4C92;margin:12px 0 8px;border-left:3px solid #0E4C92;padding-left:8px">💡 常用技巧</div>
         <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>自动保存：</strong>系统自动保存，再次打开历史记录恢复上次最终状态。</div>
         <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>历史筛选：</strong>按关键词与时间筛选，每条记录显示状态徽标。</div>
         <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>发言稿编辑：</strong>点击"编辑"进入编辑前/编辑后对比视图。</div>
-        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>政策依据溯源：</strong>红色下划线短语点击查看原文详情。</div>
+        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>依据查看：</strong>可查看本次需求、上传资料、讲话人档案和缺失事实处理规则。</div>
         <div style="font-weight:600;color:#0E4C92;margin:12px 0 8px;border-left:3px solid #0E4C92;padding-left:8px">⚙️ 配置功能</div>
         <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px;margin-bottom:6px"><strong>三层作用域：</strong>全局通用（系统管理员）→ 我的部门（同委办局共用）→ 我的私有（仅本人）。</div>
-        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px"><strong>私有隔离：</strong>上传参考资料、风格语料默认仅本人可用，不进入共享池。</div>
+        <div style="background:#f4f8fd;border-radius:4px;padding:8px 12px"><strong>任务隔离：</strong>上传参考资料只服务本次任务，不进入讲话人风格档案或共享训练池。</div>
       </div>
     </n-modal>
 
@@ -1408,7 +1416,7 @@ const app = createApp({
     </n-modal>
 
     <!-- 政策详情 -->
-    <n-modal v-model:show="policyDetailShow" preset="card" title="政策依据详情" style="width:640px;max-width:90vw">
+    <n-modal v-model:show="policyDetailShow" preset="card" title="生成依据详情" style="width:640px;max-width:90vw">
       <div v-if="policyDetailItem" class="policy-detail">
         <div class="policy-detail-title-main">{{ policyDetailItem.fullTitle }}</div>
         <div class="policy-detail-row"><span class="policy-detail-label">引用表述</span><span class="policy-detail-val">{{ policyDetailItem.text }}</span></div>
@@ -1434,3 +1442,5 @@ app.mount('#app');
 <script src="handoff-context.js"></script>
 </body>
 </html>
+
+
