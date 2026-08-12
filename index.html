@@ -473,6 +473,9 @@
   .thinking-trace[open] summary::after { content:"收起"; }
   .thinking-trace .generation-process { margin:0; padding:0 11px 11px; }
   .agent-generated-at { margin:0 0 8px; color:#8c98a8; font-size:11px; line-height:1; }
+  .market-template-preview { margin:10px 0 0; max-height:260px; overflow:auto; padding:11px 12px; border:1px solid var(--line-soft); border-radius:8px; background:#f8fbfd; color:#3f5269; font:12px/1.65 ui-monospace, SFMono-Regular, Consolas, "Microsoft YaHei", sans-serif; white-space:pre-wrap; }
+  .market-template-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; padding-top:10px; border-top:1px solid var(--line-soft); }
+  .market-template-actions .btn { flex:none; }
   .send-btn.stop-mode { color:#fff; background:#b42318; border-color:#b42318; }
   .send-btn.stop-mode:hover { background:#922018; }
   .agent-template-row { display:flex; align-items:center; gap:6px; min-width:0; }
@@ -1896,7 +1899,8 @@
   .cfg-personal-page{max-width:980px}.cfg-personal-card{padding:28px;border:1px solid #dfe6ec;border-radius:14px;background:#fff;box-shadow:0 8px 28px rgba(42,70,92,.055)}.cfg-personal-card h2{margin:0;color:#1f3449;font-size:21px}.cfg-personal-card>p{margin:9px 0 18px;color:#68798b;font-size:13px}.cfg-personal-textarea{width:100%;min-height:230px;padding:18px;border:1px solid #b6cbd8;border-radius:12px;background:#fbfdfe;color:#31475d;font:13px/1.8 inherit;resize:vertical;outline:none}.cfg-personal-textarea:focus{border-color:#1680b5;box-shadow:0 0 0 3px rgba(22,128,181,.12)}.cfg-personal-foot{display:flex;align-items:center;gap:10px;margin-top:10px;color:#8a97a5;font-size:11px}.cfg-personal-foot span{margin-left:auto}.cfg-personal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
   .cfg-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cfg-directory-card{padding:15px;border:1px solid #dfe6ec;border-radius:10px;background:#fff}.cfg-directory-card b{display:block;color:#2c4157}.cfg-directory-card p{min-height:34px;margin:7px 0;color:#7c8a99;font-size:10.5px;line-height:1.55}.cfg-directory-card span{color:#16805e;font-size:10px}
   @media(max-width:1180px){.cfg-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cfg-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cfg-editor-grid{grid-template-columns:1fr}.cfg-markdown-preview{position:static;max-height:none}.cfg-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  .cfg-simple-tree,.cfg-simple-tree ul{margin:0;padding:0;list-style:none}.cfg-simple-tree ul{margin:5px 0 10px 26px;padding-left:16px;border-left:1px solid #dbe4eb}.cfg-simple-tree li{margin:5px 0}.cfg-tree-node{min-height:38px;display:flex;align-items:center;gap:9px;padding:6px 10px;border:1px solid #edf1f4;border-radius:8px;background:#fff;color:#42536a}.cfg-tree-node.root{background:#f7fafc;border-color:#dde7ee}.cfg-tree-node b{color:#25384f}.cfg-tree-node em{margin-left:auto;color:#8a96a5;font-size:11px;font-style:normal}.cfg-tree-node .btn{margin-left:auto}.cfg-role-scope-tree{display:grid;gap:9px;margin-top:12px}.cfg-role-scope-group{padding:10px 12px;border:1px solid #e1e8ee;border-radius:10px;background:#fbfcfd}.cfg-role-scope-group>label{display:flex;align-items:center;gap:8px}.cfg-role-scope-group>div{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:9px 0 0 24px}.cfg-role-scope-group>div label{display:flex;align-items:center;gap:7px;color:#536178;font-size:12px}
+  .cfg-simple-tree,.cfg-simple-tree ul{margin:0;padding:0;list-style:none}.cfg-simple-tree ul{margin:5px 0 10px 26px;padding-left:16px;border-left:1px solid #dbe4eb}.cfg-simple-tree li{margin:5px 0}.cfg-tree-node{min-height:38px;display:flex;align-items:center;gap:9px;padding:6px 10px;border:1px solid #edf1f4;border-radius:8px;background:#fff;color:#42536a}.cfg-tree-node.root{background:#f7fafc;border-color:#dde7ee}.cfg-tree-node b{color:#25384f}.cfg-tree-node em{margin-left:auto;color:#8a96a5;font-size:11px;font-style:normal}.cfg-tree-node .btn{margin-left:auto}.cfg-role-scope-tree{display:grid;gap:12px;margin-top:12px;max-height:62vh;overflow:auto;padding-right:4px}.cfg-role-scope-level1{overflow:hidden;border:1px solid #d7e3ea;border-radius:8px;background:#fff}.cfg-role-scope-head{display:flex;align-items:center;gap:10px;min-height:52px;padding:9px 12px;background:#f5f9fb;border-bottom:1px solid #e2ebf0}.cfg-role-scope-index{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:6px;background:var(--gov-700);color:#fff;font-size:11px;font-weight:800}.cfg-role-scope-title{display:flex;align-items:center;gap:8px;min-width:0;color:var(--gov-900);font-size:13.5px;font-weight:800}.cfg-role-scope-title small{color:var(--muted);font-size:10.5px;font-weight:500}.cfg-role-scope-content{position:relative;padding:9px 12px 11px 40px}.cfg-role-scope-content::before{content:"";position:absolute;left:25px;top:0;bottom:18px;width:1px;background:#d4e1e8}.cfg-role-scope-branch{position:relative;padding:6px 0}.cfg-role-scope-branch::before{content:"";position:absolute;left:-15px;top:21px;width:15px;height:1px;background:#d4e1e8}.cfg-role-scope-branch:last-child::after{content:"";position:absolute;left:-15px;top:22px;bottom:-12px;width:2px;background:#fff}.cfg-role-scope-node{overflow:hidden;border:1px solid #e1e9ee;border-radius:7px;background:#fbfdfe}.cfg-role-scope-node-head{display:flex;align-items:center;gap:8px;min-height:42px;padding:6px 10px;border-bottom:1px solid #e8eef2}.cfg-role-scope-buttons{position:relative;display:flex;align-items:flex-start;gap:10px;margin-left:28px;padding:9px 10px 10px 24px}.cfg-role-scope-buttons::before{content:"";position:absolute;left:11px;top:0;bottom:20px;width:1px;background:#d7e3ea}.cfg-role-scope-buttons::after{content:"";position:absolute;left:11px;top:20px;width:13px;height:1px;background:#d7e3ea}.cfg-role-scope-button-list{display:flex;flex-wrap:wrap;gap:6px}.cfg-scope-check{display:inline-flex;align-items:center;gap:7px;min-height:28px;cursor:pointer;color:#40546b;font-size:12px}.cfg-scope-check input{width:15px;height:15px;margin:0;accent-color:var(--gov-700);cursor:pointer}.cfg-scope-check.menu{font-weight:800}.cfg-scope-check.button{min-height:28px;padding:0 9px;border:1px solid #d4e2e9;border-radius:6px;background:#fff;font-size:11.5px}.cfg-scope-check.button:has(input:checked){border-color:#85b8ce;background:#edf7fb;color:var(--gov-700)}.cfg-role-scope-label{min-width:58px;padding:3px 6px;border-radius:5px;background:#eaf4f7;color:var(--gov-700);font-size:10px;text-align:center}.cfg-role-scope-empty{color:#8a98a8;font-size:11.5px;line-height:28px}
+  .cfg-menu-map{display:grid;gap:12px}.cfg-menu-level1{overflow:hidden;border:1px solid #d7e3ea;border-radius:8px;background:#fff}.cfg-menu-level1-head{display:flex;align-items:center;gap:10px;min-height:58px;padding:10px 14px;background:#f5f9fb;border-bottom:1px solid #e2ebf0}.cfg-menu-level1-head .cfg-menu-index{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:6px;background:var(--gov-700);color:#fff;font-size:11px;font-weight:800}.cfg-menu-level1-name{display:flex;align-items:baseline;gap:9px;min-width:160px}.cfg-menu-level1-head b{color:var(--gov-900);font-size:14px}.cfg-menu-level1-head small{color:var(--muted);font-size:11px}.cfg-menu-level1-tools,.cfg-menu-node-tools{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.cfg-menu-level1-tools{margin-left:auto}.cfg-menu-tool{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:28px;padding:4px 8px;border:1px solid #ccdae3;border-radius:6px;background:#fff;color:#40566d;font:600 11px/1 inherit;cursor:pointer;white-space:nowrap}.cfg-menu-tool:hover{border-color:#7fb1ca;background:#eef7fb;color:var(--gov-700)}.cfg-menu-tool.danger{color:#b04b4b}.cfg-menu-tool.danger:hover{border-color:#e2b7b7;background:#fff4f4;color:#9a3030}.cfg-menu-tool .svg-icon{width:12px;height:12px}.cfg-menu-content{position:relative;padding:10px 14px 12px 42px}.cfg-menu-content::before{content:"";position:absolute;left:27px;top:0;bottom:18px;width:1px;background:#d4e1e8}.cfg-menu-branch{position:relative;padding:7px 0}.cfg-menu-branch::before{content:"";position:absolute;left:-15px;top:21px;width:15px;height:1px;background:#d4e1e8}.cfg-menu-branch:last-child::after{content:"";position:absolute;left:-15px;top:22px;bottom:-13px;width:2px;background:#fff}.cfg-menu-child{border:1px solid #e1e9ee;border-radius:7px;background:#fbfdfe}.cfg-menu-child-head{display:flex;align-items:center;gap:10px;min-height:44px;padding:7px 10px;border-bottom:1px solid #e8eef2}.cfg-menu-node-title{display:flex;align-items:center;gap:7px;min-width:0;min-height:28px;color:#35465d;font-size:12.5px;font-weight:800}.cfg-menu-node-name{min-width:0;white-space:normal;word-break:break-word}.cfg-menu-level-tag{min-width:56px;padding:3px 6px;border-radius:5px;background:#eaf4f7;color:var(--gov-700);font-size:10px;text-align:center}.cfg-menu-child-buttons{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;margin-left:28px;padding:10px 10px 10px 24px}.cfg-menu-child-buttons::before{content:"";position:absolute;left:11px;top:0;bottom:21px;width:1px;background:#d7e3ea}.cfg-menu-child-buttons::after{content:"";position:absolute;left:11px;top:21px;width:13px;height:1px;background:#d7e3ea}.cfg-menu-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;min-height:28px}.cfg-menu-action-chip{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:0 4px 0 9px;border:1px solid #d4e2e9;border-radius:6px;background:#fff;color:#465a70;font-size:11.5px}.cfg-menu-chip-tools{display:inline-flex;align-items:center;gap:1px}.cfg-menu-chip-tools button{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:4px;background:transparent;color:#76879a;cursor:pointer}.cfg-menu-chip-tools button:hover{background:#eaf4f7;color:var(--gov-700)}.cfg-menu-chip-tools button.danger:hover{background:#fff0f0;color:#aa3838}.cfg-menu-chip-tools .svg-icon{width:11px;height:11px}.cfg-menu-empty{color:#8a98a8;font-size:11.5px;line-height:28px}
   @media(max-width:760px){.cfg-center-shell{grid-template-columns:1fr}.cfg-center-side{display:none}.cfg-center-head{padding:0 14px}.cfg-center-content{padding:14px}.cfg-template-grid,.cfg-overview-grid,.cfg-directory-grid{grid-template-columns:1fr}.cfg-form-grid{grid-template-columns:1fr}.cfg-form-field.full{grid-column:auto}.cfg-version-row{grid-template-columns:1fr}.cfg-data-table{min-width:980px}.cfg-section-body{overflow:auto}}
 </style>
 <meta name="prototype-version" content=""></head>
@@ -3732,14 +3736,27 @@ let sidebarCollapsed = false;
     const name = a ? a.name : "政务AI助手";
     const tag = a ? `<span class="tag blue">${a.cat}</span>` : "";
     const isDirect = !!(m && m.directGenerated);
-    const generatedClock = esc(formatClock((m && m.createdAt) || Date.now()));
+    const generatedClock = esc(responseStatusText(m, index));
     const showActions = !m || m.kind !== "task-progress";
     const actionBtns = showActions ? `<button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button><button class="agent-response-action" type="button" data-act="retryAgentReply" data-msg-index="${index}" title="重新生成回复">${svgi("i-refresh",14)}<span>重试</span></button>` : "";
     const disclaimerCell = isDirect ? `<span class="ai-disclaimer-cell"><span class="ai-disclaimer">AI 生成可能有误 注意核实</span></span>` : "";
     const materialAction = messageMaterialAction(m, index);
     const footer = `${materialAction}<div class="msg-footer">${actionBtns}${disclaimerCell}</div>`;
+    const generatedMeta = generatedClock ? `<div class="agent-generated-at">${generatedClock}</div>` : "";
     return `<div class="msg agent${m && m._wide ? " has-wide" : ""}"><div class="av"><img src="assets/jiangbei-logo.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
-      <div class="bubble"><div class="agent-generated-at">生成时间 ${generatedClock}</div><div class="who"><b>${esc(name)}</b>${tag}</div>${html}${footer}</div></div>`;
+      <div class="bubble">${generatedMeta}<div class="who"><b>${esc(name)}</b>${tag}</div>${html}${footer}</div></div>`;
+  }
+  function formatResponseDuration(ms) {
+    const total = Math.max(0, Math.round(Number(ms || 0) / 1000));
+    const minutes = Math.floor(total / 60), seconds = total % 60;
+    if (minutes) return `${minutes}分${String(seconds).padStart(2, "0")}秒`;
+    return `${seconds}秒`;
+  }
+  function responseStatusText(message) {
+    if (!message || message.kind === "task-progress") return "";
+    const started = Number(message.startedAt || message.createdAt || Date.now());
+    const completed = Number(message.completedAt || message.createdAt || Date.now());
+    return `已完成 ${formatResponseDuration(Math.max(0, completed - started))}`;
   }
   function typingBubble(agentId, label) {
     const a = agentId ? byId(agentId) : null;
@@ -3858,7 +3875,7 @@ let sidebarCollapsed = false;
     setTimeout(() => {
       const typing = $("#typingBubble"); if (typing) typing.remove();
       const generatedAt = Date.now(), materialHTML = reviseGeneratedHTML(previous.materialHTML, instruction);
-      const message = { role:"agent", agent:agent.id, html:`<p>已读取当前会话中的上一版文稿，并按您的补充完成更新。缺少的信息仍保留为“XX”，您可以继续告诉我具体内容。</p>`, materialTitle:previous.materialTitle || `${agent.name}修改稿.docx`, materialHTML, generatedMaterial:true, directGenerated:true, structuredValues:{ ...(previous.structuredValues || {}) }, generationReference:{ ...(previous.generationReference || {}) }, modelPayload:{ ...(previous.modelPayload || {}), customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(), revisionInstruction:instruction, previousMessageTime:previous.createdAt || null }, materialSource:agent.name, speakerStyleId:agent.id === "speech" ? (previous.speakerStyleId || activeSpeakerStyle().id) : "", time:nowTime(), createdAt:generatedAt, generationTime:formatDateTime(generatedAt), revisionOf:previous.createdAt || null };
+      const message = { role:"agent", agent:agent.id, html:`<p>已读取当前会话中的上一版文稿，并按您的补充完成更新。缺少的信息仍保留为“XX”，您可以继续告诉我具体内容。</p>`, materialTitle:previous.materialTitle || `${agent.name}修改稿.docx`, materialHTML, generatedMaterial:true, directGenerated:true, structuredValues:{ ...(previous.structuredValues || {}) }, generationReference:{ ...(previous.generationReference || {}) }, modelPayload:{ ...(previous.modelPayload || {}), customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(), revisionInstruction:instruction, previousMessageTime:previous.createdAt || null }, materialSource:agent.name, speakerStyleId:agent.id === "speech" ? (previous.speakerStyleId || activeSpeakerStyle().id) : "", time:nowTime(), startedAt:state.startedAt, completedAt:generatedAt, createdAt:generatedAt, generationTime:formatDateTime(generatedAt), revisionOf:previous.createdAt || null };
       conv.msgs.push(message); conv.agent = agent.id; conv.updatedAt = Date.now();
       archiveGeneratedMaterial(message, conv, { sourceType:"agent", sourceName:agent.name });
       endShortGeneration(state); markConversationCompletion(conv); renderChat(); renderSidebar(); renderRail(); scrollBottom();
@@ -5310,7 +5327,7 @@ let sidebarCollapsed = false;
     return "";
   }
   function beginShortGeneration(kind, conversation) {
-    const state = { id:`short-${kind}-${Date.now()}`, kind, convId:conversation ? conversation.id : "" };
+    const state = { id:`short-${kind}-${Date.now()}`, kind, convId:conversation ? conversation.id : "", startedAt:Date.now() };
     activeGeneration = state;
     setGenerationLocked(true);
     setTimeout(renderSidebar, 0);
@@ -5318,6 +5335,7 @@ let sidebarCollapsed = false;
   }
   function endShortGeneration(state) {
     if (activeGeneration !== state) return;
+    state.completedAt = Date.now();
     activeGeneration = null;
     setGenerationLocked(false);
   }
@@ -5327,6 +5345,7 @@ let sidebarCollapsed = false;
   }
   function startConnectorAction(conv, connector, text, attach) {
     if (currentView !== "chat") switchView("chat");
+    if (typeof cfgRecordAudit === "function") cfgRecordAudit("调用连接器", "连接器", connector.name, "发起业务连接器调用");
     const generationState = beginShortGeneration("connector", conv);
     const inner = $("#threadInner");
     inner.insertAdjacentHTML("beforeend", typingBubble(null, `正在调用${connector.name}`)); scrollBottom();
@@ -5336,7 +5355,7 @@ let sidebarCollapsed = false;
       const materialTitle = connectorMaterialTitle(connector);
       const refNames = (conv.knowledgeBases || []).map(id => (KB_ORDER.find(([kid]) => kid === id) || [,""])[1]).filter(Boolean);
       const refNote = refNames.length || attach ? `<div class="panel-note"><b>本次调用参考：</b>${refNames.length ? `知识库：${esc(refNames.join("、"))}` : ""}${refNames.length && attach ? "；" : ""}${attach ? `附件：${esc(attach)}` : ""}</div>` : "";
-      const message = { role:"agent", agent:null, html:`<div class="connector-result-head"><span class="crh-ic" style="background:${connector.color}">${svgi(connector.icon,18)}</span><div><b>${esc(connector.name)}连接器</b><small>普通对话调用 · 业务连接成功</small></div></div>${refNote}${connectorResultHTML(connector, text)}`, time:nowTime(), materialTitle, generatedMaterial:!!materialTitle, materialSource:`${connector.name}连接器`, modelPayload:{ routeType:"connector",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } };
+      const message = { role:"agent", agent:null, html:`<div class="connector-result-head"><span class="crh-ic" style="background:${connector.color}">${svgi(connector.icon,18)}</span><div><b>${esc(connector.name)}连接器</b><small>普通对话调用 · 业务连接成功</small></div></div>${refNote}${connectorResultHTML(connector, text)}`, time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), materialTitle, generatedMaterial:!!materialTitle, materialSource:`${connector.name}连接器`, modelPayload:{ routeType:"connector",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } };
       conv.msgs.push(message);
       if (materialTitle) archiveGeneratedMaterial(message, conv, { sourceType:"connector", sourceName:connector.name });
       conv.updatedAt = Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
@@ -5368,12 +5387,13 @@ let sidebarCollapsed = false;
   }
   function startKnowledgeChat(conv, text, attach) {
     if (currentView !== "chat") switchView("chat");
+    if (typeof cfgRecordAudit === "function") cfgRecordAudit("使用知识库", "知识库", (conv.knowledgeBases || []).map(id => (KB_ORDER.find(([kid]) => kid === id) || [,"未命名知识库"])[1]).join("、") || "未选择知识库", "发起知识库问答");
     const generationState = beginShortGeneration("knowledge", conv), inner = $("#threadInner");
     inner.insertAdjacentHTML("beforeend", typingBubble(null, "检索知识库")); scrollBottom();
     generationState.timer = setTimeout(() => {
       if (activeGeneration !== generationState) return;
       const tp = $("#typingBubble"); if (tp) tp.remove();
-      conv.msgs.push({ role:"agent", agent:null, html:knowledgeReplyHTML(text, attach, conv), time:nowTime(), noTrust:true, routeType:"knowledge", modelPayload:{ routeType:"knowledge",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } });
+      conv.msgs.push({ role:"agent", agent:null, html:knowledgeReplyHTML(text, attach, conv), time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), noTrust:true, routeType:"knowledge", modelPayload:{ routeType:"knowledge",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } });
       conv.updatedAt = Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
     }, 720);
   }
@@ -5384,7 +5404,7 @@ let sidebarCollapsed = false;
     generationState.timer = setTimeout(() => {
       if (activeGeneration !== generationState) return;
       const tp = $("#typingBubble"); if (tp) tp.remove();
-      conv.msgs.push({ role:"agent", agent:null, html:smartDataReplyHTML(text, attach), time:nowTime(), noTrust:true, routeType:"data", modelPayload:{ routeType:"data",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [] } });
+      conv.msgs.push({ role:"agent", agent:null, html:smartDataReplyHTML(text, attach), time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), noTrust:true, routeType:"data", modelPayload:{ routeType:"data",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [] } });
       conv.updatedAt = Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
     }, 720);
   }
@@ -5406,7 +5426,7 @@ let sidebarCollapsed = false;
       if (activeGeneration !== generationState) return;
       const tp = $("#typingBubble"); if (tp) tp.remove();
       const materialTitle = inferGeneralMaterialTitle(text, attach);
-      const message = { role:"agent", agent:null, html:generalReplyHTML(text, attach, conv), time:nowTime(), materialTitle, generatedMaterial:!!materialTitle, materialSource:"政务AI助手", noTrust:true, modelPayload:{ routeType:"general",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [] } };
+      const message = { role:"agent", agent:null, html:generalReplyHTML(text, attach, conv), time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), materialTitle, generatedMaterial:!!materialTitle, materialSource:"政务AI助手", noTrust:true, modelPayload:{ routeType:"general",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [] } };
       conv.msgs.push(message);
       // 「我的成果」仅归档智能体或连接器生成的内容，普通助手输出不进入成果列表。
       conv.updatedAt = Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
@@ -5539,7 +5559,7 @@ let sidebarCollapsed = false;
     const agent = byId(state.agentId), title = directDocumentTitle(agent, state.values), materialHTML = directDocumentHTML(agent, state.values);
     const generatedAt = Date.now();
     const message = state.progressMessage || { role:"agent", agent:agent.id };
-    Object.assign(message, { role:"agent", agent:agent.id, html:`${intentAnalysisHTML(agent, state.text, { values:state.values }, 3)}${generationProcessHTML(state)}<p>已根据当前信息生成可编辑初稿。缺少的信息已用“XX”占位；点击下方文件可在线编辑，也可以继续在对话中补充。</p>`, materialTitle:`${title}.docx`, materialHTML, generatedMaterial:true, directGenerated:true, structuredValues:{ ...(state.values || {}) }, generationReference:{ ...(state.reference || {}), knowledgeFiles:[...((state.reference && state.reference.knowledgeFiles) || [])] }, modelPayload:{ ...(state.modelPayload || {}), knowledgeFileIds:[...((state.modelPayload && state.modelPayload.knowledgeFileIds) || [])], knowledgeFiles:[...((state.modelPayload && state.modelPayload.knowledgeFiles) || [])], attachments:[...((state.modelPayload && state.modelPayload.attachments) || [])] }, materialSource:agent.name, speakerStyleId:agent.id === "speech" ? activeSpeakerStyle().id : "", time:nowTime(), createdAt:generatedAt, generationTime:formatDateTime(generatedAt) });
+    Object.assign(message, { role:"agent", agent:agent.id, html:`${intentAnalysisHTML(agent, state.text, { values:state.values }, 3)}${generationProcessHTML(state)}<p>已根据当前信息生成可编辑初稿。缺少的信息已用“XX”占位；点击下方文件可在线编辑，也可以继续在对话中补充。</p>`, materialTitle:`${title}.docx`, materialHTML, generatedMaterial:true, directGenerated:true, structuredValues:{ ...(state.values || {}) }, generationReference:{ ...(state.reference || {}), knowledgeFiles:[...((state.reference && state.reference.knowledgeFiles) || [])] }, modelPayload:{ ...(state.modelPayload || {}), knowledgeFileIds:[...((state.modelPayload && state.modelPayload.knowledgeFileIds) || [])], knowledgeFiles:[...((state.modelPayload && state.modelPayload.knowledgeFiles) || [])], attachments:[...((state.modelPayload && state.modelPayload.attachments) || [])] }, materialSource:agent.name, speakerStyleId:agent.id === "speech" ? activeSpeakerStyle().id : "", time:nowTime(), startedAt:state.startedAt || message.startedAt || message.createdAt || generatedAt, completedAt:generatedAt, createdAt:message.createdAt || generatedAt, generationTime:formatDateTime(generatedAt) });
     delete message.kind; delete message.progressId; delete message.noTrust;
     if (!state.conv.msgs.includes(message)) state.conv.msgs.push(message);
     state.conv.updatedAt = Date.now();
@@ -5565,9 +5585,10 @@ let sidebarCollapsed = false;
     const taskInstance = { id:"T-" + String(Date.now()).slice(-8), name:`${agent.name.replace("智能生成", "")} · ${directDocumentTitle(agent, values)}`, agent:agent.id, flow:"generate", state:"运行中", node:DIRECT_GENERATION_STEPS[0], idx:1, total:DIRECT_GENERATION_STEPS.length };
     TASK_INSTANCES.unshift(taskInstance);
     const ref = reference || { knowledgeFiles:(conv.knowledgeFiles || []).slice(), attachment:attach || "" };
-    const state = { id:"dg" + Date.now(), convId:conv.id, conv, agentId:agent.id, text, attach, values, reference:ref, modelPayload:{ prompt:text, customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(), structuredValues:values, knowledgeFileIds:(ref.knowledgeFiles || []).map(file => file.id), knowledgeFiles:(ref.knowledgeFiles || []).map(file => ({ id:file.id, name:file.name, parseMode:"file-parser" })), attachments:[...((ref.attachment ? [ref.attachment] : [])), ...(ref.knowledgeFiles || []).map(file => file.name)], knowledgeBaseIds:[] }, step:0, paused:false, timer:null, taskInstanceId:taskInstance.id, progressMessage:null };
-    const progressMessage = existingMessage || { role:"agent", agent:agent.id, time:nowTime(), createdAt:Date.now() };
-    Object.assign(progressMessage, { role:"agent", agent:agent.id, kind:"task-progress", progressId:state.id, html:`${intentAnalysisHTML(agent, text, { values }, 3)}${generationProcessHTML(state)}`, time:progressMessage.time || nowTime(), createdAt:progressMessage.createdAt || Date.now(), noTrust:true });
+    const startedAt = Date.now();
+    const state = { id:"dg" + startedAt, convId:conv.id, conv, agentId:agent.id, text, attach, values, reference:ref, modelPayload:{ prompt:text, customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(), structuredValues:values, knowledgeFileIds:(ref.knowledgeFiles || []).map(file => file.id), knowledgeFiles:(ref.knowledgeFiles || []).map(file => ({ id:file.id, name:file.name, parseMode:"file-parser" })), attachments:[...((ref.attachment ? [ref.attachment] : [])), ...(ref.knowledgeFiles || []).map(file => file.name)], knowledgeBaseIds:[] }, step:0, paused:false, timer:null, taskInstanceId:taskInstance.id, progressMessage:null, startedAt };
+    const progressMessage = existingMessage || { role:"agent", agent:agent.id, time:nowTime(), createdAt:startedAt };
+    Object.assign(progressMessage, { role:"agent", agent:agent.id, kind:"task-progress", progressId:state.id, html:`${intentAnalysisHTML(agent, text, { values }, 3)}${generationProcessHTML(state)}`, time:progressMessage.time || nowTime(), startedAt:progressMessage.startedAt || startedAt, createdAt:progressMessage.createdAt || startedAt, noTrust:true });
     state.progressMessage = progressMessage;
     if (!conv.msgs.includes(progressMessage)) conv.msgs.push(progressMessage);
     conv.updatedAt = Date.now();
@@ -7101,10 +7122,10 @@ let sidebarCollapsed = false;
   const CFG_MENU = {
     system:[
       ["agents","智能体管理","i-bot"],["connectors","业务连接器管理","i-plug"],["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],
-      ["users","用户管理","i-users"],["orgs","组织管理","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"]
+      ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"]
     ],
     dept:[
-      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["deptRules","本部门强制约束规则","i-shield"],["audit","部门操作记录","i-clipboard"]
+      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"]
     ],
     user:[["personalization","个性化","i-spark"],["templates","智能体模板管理","i-file"]]
   };
@@ -7154,10 +7175,6 @@ let sidebarCollapsed = false;
       {version:"v1.7",status:"retired",createdAt:"2026-07-22 10:25",creator:"王强",content:"补充政策替代关系和旧称映射。"}
     ]}
   ];
-  const CFG_DEPT_RULES = [
-    {id:"dr-1",name:"数据局内部材料数据口径",content:"涉及年度调用量、共享交换量和项目进展的数据，必须引用本部门授权台账或标注“待核实”。",version:"D-v1.4",enabled:true},
-    {id:"dr-2",name:"数据局机构名称统一规则",content:"首次出现使用单位全称，后续可使用经备案简称；不得使用历史旧称。",version:"D-v1.2",enabled:true}
-  ];
   const CFG_TEMPLATES = [
     {id:"tpl-001",agentId:"notice",name:"重点工作部署通知",scope:"public",ownerId:"u-system-wang",ownerName:"王强",ownerDept:"平台治理中心",version:"v2.1",createdAt:"2026-06-18",updatedAt:"2026-08-02",calls:286,outline:"一、工作背景\n二、重点任务\n三、责任分工\n四、工作要求",constraints:["任务表述必须明确责任单位和完成要求"],defaults:{type:"工作部署",issuer:"南京江北新区管理委员会"}},
     {id:"tpl-002",agentId:"speech",name:"专题工作会议讲话稿",scope:"department",ownerId:"u-dept-li",ownerName:"李静",ownerDept:"南京江北新区数据局",version:"v1.6",createdAt:"2026-07-03",updatedAt:"2026-08-08",calls:117,outline:"一、总结当前成效\n二、分析问题形势\n三、部署下一阶段任务",constraints:["语言务实，重点突出可执行部署"],speakerStyleId:"rs-li",defaults:{occasion:"专题工作汇报",audience:"新区各部门负责人",duration:"15分钟"}},
@@ -7187,6 +7204,7 @@ let sidebarCollapsed = false;
   function saveDefaultTemplate(agentId,templateId) {
     agentDefaultTemplates[agentId] = templateId;
     try { localStorage.setItem(AGENT_DEFAULT_TEMPLATE_KEY,JSON.stringify(agentDefaultTemplates)); } catch (e) {}
+    if (typeof cfgRecordAudit === "function") cfgRecordAudit("选择智能体模板", "模板", cfgAgentById(agentId)?.name || agentId, `设为默认模板：${CFG_TEMPLATES.find(item => item.id === templateId)?.name || templateId}`);
   }
   const SPEAKER_PROMPT_DIMENSIONS = [
     ["vocabulary","词汇偏好"],["sentence","句式结构"],["rhetoric","修辞习惯"],["expression","表达特色"]
@@ -7405,6 +7423,20 @@ let sidebarCollapsed = false;
   function renderConfig() {
     const roleName = configRole === "system" ? "系统管理员" : configRole === "dept" ? "部门管理员 · 数据局" : "政务办公使用人员 · 张敏";
     if (configRole === "user") {
+      if (configCenterPersonalMode && ["templates","personalization"].includes(configCenterSection)) {
+        const menu = cfgMenuItems();
+        cfgRenderMenu(); cfgRenderHeader();
+        let html = configCenterSection === "templates"
+          ? (configSpeakerManagerOpen ? cfgSpeakerManagerHTML() : configTemplateDraft ? cfgTemplateEditorHTML() : cfgTemplateManagerHTML())
+          : cfgPersonalizationHTML();
+        html = html.replaceAll("全局强制规则 ＞ 部门强制规则 ＞","平台基础约束 ＞").replaceAll("与全局强制规则冲突","与平台基础约束冲突").replaceAll("全局强制规则和部门规则","平台基础约束");
+        $("#cfgWorkspace").innerHTML = html;
+        if (configTemplateDraft) {
+          const select = $('[data-cfg-template-agent]');
+          if (select) select.innerHTML = `<option value="">请选择智能体</option>${AGENTS.filter(agent => cfgAgentCanUse(agent.id)).map(agent => `<option value="${agent.id}" ${agent.id === configTemplateDraft.agentId ? "selected" : ""}>${esc(agent.name)}</option>`).join("")}`;
+        }
+        return;
+      }
       $("#cfgWorkspace").innerHTML = `<div class="cfg-role-boundary"><span class="crb-ic">${svgi("i-shield",17)}</span><span><b>普通使用人员不进入后台配置管理</b>可在“个性化”中设置常用推荐智能体及少量个人偏好；平台规则、部门模板和智能体配置均为只读继承。</span></div><div class="card"><div class="card-head"><div class="card-title">可调整范围</div></div><div class="card-body"><div class="cfg-item"><span>每个智能体最多 1 项高频个人偏好</span><button class="btn primary" data-view="personalization">前往个性化</button></div><div class="cfg-item"><span>单位信息、敏感词、合规规则、模板和数据权限</span><span class="cfg-status lock">不可修改</span></div></div></div>`;
       return;
     }
@@ -7517,12 +7549,19 @@ let sidebarCollapsed = false;
     return template.ownerId === role.ownerId;
   }
   function cfgTemplateCanEdit(template) { return template.scope === "personal" && template.ownerId === cfgRoleMeta().ownerId; }
+  function cfgTemplatePublishTarget(template) {
+    const role = cfgRoleMeta();
+    if (!template) return "";
+    if (configRole === "user" && template.scope === "personal" && template.ownerId === role.ownerId) return "department";
+    if (configRole === "dept" && template.scope === "department" && template.ownerDept === role.dept) return "public";
+    if (configRole === "system" && template.scope === "department") return "public";
+    return "";
+  }
   function cfgTemplateCanWithdraw(template) {
     const role = cfgRoleMeta();
     if (template.scope === "personal") return false;
-    if (template.ownerId === role.ownerId) return true;
-    if (configRole === "system") return true;
-    return configRole === "dept" && template.scope === "department" && template.ownerDept === role.dept;
+    if (template.scope === "department") return template.ownerId === role.ownerId || (configRole === "dept" && template.ownerDept === role.dept) || configRole === "system";
+    return configRole === "system" || (configRole === "dept" && template.ownerDept === role.dept);
   }
   function cfgNextVersion(version) {
     const match = String(version || "v1.0").match(/v(\d+)\.(\d+)/i);
@@ -7565,6 +7604,7 @@ let sidebarCollapsed = false;
       outline:source?.outline || "",constraints:(source?.constraints || []).slice(),defaults,options,speakerStyleId:source?.speakerStyleId || ""
     };
   }
+  function cfgAgentCanUse(agentId) { return !!agentId && !config.agentsOff.has(agentId); }
   function formatClock(timestamp) {
     const date = new Date(Number(timestamp || Date.now()));
     const pad = value => String(value).padStart(2, "0");
@@ -7577,13 +7617,12 @@ let sidebarCollapsed = false;
       rules:["全局强制约束规则","已发布版本保持不可变；动态切换只影响新任务，运行中任务继续使用启动快照。"],
       templates:[configRole === "user" ? "我的智能体模板" : "智能体模板管理","每个智能体至少配置一个默认模板；模板修改留痕，并以结构化数据和Markdown同步维护。"],
       personalization:["个性化","维护当前用户的人设与人格描述，后续对话将自动携带该项内容。"],
-      deptRules:["本部门强制约束规则","部门规则只能补充或收紧全局规则，不得覆盖、删除或放宽全局强制要求。"],
       globalRules:["全局规则只读查看","查看当前生效版本及其作用范围；部门管理员不能切换或修改全局规则。"],
       users:["用户管理","维护平台内部政务工作人员账号、所属组织、角色和账号状态。"],
       orgs:["组织管理","维护新区委办局组织层级、单位全称、简称及组织状态。"],
       roles:["角色管理","配置系统管理员、委办局管理员和普通使用人员的功能权限边界。"],
       menus:["菜单管理","按角色配置可见菜单，菜单权限不得突破角色的数据权限范围。"],
-      audit:[configRole === "system" ? "操作日志" : "部门操作记录","记录配置变更、版本切换、模板发布撤回和服务启停等关键操作。"]
+      audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"]
     };
     return meta[section] || ["配置治理中心","集中维护平台配置。"];
   }
@@ -7660,24 +7699,25 @@ let sidebarCollapsed = false;
     return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${readOnly ? "全局强制约束规则（只读）" : "全局强制约束规则"}</h2><p>规则按列表统一管理，进入详情后查看版本、描述和作用范围。</p></div>${readOnly ? "" : `<button class="btn primary" data-act="cfgRuleAdd">${svgi("i-plus",13)}新建规则</button>`}</div><div class="cfg-section-body"><table class="cfg-data-table"><thead><tr><th>规则名称</th><th>当前版本</th><th>创建/更新时间</th><th>创建人</th><th>作用范围</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
   }
   function cfgTemplateVisibleList() {
-    return CFG_TEMPLATES.filter(cfgTemplateCanSee).filter(template => configTemplateAgentFilter === "all" || template.agentId === configTemplateAgentFilter).filter(template => !configTemplateScopeFilters.size || configTemplateScopeFilters.has(template.scope)).filter(template => !configTemplateSearch || `${template.name} ${cfgAgentById(template.agentId)?.name || ""} ${template.ownerName}`.toLowerCase().includes(configTemplateSearch.toLowerCase()));
+    return CFG_TEMPLATES.filter(cfgTemplateCanSee).filter(template => configRole !== "user" || cfgAgentCanUse(template.agentId)).filter(template => configTemplateAgentFilter === "all" || template.agentId === configTemplateAgentFilter).filter(template => !configTemplateScopeFilters.size || configTemplateScopeFilters.has(template.scope)).filter(template => !configTemplateSearch || `${template.name} ${cfgAgentById(template.agentId)?.name || ""} ${template.ownerName}`.toLowerCase().includes(configTemplateSearch.toLowerCase()));
   }
   function cfgTemplateActions(template) {
     const buttons = [`<button class="btn" data-act="cfgTemplateView" data-id="${template.id}">查看</button>`];
     buttons.push(`<button class="btn" data-act="cfgTemplateHistory" data-id="${template.id}">修改记录</button>`);
     if (cfgTemplateCanEdit(template)) buttons.push(`<button class="btn" data-act="cfgTemplateEdit" data-id="${template.id}">修改</button>`);
     buttons.push(`<button class="btn" data-act="cfgTemplateCopy" data-id="${template.id}">复制模板</button>`);
+    const publishTarget = cfgTemplatePublishTarget(template);
+    if (publishTarget) buttons.push(`<button class="btn primary" data-act="cfgTemplatePublish" data-id="${template.id}">${publishTarget === "public" ? "发布到公共" : "发布到部门"}</button>`);
     if (cfgTemplateCanEdit(template)) {
-      const publishText = configRole === "user" ? "发布到部门" : configRole === "dept" ? "发布" : "发布到公共";
-      buttons.push(`<button class="btn primary" data-act="cfgTemplatePublish" data-id="${template.id}">${publishText}</button>`);
       buttons.push(`<button class="btn" data-act="cfgTemplateDelete" data-id="${template.id}">删除</button>`);
     }
     if (cfgTemplateCanWithdraw(template)) buttons.push(`<button class="btn" data-act="cfgTemplateWithdraw" data-id="${template.id}">撤回</button>`);
     return buttons.join("");
   }
   function cfgTemplateManagerHTML() {
-    const visibleAll = CFG_TEMPLATES.filter(cfgTemplateCanSee), list = cfgTemplateVisibleList();
-    const agentTabs = [["all","全部"]].concat(AGENTS.map(agent => [agent.id,agent.name])).map(([id,name]) => `<button class="cfg-filter-tab ${configTemplateAgentFilter === id ? "active" : ""}" data-act="cfgTemplateAgentFilter" data-id="${id}">${esc(name)}<em>${visibleAll.filter(template => id === "all" || template.agentId === id).length}</em></button>`).join("");
+    const visibleAll = CFG_TEMPLATES.filter(cfgTemplateCanSee).filter(template => configRole !== "user" || cfgAgentCanUse(template.agentId)), list = cfgTemplateVisibleList();
+    const visibleAgents = AGENTS.filter(agent => configRole !== "user" || cfgAgentCanUse(agent.id));
+    const agentTabs = [["all","全部"]].concat(visibleAgents.map(agent => [agent.id,agent.name])).map(([id,name]) => `<button class="cfg-filter-tab ${configTemplateAgentFilter === id ? "active" : ""}" data-act="cfgTemplateAgentFilter" data-id="${id}">${esc(name)}<em>${visibleAll.filter(template => id === "all" || template.agentId === id).length}</em></button>`).join("");
     const scopeTabs = [["all","全部"],["personal","个人"],["department","部门"],["public","公共"]].map(([id,name]) => `<button class="cfg-filter-tab ${id === "all" ? (!configTemplateScopeFilters.size ? "active" : "") : (configTemplateScopeFilters.has(id) ? "active" : "")}" data-act="cfgTemplateScopeFilter" data-id="${id}">${name}<em>${visibleAll.filter(template => id === "all" || template.scope === id).length}</em></button>`).join("");
     const cards = list.map(template => { const agent = cfgAgentById(template.agentId); return `<article class="cfg-template-card"><div class="cfg-template-top"><span class="cfg-template-icon">${svgi(AGENT_ICON[template.agentId] || "i-file",17)}</span><span class="cfg-template-title"><b title="${esc(template.name)}">${esc(template.name)}</b><small>${esc(agent?.name || "")} · ${CFG_SCOPE_LABEL[template.scope]}模板 · ${esc(template.ownerName)}</small></span><span class="cfg-status-pill ${template.scope === "personal" ? "off" : ""}">${CFG_SCOPE_LABEL[template.scope]}</span></div><p class="cfg-template-summary">${esc((template.outline || "默认流程模板").replace(/\n/g,"；"))}</p><div class="cfg-template-meta"><span>调用次数<b>${template.calls} 次</b></span><span>创建时间<b>${esc(template.createdAt)}</b></span><span>更新时间<b>${esc(template.updatedAt)}</b></span></div><div class="cfg-template-actions">${cfgTemplateActions(template)}</div></article>`; }).join("");
     return `<div class="cfg-template-filter"><div class="cfg-toolbar" style="margin-bottom:10px"><div class="search-box">${svgi("i-search",14)}<input id="cfgTemplateSearch" value="${esc(configTemplateSearch)}" placeholder="搜索模板名称、智能体或创建人"></div><span class="cfg-toolbar-spacer"></span><button class="btn primary" data-act="cfgTemplateAdd">${svgi("i-plus",14)}新增模板</button></div><div class="cfg-filter-row"><span class="cfg-filter-label">智能体</span><div class="cfg-filter-tabs">${agentTabs}</div></div><div class="cfg-filter-row"><span class="cfg-filter-label">模板所属范围</span><div class="cfg-filter-tabs">${scopeTabs}</div></div></div>${cards ? `<div class="cfg-template-grid">${cards}</div>` : `<div class="cfg-empty">${svgi("i-file",34)}<b>暂无符合条件的模板</b><p>调整筛选条件或新建个人模板。</p></div>`}`;
@@ -7809,11 +7849,8 @@ let sidebarCollapsed = false;
     const constraints = draft.constraints.map((item,index) => `<div class="cfg-constraint-row"><textarea data-cfg-constraint="${index}" ${readonly ? "disabled" : ""} placeholder="填写不得与全局强制规则冲突的模板约束">${esc(item)}</textarea>${readonly ? "" : `<button class="btn" data-act="cfgTemplateConstraintRemove" data-index="${index}">删除</button>`}</div>`).join("");
     const speaker = draft.agentId === "speech" ? `<div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>讲话人风格</b><span>仅发言稿智能体展示</span><button class="btn" style="margin-left:0" data-act="cfgSpeakerManage">管理讲话人风格</button></div><div class="cfg-editor-panel-body"><div class="cfg-form-field"><label>模板默认讲话人风格</label><select data-cfg-template-speaker ${readonly ? "disabled" : ""}><option value="">不预设，运行时手动选择</option>${SPEAKER_STYLE_PROFILES.map(role => `<option value="${role.id}" ${role.id === draft.speakerStyleId ? "selected" : ""}>${esc(role.name)} · ${esc(role.title)}</option>`).join("")}</select><small>模板仅保存讲话人风格ID；对话中仍可切换并重新生成发言稿。</small></div></div></div>` : "";
     const markdown = configTemplateMarkdownEditing ? configTemplateMarkdownDraft || cfgTemplateMarkdownText(draft) : cfgTemplateMarkdownText(draft);
-    const right = `<aside class="cfg-markdown-shell"><div class="cfg-preview-note">预览按“全局强制规则 ＞ 部门强制规则 ＞ 模板约束 ＞ 本次用户输入”拼装。在线保存时会校验格式、智能体和主要参数。</div><div class="cfg-markdown-toolbar"><b>Markdown模板</b><span>${configTemplateMarkdownEditing ? "编辑后须保存并校验" : "与左侧参数保持同步"}</span><button class="btn" data-act="cfgTemplateMarkdownExport">导出</button>${readonly ? "" : configTemplateMarkdownEditing ? `<button class="btn" data-act="cfgTemplateMarkdownCancel">取消</button><button class="btn primary" data-act="cfgTemplateMarkdownSave">保存</button>` : `<button class="btn primary" data-act="cfgTemplateMarkdownEdit">在线编辑</button>`}</div>${configTemplateMarkdownEditing ? `<textarea class="cfg-markdown-editor" id="cfgTemplateMarkdownEditor">${esc(markdown)}</textarea>` : `<pre class="cfg-markdown-preview" id="cfgTemplateMarkdownPreview">${esc(markdown)}</pre>`}</aside>`;
-    return `<div class="cfg-editor-head"><button class="btn" data-act="cfgTemplateEditorBack">${svgi("i-chevron-left",13)}返回模板列表</button><div class="cfg-editor-head-copy"><h2>${readonly ? "查看模板" : draft.id ? "修改模板" : "新增模板"}</h2><p>先选择智能体，再维护结构化内容；Markdown支持导入、导出、在线编辑和反向同步。</p></div><input id="cfgMarkdownFile" type="file" accept=".md,text/markdown" hidden>${readonly ? `<button class="btn primary" data-act="cfgTemplateCopy" data-id="${draft.id}">复制模板</button>` : `<button class="btn" data-act="cfgTemplateMarkdownImport">${svgi("i-upload",13)}导入Markdown</button><button class="btn primary" data-act="cfgTemplateSave">${svgi("i-check",13)}保存模板</button>`}</div><div class="cfg-editor-grid"><div class="cfg-editor-stack"><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>基本信息</b><span>名称按“智能体＋范围＋所有者”校验唯一</span></div><div class="cfg-editor-panel-body"><div class="cfg-form-grid"><div class="cfg-form-field"><label>智能体 <i>*</i></label><select data-cfg-template-agent ${readonly ? "disabled" : ""}><option value="">请选择智能体</option>${DRAFT_AGENT_IDS.map(id => `<option value="${id}" ${id === draft.agentId ? "selected" : ""}>${esc(cfgAgentById(id)?.name || id)}</option>`).join("")}</select></div><div class="cfg-form-field"><label>模板名称 <i>*</i></label><input data-cfg-template-prop="name" value="${esc(draft.name)}" ${readonly ? "disabled" : ""}></div><div class="cfg-form-field"><label>当前所属范围</label><input value="${CFG_SCOPE_LABEL[draft.scope]}模板" disabled></div><div class="cfg-form-field"><label>模板版本</label><input value="${esc(draft.version)}" disabled></div></div></div></div><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>主要参数</b><span>已隐藏日期字段 · ${fields.length}个可配置字段</span></div><div class="cfg-editor-panel-body"><div class="cfg-param-list">${fieldRows}</div></div></div><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>自定义约束规则</b>${readonly ? "" : `<button class="btn" style="margin-left:auto" data-act="cfgTemplateConstraintAdd">${svgi("i-plus",12)}添加规则</button>`}</div><div class="cfg-editor-panel-body">${constraints || `<div class="cfg-readonly">暂无自定义约束，模板自动继承全局强制规则和部门规则。</div>`}</div></div>${speaker}<div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>默认生成的文稿大纲（非必填）</b><span>支持Markdown层级</span>${readonly ? "" : `<button class="btn" style="margin-left:auto" data-act="cfgTemplateOutlineFocus">编辑大纲</button>`}</div><div class="cfg-editor-panel-body"><div class="cfg-form-field"><textarea data-cfg-template-prop="outline" ${readonly ? "disabled" : ""} placeholder="可不填写；运行时由对话补充或使用XX占位">${esc(draft.outline)}</textarea><small>该大纲作为模板默认生成结构；未填写不阻断保存和生成。</small></div></div></div></div>${right}</div>`;
-  }
-  function cfgDepartmentRulesHTML() {
-    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>南京江北新区数据局强制约束规则</h2><p>仅作用于本部门；与全局规则冲突时禁止保存。</p></div><button class="btn primary" data-act="cfgDeptRuleAdd">${svgi("i-plus",13)}新增部门规则</button></div><div class="cfg-section-body"><table class="cfg-data-table"><thead><tr><th>规则名称</th><th>规则内容</th><th>版本</th><th>状态</th><th>操作</th></tr></thead><tbody>${CFG_DEPT_RULES.map(rule => `<tr><td><b>${esc(rule.name)}</b></td><td>${esc(rule.content)}</td><td>${esc(rule.version)}</td><td><span class="cfg-status-pill">已启用</span></td><td><button class="btn" data-act="cfgDeptRuleEdit" data-id="${rule.id}">修改</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const right = `<aside class="cfg-markdown-shell"><div class="cfg-preview-note">预览按“平台基础约束 ＞ 模板约束 ＞ 本次用户输入”拼装。在线保存时会校验格式、智能体和主要参数。</div><div class="cfg-markdown-toolbar"><b>Markdown模板</b><span>${configTemplateMarkdownEditing ? "编辑后须保存并校验" : "与左侧参数保持同步"}</span><button class="btn" data-act="cfgTemplateMarkdownExport">导出</button>${readonly ? "" : configTemplateMarkdownEditing ? `<button class="btn" data-act="cfgTemplateMarkdownCancel">取消</button><button class="btn primary" data-act="cfgTemplateMarkdownSave">保存</button>` : `<button class="btn primary" data-act="cfgTemplateMarkdownEdit">在线编辑</button>`}</div>${configTemplateMarkdownEditing ? `<textarea class="cfg-markdown-editor" id="cfgTemplateMarkdownEditor">${esc(markdown)}</textarea>` : `<pre class="cfg-markdown-preview" id="cfgTemplateMarkdownPreview">${esc(markdown)}</pre>`}</aside>`;
+    return `<div class="cfg-editor-head"><button class="btn" data-act="cfgTemplateEditorBack">${svgi("i-chevron-left",13)}返回模板列表</button><div class="cfg-editor-head-copy"><h2>${readonly ? "查看模板" : draft.id ? "修改模板" : "新增模板"}</h2><p>先选择智能体，再维护结构化内容；Markdown支持导入、导出、在线编辑和反向同步。</p></div><input id="cfgMarkdownFile" type="file" accept=".md,text/markdown" hidden>${readonly ? `<button class="btn primary" data-act="cfgTemplateCopy" data-id="${draft.id}">复制模板</button>` : `<button class="btn" data-act="cfgTemplateMarkdownImport">${svgi("i-upload",13)}导入Markdown</button><button class="btn primary" data-act="cfgTemplateSave">${svgi("i-check",13)}保存模板</button>`}</div><div class="cfg-editor-grid"><div class="cfg-editor-stack"><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>基本信息</b><span>名称按“智能体＋范围＋所有者”校验唯一</span></div><div class="cfg-editor-panel-body"><div class="cfg-form-grid"><div class="cfg-form-field"><label>智能体 <i>*</i></label><select data-cfg-template-agent ${readonly ? "disabled" : ""}><option value="">请选择智能体</option>${DRAFT_AGENT_IDS.map(id => `<option value="${id}" ${id === draft.agentId ? "selected" : ""}>${esc(cfgAgentById(id)?.name || id)}</option>`).join("")}</select></div><div class="cfg-form-field"><label>模板名称 <i>*</i></label><input data-cfg-template-prop="name" value="${esc(draft.name)}" ${readonly ? "disabled" : ""}></div><div class="cfg-form-field"><label>当前所属范围</label><input value="${CFG_SCOPE_LABEL[draft.scope]}模板" disabled></div><div class="cfg-form-field"><label>模板版本</label><input value="${esc(draft.version)}" disabled></div></div></div></div><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>主要参数</b><span>已隐藏日期字段 · ${fields.length}个可配置字段</span></div><div class="cfg-editor-panel-body"><div class="cfg-param-list">${fieldRows}</div></div></div><div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>自定义约束规则</b>${readonly ? "" : `<button class="btn" style="margin-left:auto" data-act="cfgTemplateConstraintAdd">${svgi("i-plus",12)}添加规则</button>`}</div><div class="cfg-editor-panel-body">${constraints || `<div class="cfg-readonly">暂无自定义约束，模板自动继承平台基础约束。</div>`}</div></div>${speaker}<div class="cfg-editor-panel"><div class="cfg-editor-panel-head"><b>默认生成的文稿大纲（非必填）</b><span>支持Markdown层级</span>${readonly ? "" : `<button class="btn" style="margin-left:auto" data-act="cfgTemplateOutlineFocus">编辑大纲</button>`}</div><div class="cfg-editor-panel-body"><div class="cfg-form-field"><textarea data-cfg-template-prop="outline" ${readonly ? "disabled" : ""} placeholder="可不填写；运行时由对话补充或使用XX占位">${esc(draft.outline)}</textarea><small>该大纲作为模板默认生成结构；未填写不阻断保存和生成。</small></div></div></div></div>${right}</div>`;
   }
   const CFG_DIRECTORY_DATA = {
     users:[
@@ -7830,7 +7867,7 @@ let sidebarCollapsed = false;
     ],
     roles:[
       {id:"role-001",name:"系统管理员",scope:"全平台配置治理与审计",users:"3人",status:"启用",updatedAt:"2026-08-10 09:00"},
-      {id:"role-002",name:"委办局管理员",scope:"本部门规则、模板和操作记录",users:"18人",status:"启用",updatedAt:"2026-08-09 16:10"},
+      {id:"role-002",name:"委办局管理员",scope:"本部门模板、菜单和操作日志",users:"18人",status:"启用",updatedAt:"2026-08-09 16:10"},
       {id:"role-003",name:"普通使用人员",scope:"智能体使用、个人模板与知识库",users:"326人",status:"启用",updatedAt:"2026-08-08 13:35"}
     ],
     menus:[
@@ -7840,12 +7877,21 @@ let sidebarCollapsed = false;
       {id:"menu-004",name:"配置管理",roles:"按角色展示不同配置范围",order:"90",status:"启用",updatedAt:"2026-08-08 10:12"}
     ],
     audit:[
-      {id:"log-001",name:"切换全局规则版本",operator:"王强",department:"平台治理中心",time:"2026-08-10 09:12",status:"成功"},
-      {id:"log-002",name:"撤回公共模板《专项工作情况报告》",operator:"王强",department:"平台治理中心",time:"2026-08-09 16:48",status:"成功"},
-      {id:"log-003",name:"发布部门模板《跨部门数据共享商洽函》",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-09 14:20",status:"成功"},
-      {id:"log-004",name:"关闭督查督办连接器",operator:"王强",department:"平台治理中心",time:"2026-08-08 18:03",status:"成功"}
+      {id:"log-001",name:"用户登录",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 08:58",status:"成功",category:"账号",target:"政务AI办公助手",detail:"网页登录成功"},
+      {id:"log-002",name:"使用智能体",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 09:16",status:"成功",category:"智能体",target:"通知公告智能体生成",detail:"发起通知公告生成对话"},
+      {id:"log-003",name:"调用连接器",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 09:24",status:"成功",category:"连接器",target:"政务协同 OA",detail:"创建公文流转草稿"},
+      {id:"log-004",name:"使用知识库",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 09:31",status:"成功",category:"知识库",target:"数据局政策法规库",detail:"作为本次生成参考资料"},
+      {id:"log-005",name:"创建智能体模板",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 09:42",status:"成功",category:"模板",target:"通知公告 · 个人模板",detail:"新建并保存模板"},
+      {id:"log-006",name:"用户登出",operator:"张敏",department:"南京江北新区数据局",time:"2026-08-12 18:02",status:"成功",category:"账号",target:"政务AI办公助手",detail:"主动退出登录"},
+      {id:"log-007",name:"切换全局规则版本",operator:"王强",department:"平台治理中心",time:"2026-08-10 09:12",status:"成功",category:"配置",target:"全局强制规则",detail:"切换至 v2.4.0"},
+      {id:"log-008",name:"发布部门模板",operator:"李静",department:"南京江北新区数据局",time:"2026-08-09 16:48",status:"成功",category:"模板",target:"跨部门数据共享商洽函",detail:"发布到本部门"}
     ]
   };
+  function cfgRecordAudit(name, category, target, detail, status = "成功") {
+    const role = cfgRoleMeta();
+    CFG_DIRECTORY_DATA.audit.unshift({ id:`log-${Date.now()}`, name, category, target, detail, operator:role.ownerName, department:role.dept, time:formatDateTime(Date.now()), status });
+    if (CFG_DIRECTORY_DATA.audit.length > 120) CFG_DIRECTORY_DATA.audit.length = 120;
+  }
   let configDirectorySearch = "";
   let configDirectoryStatus = "all";
   function cfgDirectoryHTML(section) {
@@ -7855,7 +7901,7 @@ let sidebarCollapsed = false;
       orgs:[["组织名称","name"],["组织类型","type"],["上级组织","parent"],["状态","status"],["更新时间","updatedAt"]],
       roles:[["角色名称","name"],["权限范围","scope"],["用户数","users"],["状态","status"],["更新时间","updatedAt"]],
       menus:[["菜单名称","name"],["可见角色","roles"],["排序","order"],["状态","status"],["更新时间","updatedAt"]],
-      audit:[[configRole === "dept" ? "部门操作内容" : "操作内容","name"],["操作人","operator"],["所属部门","department"],["操作时间","time"],["结果","status"]]
+      audit:[["操作内容","name"],["操作分类","category"],["目标对象","target"],["操作人","operator"],["所属部门","department"],["操作时间","time"],["结果","status"]]
     };
     const columns = definitions[section] || definitions.audit;
     let rows = (CFG_DIRECTORY_DATA[section] || []).slice();
@@ -7883,24 +7929,44 @@ let sidebarCollapsed = false;
       const next = {id:item?.id || `${section}-${Date.now()}`,name,updatedAt:time,status:$("#cfgDirStatus")?.value || "启用"};
       if (section === "users") Object.assign(next,{department:$("#cfgDirDepartment").value,role:$("#cfgDirRole").value});
       else if (section === "orgs") Object.assign(next,{type:$("#cfgDirType").value,parent:$("#cfgDirParent").value});
-      else if (section === "roles") Object.assign(next,{scope:$("#cfgDirScope").value.trim(),users:item?.users || "0人"});
+      else if (section === "roles") {
+        const scope = $("#cfgDirScope").value.trim();
+        if (!scope) { showToast("请填写权限范围"); return; }
+        Object.assign(next,{scope,users:item?.users || "0人"});
+      }
       else Object.assign(next,{roles:$("#cfgDirRoles").value.trim(),order:$("#cfgDirOrder").value || "10"});
       if (item) Object.assign(item,next); else CFG_DIRECTORY_DATA[section].unshift(next);
+      if (section === "roles" && !CFG_ROLE_MENU_SCOPE[next.id]) CFG_ROLE_MENU_SCOPE[next.id] = ["home","agents"];
+      if (section === "roles") cfgRecordAudit(item ? "编辑角色" : "创建角色", "角色", name, item ? "更新角色权限范围" : "新建自定义角色");
       closeModal(); renderConfig(); showToast(`${name}已${item ? "更新" : "新增"}`);
     },{okText:item ? "保存修改" : "确认新增",width:"720px"});
   }
   function cfgOpenDirectoryDetail(section,id) {
     const item = cfgDirectoryItem(section,id); if (!item) return;
-    const labels = {id:"编号",name:section === "audit" ? "操作内容" : "名称",department:"所属部门",role:"角色",status:section === "audit" ? "结果" : "状态",updatedAt:"更新时间",type:"组织类型",parent:"上级组织",scope:"权限范围",users:"用户数",roles:"可见角色",order:"排序",operator:"操作人",time:"操作时间"};
+    const labels = {id:"编号",name:section === "audit" ? "操作内容" : "名称",category:"操作分类",target:"目标对象",detail:"操作详情",department:"所属部门",role:"角色",status:section === "audit" ? "结果" : "状态",updatedAt:"更新时间",type:"组织类型",parent:"上级组织",scope:"权限范围",users:"用户数",roles:"可见角色",order:"排序",operator:"操作人",time:"操作时间"};
     openModal(`${cfgSectionMeta(section)[0]}详情`,`<table class="cfg-data-table"><tbody>${Object.entries(item).map(([key,value]) => `<tr><th style="width:130px">${labels[key] || key}</th><td>${esc(value)}</td></tr>`).join("")}</tbody></table>`,null,{hideFooter:true,width:"680px"});
   }
   const CFG_MENU_TREE = [
-    {id:"home",name:"首页",buttons:["新对话","发送","停止生成","上传附件"]},
-    {id:"agents",name:"智能体广场",buttons:["查看智能体","选择模板","进入智能体"]},
-    {id:"connectors",name:"业务连接器",buttons:["查看连接器","使用连接器"]},
-    {id:"tasks",name:"任务空间",buttons:["查看任务流","进入智能体"]},
-    {id:"knowledge",name:"知识库",buttons:["查看","上传","下载","删除"]},
-    {id:"config",name:"配置管理",buttons:["查看","修改","启停","导出"]}
+    {id:"home",name:"首页",buttons:[],children:[]},
+    {id:"agents",name:"智能体广场",buttons:["选择模板","配置更多模板"],children:[]},
+    {id:"connectors",name:"业务连接器",buttons:["使用连接器"],children:[]},
+    {id:"knowledge",name:"知识库",buttons:["上传文件"],children:[
+      {id:"knowledge-personal",name:"个人知识库",buttons:["创建文件夹","修改文件夹名称","删除文件夹","查看","下载","删除"]},
+      {id:"knowledge-org",name:"组织知识库",buttons:["查看"]},
+      {id:"knowledge-results",name:"我的成果",buttons:["查看","下载","上传到个人知识库"]}
+    ]},
+    {id:"tasks",name:"任务空间",buttons:["进入智能体"],children:[]},
+    {id:"config",name:"配置治理中心",buttons:[],children:[
+      {id:"config-agents",name:"智能体管理",buttons:["查看"]},
+      {id:"config-connectors",name:"业务连接器管理",buttons:["查看"]},
+      {id:"config-templates",name:"智能体模板管理",buttons:["新增模板","查看","修改记录","复制模板","发布到部门","发布到公共","撤回"]},
+      {id:"config-personalization",name:"个性化",buttons:["恢复角色默认值","保存并应用"]},
+      {id:"config-users",name:"用户管理",buttons:["查看","禁用/启用"]},
+      {id:"config-orgs",name:"组织机构",buttons:[]},
+      {id:"config-roles",name:"角色管理",buttons:["新建角色","查看","使用菜单范围"]},
+      {id:"config-menus",name:"菜单管理",buttons:["修改菜单名称","新增按钮","重命名","删除"]},
+      {id:"config-audit",name:"操作日志",buttons:["查看"]}
+    ]}
   ];
   const CFG_ROLE_MENU_SCOPE = {
     "role-001":["home","agents","connectors","tasks","knowledge","config"],
@@ -7908,7 +7974,8 @@ let sidebarCollapsed = false;
     "role-003":["home","agents","connectors","tasks","knowledge"]
   };
   function cfgUserReadonlyHTML() {
-    const rows = CFG_DIRECTORY_DATA.users.map(item => `<tr><td><b>${esc(item.name)}</b></td><td>${esc(item.department)}</td><td>${esc(item.role)}</td><td><span class="cfg-status-pill ${item.status === "已停用" ? "off" : ""}">${esc(item.status)}</span></td><td>${esc(item.updatedAt)}</td><td><button class="btn" data-act="cfgDirectoryView" data-section="users" data-id="${item.id}">查看</button><button class="btn ${item.status === "已停用" ? "primary" : ""}" data-act="cfgUserToggle" data-id="${item.id}">${item.status === "已停用" ? "启用" : "禁用"}</button></td></tr>`).join("");
+    const visible = configRole === "dept" ? CFG_DIRECTORY_DATA.users.filter(item => item.department === cfgRoleMeta().dept) : CFG_DIRECTORY_DATA.users;
+    const rows = visible.map(item => `<tr><td><b>${esc(item.name)}</b></td><td>${esc(item.department)}</td><td>${esc(item.role)}</td><td><span class="cfg-status-pill ${item.status === "已停用" ? "off" : ""}">${esc(item.status)}</span></td><td>${esc(item.updatedAt)}</td><td><button class="btn" data-act="cfgDirectoryView" data-section="users" data-id="${item.id}">查看</button><button class="btn ${item.status === "已停用" ? "primary" : ""}" data-act="cfgUserToggle" data-id="${item.id}">${item.status === "已停用" ? "启用" : "禁用"}</button></td></tr>`).join("");
     return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>用户清单</h2><p>用户信息由统一身份系统同步，本平台仅支持查看和禁用/启用账号。</p></div></div><div class="cfg-section-body"><div class="cfg-toolbar" style="margin-bottom:14px"><div class="search-box">${svgi("i-search",14)}<input placeholder="搜索姓名、部门或角色"></div><select class="select" style="width:150px"><option>全部状态</option><option>正常</option><option>已停用</option></select><button class="btn">筛选</button></div><table class="cfg-data-table"><thead><tr><th>用户姓名</th><th>所属部门</th><th>角色</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
   }
   function cfgOrganizationTreeHTML() {
@@ -7916,30 +7983,118 @@ let sidebarCollapsed = false;
     return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>组织树</h2><p>组织信息由统一组织机构目录同步，仅供查看。</p></div></div><div class="cfg-section-body"><ul class="cfg-simple-tree"><li><span class="cfg-tree-node root">${svgi("i-landmark",16)}<b>南京江北新区管理委员会</b><em>根组织</em></span><ul>${children}</ul></li></ul></div></section>`;
   }
   function cfgMenuTreeHTML() {
-    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>菜单与页面按钮</h2><p>仅维护一级菜单名称及其页面按钮，不新增多级菜单。</p></div></div><div class="cfg-section-body"><ul class="cfg-simple-tree">${CFG_MENU_TREE.map(menu => `<li><span class="cfg-tree-node root"><b>${esc(menu.name)}</b><span style="margin-left:auto;display:flex;gap:6px"><button class="btn" data-act="cfgMenuButtonAdd" data-id="${menu.id}">新增按钮</button><button class="btn" data-act="cfgMenuRename" data-id="${menu.id}">修改菜单名称</button></span></span><ul>${menu.buttons.map((button,index) => `<li><span class="cfg-tree-node"><span>${esc(button)}</span><em>页面按钮</em><span style="margin-left:auto;display:flex;gap:6px"><button class="btn" data-act="cfgMenuButtonRename" data-id="${menu.id}" data-index="${index}">重命名</button><button class="btn" data-act="cfgMenuButtonDelete" data-id="${menu.id}" data-index="${index}">删除</button></span></span></li>`).join("")}</ul></li>`).join("")}</ul></div></section>`;
+    const tool = (act,id,label,icon,danger) => `<button class="cfg-menu-tool ${danger ? "danger" : ""}" data-act="${act}" data-id="${id}">${svgi(icon,12)}${label}</button>`;
+    const chips = (menuId,buttons) => buttons.length ? buttons.map((button,index) => `<span class="cfg-menu-action-chip"><span>${esc(button)}</span><span class="cfg-menu-chip-tools"><button data-act="cfgMenuButtonRename" data-id="${menuId}" data-index="${index}" title="重命名按钮">${svgi("i-edit",11)}</button><button class="danger" data-act="cfgMenuButtonDelete" data-id="${menuId}" data-index="${index}" title="删除按钮">${svgi("i-trash",11)}</button></span></span>`).join("") : `<span class="cfg-menu-empty">无页面按钮</span>`;
+    const rows = CFG_MENU_TREE.map((menu,index) => {
+      const direct = `<div class="cfg-menu-branch"><div class="cfg-menu-child"><div class="cfg-menu-child-head"><div class="cfg-menu-node-title"><span class="cfg-menu-level-tag">页面按钮</span><span class="cfg-menu-node-name">一级菜单当前页面</span></div></div><div class="cfg-menu-child-buttons"><span class="cfg-menu-level-tag">按钮</span><div class="cfg-menu-actions">${chips(menu.id,menu.buttons)}</div></div></div></div>`;
+      const children = (menu.children || []).map(child => `<div class="cfg-menu-branch"><div class="cfg-menu-child"><div class="cfg-menu-child-head"><div class="cfg-menu-node-title"><span class="cfg-menu-level-tag">二级菜单</span><span class="cfg-menu-node-name">${esc(child.name)}</span></div><span class="cfg-menu-node-tools">${tool("cfgMenuRename",child.id,"重命名","i-edit")}${tool("cfgMenuButtonAdd",child.id,"新增按钮","i-plus")}${tool("cfgMenuDelete",child.id,"删除","i-trash",true)}</span></div><div class="cfg-menu-child-buttons"><span class="cfg-menu-level-tag">页面按钮</span><div class="cfg-menu-actions">${chips(child.id,child.buttons)}</div></div></div></div>`).join("");
+      const controls = `${tool("cfgMenuRename",menu.id,"重命名","i-edit")}${tool("cfgMenuChildAdd",menu.id,"新增二级菜单","i-plus")}${tool("cfgMenuButtonAdd",menu.id,"新增按钮","i-plus")}${tool("cfgMenuDelete",menu.id,"删除","i-trash",true)}`;
+      return `<article class="cfg-menu-level1"><div class="cfg-menu-level1-head"><span class="cfg-menu-index">${String(index+1).padStart(2,"0")}</span><span class="cfg-menu-level1-name"><b>一级菜单：${esc(menu.name)}</b><small>${menu.buttons.length + (menu.children || []).reduce((sum,item) => sum + item.buttons.length,0)} 个页面按钮</small></span><span class="cfg-menu-level1-tools">${controls}</span></div><div class="cfg-menu-content">${direct}${children}</div></article>`;
+    }).join("");
+    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>菜单与页面按钮</h2><p>按一级菜单、二级菜单、页面按钮三级树状结构展示；二级菜单的页面按钮位于其下一层。</p></div></div><div class="cfg-section-body"><div class="cfg-menu-map">${rows}</div></div></section>`;
+  }
+  function cfgMenuParent(menuId) {
+    return CFG_MENU_TREE.find(menu => (menu.children || []).some(child => child.id === menuId)) || null;
+  }
+  function cfgMenuUniqueId(prefix) {
+    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+  }
+  function cfgMenuRename(menuId) {
+    const menu = cfgMenuNode(menuId); if (!menu) return;
+    const level = cfgMenuParent(menuId) ? "二级菜单" : "一级菜单";
+    openModal(`重命名${level}`,`<div class="field"><label>${level}名称</label><input id="cfgMenuNewName" maxlength="20" value="${esc(menu.name)}"></div>`,() => { const name = ($("#cfgMenuNewName")?.value || "").trim(); if (!name) { showToast(`${level}名称不能为空`); return; } menu.name = name; closeModal(); renderConfig(); showToast(`${level}名称已更新`); },{okText:"保存"});
+  }
+  function cfgMenuChildAdd(menuId) {
+    const menu = CFG_MENU_TREE.find(item => item.id === menuId); if (!menu) return;
+    openModal(`新增${menu.name}二级菜单`,`<div class="field"><label>二级菜单名称</label><input id="cfgMenuChildName" maxlength="20" placeholder="请输入二级菜单名称"></div>`,() => { const name = ($("#cfgMenuChildName")?.value || "").trim(); if (!name) { showToast("请输入二级菜单名称"); return; } if ((menu.children || []).some(item => item.name === name)) { showToast("同一一级菜单下不能存在同名二级菜单"); return; } (menu.children || (menu.children = [])).push({id:cfgMenuUniqueId("menu-child"),name,buttons:[]}); closeModal(); renderConfig(); showToast("二级菜单已新增"); },{okText:"保存"});
+  }
+  function cfgMenuDelete(menuId) {
+    const topIndex = CFG_MENU_TREE.findIndex(menu => menu.id === menuId), parent = cfgMenuParent(menuId);
+    const menu = topIndex >= 0 ? CFG_MENU_TREE[topIndex] : parent?.children.find(child => child.id === menuId); if (!menu) return;
+    const level = topIndex >= 0 ? "一级菜单" : "二级菜单";
+    const childCount = topIndex >= 0 ? (menu.children || []).length : 0, buttonCount = menu.buttons.length + (topIndex >= 0 ? (menu.children || []).reduce((sum,item) => sum + item.buttons.length,0) : 0);
+    const impact = `${childCount ? `、${childCount}个二级菜单` : ""}${buttonCount ? `、${buttonCount}个页面按钮` : ""}`;
+    openModal(`删除${level}`,`确认删除${level}“${esc(menu.name)}”？${impact ? `将同时删除其下${impact.slice(1)}，` : ""}相关角色将失去对应权限。`,() => {
+      const removedIds = topIndex >= 0 ? [menu.id,...(menu.children || []).map(child => child.id)] : [menu.id];
+      if (topIndex >= 0) CFG_MENU_TREE.splice(topIndex,1); else parent.children.splice(parent.children.findIndex(child => child.id === menuId),1);
+      Object.keys(CFG_ROLE_MENU_SCOPE).forEach(roleId => { CFG_ROLE_MENU_SCOPE[roleId] = (CFG_ROLE_MENU_SCOPE[roleId] || []).filter(value => !removedIds.some(id => value === id || value.startsWith(`${id}:`))); });
+      closeModal(); renderConfig(); showToast(`${level}已删除`);
+    },{okText:"确认删除"});
+  }
+  function cfgMenuNode(menuId) {
+    for (const menu of CFG_MENU_TREE) {
+      if (menu.id === menuId) return menu;
+      const child = (menu.children || []).find(item => item.id === menuId);
+      if (child) return child;
+    }
+    return null;
   }
   function cfgMenuButtonAdd(menuId) {
-    const menu = CFG_MENU_TREE.find(item => item.id === menuId); if (!menu) return;
+    const menu = cfgMenuNode(menuId); if (!menu) return;
     openModal(`新增${menu.name}页面按钮`,`<div class="field"><label>按钮名称</label><input id="cfgMenuButtonName" maxlength="30" placeholder="请输入页面按钮名称"></div>`,() => { const name = ($("#cfgMenuButtonName")?.value || "").trim(); if (!name) { showToast("请输入按钮名称"); return; } if (menu.buttons.includes(name)) { showToast("按钮名称已存在"); return; } menu.buttons.push(name); closeModal(); renderConfig(); showToast("页面按钮已新增"); },{okText:"保存"});
   }
   function cfgMenuButtonRename(menuId,index) {
-    const menu = CFG_MENU_TREE.find(item => item.id === menuId), oldName = menu?.buttons?.[Number(index)]; if (!menu || oldName === undefined) return;
-    openModal("重命名页面按钮",`<div class="field"><label>按钮名称</label><input id="cfgMenuButtonName" maxlength="30" value="${esc(oldName)}"></div>`,() => { const name = ($("#cfgMenuButtonName")?.value || "").trim(); if (!name) { showToast("请输入按钮名称"); return; } if (menu.buttons.some((item,i) => i !== Number(index) && item === name)) { showToast("按钮名称已存在"); return; } menu.buttons[Number(index)] = name; closeModal(); renderConfig(); showToast("按钮名称已更新"); },{okText:"保存"});
+    const menu = cfgMenuNode(menuId), oldName = menu?.buttons?.[Number(index)]; if (!menu || oldName === undefined) return;
+    openModal("重命名页面按钮",`<div class="field"><label>按钮名称</label><input id="cfgMenuButtonName" maxlength="30" value="${esc(oldName)}"></div>`,() => { const name = ($("#cfgMenuButtonName")?.value || "").trim(); if (!name) { showToast("请输入按钮名称"); return; } if (menu.buttons.some((item,i) => i !== Number(index) && item === name)) { showToast("按钮名称已存在"); return; } menu.buttons[Number(index)] = name; Object.keys(CFG_ROLE_MENU_SCOPE).forEach(roleId => { CFG_ROLE_MENU_SCOPE[roleId] = (CFG_ROLE_MENU_SCOPE[roleId] || []).map(value => value === `${menuId}:${oldName}` ? `${menuId}:${name}` : value); }); closeModal(); renderConfig(); showToast("按钮名称已更新"); },{okText:"保存"});
   }
   function cfgMenuButtonDelete(menuId,index) {
-    const menu = CFG_MENU_TREE.find(item => item.id === menuId), name = menu?.buttons?.[Number(index)]; if (!menu || name === undefined) return;
-    openModal("删除页面按钮",`确认删除“${esc(name)}”按钮？删除后相关角色将不再获得该按钮权限。`,() => { menu.buttons.splice(Number(index),1); closeModal(); renderConfig(); showToast("页面按钮已删除"); },{okText:"确认删除"});
+    const menu = cfgMenuNode(menuId), name = menu?.buttons?.[Number(index)]; if (!menu || name === undefined) return;
+    openModal("删除页面按钮",`确认删除“${esc(name)}”按钮？删除后相关角色将不再获得该按钮权限。`,() => { menu.buttons.splice(Number(index),1); Object.keys(CFG_ROLE_MENU_SCOPE).forEach(roleId => { CFG_ROLE_MENU_SCOPE[roleId] = (CFG_ROLE_MENU_SCOPE[roleId] || []).filter(value => value !== `${menuId}:${name}`); }); closeModal(); renderConfig(); showToast("页面按钮已删除"); },{okText:"确认删除"});
   }
   function cfgRoleManagementHTML() {
     const rows = CFG_DIRECTORY_DATA.roles.map(item => `<tr><td><b>${esc(item.name)}</b></td><td>${esc(item.scope)}</td><td>${esc(item.users)}</td><td><span class="cfg-status-pill">${esc(item.status)}</span></td><td>${esc(item.updatedAt)}</td><td><button class="btn" data-act="cfgDirectoryView" data-section="roles" data-id="${item.id}">查看</button><button class="btn primary" data-act="cfgRoleMenuScope" data-id="${item.id}">使用菜单范围</button></td></tr>`).join("");
-    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>角色清单</h2><p>角色可勾选多个一级菜单及其页面按钮，数据权限仍按角色和部门边界执行。</p></div></div><div class="cfg-section-body"><table class="cfg-data-table"><thead><tr><th>角色名称</th><th>权限范围</th><th>用户数</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>角色清单</h2><p>角色可按一级菜单、二级菜单和页面按钮逐级配置使用范围，数据权限仍按角色和部门边界执行。</p></div><button class="btn primary" data-act="cfgDirectoryAdd" data-section="roles">${svgi("i-plus",13)}新建角色</button></div><div class="cfg-section-body"><table class="cfg-data-table"><thead><tr><th>角色名称</th><th>权限范围</th><th>用户数</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
   }
   function cfgOpenRoleMenuScope(roleId) {
     const role = CFG_DIRECTORY_DATA.roles.find(item => item.id === roleId); if (!role) return;
     const selected = new Set(CFG_ROLE_MENU_SCOPE[roleId] || []);
-    openModal(`${role.name} · 使用菜单范围`,`<div class="cfg-readonly">一级菜单和页面按钮均可多选；取消菜单后，该菜单下按钮自动取消。</div><div class="cfg-role-scope-tree" id="cfgRoleScopeTree">${CFG_MENU_TREE.map(menu => { const hasExplicitButtons = Array.from(selected).some(value => value.startsWith(`${menu.id}:`)); return `<div class="cfg-role-scope-group"><label><input type="checkbox" data-role-menu="${menu.id}" ${selected.has(menu.id) ? "checked" : ""}><b>${esc(menu.name)}</b></label><div>${menu.buttons.map(button => `<label><input type="checkbox" data-role-button="${menu.id}" value="${esc(button)}" ${selected.has(`${menu.id}:${button}`) || (selected.has(menu.id) && !hasExplicitButtons) ? "checked" : ""}><span>${esc(button)}</span></label>`).join("")}</div></div>`; }).join("")}</div>`,() => { const tree = $("#cfgRoleScopeTree"), menus = $$("[data-role-menu]:checked",tree).map(input => input.dataset.roleMenu), buttons = $$("[data-role-button]:checked",tree).map(input => `${input.dataset.roleButton}:${input.value}`); CFG_ROLE_MENU_SCOPE[roleId] = menus.concat(buttons); closeModal(); showToast("使用菜单范围已保存"); },{okText:"保存范围",width:"760px"});
+    const explicit = selected.has("__explicit__");
+    const nodeChecked = (nodeId,menuId) => explicit ? selected.has(nodeId) : selected.has(menuId) || selected.has(nodeId);
+    const buttonChecked = (nodeId,menuId,button) => explicit ? selected.has(`${nodeId}:${button}`) : selected.has(menuId) || selected.has(`${nodeId}:${button}`);
+    const buttonList = (nodeId,menuId,buttons,childId) => buttons.length ? buttons.map(button => `<label class="cfg-scope-check button"><input type="checkbox" data-scope-button="${nodeId}" data-scope-parent="${menuId}" ${childId ? `data-scope-child="${childId}"` : ""} value="${esc(button)}" ${buttonChecked(nodeId,menuId,button) ? "checked" : ""}><span>${esc(button)}</span></label>`).join("") : `<span class="cfg-role-scope-empty">无页面按钮</span>`;
+    const scopeGroups = CFG_MENU_TREE.map((menu,index) => {
+      const direct = `<div class="cfg-role-scope-branch"><div class="cfg-role-scope-node"><div class="cfg-role-scope-node-head"><span class="cfg-role-scope-label">页面按钮</span><b>一级菜单当前页面</b></div><div class="cfg-role-scope-buttons"><span class="cfg-role-scope-label">按钮</span><div class="cfg-role-scope-button-list">${buttonList(menu.id,menu.id,menu.buttons,"")}</div></div></div></div>`;
+      const children = (menu.children || []).map(child => `<div class="cfg-role-scope-branch"><div class="cfg-role-scope-node"><div class="cfg-role-scope-node-head"><label class="cfg-scope-check menu"><input type="checkbox" data-scope-child="${child.id}" data-scope-parent="${menu.id}" ${nodeChecked(child.id,menu.id) ? "checked" : ""}><span class="cfg-role-scope-label">二级菜单</span><span>${esc(child.name)}</span></label></div><div class="cfg-role-scope-buttons"><span class="cfg-role-scope-label">页面按钮</span><div class="cfg-role-scope-button-list">${buttonList(child.id,menu.id,child.buttons,child.id)}</div></div></div></div>`).join("");
+      const buttonCount = menu.buttons.length + (menu.children || []).reduce((sum,item) => sum + item.buttons.length,0);
+      return `<article class="cfg-role-scope-level1"><div class="cfg-role-scope-head"><span class="cfg-role-scope-index">${String(index+1).padStart(2,"0")}</span><label class="cfg-scope-check menu"><input type="checkbox" data-scope-menu="${menu.id}" ${nodeChecked(menu.id,menu.id) ? "checked" : ""}><span class="cfg-role-scope-title">一级菜单：${esc(menu.name)} <small>${buttonCount} 个页面按钮</small></span></label></div><div class="cfg-role-scope-content">${direct}${children}</div></article>`;
+    }).join("");
+    openModal(`${role.name} · 使用菜单范围`,`<div class="cfg-readonly">页面内容与菜单管理保持一致。勾选一级菜单会选择其全部下级；取消任一二级菜单或按钮后，父级显示为部分选择。</div><div class="cfg-role-scope-tree" id="cfgRoleScopeTree">${scopeGroups}</div>`,() => {
+      const tree = $("#cfgRoleScopeTree"), values = ["__explicit__"];
+      $$('[data-scope-menu]',tree).forEach(input => { if (input.checked || input.indeterminate) values.push(input.dataset.scopeMenu); });
+      $$('[data-scope-child]',tree).filter(input => !input.matches('[data-scope-button]')).forEach(input => { if (input.checked || input.indeterminate) values.push(input.dataset.scopeChild); });
+      $$('[data-scope-button]:checked',tree).forEach(input => values.push(`${input.dataset.scopeButton}:${input.value}`));
+      CFG_ROLE_MENU_SCOPE[roleId] = Array.from(new Set(values)); closeModal(); showToast("使用菜单范围已保存");
+    },{okText:"保存范围",width:"920px"});
     const tree = $("#cfgRoleScopeTree");
-    if (tree) tree.addEventListener("change",event => { const input = event.target; if (input.matches("[data-role-menu]")) $$(`[data-role-button="${input.dataset.roleMenu}"]`,tree).forEach(button => { button.checked = input.checked; }); else if (input.matches("[data-role-button]") && input.checked) { const parent = $(`[data-role-menu="${input.dataset.roleButton}"]`,tree); if (parent) parent.checked = true; } });
+    if (tree) {
+      const updateStates = () => {
+        $$('[data-scope-child]',tree).filter(input => !input.matches('[data-scope-button]')).forEach(child => {
+          const buttons = $$(`[data-scope-button][data-scope-child="${child.dataset.scopeChild}"]`,tree);
+          if (!buttons.length) return;
+          const checked = buttons.filter(input => input.checked).length;
+          child.checked = checked === buttons.length; child.indeterminate = checked > 0 && checked < buttons.length;
+        });
+        $$('[data-scope-menu]',tree).forEach(menuInput => {
+          const menuId = menuInput.dataset.scopeMenu;
+          const direct = $$(`[data-scope-button][data-scope-button="${menuId}"]`,tree);
+          const children = $$(`[data-scope-child][data-scope-parent="${menuId}"]`,tree).filter(input => !input.matches('[data-scope-button]'));
+          const leaves = direct.concat(children.filter(child => !$$(`[data-scope-button][data-scope-child="${child.dataset.scopeChild}"]`,tree).length),...children.map(child => $$(`[data-scope-button][data-scope-child="${child.dataset.scopeChild}"]`,tree)));
+          if (!leaves.length) return;
+          const checked = leaves.filter(input => input.checked).length;
+          menuInput.checked = checked === leaves.length; menuInput.indeterminate = checked > 0 && checked < leaves.length;
+        });
+      };
+      tree.addEventListener("change",event => {
+        const input = event.target;
+        if (input.matches('[data-scope-menu]')) {
+          $$(`[data-scope-parent="${input.dataset.scopeMenu}"]`,tree).forEach(item => { item.checked = input.checked; item.indeterminate = false; });
+        } else if (input.matches('[data-scope-child]:not([data-scope-button])')) {
+          $$(`[data-scope-button][data-scope-child="${input.dataset.scopeChild}"]`,tree).forEach(item => { item.checked = input.checked; });
+        }
+        updateStates();
+      });
+      updateStates();
+    }
   }
   function renderConfig() {
     if (!$("#cfgWorkspace")) return;
@@ -7951,7 +8106,6 @@ let sidebarCollapsed = false;
     else if (configCenterSection === "connectors") html = cfgServiceTable("connector");
     else if (configCenterSection === "rules") html = cfgRulesHTML(false);
     else if (configCenterSection === "globalRules") html = cfgRulesHTML(true);
-    else if (configCenterSection === "deptRules") html = cfgDepartmentRulesHTML();
     else if (configCenterSection === "templates") html = configSpeakerManagerOpen ? cfgSpeakerManagerHTML() : configTemplateDraft ? cfgTemplateEditorHTML() : cfgTemplateManagerHTML();
     else if (configCenterSection === "personalization") html = cfgPersonalizationHTML();
     else if (configCenterSection === "users") html = cfgUserReadonlyHTML();
@@ -7966,7 +8120,8 @@ let sidebarCollapsed = false;
     if (configCenterSection === "connectors") $$(".cfg-data-title small",$("#cfgWorkspace")).forEach(item => item.remove());
     if (configCenterSection === "templates" && configTemplateDraft) {
       const select = $('[data-cfg-template-agent]');
-      if (select) select.innerHTML = `<option value="">请选择智能体</option>${AGENTS.map(agent => `<option value="${agent.id}" ${agent.id === configTemplateDraft.agentId ? "selected" : ""}>${esc(agent.name)}</option>`).join("")}`;
+      const agents = configRole === "user" ? AGENTS.filter(agent => cfgAgentCanUse(agent.id)) : AGENTS;
+      if (select) select.innerHTML = `<option value="">请选择智能体</option>${agents.map(agent => `<option value="${agent.id}" ${agent.id === configTemplateDraft.agentId ? "selected" : ""}>${esc(agent.name)}</option>`).join("")}`;
       $$(".cfg-form-field",$("#cfgWorkspace")).forEach(field => { const label = $("label",field); if (label && label.textContent.trim() === "模板版本") field.remove(); });
     }
   }
@@ -8007,21 +8162,22 @@ let sidebarCollapsed = false;
     configTemplateDraft = null; configTemplateMode = "edit"; configTemplateMarkdownEditing = false; configTemplateMarkdownDraft = ""; renderConfig(); showToast("模板已保存，结构化JSON与Markdown预览已同步更新");
   }
   function cfgPublishTemplate(template) {
-    if (!template || !cfgTemplateCanEdit(template)) return;
-    const commit = scope => {
-      cfgRecordTemplateVersion(template, scope === "public" ? "发布到公共" : "发布到部门");
-      template.scope = scope; template.updatedAt = cfgNowDate(); template.version = cfgNextVersion(template.version);
-      renderConfig(); showToast(scope === "public" ? "模板已直接发布为公共模板" : "模板已直接发布到本部门，无需审核");
-    };
-    if (configRole === "user") { commit("department"); return; }
-    if (configRole === "system") { commit("public"); return; }
-    openModal("发布模板", `<div class="cfg-readonly">委办局管理员可将本人模板直接发布到本部门或公共模板，无需审核。发布后可撤回，撤回后恢复为仅发布人可见的个人模板。</div><div class="field" style="margin-top:12px"><label>发布范围</label><select id="cfgPublishScope"><option value="department">发布到本部门</option><option value="public">发布为公共模板</option></select></div>`, () => { const scope = $("#cfgPublishScope").value; closeModal(); commit(scope); }, { okText:"确认发布" });
+    const target = cfgTemplatePublishTarget(template); if (!template || !target) return;
+    const label = target === "public" ? "公共" : "本部门";
+    openModal(`发布到${label}`, `<div class="cfg-readonly">模板发布采用逐级流程：普通使用人员的个人模板只能发布到本部门；委办局管理员再将本部门模板发布到公共范围。</div><div class="field" style="margin-top:12px"><label>模板名称</label><input value="${esc(template.name)}" disabled></div><div class="field"><label>发布后范围</label><input value="${label}模板" disabled></div>`, () => {
+      cfgRecordTemplateVersion(template, target === "public" ? "发布到公共" : "发布到部门");
+      template.scope = target; template.updatedAt = cfgNowDate(); template.version = cfgNextVersion(template.version);
+      cfgRecordAudit(target === "public" ? "发布公共模板" : "发布部门模板", "模板", template.name, `模板范围更新为${label}`);
+      closeModal(); renderConfig(); showToast(`模板已发布到${label}`);
+    }, { okText:`确认发布到${label}` });
   }
   function cfgWithdrawTemplate(template) {
     if (!template || !cfgTemplateCanWithdraw(template)) return;
-    openModal("撤回模板", `确认撤回《${esc(template.name)}》？撤回后恢复为发布人的个人模板，仅发布人本人可见和使用。`, () => {
-      cfgRecordTemplateVersion(template,"撤回为个人模板");
-      template.scope = "personal"; template.updatedAt = cfgNowDate(); template.version = cfgNextVersion(template.version); closeModal(); renderConfig(); showToast("模板已撤回，仅发布人本人可见");
+    const nextScope = template.scope === "public" ? "department" : "personal";
+    const nextLabel = nextScope === "department" ? "本部门模板" : "发布人的个人模板";
+    openModal("撤回模板", `确认撤回《${esc(template.name)}》？撤回后将逐级恢复为${nextLabel}。`, () => {
+      cfgRecordTemplateVersion(template,nextScope === "department" ? "撤回到部门模板" : "撤回为个人模板");
+      template.scope = nextScope; template.updatedAt = cfgNowDate(); template.version = cfgNextVersion(template.version); closeModal(); renderConfig(); showToast(nextScope === "department" ? "模板已撤回到本部门" : "模板已撤回，仅发布人本人可见");
     }, { okText:"确认撤回" });
   }
   function restyleSpeechHTML(html, role) {
@@ -8065,7 +8221,7 @@ let sidebarCollapsed = false;
       generationReference:{ ...((sourceMessage && sourceMessage.generationReference) || {}) },
       modelPayload:{ ...((sourceMessage && sourceMessage.modelPayload) || {}), speakerStyleId:role.id, revisionInstruction:`切换成${role.name}发言稿` },
       materialSource:"发言稿智能生成", speakerStyleId:role.id, revisionOf:sourceMessage ? sourceMessage.createdAt : null,
-      time:nowTime(), createdAt:generatedAt + 1, generationTime:formatDateTime(generatedAt + 1)
+      time:nowTime(), startedAt:generatedAt, completedAt:generatedAt + 1, createdAt:generatedAt + 1, generationTime:formatDateTime(generatedAt + 1)
     };
     conv.msgs.push(userMessage, replyMessage);
     conv.agent = "speech"; conv.updatedAt = Date.now();
@@ -8230,9 +8386,11 @@ let sidebarCollapsed = false;
     const on = !config.agentsOff.has(a.id);
     const homeMode = mode === "home";
     const stats = AGENT_STATS[a.id] || { calls: 0, published: "2026-01-01" };
-    const template = a.entryMode === "chat" ? defaultTemplateForAgent(a.id) : null;
+    const templates = a.entryMode === "chat" ? templatesForAgent(a.id) : [];
+    const template = templates.length ? (defaultTemplateForAgent(a.id) || templates[0]) : null;
     if (homeMode) return `<div class="a-card" data-home-agent="${a.id}"><div class="ac-top"><div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a,20)}</div><div style="min-width:0"><div class="ac-name">${esc(a.name)}</div><div class="ac-cat">${esc(a.cat)} · ${a.entryMode === "chat" ? "对话型" : "独立工作台"}</div></div></div><div class="ac-desc">${esc(a.desc)}</div></div>`;
-    const templateRow = a.entryMode === "chat" ? `<div class="agent-template-row"><span class="agent-template-name" title="${esc(template?.name || "默认模板")}">模板：${esc(template?.name || "默认模板")}</span><button class="agent-template-select" type="button" data-act="marketTemplateSelect" data-agent-id="${a.id}">选择模板</button></div>` : "";
+    const templateAction = templates.length === 1 ? `<button class="agent-template-select" type="button" data-act="marketTemplateManage" data-create-new="true" data-agent-id="${a.id}">配置更多模板</button>` : `<button class="agent-template-select" type="button" data-act="marketTemplateSelect" data-agent-id="${a.id}">选择模板</button>`;
+    const templateRow = a.entryMode === "chat" ? `<div class="agent-template-row"><span class="agent-template-name" title="${esc(template?.name || "默认模板")}">模板：${esc(template?.name || "默认模板")}</span>${templateAction}</div>` : "";
     return `<div class="a-card" data-agent-card="${a.id}">
       <div class="ac-top">
         <div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a, 20)}</div>
@@ -8824,7 +8982,28 @@ let sidebarCollapsed = false;
   function openMarketplaceTemplatePicker(agentId,enterAfterSelect) {
     const agent = byId(agentId), list = templatesForAgent(agentId); if (!agent || !list.length) return;
     const current = defaultTemplateForAgent(agentId);
-    openModal(`选择${agent.name}模板`,`<div class="cfg-readonly">选择后保存为该智能体的个人默认模板，后续从智能体广场进入时自动带入。</div><div class="field" style="margin-top:12px"><label>模板名称</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === current?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div>`,() => { const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agentId,selected.id); closeModal(); renderAgentsView(); showToast(`已将“${selected.name}”设为默认模板`); if (enterAfterSelect) enterAgentWithTemplate(agent,selected); },{okText:"设为默认模板",width:"560px"});
+    const initial = current || list[0];
+    openModal(`选择${agent.name}模板`,`<div class="cfg-readonly">选择后保存为该智能体的个人默认模板，后续从智能体广场进入时自动带入。</div><div class="field" style="margin-top:12px"><label>模板名称</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><span class="cfg-readonly">选择模板后可预览其 Markdown 内容</span><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">管理模板</button></div>`,() => { const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agentId,selected.id); closeModal(); renderAgentsView(); showToast(`已将“${selected.name}”设为默认模板`); if (enterAfterSelect) enterAgentWithTemplate(agent,selected); },{okText:"设为默认模板",width:"680px"});
+    const choice = $("#marketTemplateChoice"), preview = $("#marketTemplatePreview");
+    if (choice && preview) choice.addEventListener("change", () => { const selected = list.find(template => template.id === choice.value) || list[0]; preview.textContent = cfgTemplateMarkdownText(selected); });
+  }
+  function openAgentTemplateManager(agentId, createNew) {
+    const agent = byId(agentId); if (!agent) return;
+    closeModal();
+    configCenterPersonalMode = configRole === "user";
+    configCenterSection = "templates";
+    configTemplateAgentFilter = agentId;
+    configTemplateScopeFilters = new Set();
+    configTemplateSearch = "";
+    configTemplateDraft = null;
+    switchView("config");
+    if (createNew) {
+      configTemplateDraft = cfgTemplateNormalize({ agentId }, false);
+      configTemplateMode = "edit";
+      configTemplateMarkdownEditing = false;
+      configTemplateMarkdownDraft = cfgTemplateMarkdownText(configTemplateDraft);
+      renderConfig();
+    }
   }
   function openAgentFromMarketplace(agentId) {
     const agent = byId(agentId); if (!agent) return;
@@ -8837,7 +9016,10 @@ let sidebarCollapsed = false;
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
     const apply = template => { activeTemplateId = template?.id || null; fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),target || currentComposerInput()); renderAgentPill(); };
     if (list.length <= 1 || saved) { apply(saved || list[0] || null); return; }
-    openModal(`选择${agent.name}模板`,`<div class="field"><label>当前智能体有多个可用模板</label><select id="composerTemplateChoice">${list.map(template => `<option value="${template.id}">${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div>`,() => { const template = list.find(item => item.id === $("#composerTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agent.id,template.id); closeModal(); apply(template); showToast(`已选择模板“${template.name}”`); },{okText:"确认选择",width:"540px"});
+    const initial = saved || list[0];
+    openModal(`选择${agent.name}模板`,`<div class="field"><label>当前智能体有多个可用模板</label><select id="composerTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><span class="cfg-readonly">选择模板后可预览其 Markdown 内容</span><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agent.id}">管理模板</button></div>`,() => { const template = list.find(item => item.id === $("#composerTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agent.id,template.id); closeModal(); apply(template); showToast(`已选择模板“${template.name}”`); },{okText:"确认选择",width:"620px"});
+    const choice = $("#composerTemplateChoice"), preview = $("#marketTemplatePreview");
+    if (choice && preview) choice.addEventListener("change", () => { const selected = list.find(template => template.id === choice.value) || list[0]; preview.textContent = cfgTemplateMarkdownText(selected); });
   }
   function renderAgentsView() {
     const q = ($("#agentSearch").value || "").trim().toLowerCase();
@@ -9912,6 +10094,7 @@ let sidebarCollapsed = false;
       case "cfgCenterSection": configCenterSection = el.dataset.section || cfgMenuItems()[0][0]; configTemplateDraft = null; configRuleDetailId = null; configSpeakerManagerOpen = false; configTemplateMarkdownEditing = false; configTemplateMarkdownDraft = ""; configDirectorySearch = ""; configDirectoryStatus = "all"; renderConfig(); break;
       case "cfgCenterRefresh": renderConfig(); showToast("配置数据已刷新"); break;
       case "marketTemplateSelect": openMarketplaceTemplatePicker(el.dataset.agentId,false); break;
+      case "marketTemplateManage": openAgentTemplateManager(el.dataset.agentId, el.dataset.createNew === "true"); break;
       case "cfgServiceToggle": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (item) { item.enabled = !item.enabled; if (el.dataset.kind === "agent") { if (item.enabled) config.agentsOff.delete(item.id); else config.agentsOff.add(item.id); } renderConfig(); showToast(`${item.name}已${item.enabled ? "开启" : "关闭"}；运行中任务继续使用启动快照`); } break; }
       case "cfgServiceView": { const isAgent = el.dataset.kind === "agent", rows = isAgent ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break; const agent = isAgent ? byId(item.id) : null, connector = !isAgent ? connectorById(item.id) : null, fields = isAgent ? [["智能体图标",agentIcon(agent,20)],["智能体名称",item.name],["智能体描述",item.desc],["智能体类型",agent?.cat || item.businessType],["使用方式",item.entryMode === "chat" ? "对话型" : "独立工作台"],["作用业务部门",item.departments.join("、")],["运行状态",item.enabled ? "展示" : "隐藏"]] : [["业务连接器图标",svgi(connector?.icon || "i-plug",20)],["业务连接器名称",item.name],["描述",item.desc],["作用业务部门",item.departments.join("、")],["运行状态",item.enabled ? "运行" : "停用"]]; openModal(`${item.name} · 查看详情`,`<div class="cfg-readonly">基础信息由智能体中台同步，本平台仅维护作用业务部门与运行状态。</div><table class="cfg-data-table" style="margin-top:12px"><tbody>${fields.map(([label,value]) => `<tr><th style="width:150px">${label}</th><td>${value}</td></tr>`).join("")}</tbody></table>`,null,{hideFooter:true,width:"720px"}); break; }
       case "cfgServiceScope": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break; const checks = CFG_DEPARTMENTS.map(name => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${item.departments.includes(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join(""); openModal(`配置作用业务部门 · ${item.name}`, `<div class="cfg-readonly">作用范围与规则、模板范围共同取交集；未授权部门不能调用该服务。</div><div id="cfgDeptChecks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">${checks}</div>`, () => { const selected = $$("#cfgDeptChecks input:checked").map(input => input.value); if (!selected.length) { showToast("至少选择一个作用业务部门"); return; } item.departments = selected; closeModal(); renderConfig(); showToast("作用业务部门已更新"); }, { okText:"保存范围" }); break; }
@@ -9929,12 +10112,14 @@ let sidebarCollapsed = false;
       case "cfgDirectoryEdit": cfgOpenDirectoryEditor(el.dataset.section,el.dataset.id); break;
       case "cfgDirectoryView": cfgOpenDirectoryDetail(el.dataset.section,el.dataset.id); break;
       case "cfgUserToggle": { const user = cfgDirectoryItem("users",el.dataset.id); if (user) { user.status = user.status === "已停用" ? "正常" : "已停用"; user.updatedAt = formatDateTime(Date.now()); renderConfig(); showToast(`用户“${user.name}”已${user.status === "已停用" ? "禁用" : "启用"}`); } break; }
-      case "cfgMenuRename": { const menu = CFG_MENU_TREE.find(item => item.id === el.dataset.id); if (!menu) break; openModal("修改一级菜单名称",`<div class="field"><label>菜单名称</label><input id="cfgMenuNewName" maxlength="20" value="${esc(menu.name)}"></div>`,() => { const name = ($("#cfgMenuNewName")?.value || "").trim(); if (!name) { showToast("菜单名称不能为空"); return; } menu.name = name; closeModal(); renderConfig(); showToast("菜单名称已更新"); },{okText:"保存"}); break; }
+      case "cfgMenuRename": cfgMenuRename(el.dataset.id); break;
+      case "cfgMenuChildAdd": cfgMenuChildAdd(el.dataset.id); break;
+      case "cfgMenuDelete": cfgMenuDelete(el.dataset.id); break;
       case "cfgMenuButtonAdd": cfgMenuButtonAdd(el.dataset.id); break;
       case "cfgMenuButtonRename": cfgMenuButtonRename(el.dataset.id,el.dataset.index); break;
       case "cfgMenuButtonDelete": cfgMenuButtonDelete(el.dataset.id,el.dataset.index); break;
       case "cfgRoleMenuScope": cfgOpenRoleMenuScope(el.dataset.id); break;
-      case "cfgDirectoryExport": showToast(configRole === "dept" ? "本部门操作记录已导出" : "操作日志已导出"); break;
+      case "cfgDirectoryExport": showToast("操作日志已导出"); break;
       case "cfgTemplateAgentFilter": configTemplateAgentFilter = el.dataset.id || "all"; renderConfig(); break;
       case "cfgTemplateScopeFilter": { const id = el.dataset.id; if (id === "all") configTemplateScopeFilters.clear(); else { if (configTemplateScopeFilters.has(id)) configTemplateScopeFilters.delete(id); else configTemplateScopeFilters.add(id); } renderConfig(); break; }
       case "cfgTemplateAdd": cfgOpenTemplateEditor(null,"edit",false); break;
@@ -9961,8 +10146,6 @@ let sidebarCollapsed = false;
       case "cfgSpeakerManage": configSpeakerManagerOpen = true; renderConfig(); break;
       case "cfgSpeakerManagerBack": configSpeakerManagerOpen = false; renderConfig(); break;
       case "cfgTemplateOutlineFocus": { const field = $('[data-cfg-template-prop="outline"]'); if (field) { field.focus(); field.scrollIntoView({behavior:"smooth",block:"center"}); } break; }
-      case "cfgDeptRuleAdd": showToast("已打开部门规则新增入口；保存时自动执行全局规则冲突检查（原型演示）"); break;
-      case "cfgDeptRuleEdit": showToast("部门规则只允许补充或收紧，不允许覆盖全局强制规则"); break;
       case "conversationChoice": sendConversationalChoice(el.dataset.choiceValue || ""); break;
       case "copyAgentReply": copyAgentReply(el.dataset.msgIndex); break;
       case "copyUserReply": copyUserReply(el.dataset.msgIndex); break;
