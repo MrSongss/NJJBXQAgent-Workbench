@@ -301,10 +301,19 @@
   .msg-footer-user .agent-response-action:hover { background:rgba(255,255,255,.18); color:#fff; }
   .ai-disclaimer-cell { flex:1; display:flex; justify-content:center; min-width:0; }
   .ai-disclaimer-cell ~ .msg-footer-time { margin-left:0; }
-  .ai-disclaimer { display:inline-block; padding:3px 11px; border-radius:9px; background:#fff8e6; color:#9a6a00; font-size:11px; font-weight:700; text-align:center; border:1px solid #f3e0b3; white-space:nowrap; }
+  .ai-disclaimer { display:inline-block; padding:0; border:0; border-radius:0; background:transparent; color:#8994a3; font-size:11px; font-weight:600; text-align:center; white-space:nowrap; }
   .agent-response-action { min-height:28px; display:inline-flex; align-items:center; gap:5px; padding:0 2px; border:0; border-radius:6px; background:transparent; color:#778598; font-size:12px; font-weight:700; }
   .agent-response-action:hover { color:var(--gov-700); background:var(--gov-50); }
   .agent-response-action .svg-icon { width:14px; height:14px; }
+  .model-error-card { display:flex; align-items:flex-start; gap:11px; margin:4px 0 2px; padding:12px 13px; border:1px solid #efc7c4; border-radius:8px; background:#fff8f7; color:#70413f; }
+  .model-error-icon { width:30px; height:30px; display:grid; place-items:center; flex:none; border-radius:7px; background:#fde7e5; color:#bd3d35; }
+  .model-error-copy { min-width:0; }
+  .model-error-copy b { display:block; color:#8b2f29; font-size:13px; }
+  .model-error-copy p { margin:3px 0 0; color:#78605e; font-size:12px; line-height:1.6; }
+  .model-retry-action { color:#a63b34; }
+  .model-retry-action:hover { background:#fff0ee; color:#8d2822; }
+  .retry-confirm-note { display:flex; gap:11px; align-items:flex-start; padding:12px; border:1px solid #d8e5ed; border-radius:8px; background:#f7fafc; color:#46566b; line-height:1.7; }
+  .retry-confirm-note .svg-icon { width:18px; height:18px; flex:none; margin-top:3px; color:var(--gov-700); }
   .generated-file-card { position:relative; display:grid; grid-template-columns:44px minmax(0,1fr) auto; align-items:center; gap:12px; min-height:92px; margin-top:13px; padding:14px 15px; border:1px solid #d6e1e9; border-radius:12px; background:#fff; box-shadow:0 3px 12px rgba(30,67,96,.06); cursor:pointer; text-align:left; overflow:hidden; }
   .generated-file-card:hover { border-color:#9fc2dc; box-shadow:0 7px 20px rgba(30,67,96,.12); }
   .generated-file-card-icon { width:44px; height:54px; border:1px solid #cfe0ec; border-radius:7px; display:grid; place-items:center; background:#f6fbff; color:var(--gov-700); }
@@ -316,6 +325,13 @@
   .generated-file-card:hover .generated-file-download, .generated-file-download:focus-visible { opacity:1; transform:none; }
   .generated-file-card::after { content:"点击打开在线编辑"; position:absolute; right:15px; bottom:8px; color:#a1acb8; font-size:10.5px; opacity:0; transition:.16s ease; pointer-events:none; }
   .generated-file-card:hover::after { opacity:1; }
+  .download-format-menu { position:fixed; z-index:520; width:214px; padding:6px; border:1px solid #d8e2ea; border-radius:8px; background:#fff; box-shadow:0 14px 34px rgba(25,51,74,.18); }
+  .download-format-menu button { width:100%; min-height:44px; display:flex; align-items:center; gap:10px; padding:7px 9px; border:0; border-radius:6px; background:transparent; color:#334155; text-align:left; }
+  .download-format-menu button:hover { background:#f2f7fa; color:var(--gov-700); }
+  .download-format-menu .format-icon { width:28px; height:28px; display:grid; place-items:center; flex:none; border-radius:6px; background:#edf5fa; color:var(--gov-700); }
+  .download-format-menu .format-copy { min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .download-format-menu .format-copy b { font-size:12px; font-weight:700; }
+  .download-format-menu .format-copy small { color:#8994a3; font-size:10.5px; }
   .generated-secondary-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
   .generated-secondary-actions .btn { height:31px; padding:0 10px; font-size:11.5px; }
   .draft-guidance { color:#34445b; }
@@ -1775,6 +1791,42 @@
   :is(#view-home, #view-newchat) .landing-composer-shell.is-expanded textarea{min-height:280px;max-height:420px}
   :is(#view-home, #view-newchat) .landing-composer-shell.is-expanded .prompt-highlight{min-height:280px;max-height:420px}
   :is(#view-home,#view-newchat) .prompt-editor textarea,:is(#view-home,#view-newchat) .prompt-editor .prompt-highlight{text-align:left}
+  .model-select-btn{height:32px;max-width:170px;padding:0 8px;border:0;border-radius:7px;background:transparent;color:#17617a;font-size:12px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .model-select-btn:hover,.model-select-btn[aria-expanded="true"]{background:#eef7f8}
+  .voice-input-btn{width:34px;height:34px;border:0;border-radius:7px;display:grid;place-items:center;background:transparent;color:#087b7c;cursor:pointer}
+  .voice-input-btn:hover{background:#eff8f8}
+  .voice-input-btn img{width:17px;height:17px;display:block}
+  .model-button-icon{display:grid;place-items:center;width:16px;height:16px;flex:none}.model-button-icon:empty{display:none}
+  .model-svg-icon{width:18px;height:18px;display:block}
+  .voice-recording-host{display:flex;align-items:center;min-width:180px}
+  .voice-recording-bar{display:flex;align-items:center;gap:12px;padding:5px 8px;border:1px solid #d7e6e8;border-radius:10px;background:#f4f8f8;color:#205766;min-height:34px}
+  .voice-recording-bar b{font-variant-numeric:tabular-nums;min-width:45px}
+  .voice-recording-bar button{margin-left:auto;width:30px;height:30px;border:1px solid #aebbc5;border-radius:50%;display:grid;place-items:center;background:#fff;color:#596b78;font-size:19px;line-height:1;cursor:pointer}
+  .voice-recording-bar button:hover{border-color:#1aa39f;background:#eaf8f7;color:#087b7c}
+  .voice-recording-bar button + button{margin-left:0;border-color:#1aa39f;background:#1aa39f;color:#fff;font-size:14px}
+  .voice-transcribing{justify-content:center;color:#087b7c}
+  .voice-spinner{width:16px;height:16px;border:2px solid #b6dedd;border-top-color:#0b9c95;border-radius:50%;animation:voice-spin .8s linear infinite}
+  @keyframes voice-spin{to{transform:rotate(360deg)}}
+  .speaker-sample-actions{margin-left:auto;display:inline-flex;align-items:center;gap:6px}
+  .speaker-sample-actions .btn{height:26px;padding:0 8px;font-size:12px}
+  .speaker-learned-editor{width:100%;min-height:180px;border:1px solid #d8e2ec;border-radius:8px;padding:11px 12px;resize:vertical;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#24344e;background:#fbfdff}
+  .model-picker-list{display:grid;gap:6px}
+  .model-option{display:flex;align-items:center;gap:10px;width:100%;padding:10px 11px;border:1px solid transparent;border-radius:8px;background:#fff;text-align:left;color:#24344e;cursor:pointer}
+  .model-option:hover,.model-option.active{border-color:#bde3e2;background:#f2fbfa}
+  .model-option-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#edf6fb;color:#16739e}
+  .model-option span:nth-child(2){display:grid;gap:2px;flex:1}.model-option small{color:#78879a;font-size:11px}
+  .model-config-link{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:10px;border:1px dashed #b8d7df;border-radius:8px;background:#f7fbfc;color:#087b7c;cursor:pointer}
+  .model-quick-popover{position:fixed;z-index:1300;width:286px;padding:8px;border:1px solid #dce5eb;border-radius:10px;background:#fff;box-shadow:0 12px 30px rgba(35,66,91,.16)}
+  .model-quick-title{padding:5px 7px 8px;color:#2d4055;font-size:12px;font-weight:700}
+  .model-quick-popover .model-picker-list{gap:3px;max-height:268px;overflow:auto}
+  .model-quick-popover .model-option{padding:7px 8px;border-radius:7px}
+  .model-quick-popover .model-option-icon{width:27px;height:27px;border-radius:6px}
+  .model-quick-popover .model-config-link{margin-top:6px;padding:8px;font-size:12px}
+  .cfg-model-current{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 12px;background:#f4f8fb;border-radius:8px;color:#53657a}.cfg-model-current b{color:#173f68}.cfg-model-current span{font-size:12px;color:#7a8da1}
+  .model-checks{display:flex;flex-wrap:wrap;gap:14px}.model-checks label{display:inline-flex;align-items:center;gap:6px;color:#4d5e73;font-size:13px}
+  .model-checks label{flex-wrap:wrap}.model-checks small{display:block;width:100%;padding-left:22px;color:#8392a2;font-size:11px;line-height:1.45}
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .model-select-btn,:is(#view-home,#view-newchat) .home-composer.is-voice-recording .voice-input-btn{display:none}
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .composer-foot-right{gap:8px}
   @media (max-width:980px){.composer-expand{right:5px;bottom:-31px}}
   .template-selected .sel-ic{background:#7b61a8!important}
   .composer-template-banner{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 0 5px;border-radius:8px;background:#f4f1fa;color:#64517f;font-size:11.5px}
@@ -2073,7 +2125,7 @@
                  <div class="prompt-editor"><div class="prompt-highlight" id="homePromptHighlight" aria-hidden="true"></div><textarea id="homeInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
                 <div class="composer-foot">
                   <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span>
-                  <span class="composer-foot-right"><button class="send-btn" id="homeSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span>
+                  <span class="composer-foot-right"><button class="model-select-btn" type="button" data-model-trigger="home"><span class="model-button-icon" data-model-button-icon="home"></span><span data-model-button-label="home">DeepSeek-V4-Pro</span></button><button class="voice-input-btn" type="button" data-voice-trigger="home" aria-label="语音输入" title="语音输入"><img src="assets/voice-input.svg" alt="" aria-hidden="true"></button><button class="send-btn" id="homeSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span>
                 </div>
                </div>
               </div>
@@ -2125,7 +2177,7 @@
                  <span id="newAttachLive"></span>
                </div>
                <div class="prompt-editor"><div class="prompt-highlight" id="newPromptHighlight" aria-hidden="true"></div><textarea id="newInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
-              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span><span class="composer-foot-right"><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span></div>
+              <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span><span class="composer-foot-right"><button class="model-select-btn" type="button" data-model-trigger="new"><span class="model-button-icon" data-model-button-icon="new"></span><span data-model-button-label="new">DeepSeek-V4-Pro</span></button><button class="voice-input-btn" type="button" data-voice-trigger="new" aria-label="语音输入" title="语音输入"><img src="assets/voice-input.svg" alt="" aria-hidden="true"></button><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span></div>
             </div>
            </div>
            <button class="composer-expand" data-composer-expand="new" aria-label="展开输入框" title="展开输入框"><svg class="svg-icon"><use href="#i-expand"></use></svg></button>
@@ -2179,7 +2231,7 @@
             <div class="editor-top-bar">
             <div class="editor-panel-head">
               <div class="editor-panel-title"><b id="editorPanelTitle">在线编辑文稿</b><button class="editor-modified-btn" id="editorModifiedBtn" type="button" data-editor-action="history" title="查看文档修改历史"><svg class="svg-icon" style="width:12px;height:12px"><use href="#i-clock"></use></svg><span id="editorModifiedLabel">修改于—</span></button></div>
-              <div class="editor-head-actions"><button data-editor-action="formatDoc"><svg class="svg-icon"><use href="#i-file-check"></use></svg>生成版式公文</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
+              <div class="editor-head-actions"><button data-editor-action="share"><svg class="svg-icon"><use href="#i-share"></use></svg>分享</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
             </div>
             <div class="oo-toolbar" id="ooToolbar">
               <div class="oo-tabs">
@@ -2880,7 +2932,7 @@ let sidebarCollapsed = false;
     doc: { secret: "非涉密", dateCn: true, font: "仿宋_GB2312", autoTitle: true },
     exportOA: { word: true, pdf: true, oa: true, watermark: true },
    model: { local: true, audit: true, offline: true },
-    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, customPrompt:"", homeAgents: ["decision", "notice", "interpret", "review", "meeting"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, roleStyle: { activeRoleId:"rs-zhang" }, agentPrefs: { review:"问题清单优先", polish:"标准润色", interpret:"政务工作人员", speech:"张主任 · 管委会副主任", meeting:"标准纪要", summary:"标准篇幅", news:"政府门户网站", ppt:"部门政务蓝", plan:"按事项拆分" }, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
+    personal: { concise: true, citeBasis: true, defaultDepth: "标准", export: "Word", strictness: "查准", highRiskFirst: true, templateFormat: "Markdown", templateEditable: true, customPrompt:"", homeAgents: ["decision", "notice", "interpret", "review", "meeting"], commonSkills: [], commonKb: ["personal", "general", "policy"], personaPrompts: {}, roleStyle: { activeRoleId:"rs-zhang" }, roleStylesByUser: {}, agentPrefs: { review:"问题清单优先", polish:"标准润色", interpret:"政务工作人员", speech:"张主任 · 管委会副主任", meeting:"标准纪要", summary:"标准篇幅", news:"政府门户网站", ppt:"部门政务蓝", plan:"按事项拆分" }, tryQuestions: [{ text: "帮我生成一份江北新区的决定决议", agent: "decision" }, { text: "审查这份通知的合规性", agent: "review" }, { text: "把例会录音生成会议纪要", agent: "meeting" }, { text: "解读产业政策，企业怎么申报", agent: "interpret" }, { text: "起草一份关于推进重点项目服务保障工作的通知", agent: "notice" }, { text: "润色这段工作总结，统一术语", agent: "polish" }, { text: "生成一份服务委托协议初稿", agent: "contract" }, { text: "做一份上半年工作汇报 PPT", agent: "ppt" }, { text: "拟一份关于申请专项资金支持的请示", agent: "report" }, { text: "生成一份季度工作计划", agent: "plan" }, { text: "帮我写一篇政务活动新闻稿", agent: "news" }, { text: "解读这份办事指南的申报条件", agent: "interpret" }] },
     department: { strictness: "严格", officialName: "南京江北新区管理委员会办公室", numberPattern: "宁新区〔年份〕序号", watermark: true },
    agentsOff: new Set(), departmentAgentsOff: new Set(), templates: {},
    decision: { subjects: ["中共南京江北新区工作委员会","南京江北新区管理委员会","管委会主任办公会","部门党组（党委）"], types: ["重大事项决策","人事任免","表彰奖惩","重点工作部署","制度文件修订审议"] }
@@ -3293,9 +3345,10 @@ let sidebarCollapsed = false;
     if (m.directGenerated) {
       const created = m.generationTime || formatDateTime(m.createdAt || Date.now());
       const speechHasStyle = m.agent === "speech" && hasSpeakerStyles();
-      return `<div class="generated-file-card ${speechHasStyle ? "has-style" : ""}" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(material.name)}》在线编辑">
+      const displayName = displayFileName(material.name);
+      return `<div class="generated-file-card ${speechHasStyle ? "has-style" : ""}" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(displayName)}》在线编辑">
         <span class="generated-file-card-icon">${svgi("i-file",22)}</span>
-        <span class="generated-file-card-copy"><b>${esc(material.name)}</b><small>创建时间：${esc(created)}</small>${speechHasStyle ? speechStyleSwitchHTML(index,"direct",m.speakerStyleId) : ""}</span>
+        <span class="generated-file-card-copy"><b>${esc(displayName)}</b><small>创建时间：${esc(created)}</small>${speechHasStyle ? speechStyleSwitchHTML(index,"direct",m.speakerStyleId) : ""}</span>
         <button class="generated-file-download" type="button" data-act="generatedExport" data-msg-index="${index}">${svgi("i-download",13)} 下载</button>
       </div>`;
     }
@@ -3323,15 +3376,11 @@ let sidebarCollapsed = false;
       achievementId:message.achievementId || ""
     };
   }
-  function exportGeneratedMessage(messageIndex) {
+  function exportGeneratedMessage(messageIndex, format) {
     const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)];
     const material = messageMaterial(message);
     if (!message || !message.directGenerated || !material) { showToast("未找到可导出的生成内容"); return; }
-    const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(material.name)}</title><style>body{font-family:\"Microsoft YaHei\",sans-serif;line-height:1.9;padding:36px;color:#1f2937}h2{text-align:center}</style></head><body>${message.materialHTML || material.contentHTML || `<p>${esc(plainText(message.html || ""))}</p>`}</body></html>`;
-    const blob = new Blob([html], { type:"application/msword;charset=utf-8" }), url = URL.createObjectURL(blob), link = document.createElement("a");
-    link.href = url; link.download = (material.name || "政务文稿.docx").replace(/\.docx$/i, ".doc"); document.body.appendChild(link); link.click(); link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 500);
-    showToast(`《${material.name}》已开始导出`);
+    downloadDocumentByFormat(displayFileName(material.name) || "政务文稿", message.materialHTML || material.contentHTML || `<p>${esc(plainText(message.html || ""))}</p>`, format || "word");
   }
   function openGeneratedResultWorkbench(messageIndex, targetAgentId) {
     const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)];
@@ -3618,15 +3667,77 @@ let sidebarCollapsed = false;
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(value).then(done).catch(() => { const ta = document.createElement("textarea"); ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); });
     else { const ta = document.createElement("textarea"); ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); }
   }
-  function downloadEditorDocument() {
+  function htmlToMarkdown(html) {
+    const host = document.createElement("div"); host.innerHTML = html || "";
+    host.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach(node => { const level = Number(node.tagName.slice(1)); node.replaceWith(`${"#".repeat(level)} ${node.textContent.trim()}\n\n`); });
+    host.querySelectorAll("li").forEach(node => node.replaceWith(`- ${node.textContent.trim()}\n`));
+    host.querySelectorAll("br").forEach(node => node.replaceWith("\n"));
+    host.querySelectorAll("p,div,tr").forEach(node => node.append("\n\n"));
+    return host.textContent.replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function downloadBlob(content, type, fileName) {
+    const blob = new Blob([content], { type }), url = URL.createObjectURL(blob), link = document.createElement("a");
+    link.href = url; link.download = fileName; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+  function documentExportHTML(title, contentHTML, standard) {
+    return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:25.4mm 26mm 26mm}body{font-family:FangSong,仿宋,"Microsoft YaHei",sans-serif;line-height:2;color:#111;font-size:16px;margin:0;padding:36px}.standard{max-width:760px;margin:auto}.standard h1,.standard h2{text-align:center;font-family:SimHei,黑体,sans-serif;font-weight:400}.standard p{text-indent:2em;margin:0 0 8px}.standard .no-indent{text-indent:0}.doc-head{margin-bottom:26px}.dh-top,.df-row{display:flex;justify-content:space-between}.dh-number{text-align:center;margin-top:28px}.doc-foot{margin-top:40px}.doc-foot hr{border:0;border-top:1px solid #111}</style></head><body class="${standard ? "standard" : ""}">${contentHTML}</body></html>`;
+  }
+  function downloadDocumentByFormat(title, contentHTML, format, standard) {
+    const cleanTitle = displayFileName(title) || "政务文稿";
+    if (format === "markdown") downloadBlob(`# ${cleanTitle}\n\n${htmlToMarkdown(contentHTML)}`, "text/markdown;charset=utf-8", `${cleanTitle}.md`);
+    else if (format === "pdf") {
+      const win = window.open("", "_blank");
+      if (!win) { showToast("浏览器阻止了 PDF 预览窗口，请允许弹出窗口后重试"); return; }
+      win.document.write(documentExportHTML(cleanTitle, contentHTML, !!standard)); win.document.close(); win.focus(); setTimeout(() => win.print(), 260);
+    } else downloadBlob(documentExportHTML(cleanTitle, contentHTML, !!standard), "application/msword;charset=utf-8", `${cleanTitle}.doc`);
+    showToast(format === "pdf" ? "已打开 PDF 打印下载页面" : `${format === "markdown" ? "Markdown" : "Word"} 文件下载已开始`);
+  }
+  let downloadMenuState = null;
+  function closeDownloadFormatMenu() { const menu = $("#downloadFormatMenu"); if (menu) menu.remove(); downloadMenuState = null; }
+  function openDownloadFormatMenu(anchor, source, messageIndex) {
+    closeDownloadFormatMenu();
+    const menu = document.createElement("div"); menu.id = "downloadFormatMenu"; menu.className = "download-format-menu";
+    menu.innerHTML = [["word","i-file","Word","适合继续编辑"],["pdf","i-file-check","PDF","适合定稿传阅"],["markdown","i-code","Markdown","适合纯文本复用"]].map(([format,icon,label,tip]) => `<button type="button" data-download-format="${format}"><span class="format-icon">${svgi(icon,15)}</span><span class="format-copy"><b>${label}</b><small>${tip}</small></span></button>`).join("");
+    document.body.appendChild(menu); downloadMenuState = { source, messageIndex };
+    const rect = anchor.getBoundingClientRect(), menuRect = menu.getBoundingClientRect();
+    const left = Math.max(10, Math.min(window.innerWidth - menuRect.width - 10, rect.right - menuRect.width));
+    const top = rect.bottom + menuRect.height + 8 > window.innerHeight ? Math.max(10, rect.top - menuRect.height - 8) : rect.bottom + 8;
+    menu.style.left = `${left}px`; menu.style.top = `${top}px`;
+  }
+  function downloadEditorDocument(format) {
     const paper = $("#editorPaper"), title = $("#editorPanelTitle").textContent || "政务文稿";
     if (!paper) return;
-    const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>body{font-family:"Microsoft YaHei",sans-serif;line-height:1.9;padding:36px;color:#1f2937}h2{text-align:center}</style></head><body>${paper.innerHTML}</body></html>`;
-    const blob = new Blob([html], { type:"application/msword;charset=utf-8" }), url = URL.createObjectURL(blob), link = document.createElement("a");
-    link.href = url; link.download = `${title}.doc`; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 500); showToast("文稿下载已开始");
+    downloadDocumentByFormat(title, paper.innerHTML, format || "word");
   }
-  // 生成版式公文：选择模板 + 版头（密级/紧急程度/发文字号）+ 版记（印发机关/印发日期），套用到编辑区
-  function openGenerateFormatDocModal() {
+  function copyTextToClipboard(value, successText) {
+    const done = () => showToast(successText);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(value).then(done).catch(() => { const ta = document.createElement("textarea"); ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); });
+    else { const ta = document.createElement("textarea"); ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); }
+  }
+  function shareEditorDocument() {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)];
+    if (!conversation || !message || editorMessageIndex == null) { showToast("未找到可分享的文稿"); return; }
+    const title = displayFileName(message.materialTitle || $("#editorPanelTitle")?.textContent || "政务文稿");
+    const shareId = `${conversation.id}-${editorMessageIndex}`.replace(/[^a-zA-Z0-9_-]/g, "");
+    const base = location.origin && location.origin !== "null" ? `${location.origin}${location.pathname}` : location.href.split("?")[0].split("#")[0];
+    const url = `${base}?share=${encodeURIComponent(shareId)}`;
+    const shareText = `【江北新区 AI 文档】${title}[${url}](${url})`;
+    copyTextToClipboard(shareText, "已复制分享链接");
+    openModal("已复制分享链接", `<div class="retry-confirm-note">${svgi("i-check",18)}<div><b>分享内容已复制到剪贴板</b><div style="margin-top:6px;color:#66758a;word-break:break-all">${esc(shareText)}</div></div></div>`, null, { hideFooter:true, width:"min(620px, calc(100vw - 32px))" });
+  }
+  function standardDocumentHTML(contentHTML) {
+    const host = document.createElement("div"); host.innerHTML = contentHTML || "";
+    if (!host.querySelector(".doc-head")) host.insertAdjacentHTML("afterbegin", `<div class="doc-head"><div class="dh-top"><span>非涉密</span><span></span></div><div class="dh-number">江北新管发〔2026〕XX号</div></div>`);
+    if (!host.querySelector(".doc-foot")) host.insertAdjacentHTML("beforeend", `<div class="doc-foot"><hr><div class="df-row"><span>南京江北新区管委会办公室</span><span>${new Date().getFullYear()}年${new Date().getMonth()+1}月${new Date().getDate()}日印发</span></div></div>`);
+    return host.innerHTML;
+  }
+  function downloadStandardPreviewWord() {
+    const paper = $("#editorPaper"), title = $("#editorPanelTitle")?.textContent || "政务文稿";
+    if (!paper) return;
+    downloadDocumentByFormat(`${displayFileName(title)}（标准版式）`, standardDocumentHTML(paper.innerHTML), "word", true);
+  }
+  // 保留旧配置流程供历史脚本兼容，不再作为编辑器入口。
+  function openLegacyFormatDocModal() {
     const tpls = [
       { id: "notice", name: "通知" }, { id: "report", name: "报告" }, { id: "request", name: "请示" },
       { id: "decision", name: "决定/决议" }, { id: "letter", name: "函" }, { id: "reply", name: "批复" },
@@ -3673,6 +3784,12 @@ let sidebarCollapsed = false;
         b.classList.add("active");
       }));
     }, 0);
+  }
+  // 预览当前文稿的标准版式，保持编辑区内容不变。
+  function openGenerateFormatDocModal() {
+    const paper = $("#editorPaper"); if (!paper) return;
+    const preview = `<div style="background:#edf1f4;padding:22px;max-height:70vh;overflow:auto"><article style="width:min(720px,100%);min-height:820px;margin:auto;padding:64px 72px;background:#fff;box-shadow:0 8px 26px rgba(29,50,68,.12);font-family:FangSong,仿宋,serif;font-size:16px;line-height:2;color:#111">${standardDocumentHTML(paper.innerHTML)}</article></div>`;
+    openModal("标准版式预览", preview, downloadStandardPreviewWord, { okText:"下载 Word", width:"min(920px, calc(100vw - 32px))" });
   }
   function messageActionText(message) {
     if (!message) return "";
@@ -3738,7 +3855,11 @@ let sidebarCollapsed = false;
     const isDirect = !!(m && m.directGenerated);
     const generatedClock = esc(responseStatusText(m, index));
     const showActions = !m || m.kind !== "task-progress";
-    const actionBtns = showActions ? `<button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button><button class="agent-response-action" type="button" data-act="retryAgentReply" data-msg-index="${index}" title="重新生成回复">${svgi("i-refresh",14)}<span>重试</span></button>` : "";
+    const actionBtns = m && m.kind === "model-error"
+      ? m.retryStartedAt
+        ? `<button class="agent-response-action" type="button" disabled title="已发起继续执行">${svgi("i-check",14)}<span>已重试</span></button>`
+        : `<button class="agent-response-action model-retry-action" type="button" data-act="retryFailedReply" data-msg-index="${index}" title="继续完成上次失败的任务">${svgi("i-refresh",14)}<span>重试</span></button>`
+      : showActions ? `<button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button>` : "";
     const disclaimerCell = isDirect ? `<span class="ai-disclaimer-cell"><span class="ai-disclaimer">AI 生成可能有误 注意核实</span></span>` : "";
     const materialAction = messageMaterialAction(m, index);
     const footer = `${materialAction}<div class="msg-footer">${actionBtns}${disclaimerCell}</div>`;
@@ -3753,10 +3874,47 @@ let sidebarCollapsed = false;
     return `${seconds}秒`;
   }
   function responseStatusText(message) {
-    if (!message || message.kind === "task-progress") return "";
+    if (!message || message.kind === "task-progress" || message.kind === "model-error") return "";
     const started = Number(message.startedAt || message.createdAt || Date.now());
     const completed = Number(message.completedAt || message.createdAt || Date.now());
     return `已完成 ${formatResponseDuration(Math.max(0, completed - started))}`;
+  }
+  function modelErrorHTML(detail) {
+    return `<div class="model-error-card"><span class="model-error-icon">${svgi("i-warn",17)}</span><div class="model-error-copy"><b>回答生成失败</b><p>${esc(detail || "模型执行过程中出现异常，本次回答未完成。您可以点击下方“重试”继续执行未完成的任务。")}</p></div></div>`;
+  }
+  function appendModelFailure(conversation, options) {
+    if (!conversation) return null;
+    const opts = options || {}, lastUser = [...(conversation.msgs || [])].reverse().find(item => item.role === "user");
+    const failed = { role:"agent", agent:opts.agentId || conversation.agent || null, kind:"model-error", html:modelErrorHTML(opts.detail), createdAt:Date.now(), completedAt:Date.now(), noTrust:true, retryContext:{ agentId:opts.agentId || conversation.agent || null, connectorId:opts.connectorId || conversation.connector || null, routeType:opts.routeType || "general", originalPrompt:opts.originalPrompt || plainText(lastUser?.html || ""), attach:opts.attach || lastUser?.attach || "", structuredValues:{ ...(opts.structuredValues || {}) }, knowledgeBaseIds:[...((opts.knowledgeBaseIds || conversation.knowledgeBases || []))] } };
+    conversation.msgs.push(failed); conversation.updatedAt = Date.now(); renderChat(); renderSidebar(); focusTop();
+    return failed;
+  }
+  function openFailedReplyRetry(messageIndex) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)];
+    if (!message || message.kind !== "model-error") { showToast("未找到可继续的失败任务"); return; }
+    openModal("继续未完成的任务", `<div class="retry-confirm-note">${svgi("i-refresh",18)}<div><b>将继续上次未完成的回答</b><div style="margin-top:5px;color:#66758a">确认后，系统会自动发送“请继续完成未完成的任务”，并沿用上次任务的上下文继续执行。</div></div></div>`, () => continueFailedReply(Number(messageIndex)), { okText:"重试" });
+  }
+  function continueFailedReply(messageIndex) {
+    const conversation = cur(), failed = conversation && conversation.msgs[Number(messageIndex)];
+    if (!conversation || !failed || failed.kind !== "model-error") { closeModal(); showToast("未找到可继续的失败任务"); return; }
+    if (activeGeneration) { closeModal(); showToast("当前已有任务正在生成，请稍后重试"); return; }
+    const context = failed.retryContext || {}, retryText = "请继续完成未完成的任务", now = Date.now();
+    failed.retryStartedAt = now;
+    conversation.msgs.push({ role:"user", html:esc(retryText), createdAt:now });
+    conversation.updatedAt = now; closeModal(); renderChat(); renderSidebar(); scrollBottom();
+    const agent = context.agentId ? byId(context.agentId) : null, attach = context.attach || "";
+    if (context.connectorId) {
+      const connector = connectorById(context.connectorId);
+      if (connector) { startConnectorAction(conversation, connector, retryText, attach); return; }
+    }
+    if (agent && agent.entryMode === "chat") {
+      startDirectGeneration(conversation, agent, `${context.originalPrompt || ""}\n\n${retryText}`.trim(), attach, context.structuredValues || {}, { knowledgeBases:[...(context.knowledgeBaseIds || [])], attachment:attach });
+      return;
+    }
+    conversation.knowledgeBases = [...(context.knowledgeBaseIds || [])];
+    if (context.routeType === "knowledge" && conversation.knowledgeBases.length) startKnowledgeChat(conversation, retryText, attach);
+    else if (context.routeType === "data") startSmartDataChat(conversation, retryText, attach);
+    else startGeneralChat(conversation, `${context.originalPrompt || ""}\n\n${retryText}`.trim(), attach);
   }
   function typingBubble(agentId, label) {
     const a = agentId ? byId(agentId) : null;
@@ -4078,7 +4236,9 @@ let sidebarCollapsed = false;
       "rs-wang": { lead:"要以应用场景为牵引、以数据要素为支撑、以改革成效为检验，推动业务流程和数字技术深度融合。", section:"突出场景牵引，以数据赋能提升治理效能", close:"要用数据说话、用场景验证、用成效评价，不断把数字化能力转化为服务发展和基层治理的实际效能。" },
       "rs-zhangmin": { lead:"下面我结合当前进展，重点汇报任务安排、存在问题和下一步措施。", section:"抓住重点事项，逐项明确责任和完成时限", close:"会后我将按任务清单持续跟进，及时反馈进展和问题，确保各项安排落实到位。" }
     };
-    return copies[roleId] || copies["rs-zhang"];
+    const base = copies[roleId] || copies["rs-zhang"], role = activeSpeakerStyle();
+    if (role && role.id === roleId && role.customPrompt) return { lead:role.customPrompt, section:base.section, close:base.close };
+    return base;
   }
 
   // 各智能体的草稿正文HTML（带占位符）
@@ -7122,12 +7282,12 @@ let sidebarCollapsed = false;
   const CFG_MENU = {
     system:[
       ["agents","智能体管理","i-bot"],["connectors","业务连接器管理","i-plug"],["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],
-      ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"]
+      ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"]
     ],
     dept:[
-      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"]
+      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"]
     ],
-    user:[["personalization","个性化","i-spark"],["templates","智能体模板管理","i-file"]]
+    user:[["personalization","个性化","i-spark"],["templates","智能体模板管理","i-file"],["models","模型配置","i-spark"]]
   };
   let configCenterSection = "agents";
   let configRuleDetailId = null;
@@ -7141,6 +7301,65 @@ let sidebarCollapsed = false;
   let configTemplateMode = "edit";
   let configTemplateMarkdownEditing = false;
   let configTemplateMarkdownDraft = "";
+  const BUILTIN_MODELS = [
+    {id:"auto",name:"Auto",provider:"平台自动路由",icon:"auto-svg"},
+    {id:"deepseek-v4-pro",name:"DeepSeek-V4-Pro",provider:"DeepSeek",icon:"i-spark"},
+    {id:"glm-5-2",name:"GLM-5.2",provider:"智谱",icon:"i-bot"},
+    {id:"kimi-k3",name:"Kimi-K3",provider:"Moonshot",icon:"i-spark"}
+  ];
+  let customModels = [];
+  let selectedModelId = "deepseek-v4-pro";
+  let modelConfigEditingId = null;
+  let modelPopoverContext = null;
+  let voiceRecordingState = null, voiceRecordingTimer = null, voiceRecordingElapsed = 0, voiceInputTarget = null;
+  function modelVisible(model) { return !model.scope || model.scope === "public" || model.ownerId === currentSpeakerUserKey() || (model.scope === "department" && model.department === (CFG_ROLE_META[configRole] || CFG_ROLE_META.user).dept); }
+  function allModels() { return BUILTIN_MODELS.concat(customModels.filter(modelVisible)); }
+  function selectedModel() { return allModels().find(model => model.id === selectedModelId) || BUILTIN_MODELS[1]; }
+  function modelIconHTML(model, size) { return model && model.id === "auto" ? `<img class="model-svg-icon" src="assets/model-auto.svg" alt="" aria-hidden="true">` : svgi(model?.icon || "i-spark", size || 17); }
+  function syncModelButtons() { const model = selectedModel(); $$('[data-model-button-label]').forEach(label => label.textContent = model.name); $$('[data-model-button-icon]').forEach(icon => icon.innerHTML = modelIconHTML(model, 15)); }
+  function modelConfigHTML() {
+    const visible = customModels.filter(model => model.scope === "public" || model.ownerId === currentSpeakerUserKey() || (model.scope === "department" && model.department === (CFG_ROLE_META[configRole] || CFG_ROLE_META.user).dept));
+    const rows = visible.map(model => `<tr><td><div class="cfg-data-title"><span class="pref-ic">${svgi(model.icon || "i-settings",16)}</span><span><b>${esc(model.name)}</b><small>${esc(model.provider || "自定义")} · ${esc(model.scope === "public" ? "公共" : model.scope === "department" ? "部门" : "个人")}</small></span></div></td><td>${esc(model.endpoint || "未配置")}</td><td><button class="btn" data-act="modelEdit" data-id="${model.id}">编辑</button><button class="btn" data-act="modelDelete" data-id="${model.id}">删除</button></td></tr>`).join("");
+    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>模型配置</h2><p>模型按角色和使用范围管理：普通使用人员仅可创建个人模型，委办局管理员可创建个人或部门模型，系统管理员可创建个人或公共模型。</p></div><button class="btn primary" data-act="modelAdd">${svgi("i-plus",13)}添加模型</button></div><div class="cfg-section-body"><div class="cfg-model-current">当前模型：<b>${esc(selectedModel().name)}</b><span>${esc(selectedModel().provider)}</span></div><div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>模型名称</th><th>接口地址</th><th>操作</th></tr></thead><tbody>${rows || `<tr><td colspan="3"><div class="cfg-empty"><b>暂无可用自定义模型</b></div></td></tr>`}</tbody></table></div></div></section>`;
+  }
+  function openModelConfigEditor(id) {
+    const model = customModels.find(item => item.id === id) || {provider:"",endpoint:"",apiKey:"",name:"",toolCalling:true,imageInput:false,customProtocol:false,input:"",output:"",scope:configRole === "dept" ? "department" : configRole === "system" ? "public" : "personal"};
+    modelConfigEditingId = id || null;
+    openModal(id ? "编辑模型" : "添加模型", `<div class="cfg-readonly">仅支持 OpenAI 兼容协议 API</div><div class="cfg-form-grid" style="margin-top:12px"><div class="cfg-form-field"><label>提供商 <i>*</i></label><input id="modelProvider" value="${esc(model.provider)}" placeholder="如：DeepSeek"></div><div class="cfg-form-field"><label>接口地址 <i>*</i></label><input id="modelEndpoint" value="${esc(model.endpoint)}" placeholder="https://api.example.com/v1"></div><div class="cfg-form-field full"><label>API Key <i>*</i></label><input id="modelApiKey" type="password" value="${esc(model.apiKey)}" placeholder="请输入 API Key"></div><div class="cfg-form-field full"><label>模型名称 <i>*</i></label><input id="modelName" value="${esc(model.name)}" placeholder="输入模型参数值，例如deepseek-v4-pro或GLM-5.2"></div><div class="cfg-form-field full"><label>模型使用范围</label><select id="modelScope" ${configRole === "user" ? "disabled" : ""}>${(configRole === "user" ? [["personal","个人"]] : configRole === "dept" ? [["personal","个人"],["department","部门"]] : [["personal","个人"],["public","公共"]]).map(([value,label]) => `<option value="${value}" ${model.scope === value ? "selected" : ""}>${label}</option>`).join("")}</select></div><div class="cfg-form-field full"><label>高级配置</label><div class="model-checks"><label><input id="modelToolCalling" type="checkbox" ${model.toolCalling ? "checked" : ""}>工具调用<small>允许模型调用智能体运行时暴露出来的工具和函数</small></label><label><input id="modelImageInput" type="checkbox" ${model.imageInput ? "checked" : ""}>图片输入<small>允许在聊天时向该模型发送图片附件</small></label><label><input id="modelCustomProtocol" type="checkbox" ${model.customProtocol ? "checked" : ""}>自定义协议<small>开启后将直接使用填写的接口地址，不再自动补全:/chat/completions路径。适用于代理层或服务端已自行处理协议的场景。</small></label></div></div><div class="cfg-form-field"><label>输入</label><input id="modelInput" value="${esc(model.input || "")}" placeholder="使用提供商默认值"></div><div class="cfg-form-field"><label>输出</label><input id="modelOutput" value="${esc(model.output || "")}" placeholder="使用提供商默认值"></div></div>`, () => {
+      const next = { id:id || `custom-${Date.now()}`, provider:$("#modelProvider").value.trim(), endpoint:$("#modelEndpoint").value.trim(), apiKey:$("#modelApiKey").value.trim(), name:$("#modelName").value.trim(), scope:$("#modelScope").value || "personal", ownerId:id ? (customModels.find(item => item.id === id)?.ownerId || currentSpeakerUserKey()) : currentSpeakerUserKey(), department:(CFG_ROLE_META[configRole] || CFG_ROLE_META.user).dept, toolCalling:$("#modelToolCalling").checked, imageInput:$("#modelImageInput").checked, customProtocol:$("#modelCustomProtocol").checked, input:$("#modelInput").value.trim(), output:$("#modelOutput").value.trim(), icon:"i-settings"};
+      if (!next.provider || !next.endpoint || !next.apiKey || !next.name) { showToast("请填写提供商、接口地址、API Key和模型名称"); return; }
+      const duplicate = customModels.find(item => item.name === next.name && item.id !== next.id); if (duplicate) { showToast("模型名称已存在"); return; }
+      if (id) Object.assign(customModels.find(item => item.id === id), next); else customModels.unshift(next);
+      closeModal(); renderConfig(); showToast(id ? "模型已更新" : "模型已添加");
+    }, {okText:"保存", width:"760px"});
+  }
+  function openModelPicker(context) {
+    modelPopoverContext = context;
+    const items = allModels().map(model => `<button class="model-option ${model.id === selectedModelId ? "active" : ""}" type="button" data-model-option="${model.id}"><span class="model-option-icon">${modelIconHTML(model,17)}</span><span><b>${esc(model.name)}</b><small>${esc(model.provider)}</small></span>${model.id === selectedModelId ? svgi("i-check",16) : ""}</button>`).join("");
+    closeModelPicker();
+    const trigger = $(`[data-model-trigger="${context}"]`); if (!trigger) return;
+    const popover = document.createElement("div"); popover.className = "model-quick-popover"; popover.id = "modelQuickPopover";
+    popover.innerHTML = `<div class="model-quick-title">选择模型</div><div class="model-picker-list">${items}</div><button class="model-config-link" type="button" data-act="modelConfigure">${svgi("i-settings",14)}配置自定义模型</button>`;
+    document.body.appendChild(popover); trigger.setAttribute("aria-expanded","true");
+    const rect = trigger.getBoundingClientRect(), width = popover.offsetWidth, height = popover.offsetHeight;
+    popover.style.left = `${Math.max(10,Math.min(window.innerWidth-width-10,rect.left))}px`;
+    popover.style.top = `${Math.max(10,rect.top-height-7)}px`;
+  }
+  function closeModelPicker() { const popover = $("#modelQuickPopover"); if (popover) popover.remove(); $$('[data-model-trigger]').forEach(button => button.setAttribute("aria-expanded","false")); modelPopoverContext = null; }
+  function insertVoiceText(text) {
+    const input = voiceInputTarget; if (!input) return;
+    const start = Number.isInteger(input.selectionStart) ? input.selectionStart : input.value.length, end = Number.isInteger(input.selectionEnd) ? input.selectionEnd : start;
+    if (input.setRangeText) input.setRangeText(text,start,end,"end"); else input.value = input.value.slice(0,start) + text + input.value.slice(end);
+    input.focus(); syncPromptHighlight(input); if (input.id === "homeInput") updateLandingComposerControls("home"); else updateLandingComposerControls("new");
+  }
+  function renderVoiceRecording() {
+    if (!voiceRecordingState) return;
+    const text = voiceRecordingState === "recording" ? `<div class="voice-recording-bar">${svgi("i-mic",16)}<b>${String(Math.floor(voiceRecordingElapsed / 60)).padStart(2,"0")}:${String(voiceRecordingElapsed % 60).padStart(2,"0")}</b><button type="button" data-voice-action="cancel" aria-label="取消">×</button><button type="button" data-voice-action="finish" aria-label="完成">${svgi("i-check",16)}</button></div>` : `<div class="voice-recording-bar voice-transcribing"><span class="voice-spinner"></span><span>正在转写</span></div>`;
+    const input = voiceInputTarget; const shell = input && input.closest(".home-composer"), foot = shell && $(".composer-foot-right", shell); if (!foot) return; let host = $(".voice-recording-host", foot); if (!host) { host = document.createElement("div"); host.className = "voice-recording-host"; foot.insertBefore(host, foot.firstChild); } host.innerHTML = text; shell.classList.add("is-voice-recording");
+  }
+  function startVoiceInput(context) { voiceInputTarget = context === "new" ? $("#newInput") : $("#homeInput"); voiceRecordingState = "recording"; voiceRecordingElapsed = 0; renderVoiceRecording(); clearInterval(voiceRecordingTimer); voiceRecordingTimer = setInterval(() => { voiceRecordingElapsed += 1; renderVoiceRecording(); }, 1000); }
+  function cancelVoiceInput() { clearInterval(voiceRecordingTimer); voiceRecordingTimer = null; voiceRecordingState = null; const shell = voiceInputTarget && voiceInputTarget.closest(".home-composer"), host = shell && $(".voice-recording-host", shell); if (host) host.remove(); if (shell) shell.classList.remove("is-voice-recording"); }
+  function finishVoiceInput() { if (voiceRecordingState !== "recording") return; clearInterval(voiceRecordingTimer); voiceRecordingTimer = null; voiceRecordingState = "transcribing"; renderVoiceRecording(); setTimeout(() => { insertVoiceText("请帮我起草一份关于重点项目服务保障工作的通知"); cancelVoiceInput(); showToast("语音已转换为文字"); }, 900); }
   const CFG_SCOPE_LABEL = { personal:"个人", department:"部门", public:"公共" };
   const CFG_DEPARTMENTS = ["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心","新区各委办局"];
   const CFG_AGENT_SERVICES = AGENTS.map((agent,index) => ({
@@ -7215,13 +7434,36 @@ let sidebarCollapsed = false;
   const DEFAULT_SPEAKER_STYLE = { id:"default", name:"通用", title:"通用政务发言稿", initials:"讲", stylePrompt:{ vocabulary:"使用规范政务用语。", sentence:"结构清晰，分点陈述。", rhetoric:"修辞克制。", expression:"准确、简洁、稳妥。" }, switchDimensions:{}, samples:[] };
   function hasSpeakerStyles() { return SPEAKER_STYLE_PROFILES.length > 0; }
   function speakerStyleById(roleId) { return SPEAKER_STYLE_PROFILES.find(role => role.id === roleId) || null; }
+  function currentSpeakerUserKey() { return (CFG_ROLE_META[configRole] || CFG_ROLE_META.user).ownerId; }
+  function cloneSpeakerStyle(role) { return JSON.parse(JSON.stringify(role || DEFAULT_SPEAKER_STYLE)); }
+  function speakerStyleStore() {
+    config.personal.roleStylesByUser = config.personal.roleStylesByUser || {};
+    const key = currentSpeakerUserKey();
+    config.personal.roleStylesByUser[key] = config.personal.roleStylesByUser[key] || { activeRoleId: "rs-zhang", profiles: {} };
+    return config.personal.roleStylesByUser[key];
+  }
+  function speakerProfileForUser(roleId) {
+    const base = speakerStyleById(roleId) || DEFAULT_SPEAKER_STYLE, store = speakerStyleStore();
+    if (!store.profiles[base.id]) store.profiles[base.id] = cloneSpeakerStyle(base);
+    const role = store.profiles[base.id];
+    role.samples = (role.samples || []).map(item => typeof item === "string" ? { name:item, content:"", uploadedAt:"" } : item);
+    return role;
+  }
+  function saveSpeakerStyleStore() {
+    try { localStorage.setItem("jbai_speaker_styles_by_user", JSON.stringify(config.personal.roleStylesByUser || {})); } catch (e) {}
+  }
+  try {
+    const savedSpeakerStyles = JSON.parse(localStorage.getItem("jbai_speaker_styles_by_user") || "{}");
+    if (savedSpeakerStyles && typeof savedSpeakerStyles === "object") config.personal.roleStylesByUser = savedSpeakerStyles;
+  } catch (e) {}
   function activeSpeakerStyle() {
-    config.personal.roleStyle = config.personal.roleStyle || { activeRoleId:"rs-zhang" };
-    return speakerStyleById(config.personal.roleStyle.activeRoleId) || SPEAKER_STYLE_PROFILES[0] || DEFAULT_SPEAKER_STYLE;
+    const store = speakerStyleStore();
+    return speakerProfileForUser(store.activeRoleId) || SPEAKER_STYLE_PROFILES[0] || DEFAULT_SPEAKER_STYLE;
   }
   function setActiveSpeakerStyle(roleId, quiet) {
     const role = SPEAKER_STYLE_PROFILES.find(item => item.id === roleId); if (!role) return;
-    config.personal.roleStyle.activeRoleId = role.id;
+    const store = speakerStyleStore(); store.activeRoleId = role.id; config.personal.roleStyle.activeRoleId = role.id;
+    speakerProfileForUser(role.id); saveSpeakerStyleStore();
     config.personal.agentPrefs.speech = `${role.name} · ${role.title}`;
     if (!quiet) showToast(`发言稿已切换为“${role.name}”讲话风格`);
   }
@@ -7232,9 +7474,12 @@ let sidebarCollapsed = false;
   }
   function speakerStyleEditorHTML() {
     const role = activeSpeakerStyle();
-    const prompts = SPEAKER_PROMPT_DIMENSIONS.map(([key,label]) => `<div class="speaker-prompt-field"><label>${label}</label><textarea data-speaker-prompt="${key}" placeholder="请输入${label}，用于生成时约束讲话人的表达习惯">${esc((role.stylePrompt && role.stylePrompt[key]) || "")}</textarea></div>`).join("");
-    const samples = role.samples.map(name => `<div class="speaker-sample">${svgi("i-file",14)}<span>${esc(name)}</span><button class="icon-btn" type="button" data-act="speakerSampleRemove" data-sample-name="${esc(name)}" title="移除参考材料">×</button></div>`).join("");
-    return `<div class="card"><div class="card-head"><div><div class="card-title">讲话人风格</div><div class="page-sub" style="margin-top:3px">选择默认讲话人并维护风格提示词；发言稿生成后可在文件卡片上切换</div></div><button class="btn" type="button" data-act="speakerRoleAdd">+ 新增讲话人</button></div><div class="card-body" style="display:grid;gap:14px">${hasSpeakerStyles() ? `<div class="speaker-summary"><span class="speaker-avatar">${esc(role.initials)}</span><span class="speaker-summary-copy"><b>${esc(role.name)}</b><span>${esc(role.title)}</span></span><span class="cfg-status live">默认讲话人</span></div>` : ""}${speakerRoleCardsHTML()}${hasSpeakerStyles() ? `<div class="speaker-edit-grid"><div class="field"><label>讲话人名称</label><input value="${esc(role.name)}" data-speaker-field="name"></div><div class="field"><label>职务或适用场景</label><input value="${esc(role.title)}" data-speaker-field="title"></div></div><div><div class="card-title" style="font-size:13px">风格提示词</div><p class="pref-explain">系统在生成或切换发言稿时带入以下四项提示词。内容应描述表达习惯，不填写具体业务事实。</p><div class="speaker-prompt-grid">${prompts}</div></div><div><div class="card-title" style="font-size:13px">参考材料</div><p class="pref-explain">上传经授权的历史讲话材料用于提取表达习惯，建议保留 3—10 份代表性材料。</p><div class="speaker-samples">${samples || '<div class="cfg-readonly">尚未上传参考材料</div>'}</div><input id="speakerSampleInput" type="file" accept=".doc,.docx,.pdf,.txt" multiple hidden><button class="btn" type="button" data-act="speakerSampleUpload" style="margin-top:10px">${svgi("i-upload",14)} 上传参考材料</button></div><div style="display:flex;justify-content:flex-end"><button class="btn primary" type="button" data-act="speakerStyleSave">保存讲话人风格</button></div>` : ""}</div></div>`;
+    role.customPrompt = role.customPrompt || "";
+    const prompts = `<div class="speaker-prompt-field speaker-prompt-custom"><label>自定义风格约束</label><textarea data-speaker-custom-prompt placeholder="请输入任意讲话风格、语气、结构、用词或禁用表达约束，支持多行编辑">${esc(role.customPrompt || "")}</textarea><small class="pref-explain">可按当前用户的实际需要自由描述，不受固定风格维度限制。</small></div>`;
+    const samples = role.samples.map(item => { const sample = typeof item === "string" ? { name:item, content:"" } : item; return `<div class="speaker-sample">${svgi("i-file",14)}<span>${esc(sample.name)}</span><span class="speaker-sample-actions"><button class="btn" type="button" data-act="speakerSampleView" data-sample-name="${esc(sample.name)}">查看</button><button class="icon-btn" type="button" data-act="speakerSampleRemove" data-sample-name="${esc(sample.name)}" title="删除参考材料">×</button></span></div>`; }).join("");
+    const learned = role.learnedMarkdown || "";
+    const learning = role.learningStatus === "学习中";
+    return `<div class="card"><div class="card-head"><div><div class="card-title">讲话人风格</div><div class="page-sub" style="margin-top:3px">讲话人风格绑定当前用户，模板只负责结构，不再绑定具体讲话人。</div></div><button class="btn" type="button" data-act="speakerRoleAdd">+ 新增讲话人</button></div><div class="card-body" style="display:grid;gap:14px">${hasSpeakerStyles() ? `<div class="speaker-summary"><span class="speaker-avatar">${esc(role.initials)}</span><span class="speaker-summary-copy"><b>${esc(role.name)}</b><span>${esc(role.title)}</span></span><span class="cfg-status live">当前用户默认</span></div>` : ""}${speakerRoleCardsHTML()}${hasSpeakerStyles() ? `<div class="speaker-edit-grid"><div class="field"><label>讲话人名称</label><input value="${esc(role.name)}" data-speaker-field="name"></div><div class="field"><label>职务或适用场景</label><input value="${esc(role.title)}" data-speaker-field="title"></div></div><div><div class="card-title" style="font-size:13px">自定义风格约束</div><p class="pref-explain">不再限制为固定四种风格维度，可自由输入本用户需要的讲话风格规则。</p><div class="speaker-prompt-grid">${prompts}</div></div><div><div class="card-title" style="font-size:13px">参考材料</div><p class="pref-explain">上传经授权的历史讲话材料，可查看或删除；点击开始学习后提取表达习惯。</p><div class="speaker-samples">${samples || '<div class="cfg-readonly">尚未上传参考材料</div>'}</div><input id="speakerSampleInput" type="file" accept=".doc,.docx,.pdf,.txt" multiple hidden><button class="btn" type="button" data-act="speakerSampleUpload" style="margin-top:10px">${svgi("i-upload",14)} 上传参考材料</button>${learning ? `<button class="btn danger" type="button" data-act="speakerStyleStop" style="margin:10px 0 0 8px">停止学习</button><span class="cfg-status live" style="margin-left:8px">学习中…</span>` : `<button class="btn primary" type="button" data-act="speakerStyleLearn" style="margin:10px 0 0 8px">${svgi("i-spark",14)} 开始学习</button>`}</div>${learning ? `<div class="cfg-readonly speaker-learning-state">正在根据参考材料学习讲话人风格，请稍候…</div>` : role.learnedMarkdown ? `<div><div class="card-title" style="font-size:13px">学习后的 Markdown 内容</div><textarea data-speaker-learned class="speaker-learned-editor">${esc(learned)}</textarea><small class="pref-explain">支持在线编辑，保存讲话人风格时一并保存。</small></div>` : ""}<div style="display:flex;justify-content:flex-end"><button class="btn primary" type="button" data-act="speakerStyleSave">保存讲话人风格</button></div>` : ""}</div></div>`;
   }
   function personalPreferenceDetailHTML(agentId) {
     if (agentId === "speech") return speakerStyleEditorHTML();
@@ -7601,7 +7846,7 @@ let sidebarCollapsed = false;
       ownerId:copyMode || !source ? role.ownerId : source.ownerId,ownerName:copyMode || !source ? role.ownerName : source.ownerName,ownerDept:copyMode || !source ? role.dept : source.ownerDept,
       version:copyMode || !source ? "v1.0" : source.version,createdAt:copyMode || !source ? cfgNowDate() : source.createdAt,updatedAt:cfgNowDate(),calls:copyMode || !source ? 0 : source.calls,
       history:copyMode || !source ? [] : (source.history || []).map(item => ({ ...item })),
-      outline:source?.outline || "",constraints:(source?.constraints || []).slice(),defaults,options,speakerStyleId:source?.speakerStyleId || ""
+      outline:source?.outline || "",constraints:(source?.constraints || []).slice(),defaults,options,speakerStyleId:""
     };
   }
   function cfgAgentCanUse(agentId) { return !!agentId && !config.agentsOff.has(agentId); }
@@ -7622,7 +7867,8 @@ let sidebarCollapsed = false;
       orgs:["组织管理","维护新区委办局组织层级、单位全称、简称及组织状态。"],
       roles:["角色管理","配置系统管理员、委办局管理员和普通使用人员的功能权限边界。"],
       menus:["菜单管理","按角色配置可见菜单，菜单权限不得突破角色的数据权限范围。"],
-      audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"]
+      audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"],
+      models:["模型配置","维护当前用户可用的内置模型和自定义模型连接配置。"]
     };
     return meta[section] || ["配置治理中心","集中维护平台配置。"];
   }
@@ -7809,7 +8055,7 @@ let sidebarCollapsed = false;
     input.click();
   }
   function cfgSpeakerManagerHTML() {
-    return `<div class="cfg-editor-head"><button class="btn" data-act="cfgSpeakerManagerBack">${svgi("i-chevron-left",13)}返回当前发言稿模板</button><div class="cfg-editor-head-copy"><h2>讲话人风格管理</h2><p>在模板治理页面直接维护讲话人及四维风格提示词，不跳转到个性化页面。</p></div></div><div class="cfg-preview-note" style="margin-bottom:14px">讲话人风格与起草模板分别独立管理，通过讲话人风格ID关联；模板中可设置默认讲话人，对话运行时仍可手动切换。</div>${speakerStyleEditorHTML()}`;
+    return `<div class="cfg-editor-head"><button class="btn" data-act="cfgSpeakerManagerBack">${svgi("i-chevron-left",13)}返回当前发言稿模板</button><div class="cfg-editor-head-copy"><h2>讲话人风格管理</h2><p>在模板治理页面维护当前用户的讲话人、参考材料和自定义风格约束。</p></div></div><div class="cfg-preview-note" style="margin-bottom:14px">讲话人风格归属于当前登录用户，发言稿模板只维护内容结构，不绑定具体讲话人。</div>${speakerStyleEditorHTML()}`;
   }
   function refreshSpeakerManagementView() {
     if (currentView === "config" && configSpeakerManagerOpen) renderConfig(); else renderPersonalization();
@@ -8029,6 +8275,9 @@ let sidebarCollapsed = false;
     }
     return null;
   }
+  function displayFileName(name) {
+    return String(name || "").replace(/\.(docx?|pdf|md|markdown)$/i, "");
+  }
   function cfgMenuButtonAdd(menuId) {
     const menu = cfgMenuNode(menuId); if (!menu) return;
     openModal(`新增${menu.name}页面按钮`,`<div class="field"><label>按钮名称</label><input id="cfgMenuButtonName" maxlength="30" placeholder="请输入页面按钮名称"></div>`,() => { const name = ($("#cfgMenuButtonName")?.value || "").trim(); if (!name) { showToast("请输入按钮名称"); return; } if (menu.buttons.includes(name)) { showToast("按钮名称已存在"); return; } menu.buttons.push(name); closeModal(); renderConfig(); showToast("页面按钮已新增"); },{okText:"保存"});
@@ -8111,6 +8360,7 @@ let sidebarCollapsed = false;
     else if (configCenterSection === "users") html = cfgUserReadonlyHTML();
     else if (configCenterSection === "orgs") html = cfgOrganizationTreeHTML();
     else if (configCenterSection === "menus") html = cfgMenuTreeHTML();
+    else if (configCenterSection === "models") html = modelConfigHTML();
     else if (configCenterSection === "roles") html = cfgRoleManagementHTML();
     else html = cfgDirectoryHTML(configCenterSection);
     if (configCenterSection === "templates") {
@@ -9624,6 +9874,8 @@ let sidebarCollapsed = false;
 
     // 主页对话框
     $("#homeSend").addEventListener("click", sendFromHome);
+    $$('[data-model-trigger="home"]').forEach(button => button.addEventListener("click", () => openModelPicker("home")));
+    $$('[data-voice-trigger="home"]').forEach(button => button.addEventListener("click", () => startVoiceInput("home")));
     $("#homeInput").addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendFromHome(); return; }
       if (e.key === "@") { e.preventDefault(); openComposerActionMenu("home", $("#homePlus")); renderComposerResourceList("agent", ""); }
@@ -9641,11 +9893,13 @@ let sidebarCollapsed = false;
 
     // 新对话输入区
     $("#newSend").addEventListener("click", sendFromNew);
+    $$('[data-model-trigger="new"]').forEach(button => button.addEventListener("click", () => openModelPicker("new")));
+    $$('[data-voice-trigger="new"]').forEach(button => button.addEventListener("click", () => startVoiceInput("new")));
     $("#newInput").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendFromNew(); return; } if (e.key === "@") { e.preventDefault(); openComposerActionMenu("new", $("#newPlus")); renderComposerResourceList("agent", ""); } if (e.key === "/") { e.preventDefault(); openSkillPickerGuarded("#newPlus"); } });
     $("#newInput").addEventListener("input", () => { syncPromptHighlight($("#newInput")); updateLandingComposerControls("new"); });
     $("#newInput").addEventListener("scroll", () => syncPromptHighlight($("#newInput")));
     $$('[data-composer-expand]').forEach(button => button.addEventListener("click", () => toggleLandingComposer(button.dataset.composerExpand,button)));
-    updateLandingComposerControls("home"); updateLandingComposerControls("new");
+    updateLandingComposerControls("home"); updateLandingComposerControls("new"); syncModelButtons();
     $("#newPlus").addEventListener("click", (e) => { e.stopPropagation(); openComposerActionMenu("new", e.currentTarget); });
     $("#newPick").addEventListener("click", () => openPickerGuarded("#newPick"));
     $("#newSkillBtn").addEventListener("click", () => openSkillPickerGuarded("#newSkillBtn"));
@@ -9742,7 +9996,8 @@ let sidebarCollapsed = false;
       const action = e.target.closest("[data-editor-action]"); if (!action) return;
       const act = action.dataset.editorAction;
       if (act === "copy") copyEditorDocument();
-      else if (act === "download") downloadEditorDocument();
+      else if (act === "share") shareEditorDocument();
+      else if (act === "download") { e.stopPropagation(); openDownloadFormatMenu(action,"editor"); }
       else if (act === "formatDoc") openGenerateFormatDocModal();
       else if (act === "save") saveDocumentEditor();
       else if (act === "close") { agentV3Session ? v3CloseDocEditor() : closeDocumentEditor(); }
@@ -9839,6 +10094,15 @@ let sidebarCollapsed = false;
 
     // ===== 全局点击委托 =====
     document.addEventListener("click", (e) => {
+      const formatOption = e.target.closest("[data-download-format]");
+      if (formatOption && downloadMenuState) {
+        const state = { ...downloadMenuState }, format = formatOption.dataset.downloadFormat;
+        closeDownloadFormatMenu();
+        if (state.source === "conversation") exportGeneratedMessage(state.messageIndex, format);
+        else downloadEditorDocument(format);
+        return;
+      }
+      if (!e.target.closest("#downloadFormatMenu") && !e.target.closest('[data-editor-action="download"]') && !e.target.closest('[data-act="generatedExport"]')) closeDownloadFormatMenu();
       const conversationMenuAction = e.target.closest("[data-conversation-menu-action]");
       if (conversationMenuAction) { e.stopPropagation(); handleConversationMenuAction(conversationMenuAction.dataset.conversationMenuAction); return; }
       if (!e.target.closest("#conversationItemMenu") && !e.target.closest("[data-conv-more]")) closeConversationItemMenu();
@@ -9846,6 +10110,13 @@ let sidebarCollapsed = false;
       if (conversationMore) { e.preventDefault(); e.stopPropagation(); openConversationItemMenu(conversationMore.dataset.convMore, conversationMore); return; }
       const modalConfirm = e.target.closest("#modalOk");
       if (modalConfirm) { const handler = modalConfirmHandler; if (handler) handler(); return; }
+      const modelOption = e.target.closest("[data-model-option]");
+      if (modelOption) { selectedModelId = modelOption.dataset.modelOption; closeModelPicker(); syncModelButtons(); showToast(`已切换模型：${selectedModel().name}`); return; }
+      const voiceTrigger = e.target.closest("[data-voice-trigger]");
+      if (voiceTrigger) { startVoiceInput(voiceTrigger.dataset.voiceTrigger); return; }
+      const voiceAction = e.target.closest("[data-voice-action]");
+      if (voiceAction) { if (voiceAction.dataset.voiceAction === "cancel") cancelVoiceInput(); else finishVoiceInput(); return; }
+      if (!e.target.closest("#modelQuickPopover") && !e.target.closest("[data-model-trigger]")) closeModelPicker();
       if (!e.target.closest("#composerActionPopover") && !e.target.closest("[data-composer-plus]")) closeComposerActionMenu();
       if (!e.target.closest("#sideUserBtn") && !e.target.closest("#roleMenu")) {
         const roleMenu = $("#roleMenu");
@@ -10038,6 +10309,8 @@ let sidebarCollapsed = false;
       if (cfgDefault && configTemplateDraft) { configTemplateDraft.defaults[cfgDefault.dataset.cfgTemplateDefault] = cfgDefault.value; cfgRefreshTemplatePreview(); return; }
       const cfgConstraint = e.target.closest("[data-cfg-constraint]");
       if (cfgConstraint && configTemplateDraft) { configTemplateDraft.constraints[Number(cfgConstraint.dataset.cfgConstraint)] = cfgConstraint.value; cfgRefreshTemplatePreview(); return; }
+      const learnedSpeaker = e.target.closest("[data-speaker-learned]");
+      if (learnedSpeaker) { activeSpeakerStyle().learnedMarkdown = learnedSpeaker.value; saveSpeakerStyleStore(); return; }
       const speakerField = e.target.closest("[data-speaker-field]");
       if (speakerField) {
         const role = activeSpeakerStyle(), key = speakerField.dataset.speakerField;
@@ -10050,8 +10323,11 @@ let sidebarCollapsed = false;
         const role = activeSpeakerStyle(), key = speakerPrompt.dataset.speakerPrompt;
         role.stylePrompt = role.stylePrompt || {};
         role.stylePrompt[key] = speakerPrompt.value;
+        saveSpeakerStyleStore();
         return;
       }
+      const speakerCustomPrompt = e.target.closest("[data-speaker-custom-prompt]");
+      if (speakerCustomPrompt) { activeSpeakerStyle().customPrompt = speakerCustomPrompt.value; saveSpeakerStyleStore(); return; }
       if (e.target.id === "personaPromptInput") {
         const count = $("#personaCharCount"); if (count) count.textContent = `${e.target.value.length} 字`;
         return;
@@ -10083,9 +10359,16 @@ let sidebarCollapsed = false;
       case "personalAgentSelect": personalAgentTarget = el.dataset.agentId || "speech"; renderPersonalization(); break;
       case "speakerRoleSelect": setActiveSpeakerStyle(el.dataset.roleId); refreshSpeakerManagementView(); break;
       case "speakerRoleAdd": openModal("新增讲话人", `<div class="grid-2"><div class="field"><label>讲话人名称</label><input id="newSpeakerName" placeholder="如：赵主任"></div><div class="field"><label>职务或适用场景</label><input id="newSpeakerTitle" placeholder="如：部门负责人 · 专题汇报"></div></div><div class="cfg-readonly">新增后可在“风格提示词”中维护词汇偏好、句式结构、修辞习惯和表达特色。</div>`, () => { const name = ($("#newSpeakerName").value || "").trim(); if (!name) { showToast("请填写讲话人名称"); return; } const id = "rs-" + Date.now(); SPEAKER_STYLE_PROFILES.push({ id, name, title:($("#newSpeakerTitle").value || "常用讲话人").trim(), initials:name.slice(0,1), stylePrompt:{ vocabulary:"使用规范政务用语。", sentence:"结构清晰，分点陈述。", rhetoric:"修辞克制，按需使用排比。", expression:"表达准确、简洁、稳妥。" }, switchDimensions:{ positioning:"按当前讲话场景确定", structure:"结构清晰、层次完整", language:"规范准确", evidence:"按授权材料使用数据", call:"结尾明确工作要求" }, samples:[] }); setActiveSpeakerStyle(id,true); closeModal(); refreshSpeakerManagementView(); showToast("讲话人已新增，请继续完善风格提示词"); }, { okText:"新增" }); break;
-      case "speakerSampleUpload": { const input = $("#speakerSampleInput"); if (!input) break; input.onchange = () => { const role = activeSpeakerStyle(); Array.from(input.files || []).slice(0,10).forEach(file => { if (!role.samples.includes(file.name)) role.samples.push(file.name); }); input.value = ""; refreshSpeakerManagementView(); showToast("参考材料已加入讲话人风格"); }; input.click(); break; }
-      case "speakerSampleRemove": { const role = activeSpeakerStyle(); role.samples = role.samples.filter(name => name !== el.dataset.sampleName); refreshSpeakerManagementView(); showToast("参考材料已移除"); break; }
-      case "speakerStyleSave": setActiveSpeakerStyle(activeSpeakerStyle().id,true); refreshSpeakerManagementView(); showToast("讲话人风格已保存，后续发言稿将默认使用"); break;
+      case "speakerSampleUpload": { const input = $("#speakerSampleInput"); if (!input) break; input.onchange = () => { const role = activeSpeakerStyle(); Array.from(input.files || []).slice(0,10).forEach(file => { if (role.samples.some(item => (item.name || item) === file.name)) return; const reader = new FileReader(); reader.onload = () => { role.samples.push({name:file.name,content:String(reader.result || ""),uploadedAt:formatDateTime(Date.now())}); saveSpeakerStyleStore(); refreshSpeakerManagementView(); }; reader.readAsText(file); }); input.value = ""; showToast("参考材料已加入讲话人风格"); }; input.click(); break; }
+      case "speakerSampleView": { const role = activeSpeakerStyle(), sample = role.samples.find(item => (item.name || item) === el.dataset.sampleName); if (sample) openModal(`参考材料 · ${sample.name || sample}`, `<pre class="cfg-markdown-preview" style="white-space:pre-wrap;max-height:55vh;overflow:auto">${esc(sample.content || "已上传材料，当前原型未读取二进制正文。")}</pre>`, null, {hideFooter:true,width:"760px"}); break; }
+      case "speakerSampleRemove": { const role = activeSpeakerStyle(); role.samples = role.samples.filter(item => (item.name || item) !== el.dataset.sampleName); saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("参考材料已删除"); break; }
+      case "speakerStyleLearn": { const role = activeSpeakerStyle(); if (!role.samples.length) { showToast("请先上传参考材料"); break; } role.learningStatus = "学习中"; saveSpeakerStyleStore(); refreshSpeakerManagementView(); setTimeout(() => { if (role.learningStatus !== "学习中") return; role.learningStatus = "学习完成"; role.learnedAt = formatDateTime(Date.now()); role.learnedMarkdown = `# ${role.name}讲话人风格学习结果\n\n- 学习材料：${role.samples.map(item => item.name || item).join("、")}\n- 学习时间：${role.learnedAt}\n\n## 自定义风格约束\n${role.customPrompt || "未填写自定义约束，按参考材料提取表达习惯。"}\n\n## 使用建议\n生成发言稿时优先保持以上表达习惯，并结合本次讲话场景调整语气。`; saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("大模型已完成讲话人风格学习"); }, 1800); break; }
+      case "speakerStyleStop": { const role = activeSpeakerStyle(); role.learningStatus = "学习已停止"; saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("已停止学习"); break; }
+      case "speakerStyleSave": { const role = activeSpeakerStyle(), learned = $("[data-speaker-learned]"); if (learned) role.learnedMarkdown = learned.value; setActiveSpeakerStyle(role.id,true); saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("讲话人风格已保存，后续发言稿将默认使用当前用户配置"); break; }
+      case "modelConfigure": closeModelPicker(); closeModal(); configCenterSection = "models"; configCenterPersonalMode = false; switchView("config"); break;
+      case "modelAdd": openModelConfigEditor(null); break;
+      case "modelEdit": openModelConfigEditor(el.dataset.id); break;
+      case "modelDelete": { const model = customModels.find(item => item.id === el.dataset.id); if (!model) break; openModal("删除模型", `确认删除模型“${esc(model.name)}”？`, () => { customModels = customModels.filter(item => item.id !== model.id); if (selectedModelId === model.id) selectedModelId = "auto"; closeModal(); renderConfig(); showToast("模型已删除"); }, {okText:"确认删除"}); break; }
       case "speechStyleSwitch": openSpeechStyleSwitch(el.dataset.msgIndex, el.dataset.styleSource); break;
       case "adminConfigSelect": adminConfigTarget = el.dataset.agentId || "global"; renderConfig(); break;
       case "adminViewTemplate": { const agent = byId(el.dataset.agentId); if (agent) openModal(`${agent.name} · 公文格式模板`, `<div class="cfg-readonly" style="margin-bottom:12px">仅供查看：标题、正文层级、落款、日期和版式规范由平台统一维护。</div><div class="editor-paper" style="min-height:360px;padding:32px">${v3TemplateHTML(agent.id)}</div>`, null, { hideFooter:true, width:"min(900px, calc(100vw - 40px))" }); break; }
@@ -10150,9 +10433,9 @@ let sidebarCollapsed = false;
       case "copyAgentReply": copyAgentReply(el.dataset.msgIndex); break;
       case "copyUserReply": copyUserReply(el.dataset.msgIndex); break;
       case "followUpAgentReply": followUpAgentReply(el.dataset.msgIndex); break;
-      case "retryAgentReply": retryAgentReply(el.dataset.msgIndex); break;
+      case "retryFailedReply": openFailedReplyRetry(el.dataset.msgIndex); break;
       case "saveConversationKnowledge": saveConversationKnowledge(el.dataset.msgIndex); break;
-      case "generatedExport": exportGeneratedMessage(el.dataset.msgIndex); break;
+      case "generatedExport": openDownloadFormatMenu(el,"conversation",el.dataset.msgIndex); break;
       case "generatedEdit": openDocumentEditor(el.dataset.msgIndex); break;
       case "v3OpenEditor": { if (agentV3Session) { const c = cur(); const a = c ? byId(c.agent) : null; if (a) v3OpenDocEditor(c, a); } break; }
       case "v3Download": { if (agentV3Session) v3DownloadDocument(); break; }
@@ -10425,6 +10708,11 @@ let sidebarCollapsed = false;
       c.msgs.push(user("汇总本周重点工作进展和下周计划", ts));
       c.msgs.push(intro(a, ts + 60000));
       c.msgs.push(direct(a, { period: "本周", type: "工作总结", area: "重点项目与营商环境", work: "推进 5 个重点项目落地，办结企业诉求 12 件", next: "下周聚焦滞后项目专班推进与诉求闭环" }, ts + 120000));
+    });
+    add("report", "起草专项资金申请请示（执行失败）", 3200, (c, ts, a) => {
+      c.demoStatus = null;
+      c.msgs.push(user("请起草一份关于申请数字政府专项建设资金的请示", ts));
+      c.msgs.push({ role:"agent", agent:a.id, kind:"model-error", html:modelErrorHTML("模型服务连接中断，本次请示文稿未能生成完成。您可以点击下方“重试”继续执行未完成的任务。"), createdAt:ts + 60000, completedAt:ts + 60000, noTrust:true, retryContext:{ agentId:a.id, routeType:"direct", originalPrompt:"请起草一份关于申请数字政府专项建设资金的请示", attach:"", structuredValues:{ subject:"申请数字政府专项建设资金", recipient:"南京市有关主管部门", matter:"支持江北新区数字政府平台建设" }, knowledgeBaseIds:[] } });
     });
   }
 
