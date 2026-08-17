@@ -7861,13 +7861,6 @@ let sidebarCollapsed = false;
       detail:`${action || "保存修改"}：主要参数、约束规则或默认大纲发生调整`
     });
   }
-  function cfgShowTemplateHistory(template) {
-    if (!template) return;
-    const records = [{action:"当前内容",time:template.updatedAt,operator:template.ownerName,scope:template.scope,detail:"当前生效的模板内容"}]
-      .concat(template.history || [])
-      .concat((template.history || []).length ? [] : [{action:"首次创建",time:template.createdAt,operator:template.ownerName,scope:"personal",detail:"创建模板并保存主要参数、约束规则和默认大纲"}]);
-    openModal("模板修改记录", `<div class="cfg-readonly">模板《${esc(template.name)}》的每次修改均记录操作人、时间和具体修改内容，已生成任务继续使用当时的模板快照。</div><div style="overflow:auto;margin-top:12px"><table class="cfg-data-table"><thead><tr><th>操作</th><th>具体修改内容</th><th>所属范围</th><th>操作人</th><th>时间</th></tr></thead><tbody>${records.map(item => `<tr><td><b>${esc(item.action)}</b></td><td>${esc(item.detail || "模板内容发生调整")}</td><td>${CFG_SCOPE_LABEL[item.scope] || "个人"}</td><td>${esc(item.operator || template.ownerName)}</td><td>${esc(item.time || "-")}</td></tr>`).join("")}</tbody></table></div>`, closeModal, { okText:"关闭", width:"860px" });
-  }
   function cfgTemplateNormalize(source, copyMode) {
     const role = cfgRoleMeta(), agentId = source?.agentId || "";
     const fields = cfgTemplateFields(agentId), options = {}, defaults = { ...(source?.defaults || {}) };
@@ -7997,7 +7990,6 @@ let sidebarCollapsed = false;
   }
   function cfgTemplateActions(template) {
     const buttons = [`<button class="btn" data-act="cfgTemplateView" data-id="${template.id}">查看</button>`];
-    buttons.push(`<button class="btn" data-act="cfgTemplateHistory" data-id="${template.id}">修改记录</button>`);
     if (cfgTemplateCanEdit(template)) buttons.push(`<button class="btn" data-act="cfgTemplateEdit" data-id="${template.id}">修改</button>`);
     buttons.push(`<button class="btn" data-act="cfgTemplateCopy" data-id="${template.id}">复制模板</button>`);
     const publishTarget = cfgTemplatePublishTarget(template);
@@ -8272,7 +8264,7 @@ let sidebarCollapsed = false;
     {id:"config",name:"配置治理中心",buttons:[],children:[
       {id:"config-agents",name:"智能体管理",buttons:["查看"]},
       {id:"config-connectors",name:"业务连接器管理",buttons:["查看"]},
-      {id:"config-templates",name:"智能体模板管理",buttons:["新增模板","查看","修改记录","复制模板","发布到部门","发布到公共","撤回"]},
+      {id:"config-templates",name:"智能体模板管理",buttons:["新增模板","查看","复制模板","发布到部门","发布到公共","撤回"]},
       {id:"config-personalization",name:"个性化",buttons:["恢复角色默认值","保存并应用"]},
       {id:"config-users",name:"用户管理",buttons:["编辑"]},
       {id:"config-orgs",name:"组织机构",buttons:[]},
@@ -10496,7 +10488,6 @@ function cfgRoleManagementHTML() {
       case "cfgTemplateFilterReset": configTemplateSearch = ""; configTemplateOwnerFilter = ""; configTemplateAgentFilter = "all"; configTemplateScopeFilters.clear(); renderConfig(); break;
       case "cfgTemplateAdd": cfgOpenTemplateEditor(null,"edit",false); break;
       case "cfgTemplateView": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (template) cfgOpenTemplateEditor(template,"view",false); break; }
-      case "cfgTemplateHistory": cfgShowTemplateHistory(CFG_TEMPLATES.find(item => item.id === el.dataset.id)); break;
       case "cfgTemplateEdit": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (template && cfgTemplateCanEdit(template)) cfgOpenTemplateEditor(template,"edit",false); break; }
       case "cfgTemplateCopy": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id) || (configTemplateDraft?.id === el.dataset.id ? configTemplateDraft : null); if (template) cfgOpenTemplateEditor(template,"edit",true); break; }
       case "cfgTemplateEditorBack": configTemplateDraft = null; configTemplateMode = "edit"; configSpeakerManagerOpen = false; configTemplateMarkdownEditing = false; configTemplateMarkdownDraft = ""; renderConfig(); break;
