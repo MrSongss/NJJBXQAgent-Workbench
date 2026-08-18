@@ -1815,6 +1815,82 @@
   .speaker-sample-actions{margin-left:auto;display:inline-flex;align-items:center;gap:6px}
   .speaker-sample-actions .btn{height:26px;padding:0 8px;font-size:12px}
   .speaker-learned-editor{width:100%;min-height:180px;border:1px solid #d8e2ec;border-radius:8px;padding:11px 12px;resize:vertical;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#24344e;background:#fbfdff}
+  /* ===== 讲话人风格列表页 ===== */
+  .sp-list-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+  .sp-table{width:100%;border-collapse:collapse}
+  .sp-table thead{background:#f7faff}
+  .sp-table th{padding:13px 18px;text-align:left;font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.5px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .sp-table td{padding:16px 18px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  .sp-table tr:last-child td{border-bottom:0}
+  .sp-table tbody tr{transition:background .15s}
+  .sp-table tbody tr:hover{background:var(--gov-25)}
+  .sp-row-info{display:flex;align-items:center;gap:12px}
+  .sp-row-info .speaker-avatar{width:42px;height:42px;border-radius:12px;font-size:16px}
+  .sp-row-info .copy{min-width:0}
+  .sp-row-info .copy b{display:block;font-size:15px;font-weight:800;color:var(--ink)}
+  .sp-row-info .copy .sid{font-size:11px;color:var(--muted-2);margin-top:1px}
+  .sp-row-title{font-size:13.5px;color:var(--text-2);font-weight:600}
+  .sp-row-tags{display:flex;flex-wrap:wrap;gap:5px}
+  .sp-row-tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px}
+  .sp-row-tag.mat{background:var(--purple-soft);color:var(--purple)}
+  .sp-row-tag.sty{background:var(--gov-50);color:var(--gov-700)}
+  .sp-row-tag.sty-off{background:#f5f7fa;color:var(--muted-2)}
+  .sp-row-tag.mat-off{background:#f5f7fa;color:var(--muted-2)}
+  .sp-row-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+  .sp-row-status .dot{width:7px;height:7px;border-radius:50%}
+  .sp-row-status.active{color:var(--green)}.sp-row-status.active .dot{background:var(--green);box-shadow:0 0 0 3px rgba(22,132,71,.12)}
+  .sp-row-status.idle{color:var(--muted-2)}.sp-row-status.idle .dot{background:var(--muted-2)}
+  .sp-row-actions{display:inline-flex;align-items:center;gap:6px}
+  .sp-list-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid var(--line);background:#fafffe}
+  .sp-list-footer .cnt{font-size:12.5px;color:var(--muted);font-weight:600}
+  .sp-list-empty{padding:64px 20px;text-align:center}
+  .sp-list-empty .ic{width:64px;height:64px;margin:0 auto 16px;border-radius:16px;display:grid;place-items:center;background:var(--gov-25);color:var(--gov-600)}
+  .sp-list-empty .ic .svg-icon{width:30px;height:30px}
+  .sp-list-empty h3{font-size:16px;font-weight:800;color:var(--gov-900);margin-bottom:6px}
+  .sp-list-empty p{font-size:13px;color:var(--muted)}
+  /* ===== 讲话人弹框表单 ===== */
+  .sp-modal-section{margin-bottom:24px}
+  .sp-modal-section-title{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:14px;font-weight:800;color:var(--gov-900)}
+  .sp-modal-section-title::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--gov-700),var(--gov-600))}
+  .sp-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sp-form-field{display:flex;flex-direction:column;gap:6px}
+  .sp-form-field.full{grid-column:1 / -1}
+  .sp-form-field label{font-size:12.5px;font-weight:700;color:var(--text-2)}
+  .sp-form-field label i{color:var(--red);font-style:normal;font-size:11px}
+  .sp-form-field input,.sp-form-field textarea{width:100%;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:#fbfdff;color:var(--text);outline:none;transition:border-color .16s,box-shadow .16s}
+  .sp-form-field input:focus,.sp-form-field textarea:focus{border-color:var(--gov-500);box-shadow:0 0 0 3px rgba(21,152,189,.12);background:#fff}
+  .sp-form-field textarea{height:auto;min-height:200px;padding:12px 14px;resize:vertical;line-height:1.8;font-family:ui-monospace,SFMono-Regular,Consolas,"PingFang SC",monospace;font-size:13px}
+  .sp-form-field .hint{font-size:11.5px;color:var(--muted-2);line-height:1.5}
+  .sp-constraint-tags{display:flex;flex-wrap:wrap;gap:6px;padding:8px;min-height:42px;border:1px solid var(--line);border-radius:9px;background:#fbfdff}
+  .sp-constraint-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:var(--gov-50);color:var(--gov-700);font-size:12px;font-weight:700}
+  .sp-constraint-tag .x{cursor:pointer;color:var(--muted-2);font-size:14px;line-height:1}
+  .sp-constraint-tag .x:hover{color:var(--red)}
+  .sp-constraint-add{display:inline-flex;align-items:center;gap:5px}
+  .sp-constraint-add input{width:130px;height:28px;padding:0 8px;border:1px dashed var(--line);border-radius:6px;background:transparent;font-size:12px;outline:none}
+  .sp-constraint-add input:focus{border-color:var(--gov-500);border-style:solid}
+  .sp-constraint-add button{height:28px;padding:0 8px;border:0;border-radius:6px;background:var(--gov-700);color:#fff;font-size:12px;font-weight:700}
+  .sp-material-list{display:grid;gap:8px;margin-bottom:10px}
+  .sp-material-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+  .sp-material-item .fic{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:var(--purple-soft);color:var(--purple);flex:none}
+  .sp-material-item .fic .svg-icon{width:16px;height:16px}
+  .sp-material-item .mcopy{flex:1;min-width:0}
+  .sp-material-item .mcopy b{display:block;font-size:13px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sp-material-item .mcopy span{display:block;font-size:11px;color:var(--muted-2);margin-top:1px}
+  .sp-material-item .mactions{display:inline-flex;gap:5px}
+  .sp-material-empty{padding:20px;text-align:center;border:1px dashed var(--line);border-radius:9px;color:var(--muted-2);font-size:13px}
+  .sp-material-actions{display:flex;align-items:center;gap:8px;margin-top:10px}
+  .sp-learning-status{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700}
+  .sp-learning-status.learning{background:var(--amber-soft);color:var(--amber)}
+  .sp-learning-status.done{background:var(--green-soft);color:var(--green)}
+  .sp-learning-status .sp-spinner{width:12px;height:12px;border:2px solid rgba(154,103,0,.2);border-top-color:var(--amber);border-radius:50%;animation:sp-spin .7s linear infinite}
+  @keyframes sp-spin{to{transform:rotate(360deg)}}
+  .sp-md-preview{padding:14px 16px;border:1px solid var(--line);border-radius:9px;background:#f8faff;font-size:13px;line-height:1.85;color:var(--text);white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas,"PingFang SC",monospace;max-height:320px;overflow-y:auto}
+  .sp-md-editor{width:100%;min-height:200px;border:1px solid var(--line);border-radius:9px;padding:12px 14px;resize:vertical;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,"PingFang SC",monospace;color:var(--text);background:#fbfdff;outline:none}
+  .sp-md-editor:focus{border-color:var(--gov-500);box-shadow:0 0 0 3px rgba(21,152,189,.12);background:#fff}
+  .sp-modal-readonly .sp-form-field input,.sp-modal-readonly .sp-form-field textarea,.sp-modal-readonly .sp-md-editor{background:#f5f7fa !important;color:var(--muted) !important;border-color:var(--line-soft) !important;cursor:default}
+  .sp-modal-readonly .sp-constraint-tag .x,.sp-modal-readonly .sp-material-actions,.sp-modal-readonly .sp-constraint-add{display:none !important}
+  .sp-modal-readonly .sp-form-field input,.sp-modal-readonly .sp-form-field textarea{pointer-events:none}
+  @media(max-width:760px){.sp-form-grid{grid-template-columns:1fr}.sp-table{font-size:12px}.sp-table th,.sp-table td{padding:10px}}
   .model-picker-list{display:grid;gap:6px}
   .model-option{display:flex;align-items:center;gap:10px;width:100%;padding:10px 11px;border:1px solid transparent;border-radius:8px;background:#fff;text-align:left;color:#24344e;cursor:pointer}
   .model-option:hover,.model-option.active{border-color:#bde3e2;background:#f2fbfa}
@@ -3013,6 +3089,7 @@ let sidebarCollapsed = false;
   let modalConfirmHandler = null;
   function openModal(title, body, onOk, opts) {
     opts = opts || {};
+    $$("#modalFoot button:not(#modalCancel):not(#modalOk)").forEach(b => b.remove());
     $("#modalBox").style.width = opts.width || "";
     $("#modalTitle").textContent = title;
     $("#modalBody").innerHTML = body;
@@ -7275,7 +7352,7 @@ let sidebarCollapsed = false;
       samples:["公共数据授权运营研讨会发言.docx","数据要素市场化配置讲话稿.docx","数字化转型专题培训讲话.docx"]
     },
     {
-      id:"rs-zhangmin", name:"张敏（自己）", title:"数据局政务办公使用人员", initials:"敏",
+      id:"rs-zhangmin", name:"张主任", title:"数据局政务办公使用人员", initials:"敏",
       stylePrompt:{
         vocabulary:'常用“当前进展”“重点事项”“下一步安排”“及时反馈”“按期完成”等工作表述。',
         sentence:'偏好短句和清单式表达，按进展、问题、措施三个部分快速说明。',
@@ -7510,13 +7587,40 @@ let sidebarCollapsed = false;
     return `<div class="speaker-role-list">${SPEAKER_STYLE_PROFILES.map(role => `<button class="speaker-role-card ${role.id === active.id ? "active" : ""}" type="button" data-act="speakerRoleSelect" data-role-id="${role.id}"><b>${esc(role.name)}</b><span>${esc(role.title)}</span><span>${esc((role.stylePrompt && role.stylePrompt.expression) || "待补充表达特色")}</span>${role.id === active.id ? "<em>当前使用</em>" : ""}</button>`).join("")}</div>`;
   }
   function speakerStyleEditorHTML() {
-    const role = activeSpeakerStyle();
-    role.customPrompt = role.customPrompt || "";
-    const prompts = `<div class="speaker-prompt-field speaker-prompt-custom"><label>自定义风格约束</label><textarea data-speaker-custom-prompt placeholder="请输入任意讲话风格、语气、结构、用词或禁用表达约束，支持多行编辑">${esc(role.customPrompt || "")}</textarea><small class="pref-explain">可按当前用户的实际需要自由描述，不受固定风格维度限制。</small></div>`;
-    const samples = role.samples.map(item => { const sample = typeof item === "string" ? { name:item, content:"" } : item; return `<div class="speaker-sample">${svgi("i-file",14)}<span>${esc(sample.name)}</span><span class="speaker-sample-actions"><button class="btn" type="button" data-act="speakerSampleView" data-sample-name="${esc(sample.name)}">查看</button><button class="icon-btn" type="button" data-act="speakerSampleRemove" data-sample-name="${esc(sample.name)}" title="删除参考材料">×</button></span></div>`; }).join("");
-    const learned = role.learnedMarkdown || "";
-    const learning = role.learningStatus === "学习中";
-    return `<div class="card"><div class="card-head"><div><div class="card-title">讲话人风格</div><div class="page-sub" style="margin-top:3px">讲话人风格绑定当前用户，模板只负责结构，不再绑定具体讲话人。</div></div><button class="btn" type="button" data-act="speakerRoleAdd">+ 新增讲话人</button></div><div class="card-body" style="display:grid;gap:14px">${hasSpeakerStyles() ? `<div class="speaker-summary"><span class="speaker-avatar">${esc(role.initials)}</span><span class="speaker-summary-copy"><b>${esc(role.name)}</b><span>${esc(role.title)}</span></span><span class="cfg-status live">当前用户默认</span></div>` : ""}${speakerRoleCardsHTML()}${hasSpeakerStyles() ? `<div class="speaker-edit-grid"><div class="field"><label>讲话人名称</label><input value="${esc(role.name)}" data-speaker-field="name"></div><div class="field"><label>职务或适用场景</label><input value="${esc(role.title)}" data-speaker-field="title"></div></div><div><div class="card-title" style="font-size:13px">自定义风格约束</div><p class="pref-explain">不再限制为固定四种风格维度，可自由输入本用户需要的讲话风格规则。</p><div class="speaker-prompt-grid">${prompts}</div></div><div><div class="card-title" style="font-size:13px">参考材料</div><p class="pref-explain">上传经授权的历史讲话材料，可查看或删除；点击开始学习后提取表达习惯。</p><div class="speaker-samples">${samples || '<div class="cfg-readonly">尚未上传参考材料</div>'}</div><input id="speakerSampleInput" type="file" accept=".doc,.docx,.pdf,.txt" multiple hidden><button class="btn" type="button" data-act="speakerSampleUpload" style="margin-top:10px">${svgi("i-upload",14)} 上传参考材料</button>${learning ? `<button class="btn danger" type="button" data-act="speakerStyleStop" style="margin:10px 0 0 8px">停止学习</button><span class="cfg-status live" style="margin-left:8px">学习中…</span>` : `<button class="btn primary" type="button" data-act="speakerStyleLearn" style="margin:10px 0 0 8px">${svgi("i-spark",14)} 开始学习</button>`}</div>${learning ? `<div class="cfg-readonly speaker-learning-state">正在根据参考材料学习讲话人风格，请稍候…</div>` : role.learnedMarkdown ? `<div><div class="card-title" style="font-size:13px">学习后的 Markdown 内容</div><textarea data-speaker-learned class="speaker-learned-editor">${esc(learned)}</textarea><small class="pref-explain">支持在线编辑，保存讲话人风格时一并保存。</small></div>` : ""}<div style="display:flex;justify-content:flex-end"><button class="btn primary" type="button" data-act="speakerStyleSave">保存讲话人风格</button></div>` : ""}</div></div>`;
+    const active = activeSpeakerStyle();
+    const rows = SPEAKER_STYLE_PROFILES.map((role, i) => {
+      const profile = speakerProfileForUser(role.id);
+      const matCount = (profile.samples || []).length;
+      const isActive = role.id === active.id;
+      const learningStatus = profile.learningStatus;
+      const statusHTML = isActive
+        ? `<span class="sp-row-status active"><span class="dot"></span>当前使用</span>`
+        : learningStatus === "learning"
+        ? `<span class="sp-row-status idle"><span class="dot"></span>学习中</span>`
+        : `<span class="sp-row-status idle"><span class="dot"></span>已就绪</span>`;
+      const matTag = matCount > 0
+        ? `<span class="sp-row-tag mat">${matCount} 份材料</span>`
+        : `<span class="sp-row-tag mat-off">无材料</span>`;
+      const styTag = learningStatus === "done"
+        ? `<span class="sp-row-tag sty">风格已学习</span>`
+        : learningStatus === "learning"
+        ? `<span class="sp-row-tag sty" style="background:var(--amber-soft);color:var(--amber)">学习中</span>`
+        : `<span class="sp-row-tag sty-off">未学习</span>`;
+      return `<tr>
+        <td style="color:var(--muted-2);font-weight:700">${i + 1}</td>
+        <td><div class="sp-row-info"><div class="speaker-avatar">${esc(role.initials || role.name.slice(0,1))}</div><div class="copy"><b>${esc(role.name)}</b><span class="sid">${esc(role.id)}</span></div></div></td>
+        <td><span class="sp-row-title">${esc(role.title)}</span></td>
+        <td><div class="sp-row-tags">${matTag}${styTag}</div></td>
+        <td>${statusHTML}</td>
+        <td style="text-align:right"><div class="sp-row-actions">
+          <button class="btn btn-sm ghost" type="button" data-act="speakerRoleView" data-role-id="${role.id}">查看</button>
+          <button class="btn btn-sm" type="button" data-act="speakerRoleEdit" data-role-id="${role.id}">编辑</button>
+          <button class="icon-btn" type="button" data-act="speakerRoleDelete" data-role-id="${role.id}" title="删除"><span class="svg-icon" style="width:14px;height:14px">${svgi("i-trash",14)}</span></button>
+        </div></td>
+      </tr>`;
+    }).join("");
+    const emptyHTML = `<tr><td colspan="6"><div class="sp-list-empty"><div class="ic"><span class="svg-icon" style="width:30px;height:30px">${svgi("i-users",30)}</span></div><h3>暂无讲话人风格</h3><p>点击右上角"新增讲话人"按钮，创建第一个讲话人风格档案</p></div></td></tr>`;
+    return `<div class="card"><div class="card-head"><div><div class="card-title">讲话人风格管理</div><div class="page-sub" style="margin-top:3px">维护讲话人风格档案，供发言稿智能生成使用。讲话人风格归属于当前登录用户。</div></div><button class="btn primary" type="button" data-act="speakerRoleAdd">${svgi("i-plus",14)} 新增讲话人</button></div><div class="card-body" style="padding:0"><div class="sp-list-wrap"><table class="sp-table"><thead><tr><th style="width:60px">序号</th><th>讲话人名称</th><th>职务 / 适用场景</th><th>参考材料</th><th>状态</th><th style="text-align:right">操作</th></tr></thead><tbody>${rows || emptyHTML}</tbody></table><div class="sp-list-footer"><span class="cnt">共 ${SPEAKER_STYLE_PROFILES.length} 条</span><span class="cnt" style="color:var(--muted-2)">讲话人风格仅对当前用户有效</span></div></div></div></div>`;
   }
   function personalPreferenceDetailHTML(agentId) {
     if (agentId === "speech") return speakerStyleEditorHTML();
@@ -7952,9 +8056,9 @@ let sidebarCollapsed = false;
       const icon = isAgent ? (AGENT_ICON[item.id] || "i-bot") : (connector?.icon || "i-plug");
       const type = isAgent ? agentTypeLabel(agent || item) : "";
       const useMode = isAgent ? (item.entryMode === "chat" ? "对话型" : "独立工作台") : "";
-      return `<tr><td><div class="cfg-data-title"><span class="pref-ic">${svgi(icon,15)}</span><span><b>${esc(item.name)}</b>${isAgent ? "" : `<small>${esc(item.desc)}</small>`}</span></div></td>${isAgent ? `<td><span class="tag blue">${esc(type)}</span></td><td>${esc(useMode)}</td>` : `<td>${esc(item.desc)}</td>`}<td>${cfgScopeHTML(item.departments)}<button class="btn" style="margin-top:6px" data-act="cfgServiceScope" data-kind="${kind}" data-id="${item.id}">配置部门</button></td><td>${esc(item.updatedAt)}</td><td>${esc(item.createdAt)}</td><td><button class="toggle ${item.enabled ? "on" : ""}" data-act="cfgServiceToggle" data-kind="${kind}" data-id="${item.id}" aria-label="切换运行状态"></button><div style="margin-top:5px"><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? (isAgent ? "展示" : "运行") : (isAgent ? "隐藏" : "停用")}</span></div></td><td><button class="btn" data-act="cfgServiceView" data-kind="${kind}" data-id="${item.id}">查看</button></td></tr>`;
+      return `<tr><td><div class="cfg-data-title"><span class="pref-ic">${svgi(icon,15)}</span><span><b>${esc(item.name)}</b>${isAgent ? "" : `<small>${esc(item.desc)}</small>`}</span></div></td>${isAgent ? `<td><span class="tag blue">${esc(type)}</span></td><td>${esc(useMode)}</td>` : `<td>${esc(item.desc)}</td>`}<td>${cfgScopeHTML(item.departments)}<button class="btn" style="margin-top:6px" data-act="cfgServiceScope" data-kind="${kind}" data-id="${item.id}">配置部门</button></td><td>${esc(item.updatedAt)}</td><td>${esc(item.createdAt)}</td><td><button class="toggle ${item.enabled ? "on" : ""}" data-act="cfgServiceToggle" data-kind="${kind}" data-id="${item.id}" aria-label="切换运行状态"></button><div style="margin-top:5px"><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? (isAgent ? "启用" : "运行") : (isAgent ? "停用" : "停用")}</span></div></td><td><button class="btn" data-act="cfgServiceView" data-kind="${kind}" data-id="${item.id}">查看</button></td></tr>`;
     }).join("");
-    const filterBar = `<div class="cfg-filter-bar"><div class="cfg-filter-field wide"><label>${isAgent ? "智能体名称" : "连接器名称"}</label><input data-cfg-service-filter="name" value="${esc(filters.name)}" placeholder="请输入名称"></div>${isAgent ? `<div class="cfg-filter-field"><label>智能体类型</label><select data-cfg-service-filter="type"><option value="all">全部类型</option>${types.map(value => `<option ${filters.type === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>使用方式</label><select data-cfg-service-filter="mode"><option value="all">全部方式</option><option value="chat" ${filters.mode === "chat" ? "selected" : ""}>对话型</option><option value="workbench" ${filters.mode === "workbench" ? "selected" : ""}>独立工作台</option></select></div>` : ""}<div class="cfg-filter-field"><label>作用业务部门</label><select data-cfg-service-filter="department"><option value="all">全部部门</option>${departments.map(value => `<option ${filters.department === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>运行状态</label><select data-cfg-service-filter="status"><option value="all">全部状态</option><option value="enabled" ${filters.status === "enabled" ? "selected" : ""}>${isAgent ? "展示" : "运行"}</option><option value="disabled" ${filters.status === "disabled" ? "selected" : ""}>${isAgent ? "隐藏" : "停用"}</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="cfgServiceFilter" data-kind="${kind}">${svgi("i-search",13)}筛选</button><button class="btn" data-act="cfgServiceReset" data-kind="${kind}">重置</button></div></div>`;
+    const filterBar = `<div class="cfg-filter-bar"><div class="cfg-filter-field wide"><label>${isAgent ? "智能体名称" : "连接器名称"}</label><input data-cfg-service-filter="name" value="${esc(filters.name)}" placeholder="请输入名称"></div>${isAgent ? `<div class="cfg-filter-field"><label>智能体类型</label><select data-cfg-service-filter="type"><option value="all">全部类型</option>${types.map(value => `<option ${filters.type === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>使用方式</label><select data-cfg-service-filter="mode"><option value="all">全部方式</option><option value="chat" ${filters.mode === "chat" ? "selected" : ""}>对话型</option><option value="workbench" ${filters.mode === "workbench" ? "selected" : ""}>独立工作台</option></select></div>` : ""}<div class="cfg-filter-field"><label>作用业务部门</label><select data-cfg-service-filter="department"><option value="all">全部部门</option>${departments.map(value => `<option ${filters.department === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>运行状态</label><select data-cfg-service-filter="status"><option value="all">全部状态</option><option value="enabled" ${filters.status === "enabled" ? "selected" : ""}>${isAgent ? "启用" : "运行"}</option><option value="disabled" ${filters.status === "disabled" ? "selected" : ""}>${isAgent ? "停用" : "停用"}</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="cfgServiceFilter" data-kind="${kind}">${svgi("i-search",13)}筛选</button><button class="btn" data-act="cfgServiceReset" data-kind="${kind}">重置</button></div></div>`;
     return `<div class="cfg-overview-grid"><div class="cfg-metric"><span>${isAgent ? "智能体总数" : "连接器总数"}</span><b>${allRows.length}</b><small>由智能体中台同步</small></div><div class="cfg-metric"><span>当前启用</span><b>${enabled}</b><small>对授权部门可用</small></div><div class="cfg-metric"><span>当前停用</span><b>${allRows.length-enabled}</b><small>不允许发起新任务</small></div></div><section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${isAgent ? "智能体清单" : "业务连接器清单"}</h2><p>名称、图标、描述、类型和使用方式均从智能体中台同步，本页面不提供新增及服务地址修改。</p></div></div><div class="cfg-section-body">${filterBar}<div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>${isAgent ? "智能体名称" : "连接器名称"}</th>${isAgent ? "<th>智能体类型</th><th>使用方式</th>" : "<th>描述</th>"}<th>作用业务部门</th><th>更新时间</th><th>创建时间</th><th>运行状态</th><th>操作</th></tr></thead><tbody>${table || `<tr><td colspan="${isAgent ? 8 : 7}"><div class="cfg-empty"><b>暂无符合条件的数据</b><p>请调整筛选条件后重试。</p></div></td></tr>`}</tbody></table></div></div></section>`;
   }
   function cfgRuleAgentText(rule) {
@@ -8098,6 +8202,112 @@ let sidebarCollapsed = false;
   function refreshSpeakerManagementView() {
     if (currentView === "config" && configSpeakerManagerOpen) renderConfig(); else renderPersonalization();
   }
+  // ===== 讲话人弹框 =====
+  let speakerModalCtx = null;
+  const SPEAKER_DEFAULT_CONSTRAINTS = ["常用词汇","句式结构","修辞偏好","引用习惯"];
+  const SPEAKER_DEFAULT_MD = `- 讲话人：张主任 · 管委会副主任 · 分管数字经济
+- 词汇偏好：常用"深入贯彻""扎实推进""切实抓好""持续发力""真抓实干"等表述。
+- 句式结构：偏好"三段式"排比句，常用"一是、二是、三是"分点陈述。
+- 修辞习惯：善用比喻和引用，适度引用经典表述提升感染力。
+- 表达特色：开场简洁有力，主体条理清晰，结尾富有号召力；语言务实，注重实效导向。`;
+  function openSpeakerModal(mode, roleId) {
+    const isView = mode === "view";
+    const isAdd = mode === "add";
+    const role = !isAdd ? speakerStyleById(roleId) : null;
+    const profile = !isAdd ? speakerProfileForUser(roleId) : null;
+    const data = {
+      name: role ? role.name : "",
+      title: role ? role.title : "",
+      constraints: profile ? [...(profile.constraints || SPEAKER_DEFAULT_CONSTRAINTS)] : [...SPEAKER_DEFAULT_CONSTRAINTS],
+      materials: profile ? [...(profile.samples || [])] : [],
+      learningStatus: profile ? profile.learningStatus : null,
+      markdown: profile ? (profile.learnedMarkdown || SPEAKER_DEFAULT_MD) : SPEAKER_DEFAULT_MD
+    };
+    speakerModalCtx = { mode, roleId, data };
+    const titleText = isAdd ? "新增讲话人" : isView ? "查看讲话人" : "编辑讲话人";
+    const subText = isAdd ? "创建讲话人风格档案，上传材料后可执行风格学习" : isView ? "只读模式，不可修改" : "修改讲话人风格档案";
+    const iconHTML = isAdd ? svgi("i-plus",20) : isView ? svgi("i-eye",20) : svgi("i-edit",20);
+    openModal(titleText, `<div class="sp-modal-section-title">${iconHTML}<div><div style="font-size:18px;font-weight:900;color:var(--gov-900)">${titleText}</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px">${subText}</div></div></div><div class="${isView ? "sp-modal-readonly" : ""}" id="spModalBody">${renderSpeakerModalBody(data, isView)}</div>`, () => {
+      if (isView) { closeModal(); return; }
+      saveSpeakerModal();
+    }, { okText: isView ? "关闭" : (isAdd ? "创建" : "保存修改"), width: "min(860px, calc(100vw - 40px))" });
+  }
+  function renderSpeakerModalBody(data, isView) {
+    const basic = `<div class="sp-modal-section"><div class="sp-modal-section-title">基本信息</div><div class="sp-form-grid"><div class="sp-form-field"><label>讲话人名称 <i>*</i></label><input id="sp_f_name" value="${esc(data.name)}" placeholder="如：赵主任" ${isView ? "readonly" : ""}></div><div class="sp-form-field"><label>职务或适用场景 <i>*</i></label><input id="sp_f_title" value="${esc(data.title)}" placeholder="如：部门负责人 · 专题汇报" ${isView ? "readonly" : ""}></div></div></div>`;
+    const constraintTags = data.constraints.map((c, i) => `<span class="sp-constraint-tag">${esc(c)}${isView ? "" : `<span class="x" onclick="document.querySelector('[data-act=\\'speakerConstraintRemove\\']')&&window._spRemoveConstraint(${i})">&times;</span>`}</span>`).join("");
+    const constraintAdd = isView ? "" : `<span class="sp-constraint-add"><input id="sp_f_newConstraint" placeholder="添加约束词" onkeydown="if(event.key==='Enter'){event.preventDefault();window._spAddConstraint();}"><button type="button" onclick="window._spAddConstraint()">添加</button></span>`;
+    const constraints = `<div class="sp-modal-section"><div class="sp-modal-section-title">学习风格约束词</div><div class="sp-constraint-tags" id="spConstraintTags">${constraintTags}${constraintAdd}</div><div class="hint" style="margin-top:6px;font-size:11.5px;color:var(--muted-2)">默认包含：常用词汇、句式结构、修辞偏好、引用习惯。可自由增减。</div></div>`;
+    const matItems = data.materials.length > 0 ? data.materials.map((m, i) => {
+      const item = typeof m === "string" ? { name:m, size:"", uploadedAt:"" } : m;
+      return `<div class="sp-material-item"><div class="fic">${svgi("i-file",16)}</div><div class="mcopy"><b>${esc(item.name)}</b><span>${esc(item.size || "")} ${item.uploadedAt ? "· " + esc(item.uploadedAt) : ""}</span></div><div class="mactions"><button class="btn btn-sm ghost" type="button" data-act="speakerSampleView" data-sample-name="${esc(item.name)}">查看</button>${isView ? "" : `<button class="icon-btn" type="button" data-act="speakerSampleRemove" data-sample-name="${esc(item.name)}" title="删除">${svgi("i-x",14)}</button>`}</div></div>`;
+    }).join("") : `<div class="sp-material-empty">尚未上传参考材料</div>`;
+    const learningHTML = data.learningStatus === "学习中"
+      ? `<span class="sp-learning-status learning"><span class="sp-spinner"></span>学习中…</span>${isView ? "" : `<button class="btn btn-sm danger" type="button" data-act="speakerStyleStop">停止学习</button>`}`
+      : data.learningStatus === "学习完成"
+      ? `<span class="sp-learning-status done">&#10003; 学习完成</span>${isView ? "" : `<button class="btn btn-sm primary" type="button" data-act="speakerStyleLearn">重新学习</button>`}`
+      : isView ? "" : `<button class="btn btn-sm primary" type="button" data-act="speakerStyleLearn">${svgi("i-spark",13)} 开始学习</button>`;
+    const materials = `<div class="sp-modal-section"><div class="sp-modal-section-title">参考材料</div><div class="sp-material-list" id="spMaterialList">${matItems}</div><div class="sp-material-actions">${isView ? "" : `<button class="btn btn-sm" type="button" data-act="speakerSampleUpload">${svgi("i-upload",13)} 上传参考材料</button>`}${learningHTML}</div><input id="speakerSampleInput" type="file" accept=".doc,.docx,.pdf,.txt" multiple hidden></div>`;
+    const md = `<div class="sp-modal-section"><div class="sp-modal-section-title">讲话人风格内容</div>${isView ? `<div class="sp-md-preview">${esc(data.markdown)}</div>` : `<textarea class="sp-md-editor" id="sp_f_markdown" placeholder="Markdown格式，描述讲话人风格特征...">${esc(data.markdown)}</textarea><div class="hint" style="margin-top:6px;font-size:11.5px;color:var(--muted-2)">支持Markdown格式编辑。学习完成后系统自动生成，可手动修改。</div>`}</div>`;
+    return basic + constraints + materials + md;
+  }
+  function refreshSpeakerModalBody() {
+    if (!speakerModalCtx) return;
+    const nameEl = $("#sp_f_name"), titleEl = $("#sp_f_title"), mdEl = $("#sp_f_markdown");
+    if (nameEl) speakerModalCtx.data.name = nameEl.value;
+    if (titleEl) speakerModalCtx.data.title = titleEl.value;
+    if (mdEl) speakerModalCtx.data.markdown = mdEl.value;
+    const body = $("#spModalBody");
+    if (body) body.innerHTML = renderSpeakerModalBody(speakerModalCtx.data, speakerModalCtx.mode === "view");
+  }
+  function saveSpeakerModal() {
+    if (!speakerModalCtx) return;
+    const name = ($("#sp_f_name").value || "").trim();
+    const title = ($("#sp_f_title").value || "").trim();
+    const markdown = $("#sp_f_markdown" ) ? $("#sp_f_markdown").value.trim() : (speakerModalCtx.data.markdown || SPEAKER_DEFAULT_MD);
+    if (!name) { showToast("请填写讲话人名称"); return; }
+    if (!title) { showToast("请填写职务或适用场景"); return; }
+    const data = speakerModalCtx.data;
+    if (speakerModalCtx.mode === "add") {
+      const newId = "rs-" + Date.now();
+      SPEAKER_STYLE_PROFILES.push({ id:newId, name, title, initials:name.slice(0,1), stylePrompt:{ vocabulary:"使用规范政务用语。", sentence:"结构清晰，分点陈述。", rhetoric:"修辞克制，按需使用排比。", expression:"表达准确、简洁、稳妥。" }, switchDimensions:{ positioning:"按当前讲话场景确定", structure:"结构清晰、层次完整", language:"规范准确", evidence:"按授权材料使用数据", call:"结尾明确工作要求" }, samples:[] });
+      const profile = speakerProfileForUser(newId);
+      profile.constraints = data.constraints;
+      profile.samples = data.materials;
+      profile.learningStatus = data.learningStatus;
+      profile.learnedMarkdown = markdown;
+      saveSpeakerStyleStore();
+      showToast("讲话人已新增");
+    } else if (speakerModalCtx.mode === "edit") {
+      const role = speakerStyleById(speakerModalCtx.roleId);
+      if (role) {
+        role.name = name; role.title = title; role.initials = name.slice(0,1);
+        const profile = speakerProfileForUser(speakerModalCtx.roleId);
+        profile.constraints = data.constraints;
+        profile.samples = data.materials;
+        profile.learningStatus = data.learningStatus;
+        profile.learnedMarkdown = markdown;
+        saveSpeakerStyleStore();
+      }
+      showToast("讲话人风格已保存");
+    }
+    closeModal();
+    refreshSpeakerManagementView();
+  }
+  window._spAddConstraint = function() {
+    if (!speakerModalCtx) return;
+    const input = $("#sp_f_newConstraint");
+    const val = (input.value || "").trim();
+    if (!val) { showToast("请输入约束词"); return; }
+    if (speakerModalCtx.data.constraints.includes(val)) { showToast("约束词已存在"); return; }
+    speakerModalCtx.data.constraints.push(val);
+    input.value = "";
+    refreshSpeakerModalBody();
+  };
+  window._spRemoveConstraint = function(idx) {
+    if (!speakerModalCtx) return;
+    speakerModalCtx.data.constraints.splice(idx, 1);
+    refreshSpeakerModalBody();
+  };
   function cfgTemplateEditorHTMLLegacy() {
     const draft = configTemplateDraft, agent = cfgAgentById(draft.agentId), readonly = configTemplateMode === "view", fields = cfgTemplateFields(draft.agentId);
     const fieldRows = fields.map(field => {
@@ -9305,9 +9515,15 @@ function cfgRoleManagementHTML() {
     const agent = byId(agentId), list = templatesForAgent(agentId); if (!agent || !list.length) return;
     const current = defaultTemplateForAgent(agentId);
     const initial = current || list[0];
-    openModal(`选择${agent.name}模板`,`<div class="cfg-readonly">选择后保存为该智能体的个人默认模板，后续从智能体广场进入时自动带入。</div><div class="field" style="margin-top:12px"><label>模板名称</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><span class="cfg-readonly">选择模板后可预览其 Markdown 内容</span><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">管理模板</button></div>`,() => { const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agentId,selected.id); closeModal(); renderAgentsView(); showToast(`已将“${selected.name}”设为默认模板`); if (enterAfterSelect) enterAgentWithTemplate(agent,selected); },{okText:"设为默认模板",width:"680px"});
+    openModal(`选择${agent.name}模板`,`<div class="cfg-readonly">选择后保存为该智能体的个人默认模板，后续从智能体广场进入时自动带入。</div><div class="field" style="margin-top:12px"><label>模板名称</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">管理模板</button></div>`,() => { const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agentId,selected.id); closeModal(); renderAgentsView(); showToast(`已将“${selected.name}”设为默认模板`); if (enterAfterSelect) enterAgentWithTemplate(agent,selected); },{okText:"设为默认模板",width:"680px"});
     const choice = $("#marketTemplateChoice"), preview = $("#marketTemplatePreview");
     if (choice && preview) choice.addEventListener("change", () => { const selected = list.find(template => template.id === choice.value) || list[0]; preview.textContent = cfgTemplateMarkdownText(selected); });
+    const useNowBtn = document.createElement("button");
+    useNowBtn.className = "btn primary";
+    useNowBtn.type = "button";
+    useNowBtn.textContent = "立即使用";
+    useNowBtn.addEventListener("click", () => { const selected = list.find(t => t.id === ($("#marketTemplateChoice")?.value)) || list[0]; closeModal(); enterAgentWithTemplate(agent, selected); showToast(`已使用模板“${selected.name}”`); });
+    const modalOk = $("#modalOk"); if (modalOk) modalOk.after(useNowBtn);
   }
   function openAgentTemplateManager(agentId, createNew) {
     const agent = byId(agentId); if (!agent) return;
@@ -9340,7 +9556,7 @@ function cfgRoleManagementHTML() {
     const apply = template => { activeTemplateId = template?.id || null; fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),target || currentComposerInput()); renderAgentPill(); };
     if (list.length <= 1 || saved) { apply(saved || list[0] || null); return; }
     const initial = saved || list[0];
-    openModal(`选择${agent.name}模板`,`<div class="field"><label>当前智能体有多个可用模板</label><select id="composerTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><span class="cfg-readonly">选择模板后可预览其 Markdown 内容</span><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agent.id}">管理模板</button></div>`,() => { const template = list.find(item => item.id === $("#composerTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agent.id,template.id); closeModal(); apply(template); showToast(`已选择模板“${template.name}”`); },{okText:"确认选择",width:"620px"});
+    openModal(`选择${agent.name}模板`,`<div class="field"><label>当前智能体有多个可用模板</label><select id="composerTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agent.id}">管理模板</button></div>`,() => { const template = list.find(item => item.id === $("#composerTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agent.id,template.id); closeModal(); apply(template); showToast(`已选择模板“${template.name}”`); },{okText:"确认选择",width:"620px"});
     const choice = $("#composerTemplateChoice"), preview = $("#marketTemplatePreview");
     if (choice && preview) choice.addEventListener("change", () => { const selected = list.find(template => template.id === choice.value) || list[0]; preview.textContent = cfgTemplateMarkdownText(selected); });
   }
@@ -10432,13 +10648,31 @@ function cfgRoleManagementHTML() {
    switch (act) {
       case "personalAgentSelect": personalAgentTarget = el.dataset.agentId || "speech"; renderPersonalization(); break;
       case "speakerRoleSelect": setActiveSpeakerStyle(el.dataset.roleId); refreshSpeakerManagementView(); break;
-      case "speakerRoleAdd": openModal("新增讲话人", `<div class="grid-2"><div class="field"><label>讲话人名称</label><input id="newSpeakerName" placeholder="如：赵主任"></div><div class="field"><label>职务或适用场景</label><input id="newSpeakerTitle" placeholder="如：部门负责人 · 专题汇报"></div></div><div class="cfg-readonly">新增后可在“风格提示词”中维护词汇偏好、句式结构、修辞习惯和表达特色。</div>`, () => { const name = ($("#newSpeakerName").value || "").trim(); if (!name) { showToast("请填写讲话人名称"); return; } const id = "rs-" + Date.now(); SPEAKER_STYLE_PROFILES.push({ id, name, title:($("#newSpeakerTitle").value || "常用讲话人").trim(), initials:name.slice(0,1), stylePrompt:{ vocabulary:"使用规范政务用语。", sentence:"结构清晰，分点陈述。", rhetoric:"修辞克制，按需使用排比。", expression:"表达准确、简洁、稳妥。" }, switchDimensions:{ positioning:"按当前讲话场景确定", structure:"结构清晰、层次完整", language:"规范准确", evidence:"按授权材料使用数据", call:"结尾明确工作要求" }, samples:[] }); setActiveSpeakerStyle(id,true); closeModal(); refreshSpeakerManagementView(); showToast("讲话人已新增，请继续完善风格提示词"); }, { okText:"新增" }); break;
-      case "speakerSampleUpload": { const input = $("#speakerSampleInput"); if (!input) break; input.onchange = () => { const role = activeSpeakerStyle(); Array.from(input.files || []).slice(0,10).forEach(file => { if (role.samples.some(item => (item.name || item) === file.name)) return; const reader = new FileReader(); reader.onload = () => { role.samples.push({name:file.name,content:String(reader.result || ""),uploadedAt:formatDateTime(Date.now())}); saveSpeakerStyleStore(); refreshSpeakerManagementView(); }; reader.readAsText(file); }); input.value = ""; showToast("参考材料已加入讲话人风格"); }; input.click(); break; }
-      case "speakerSampleView": { const role = activeSpeakerStyle(), sample = role.samples.find(item => (item.name || item) === el.dataset.sampleName); if (sample) openModal(`参考材料 · ${sample.name || sample}`, `<pre class="cfg-markdown-preview" style="white-space:pre-wrap;max-height:55vh;overflow:auto">${esc(sample.content || "已上传材料，当前原型未读取二进制正文。")}</pre>`, null, {hideFooter:true,width:"760px"}); break; }
-      case "speakerSampleRemove": { const role = activeSpeakerStyle(); role.samples = role.samples.filter(item => (item.name || item) !== el.dataset.sampleName); saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("参考材料已删除"); break; }
-      case "speakerStyleLearn": { const role = activeSpeakerStyle(); if (!role.samples.length) { showToast("请先上传参考材料"); break; } role.learningStatus = "学习中"; saveSpeakerStyleStore(); refreshSpeakerManagementView(); setTimeout(() => { if (role.learningStatus !== "学习中") return; role.learningStatus = "学习完成"; role.learnedAt = formatDateTime(Date.now()); role.learnedMarkdown = `# ${role.name}讲话人风格学习结果\n\n- 学习材料：${role.samples.map(item => item.name || item).join("、")}\n- 学习时间：${role.learnedAt}\n\n## 自定义风格约束\n${role.customPrompt || "未填写自定义约束，按参考材料提取表达习惯。"}\n\n## 使用建议\n生成发言稿时优先保持以上表达习惯，并结合本次讲话场景调整语气。`; saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("大模型已完成讲话人风格学习"); }, 1800); break; }
-      case "speakerStyleStop": { const role = activeSpeakerStyle(); role.learningStatus = "学习已停止"; saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("已停止学习"); break; }
-      case "speakerStyleSave": { const role = activeSpeakerStyle(), learned = $("[data-speaker-learned]"); if (learned) role.learnedMarkdown = learned.value; setActiveSpeakerStyle(role.id,true); saveSpeakerStyleStore(); refreshSpeakerManagementView(); showToast("讲话人风格已保存，后续发言稿将默认使用当前用户配置"); break; }
+      case "speakerRoleAdd": openSpeakerModal("add"); break;
+      case "speakerRoleEdit": openSpeakerModal("edit", el.dataset.roleId); break;
+      case "speakerRoleView": openSpeakerModal("view", el.dataset.roleId); break;
+      case "speakerRoleDelete": {
+        const role = speakerStyleById(el.dataset.roleId);
+        if (!role) break;
+        const store = speakerStyleStore();
+        if (store.activeRoleId === role.id) { showToast("当前使用的讲话人不可删除，请先切换"); break; }
+        openModal("删除讲话人", `确认删除讲话人"${esc(role.name)}"？删除后不可恢复。`, () => {
+          const idx = SPEAKER_STYLE_PROFILES.findIndex(item => item.id === role.id);
+          if (idx >= 0) SPEAKER_STYLE_PROFILES.splice(idx, 1);
+          if (store.profiles[role.id]) delete store.profiles[role.id];
+          saveSpeakerStyleStore();
+          closeModal();
+          refreshSpeakerManagementView();
+          showToast("讲话人已删除");
+        }, { okText: "确认删除" });
+        break;
+      }
+      case "speakerSampleUpload": { const input = $("#speakerSampleInput"); if (!input) break; input.onchange = () => { if (!speakerModalCtx) return; Array.from(input.files || []).slice(0,10).forEach(file => { if (speakerModalCtx.data.materials.some(item => (item.name || item) === file.name)) return; const reader = new FileReader(); reader.onload = () => { speakerModalCtx.data.materials.push({name:file.name,content:String(reader.result || ""),size:(file.size/1024).toFixed(0)+"KB",uploadedAt:formatDateTime(Date.now())}); refreshSpeakerModalBody(); }; reader.readAsText(file); }); input.value = ""; showToast("参考材料已加入讲话人风格"); }; input.click(); break; }
+      case "speakerSampleView": { if (speakerModalCtx) { const sample = speakerModalCtx.data.materials.find(item => (item.name || item) === el.dataset.sampleName); if (sample) openModal(`参考材料 · ${sample.name || sample}`, `<pre class="cfg-markdown-preview" style="white-space:pre-wrap;max-height:55vh;overflow:auto">${esc(sample.content || "已上传材料，当前原型未读取二进制正文。")}</pre>`, null, {hideFooter:true,width:"760px"}); } break; }
+      case "speakerSampleRemove": { if (speakerModalCtx) { speakerModalCtx.data.materials = speakerModalCtx.data.materials.filter(item => (item.name || item) !== el.dataset.sampleName); refreshSpeakerModalBody(); showToast("参考材料已删除"); } break; }
+      case "speakerStyleLearn": { if (!speakerModalCtx) break; if (!speakerModalCtx.data.materials.length) { showToast("请先上传参考材料"); break; } speakerModalCtx.data.learningStatus = "学习中"; refreshSpeakerModalBody(); showToast("开始学习讲话人风格…"); setTimeout(() => { if (speakerModalCtx && speakerModalCtx.data.learningStatus === "学习中") { speakerModalCtx.data.learningStatus = "学习完成"; speakerModalCtx.data.markdown = `# ${speakerModalCtx.data.name || "讲话人"}风格学习结果\n\n- 学习材料：${speakerModalCtx.data.materials.map(item => item.name || item).join("、")}\n- 学习时间：${formatDateTime(Date.now())}\n\n## 使用建议\n生成发言稿时优先保持以上表达习惯，并结合本次讲话场景调整语气。`; refreshSpeakerModalBody(); showToast("大模型已完成讲话人风格学习"); } }, 1800); break; }
+      case "speakerStyleStop": { if (!speakerModalCtx) break; speakerModalCtx.data.learningStatus = null; refreshSpeakerModalBody(); showToast("已停止学习"); break; }
+      case "speakerStyleSave": { saveSpeakerModal(); break; }
       case "modelConfigure": closeModelPicker(); closeModal(); configCenterSection = "models"; configCenterPersonalMode = false; switchView("config"); break;
       case "modelAdd": openModelConfigEditor(null); break;
       case "modelEdit": openModelConfigEditor(el.dataset.id); break;
