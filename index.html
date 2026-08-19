@@ -618,6 +618,16 @@
   .page { height: 100%; overflow: auto; padding: 22px 30px 46px; }
   .page-inner { max-width: 1180px; margin: 0 auto; }
   .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+  .task-banner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: -4px 0 18px; padding: 26px 30px; border-radius: 16px; overflow: hidden; background: linear-gradient(118deg, #0b3d6e 0%, #10589b 46%, #1a7bc4 78%, #2f9bd8 100%); color: #fff; box-shadow: 0 12px 32px rgba(11, 61, 110, .22); }
+  .task-banner::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 82% 20%, rgba(255,255,255,.16), transparent 46%), radial-gradient(circle at 12% 88%, rgba(255,255,255,.10), transparent 40%); pointer-events: none; }
+  .task-banner-copy { position: relative; z-index: 1; min-width: 0; }
+  .task-banner-title { font-size: 21px; font-weight: 800; letter-spacing: .5px; }
+  .task-banner-sub { margin-top: 8px; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.82); max-width: 560px; }
+  .task-banner-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .task-banner-tag { padding: 4px 12px; border-radius: 999px; font-size: 11.5px; color: #eaf5ff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(2px); }
+  .task-banner-art { position: relative; z-index: 1; flex: none; width: 190px; height: 120px; }
+  .task-banner-art svg { width: 100%; height: 100%; display: block; }
+  @media (max-width: 860px) { .task-banner-art { display: none; } }
   .page-title { font-size: 20px; font-weight: 800; color: var(--gov-900); }
   .page-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
   .toolbar-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -2544,8 +2554,28 @@
       <div class="view" id="view-tasks">
         <div class="page"><div class="page-inner">
           <div class="page-head">
-            <div><div class="page-title">任务流</div><div class="page-sub">固化的多步办公流程与运行中实例，每个智能体对应一条可编排、可留痕的任务流</div></div>
+            <div><div class="page-title">任务流</div></div>
             <div class="toolbar-inline" hidden><button class="btn primary" id="taskNewScheduleBtn" data-act="taskAddSchedule"><svg class="svg-icon"><use href="#i-clock"></use></svg>新建定时任务</button></div>
+          </div>
+          <div class="task-banner">
+            <div class="task-banner-copy">
+              <div class="task-banner-title">智能体任务流中心</div>
+              <div class="task-banner-sub">汇聚各智能体的多步办公任务实例，运行状态一目了然，全程可留痕、可回溯，助力政务办公高效协同。</div>
+              <div class="task-banner-tags"><span class="task-banner-tag">流程编排</span><span class="task-banner-tag">运行监控</span><span class="task-banner-tag">全程留痕</span><span class="task-banner-tag">智能协同</span></div>
+            </div>
+            <div class="task-banner-art" aria-hidden="true">
+              <svg viewBox="0 0 190 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 96 C 52 70, 78 78, 100 54 S 152 30, 172 40" stroke="rgba(255,255,255,.35)" stroke-width="1.6" stroke-dasharray="5 5"/>
+                <path d="M18 96 C 52 70, 78 78, 100 54 S 152 30, 172 40" stroke="rgba(255,255,255,.85)" stroke-width="1.8"/>
+                <circle cx="18" cy="96" r="9" fill="rgba(255,255,255,.18)"/><circle cx="18" cy="96" r="4.5" fill="#fff"/>
+                <circle cx="100" cy="54" r="11" fill="rgba(255,255,255,.18)"/><circle cx="100" cy="54" r="5" fill="#ffd66b"/>
+                <circle cx="172" cy="40" r="9" fill="rgba(255,255,255,.18)"/><circle cx="172" cy="40" r="4.5" fill="#7ee2b8"/>
+                <rect x="122" y="76" width="52" height="34" rx="7" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.3)"/>
+                <rect x="129" y="84" width="30" height="4" rx="2" fill="rgba(255,255,255,.75)"/>
+                <rect x="129" y="93" width="38" height="4" rx="2" fill="rgba(255,255,255,.4)"/>
+                <circle cx="46" cy="34" r="3" fill="rgba(255,255,255,.5)"/><circle cx="66" cy="24" r="2" fill="rgba(255,255,255,.35)"/>
+              </svg>
+            </div>
           </div>
           <div class="task-tabs" id="taskTabs" role="tablist" hidden><button class="task-tab active" data-task-tab="instances" role="tab">任务流实例</button><button class="task-tab" data-task-tab="scheduled" role="tab">定时任务</button><button class="task-tab" data-task-tab="runs" role="tab">运行记录</button></div>
           <div id="taskInstancesPanel" class="task-panel">
@@ -8509,7 +8539,7 @@ let sidebarCollapsed = false;
       {id:"knowledge-org",name:"组织知识库",buttons:["查看"]},
       {id:"knowledge-results",name:"我的成果",buttons:["查看","下载","上传到个人知识库"]}
     ]},
-    {id:"tasks",name:"任务空间",buttons:["进入智能体"],children:[]},
+    {id:"tasks",name:"任务空间",buttons:["前往查看"],children:[]},
     {id:"config",name:"配置治理中心",buttons:[],children:[
       {id:"config-agents",name:"智能体管理",buttons:["查看"]},
       {id:"config-connectors",name:"业务连接器管理",buttons:["查看"]},
@@ -10030,7 +10060,7 @@ function cfgRoleManagementHTML() {
   }
   function openAgentFromMarketplace(agentId) {
     const agent = byId(agentId); if (!agent) return;
-    if (agent.entryMode !== "chat") { openWorkbench(agent.id); return; }
+    if (agent.entryMode !== "chat") { window.open(workbenchPath(agent.id), "_blank"); return; }
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
     if (list.length > 1 && !saved) { openMarketplaceTemplatePicker(agent.id,true); return; }
     enterAgentWithTemplate(agent,saved || list[0] || null);
@@ -10326,13 +10356,13 @@ function cfgRoleManagementHTML() {
     const runningCount = visibleTasks.filter(t => t.state === "运行中").length;
     const completedCount = visibleTasks.filter(t => t.state === "已完成").length;
     $("#taskCount").textContent = `${runningCount} 运行中 · ${completedCount} 已完成`;
-    const head = `<thead><tr><th>编号</th><th>任务流实例</th><th>智能体</th><th>当前节点</th><th>状态</th><th style="width:130px">操作</th></tr></thead>`;
+    const head = `<thead><tr><th>编号</th><th>任务流实例</th><th>智能体</th><th>状态</th><th style="width:130px">操作</th></tr></thead>`;
     const body = visibleTasks.map(t => {
       const a = byId(t.agent), sc = stateColor(t.state);
       const agentHTML = `<span class="chain-agent"><span class="tag" style="${ic(a.cat)};color:#fff">${agentIcon(a, 12)}</span>${esc(a.name)}</span>`;
-      return `<tr><td style="color:var(--muted)">${t.id}</td><td style="font-weight:600;color:#28324c">${esc(t.name)}</td><td><div class="flow-chain-inline">${agentHTML}</div></td><td>${t.idx}/${t.total} · ${esc(t.node)}</td><td><span class="tag" style="color:${sc.c};background:${sc.bg}">${t.state}</span></td><td class="row-act"><a data-act="taskEnterAgent" data-id="${t.id}">进入智能体</a></td></tr>`;
+      return `<tr><td style="color:var(--muted)">${t.id}</td><td style="font-weight:600;color:#28324c">${esc(t.name)}</td><td><div class="flow-chain-inline">${agentHTML}</div></td><td><span class="tag" style="color:${sc.c};background:${sc.bg}">${t.state}</span></td><td class="row-act"><a data-act="taskEnterAgent" data-id="${t.id}">前往查看</a></td></tr>`;
     }).join("");
-    $("#taskTable").innerHTML = head + `<tbody>${body || `<tr><td colspan="6" style="padding:42px;text-align:center;color:var(--muted)">暂无智能体任务流实例</td></tr>`}</tbody>`;
+    $("#taskTable").innerHTML = head + `<tbody>${body || `<tr><td colspan="5" style="padding:42px;text-align:center;color:var(--muted)">暂无智能体任务流实例</td></tr>`}</tbody>`;
     $("#taskInstancesPanel").style.display = "block";
   }
 
@@ -11490,7 +11520,19 @@ function cfgRoleManagementHTML() {
       }
       case "taskRunViewFile": { const run = TASK_RUNS.find(x => x.id === el.dataset.id); if (run && run.fileName) openModal("运行文件 · " + run.id, taskRunFileHTML(run), null, { hideFooter: true, width: "min(820px, calc(100vw - 40px))" }); break; }
       case "taskRunDownloadFile": { const run = TASK_RUNS.find(x => x.id === el.dataset.id); if (run) downloadTaskRunFile(run); break; }
-      case "taskEnterAgent": { const t = TASK_INSTANCES.find(x => x.id === el.dataset.id); const agent = t && byId(t.agent); if (agent) openWorkbench(agent.id); else showToast("未找到对应智能体"); break; }
+      case "taskEnterAgent": {
+        const t = TASK_INSTANCES.find(x => x.id === el.dataset.id);
+        const agent = t && byId(t.agent);
+        if (!t || !agent) { showToast("未找到对应智能体"); break; }
+        if (agent.entryMode === "chat") {
+          // 对话流智能体：进入该任务流的执行会话，进度卡展示当前运行/已完成节点
+          openTaskConversation(t.id);
+        } else {
+          // 独立工作台智能体：打开工作台并携带任务上下文，定位到当前运行/已完成流程节点
+          openWorkbench(agent.id, { taskId: t.id, taskName: t.name, taskNode: t.node, taskNodeIndex: t.idx, taskNodeTotal: t.total, taskState: t.state, source: "taskflow" });
+        }
+        break;
+      }
       case "taskOpen": { const t = TASK_INSTANCES.find(x => x.id === el.dataset.id); if (t) { const chain = (t.agents || [t.agent]).map(byId).filter(Boolean); const chainHTML = chain.map((a, i) => `<span class="chain-agent"><span class="tag" style="${ic(a.cat)};color:#fff">${agentIcon(a, 12)}</span>${esc(a.name)}</span>${i < chain.length - 1 ? '<span class="chain-arrow">→</span>' : ""}`).join(""); openModal("任务流 · " + t.id, `<div style="line-height:1.9"><div style="font-weight:800;font-size:15px;color:var(--gov-900);margin-bottom:8px">${esc(t.name)}</div><table class="tbl"><tbody><tr><th style="width:100px">智能体编排</th><td><div class="flow-chain-inline">${chainHTML}</div></td></tr><tr><th>当前节点</th><td>${t.idx}/${t.total} · ${esc(t.node)}</td></tr><tr><th>状态</th><td>${t.state}</td></tr></tbody></table><div class="panel-note" style="margin-top:12px">处理过程与结果均已留痕。</div></div>`, null, { hideFooter: true }); } break; }
       case "taskToChat": openTaskConversation(el.dataset.id); break;
     }
