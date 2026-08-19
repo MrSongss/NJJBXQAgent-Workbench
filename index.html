@@ -2002,6 +2002,8 @@
   .speaker-switch-head{display:flex;align-items:center;gap:10px}.speaker-switch-head .speaker-avatar{width:38px;height:38px;border-radius:11px}.speaker-switch-head-copy{min-width:0;flex:1}.speaker-switch-head-copy b{display:block;font-size:14px;color:var(--ink)}.speaker-switch-head-copy span{display:block;margin-top:2px;font-size:11.5px;color:var(--muted)}
   .speaker-switch-five{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
   .speaker-switch-dim{padding:8px;border-radius:8px;background:#f7fafc;border:1px solid #e5edf2}.speaker-switch-dim b{display:block;font-size:10.5px;color:var(--gov-800);margin-bottom:4px}.speaker-switch-dim span{display:block;font-size:10.5px;line-height:1.45;color:var(--ink-2)}
+  .speaker-switch-md{padding:11px 13px;border-radius:10px;background:#f7fafc;border:1px solid #e5edf2;font-size:12px;line-height:1.75;color:var(--ink-2);white-space:pre-wrap;word-break:break-word;max-height:170px;overflow:auto;font-family:inherit}
+  .speaker-switch-manage{display:flex;justify-content:flex-end;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
   .speaker-samples{display:grid;gap:8px;margin-top:10px}.speaker-sample{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:12px;color:var(--ink-2)}.speaker-sample span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .simple-config-item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}.simple-config-item:last-child{border-bottom:0}.simple-config-copy{min-width:0;flex:1}.simple-config-copy b{display:block;color:var(--ink);font-size:14px}.simple-config-copy span{display:block;margin-top:5px;color:var(--muted);font-size:12px;line-height:1.65}
   .speech-style-switch{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:4px 8px;border:1px solid #bcd8e7;border-radius:999px;background:#f3faff;color:var(--gov-800);font-size:11px;font-weight:800;cursor:pointer}.speech-style-switch:hover{background:#e7f5fb}.speech-style-switch strong{font-size:10px;color:var(--gov-600)}
@@ -2032,6 +2034,37 @@
   .cfg-filter-bar{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px;border:1px solid #e3e9ee;border-radius:10px;background:#f8fafc}.cfg-filter-field{display:grid;gap:5px;min-width:132px;flex:1}.cfg-filter-field.wide{min-width:190px;flex:1.35}.cfg-filter-field label{color:#778696;font-size:10px;font-weight:650}.cfg-filter-field input,.cfg-filter-field select{width:100%;height:34px;padding:0 9px;border:1px solid #d4dfe7;border-radius:7px;background:#fff;color:#405269;font:inherit}.cfg-filter-actions{display:flex;align-items:center;gap:7px;padding-bottom:1px}.cfg-filter-actions .btn{height:34px}
   .cfg-data-table{width:100%;border-collapse:collapse;font-size:11.5px}.cfg-data-table th{padding:10px 9px;border-bottom:1px solid #dde5eb;background:#f7f9fb;color:#7c8998;font-weight:650;text-align:left;white-space:nowrap}.cfg-data-table td{padding:11px 9px;border-bottom:1px solid #edf1f4;color:#405168;vertical-align:middle}.cfg-data-table tr:last-child td{border-bottom:0}.cfg-data-table tr:hover td{background:#fbfdfe}.cfg-data-title{display:flex;align-items:flex-start;gap:9px}.cfg-data-title .pref-ic{width:30px;height:30px;display:grid;place-items:center;flex:none;border-radius:8px;background:#eef6fa;color:#1473a5}.cfg-data-title b{display:block;color:#263a51;font-size:12px}.cfg-data-title small{display:block;margin-top:3px;color:#8b97a5;font-size:10px;max-width:270px;line-height:1.45}
   .cfg-scope-list{display:flex;gap:4px;flex-wrap:wrap}.cfg-scope-chip{padding:3px 6px;border-radius:5px;background:#eef4f7;color:#51677a;font-size:9.5px}.cfg-status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:#edf7f0;color:#308259;font-size:10px;font-weight:650}.cfg-status-pill.off{background:#f0f2f4;color:#8a95a1}.cfg-status-pill.warn{background:#fff5e5;color:#a66b12}
+  .lex-tabs{display:flex;gap:0;border-bottom:1px solid #dfe6ec;margin-bottom:16px}.lex-tab{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 18px;border:0;border-bottom:2px solid transparent;background:transparent;color:#5d6e80;font-size:13px;font-weight:550;cursor:pointer}.lex-tab:hover{color:#1680b5}.lex-tab.active{color:#126f9f;border-bottom-color:#126f9f;font-weight:650}.lex-tab em{min-width:20px;padding:1px 6px;border-radius:999px;background:#eef4f7;color:#5d6e80;font-size:10px;font-style:normal;text-align:center}.lex-tab.active em{background:#e0f0f8;color:#126f9f}
+  .lex-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}.lex-toolbar .cfg-filter-bar{margin-bottom:0;flex:1}
+  .lex-category-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600}.lex-cat-sensitive{background:#fdeaea;color:#c44e49}.lex-cat-negative{background:#fff5e5;color:#a66b12}.lex-cat-irregular{background:#eef4f8;color:#536b7e}.lex-cat-other{background:#eef7f0;color:#308259}
+  .lex-action-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600}.lex-act-block{background:#fdeaea;color:#c44e49}.lex-act-replace{background:#eef4f8;color:#536b7e}
+  .lex-scope-badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:5px;background:#eef4f7;color:#51677a;font-size:9.5px;font-weight:550}
+  .lex-hit-content{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4a5a6c;font-size:11px}
+  .lex-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+  .lex-stat-card{padding:14px 16px;border:1px solid #dfe6ec;border-radius:10px;background:#fff}.lex-stat-card span{display:block;color:#8391a1;font-size:10.5px}.lex-stat-card b{display:block;margin-top:6px;color:#20364f;font-size:22px;font-weight:650}.lex-stat-card small{display:block;margin-top:4px;color:#7a8999;font-size:10px}
+  .lex-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:14px;align-items:start}
+  .lex-bank-panel{border:1px solid #dfe6ec;border-radius:12px;background:#fff;overflow:hidden;position:sticky;top:0}
+  .lex-bank-search{padding:12px 12px 8px}.lex-bank-search input{width:100%;height:34px;padding:0 10px;border:1px solid #d4dfe7;border-radius:7px;background:#fff;color:#405269;font:inherit;font-size:12px}
+  .lex-bank-add{width:calc(100% - 24px);margin:4px 12px 10px;display:flex;align-items:center;justify-content:center;gap:6px;height:36px}
+  .lex-bank-list{display:grid;gap:2px;padding:4px 8px 12px;max-height:calc(100vh - 360px);overflow:auto}
+  .lex-bank-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer;position:relative}.lex-bank-item:hover{background:#f3f7fa}.lex-bank-item.active{background:#eaf5fa}
+  .lex-bank-badge{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:7px;font-size:12px;font-weight:700}
+  .lex-bank-name{min-width:0;flex:1;color:#33465c;font-size:12.5px;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lex-bank-name small{display:block;margin-top:2px;color:#93a1af;font-size:9.5px;font-weight:400}
+  .lex-bank-more{width:26px;height:26px;display:grid;place-items:center;flex:none;border:0;border-radius:6px;background:transparent;color:#8a98a8;cursor:pointer;opacity:0}.lex-bank-item:hover .lex-bank-more,.lex-bank-item.active .lex-bank-more{opacity:1}.lex-bank-more:hover{background:#e2ecf2;color:#176d9d}
+  .lex-bank-popover{position:fixed;z-index:1200;min-width:150px;padding:5px;border:1px solid #dbe4ea;border-radius:9px;background:#fff;box-shadow:0 8px 24px rgba(35,58,78,.14)}
+  .lex-bank-popover button{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border:0;border-radius:7px;background:transparent;color:#40536a;font-size:12px;text-align:left;cursor:pointer}.lex-bank-popover button:hover{background:#f2f7fa;color:#126f9f}.lex-bank-popover button.danger{color:#c44e49}.lex-bank-popover button.danger:hover{background:#fdf0f0;color:#a83a35}.lex-bank-popover .svg-icon{width:13px;height:13px}
+  .lex-org-tree{border:1px solid #e0e7ec;border-radius:9px;padding:12px 14px;background:#fbfcfd}
+  .lex-org-root{display:flex;align-items:center;gap:8px;color:#2a3f55;font-size:13px;font-weight:650;padding-bottom:9px;border-bottom:1px solid #e9eef2}
+  .lex-org-children{display:grid;gap:4px;margin-top:9px;padding-left:22px;position:relative}.lex-org-children::before{content:"";position:absolute;left:8px;top:0;bottom:10px;width:1px;background:#d4e1e8}
+  .lex-org-node{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;cursor:pointer;font-size:12px;color:#40536a}.lex-org-node:hover{background:#f0f6fa}.lex-org-node input{width:14px;height:14px;margin:0;accent-color:#1680b5}.lex-org-node span{display:flex;align-items:center;gap:6px}.lex-org-node .svg-icon{color:#7a8ba0}
+  .lex-import-step{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:8px;background:#f5f7f9;margin-bottom:12px}.lex-import-step p{margin:0;color:#3d4f63;font-size:13px;font-weight:550}
+  .lex-template-link{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:#2f7fd0;font-size:13px;font-weight:600;cursor:pointer;padding:4px 6px;border-radius:6px}.lex-template-link:hover{background:#e8f2fb;text-decoration:underline}
+  .lex-upload-zone{margin-top:4px;border:1.5px dashed #c3d2dd;border-radius:10px;background:#fbfcfd;padding:34px 20px;text-align:center;cursor:pointer;transition:all .15s}.lex-upload-zone:hover,.lex-upload-zone.dragover{border-color:#1680b5;background:#f0f8fc}
+  .lex-upload-zone .lex-upload-ic{width:40px;height:40px;margin:0 auto 10px;display:grid;place-items:center;color:#40536a}.lex-upload-zone .lex-upload-ic .svg-icon{width:34px;height:34px}
+  .lex-upload-main{color:#33465c;font-size:13.5px}.lex-upload-main a{color:#2f7fd0;font-weight:600;text-decoration:none}.lex-upload-main a:hover{text-decoration:underline}
+  .lex-upload-hint{margin-top:8px;color:#98a5b2;font-size:11.5px}
+  .lex-upload-file{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 12px;border:1px solid #cfe0ea;border-radius:8px;background:#eef7fc;color:#175f8a;font-size:12px;font-weight:600}.lex-upload-file button{border:0;background:none;color:#98a5b2;cursor:pointer;font-size:13px;line-height:1}.lex-upload-file button:hover{color:#c44e49}
+  @media(max-width:1100px){.lex-layout{grid-template-columns:1fr}.lex-bank-panel{position:static}}
   .cfg-version-list{display:grid;gap:9px}.cfg-version-row{display:grid;grid-template-columns:120px minmax(0,1fr) 150px auto;gap:12px;align-items:center;padding:12px;border:1px solid #e2e8ed;border-radius:9px}.cfg-version-row.active{border-color:#91bed5;background:#f3f9fc}.cfg-version-row b{color:#284158}.cfg-version-row p{margin:0;color:#718091;font-size:11px;line-height:1.55}.cfg-version-row small{color:#8593a2}.cfg-rule-content{max-height:64px;overflow:hidden}
   .cfg-template-filter{padding:14px 16px;border:1px solid #dfe6ec;border-radius:11px;background:#fff}.cfg-filter-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid #edf1f4}.cfg-filter-row:first-child{padding-top:0;border-top:0}.cfg-filter-label{width:104px;flex:none;padding-top:7px;color:#788797;font-size:11px}.cfg-filter-tabs{display:flex;gap:6px;flex-wrap:wrap}.cfg-filter-tab{display:inline-flex;align-items:center;gap:6px;min-height:31px;padding:6px 9px;border:1px solid #dbe4ea;border-radius:7px;background:#fff;color:#596a7c;font-size:10.5px;cursor:pointer}.cfg-filter-tab:hover{border-color:#a9c8d8}.cfg-filter-tab.active{border-color:#1680b5;background:#1680b5;color:#fff}.cfg-filter-tab em{min-width:18px;padding:1px 5px;border-radius:999px;background:rgba(28,80,110,.08);font-size:9px;font-style:normal;text-align:center}.cfg-filter-tab.active em{background:rgba(255,255,255,.2)}
   .cfg-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:14px}.cfg-template-card{display:flex;flex-direction:column;min-height:202px;padding:15px;border:1px solid #dfe6ec;border-radius:11px;background:#fff;box-shadow:0 3px 12px rgba(35,58,78,.035)}.cfg-template-card:hover{border-color:#aac8d8;box-shadow:0 7px 20px rgba(35,78,106,.08)}.cfg-template-top{display:flex;align-items:flex-start;gap:9px}.cfg-template-icon{width:34px;height:34px;display:grid;place-items:center;flex:none;border-radius:9px;background:#eef7fb;color:#126f9f}.cfg-template-title{min-width:0;flex:1}.cfg-template-title b{display:block;color:#263b52;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cfg-template-title small{display:block;margin-top:4px;color:#8a97a5;font-size:10px}.cfg-template-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:auto;padding:14px 0 12px;border-bottom:1px solid #edf1f4}.cfg-template-meta span{min-width:0;color:#8b97a5;font-size:9.5px;white-space:nowrap}.cfg-template-meta b{display:block;margin-top:3px;color:#526276;font-size:10.5px;font-weight:550;white-space:nowrap}.cfg-template-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}.cfg-template-actions .btn{min-height:29px;padding:5px 8px;font-size:10px}
@@ -2072,6 +2105,7 @@
   <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H5a2 2 0 0 1-2-2z"/></symbol>
   <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.4"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V3m0 0 5 5m-5-5-5 5M4 21h16"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
   <symbol id="i-align-left" viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></symbol>
@@ -2081,6 +2115,8 @@
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><path d="m3 8 5-5M21 8l-5-5M3 16l5 5M21 16l-5 5"/></symbol>
@@ -2215,7 +2251,7 @@
                    <button class="mini" id="homeAttach" hidden><svg class="svg-icon"><use href="#i-paperclip"></use></svg>上传附件</button>
                    <span id="homeAttachLive"></span>
                  </div>
-                 <div class="prompt-editor"><div class="prompt-highlight" id="homePromptHighlight" aria-hidden="true"></div><textarea id="homeInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
+                 <div class="prompt-editor"><div class="prompt-highlight" id="homePromptHighlight" aria-hidden="true"></div><textarea id="homeInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿 或  @选择智能体  / 选择连接器"></textarea></div>
                 <div class="composer-foot">
                   <span class="composer-foot-left"><button class="composer-plus" id="homePlus" data-composer-plus="home" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span>
                   <span class="composer-foot-right"><button class="model-select-btn" type="button" data-model-trigger="home"><span class="model-button-icon" data-model-button-icon="home"></span><span data-model-button-label="home">DeepSeek-V4-Pro</span></button><button class="voice-input-btn" type="button" data-voice-trigger="home" aria-label="语音输入" title="语音输入"><img src="assets/voice-input.svg" alt="" aria-hidden="true"></button><button class="send-btn" id="homeSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span>
@@ -2268,7 +2304,7 @@
                  <button class="mini" id="newAttach" hidden><svg class="svg-icon"><use href="#i-paperclip"></use></svg>上传附件</button>
                  <span id="newAttachLive"></span>
                </div>
-               <div class="prompt-editor"><div class="prompt-highlight" id="newPromptHighlight" aria-hidden="true"></div><textarea id="newInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
+               <div class="prompt-editor"><div class="prompt-highlight" id="newPromptHighlight" aria-hidden="true"></div><textarea id="newInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿 或  @选择智能体  / 选择连接器"></textarea></div>
               <div class="composer-foot"><span class="composer-foot-left"><button class="composer-plus" id="newPlus" data-composer-plus="new" aria-label="添加智能体、连接器、知识库或附件" title="添加资源"><svg class="svg-icon"><use href="#i-plus"></use></svg></button></span><span class="composer-foot-right"><button class="model-select-btn" type="button" data-model-trigger="new"><span class="model-button-icon" data-model-button-icon="new"></span><span data-model-button-label="new">DeepSeek-V4-Pro</span></button><button class="voice-input-btn" type="button" data-voice-trigger="new" aria-label="语音输入" title="语音输入"><img src="assets/voice-input.svg" alt="" aria-hidden="true"></button><button class="send-btn" id="newSend"><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button></span></div>
             </div>
            </div>
@@ -2306,7 +2342,7 @@
                  <span id="attachLive"></span>
                </div>
                <div class="reply-context" id="replyContext" hidden><span class="reply-context-label">追问</span><span class="reply-context-copy" id="replyContextCopy"></span><button class="reply-context-close" id="replyContextClose" type="button" aria-label="取消引用">×</button></div>
-               <div class="prompt-editor"><div class="prompt-highlight" id="composerPromptHighlight" aria-hidden="true"></div><textarea id="composerInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿"></textarea></div>
+               <div class="prompt-editor"><div class="prompt-highlight" id="composerPromptHighlight" aria-hidden="true"></div><textarea id="composerInput" rows="1" placeholder="直接描述您的需求，例如：请帮我生成一份发言稿 或  @选择智能体  / 选择连接器"></textarea></div>
               <div class="composer-foot">
                 <span class="composer-foot-left"><button class="composer-plus" id="chatPlus" data-composer-plus="chat" aria-label="添加智能体、连接器、知识库或附件" title="添加资源">+</button><span class="foot-hint">@选择智能体，/选择连接器</span></span>
                 <button class="send-btn" id="sendBtn" disabled><svg class="svg-icon"><use href="#i-send"></use></svg>发送</button>
@@ -2996,7 +3032,7 @@
   let toastTimer = null;
   let railExpanded = false;
   let railShowCompleted = false;
-  const INITIAL_COMPOSER_PLACEHOLDER = "直接描述您的需求，例如：请帮我生成一份发言稿";
+  const INITIAL_COMPOSER_PLACEHOLDER = "直接描述您的需求，例如：请帮我生成一份发言稿 或  @选择智能体  / 选择连接器";
   const CONTINUE_COMPOSER_PLACEHOLDER = "继续描述您的需求";
   let composerMenuContext = "home";
   let composerMenuType = "";
@@ -7375,10 +7411,12 @@ let sidebarCollapsed = false;
   const CFG_MENU = {
     system:[
       ["agents","智能体管理","i-bot"],["connectors","业务连接器管理","i-plug"],["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],
-      ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"]
+      ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"],
+      ["lexicon","词库管理","i-shield"]
     ],
     dept:[
-      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"]
+      ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"],
+      ["lexicon","词库管理","i-shield"]
     ],
     user:[["personalization","个性化","i-spark"],["templates","智能体模板管理","i-file"],["models","模型配置","i-spark"]]
   };
@@ -8002,7 +8040,8 @@ let sidebarCollapsed = false;
       roles:["角色管理","配置系统管理员、委办局管理员和普通使用人员的功能权限边界。"],
       menus:["菜单管理","按角色配置可见菜单，菜单权限不得突破角色的数据权限范围。"],
       audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"],
-      models:["模型配置","维护当前用户可用的内置模型和自定义模型连接配置。"]
+      models:["模型配置","维护当前用户可用的内置模型和自定义模型连接配置。"],
+      lexicon:["词库管理","维护词库与词条，按委办局配置作用范围，支持批量导入与导出；查看命中记录。仅系统管理员与委办局管理员可见。"]
     };
     return meta[section] || ["配置治理中心","集中维护平台配置。"];
   }
@@ -8480,7 +8519,8 @@ let sidebarCollapsed = false;
       {id:"config-orgs",name:"组织机构",buttons:[]},
       {id:"config-roles",name:"角色管理",buttons:["新建角色","查看","使用菜单范围"]},
       {id:"config-menus",name:"菜单管理",buttons:["修改菜单名称","新增按钮","重命名","删除"]},
-      {id:"config-audit",name:"操作日志",buttons:["查看"]}
+      {id:"config-audit",name:"操作日志",buttons:["查看"]},
+      {id:"config-lexicon",name:"词库管理",buttons:["新增词语","查看","编辑","删除","启用/禁用"]}
     ]}
   ];
   const CFG_ROLE_MENU_SCOPE = {
@@ -8567,7 +8607,436 @@ let sidebarCollapsed = false;
   }
   function cfgMenuButtonDelete(menuId,index) {
     const menu = cfgMenuNode(menuId), name = menu?.buttons?.[Number(index)]; if (!menu || name === undefined) return;
-    openModal("删除页面按钮",`确认删除“${esc(name)}”按钮？删除后相关角色将不再获得该按钮权限。`,() => { menu.buttons.splice(Number(index),1); Object.keys(CFG_ROLE_MENU_SCOPE).forEach(roleId => { CFG_ROLE_MENU_SCOPE[roleId] = (CFG_ROLE_MENU_SCOPE[roleId] || []).filter(value => value !== `${menuId}:${name}`); }); closeModal(); renderConfig(); showToast("页面按钮已删除"); },{okText:"确认删除"});
+    openModal("删除页面按钮",`确认删除"${esc(name)}"按钮？删除后相关角色将不再获得该按钮权限。`,() => { menu.buttons.splice(Number(index),1); Object.keys(CFG_ROLE_MENU_SCOPE).forEach(roleId => { CFG_ROLE_MENU_SCOPE[roleId] = (CFG_ROLE_MENU_SCOPE[roleId] || []).filter(value => value !== `${menuId}:${name}`); }); closeModal(); renderConfig(); showToast("页面按钮已删除"); },{okText:"确认删除"});
+  }
+  // ===== 词库管理 =====
+  let lexiconActiveTab = "banks";
+  let lexiconActiveBankId = "bank-negative";
+  let lexiconBankSearch = "";
+  let lexiconWordSearch = "";
+  let lexiconHitFilters = { keyword:"", category:"all", scope:"all", startDate:"", endDate:"" };
+  const LEXICON_CATEGORIES = [
+    { value:"敏感词", label:"敏感词", cls:"lex-cat-sensitive" },
+    { value:"负面情绪词", label:"负面情绪词", cls:"lex-cat-negative" },
+    { value:"不规范表述", label:"不规范表述", cls:"lex-cat-irregular" },
+    { value:"其他", label:"其他", cls:"lex-cat-other" }
+  ];
+  const LEXICON_ACTIONS = [
+    { value:"禁止提交", label:"禁止提交", cls:"lex-act-block" },
+    { value:"自动替换", label:"自动替换", cls:"lex-act-replace" }
+  ];
+  const LEXICON_SCOPES = [
+    { value:"用户输入", label:"用户输入" },
+    { value:"模型输出", label:"模型输出" },
+    { value:"输入和输出", label:"全部" }
+  ];
+  // 词库数据：scope 字段为作用到的委办局数组；勾选哪些委办局就作用哪些，全选即作用全部委办局
+  const LEXICON_BANKS = [
+    { id:"bank-negative", name:"负面情绪词", category:"负面情绪词", desc:"负面情绪类词语，输入输出时拦截或替换", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+      words:[
+        { id:"w-n-001", word:"傻逼", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-11 09:15" },
+        { id:"w-n-002", word:"废物", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-11 09:20" },
+        { id:"w-n-003", word:"黑名单", scope:"模型输出", action:"自动替换", replaceSuggestion:"失信名单", enabled:false, updatedAt:"2026-08-15 09:10" }
+      ]},
+    { id:"bank-sensitive-complaint", name:"投诉敏感词", category:"敏感词", desc:"涉及投诉处理场景的敏感表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+      words:[
+        { id:"w-c-001", word:"上访", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 10:00" },
+        { id:"w-c-002", word:"闹事", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 10:05" }
+      ]},
+    { id:"bank-sensitive-regulatory", name:"监管敏感词", category:"敏感词", desc:"涉及监管与保密要求的词语", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+      words:[
+        { id:"w-r-001", word:"绝密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
+        { id:"w-r-002", word:"机密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
+        { id:"w-r-003", word:"秘密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
+        { id:"w-r-004", word:"文革", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 09:00" }
+      ]},
+    { id:"bank-sentiment-monitor", name:"舆情监控敏感词", category:"敏感词", desc:"舆情场景下需要重点监控的表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+      words:[
+        { id:"w-y-001", word:"群体性事件", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-13 11:00" },
+        { id:"w-y-002", word:"腐败", scope:"模型输出", action:"自动替换", replaceSuggestion:"廉政风险", enabled:true, updatedAt:"2026-08-11 10:20" }
+      ]},
+    { id:"bank-irregular-gov", name:"政务表述规范词", category:"不规范表述", desc:"政务公文中需要规范化替换的表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+      words:[
+        { id:"w-g-001", word:"中国政府", scope:"输入和输出", action:"自动替换", replaceSuggestion:"中华人民共和国政府", enabled:true, updatedAt:"2026-08-12 08:45" },
+        { id:"w-g-002", word:"外蒙古", scope:"输入和输出", action:"自动替换", replaceSuggestion:"蒙古国", enabled:true, updatedAt:"2026-08-12 09:30" },
+        { id:"w-g-003", word:"台湾政府", scope:"输入和输出", action:"自动替换", replaceSuggestion:"中国台湾地区有关当局", enabled:true, updatedAt:"2026-08-13 10:15" },
+        { id:"w-g-004", word:"钓鱼岛", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-13 10:00" }
+      ]},
+    { id:"bank-dept-petition", name:"信访业务词库", category:"敏感词", desc:"信访业务场景专用词语", scope:["南京江北新区数据局"], enabled:true,
+      words:[
+        { id:"w-x-001", word:"信访群体", scope:"模型输出", action:"自动替换", replaceSuggestion:"信访群众", enabled:true, updatedAt:"2026-08-14 11:20" }
+      ]},
+    { id:"bank-dept-urban", name:"城建表述词库", category:"不规范表述", desc:"城建领域不规范表述规范", scope:["南京江北新区数据局","南京江北新区建设与交通局"], enabled:true,
+      words:[
+        { id:"w-cj-001", word:"违章建筑", scope:"模型输出", action:"自动替换", replaceSuggestion:"违法建设", enabled:true, updatedAt:"2026-08-14 14:30" },
+        { id:"w-cj-002", word:"拆迁户", scope:"模型输出", action:"自动替换", replaceSuggestion:"被征收人", enabled:true, updatedAt:"2026-08-14 15:00" }
+      ]}
+  ];
+  const LEXICON_HIT_RECORDS = [
+    { id:"hit-001", word:"机密", category:"敏感词", scope:"用户输入", action:"禁止提交", content:"关于机密文件的传输流程...", agent:"公文起草智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-16 10:23", handled:"已拦截" },
+    { id:"hit-002", word:"中国政府", category:"不规范表述", scope:"模型输出", action:"自动替换", content:"中国政府持续推进数字政府建设...", agent:"政策解读智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-16 11:05", handled:"已替换" },
+    { id:"hit-003", word:"拆迁户", category:"不规范表述", scope:"模型输出", action:"自动替换", content:"拆迁户安置补偿方案...", agent:"公文起草智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-16 14:20", handled:"已替换" },
+    { id:"hit-004", word:"傻逼", category:"负面情绪词", scope:"用户输入", action:"禁止提交", content:"用户输入包含不文明用语", agent:"通用对话", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-17 09:15", handled:"已拦截" },
+    { id:"hit-005", word:"外蒙古", category:"不规范表述", scope:"模型输出", action:"自动替换", content:"外蒙古的矿产资源丰富...", agent:"政策解读智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-17 10:40", handled:"已替换" },
+    { id:"hit-006", word:"信访群体", category:"敏感词", scope:"模型输出", action:"自动替换", content:"信访群体反映的问题集中在...", agent:"信访分析智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-17 14:30", handled:"已替换" },
+    { id:"hit-007", word:"台湾政府", category:"不规范表述", scope:"模型输出", action:"自动替换", content:"台湾政府最近发布了...", agent:"政策解读智能体", user:"张敏", department:"南京江北新区数据局", hitTime:"2026-08-17 16:10", handled:"已替换" }
+  ];
+  function lexiconCatMeta(value) { return LEXICON_CATEGORIES.find(item => item.value === value) || LEXICON_CATEGORIES[3]; }
+  function lexiconActionMeta(value) { return LEXICON_ACTIONS.find(item => item.value === value) || LEXICON_ACTIONS[0]; }
+  function lexiconBankById(id) { return LEXICON_BANKS.find(item => item.id === id); }
+  function lexiconAllDeptNames() { return CFG_DIRECTORY_DATA.orgs.map(org => org.name); }
+  function lexiconScopeText(bank) {
+    const scope = bank.scope || [], all = lexiconAllDeptNames();
+    if (all.length && all.every(name => scope.includes(name))) return "全部委办局";
+    return scope.join("、") || "未配置";
+  }
+  function lexiconVisibleBanks() {
+    let list = LEXICON_BANKS.slice();
+    if (configRole === "dept") list = list.filter(item => (item.scope || []).includes(cfgRoleMeta().dept));
+    if (lexiconBankSearch) list = list.filter(item => item.name.toLowerCase().includes(lexiconBankSearch.toLowerCase()));
+    return list;
+  }
+  function lexiconCanManageBank(bank) {
+    if (configRole === "system") return true;
+    if (configRole === "dept") return (bank.scope || []).includes(cfgRoleMeta().dept);
+    return false;
+  }
+  function lexiconCloseBankMenu() { const pop = $("#lexBankPopover"); if (pop) pop.remove(); }
+  function lexiconScopeMeta(value) { return LEXICON_SCOPES.find(item => item.value === value) || LEXICON_SCOPES[0]; }
+  function lexiconTabHTML() {
+    const tabs = [
+      { id:"banks", name:"词库管理", count: lexiconVisibleBanks().length },
+      { id:"hits", name:"命中记录", count: LEXICON_HIT_RECORDS.length }
+    ];
+    return `<div class="lex-tabs">${tabs.map(tab => `<button class="lex-tab ${tab.id === lexiconActiveTab ? "active" : ""}" data-act="lexiconTabSwitch" data-tab="${tab.id}">${esc(tab.name)}<em>${tab.count}</em></button>`).join("")}</div>`;
+  }
+  function lexiconBankListHTML() {
+    const banks = lexiconVisibleBanks();
+    const items = banks.map(bank => {
+      const cat = lexiconCatMeta(bank.category);
+      return `<div class="lex-bank-item ${bank.id === lexiconActiveBankId ? "active" : ""}" data-act="lexiconBankSelect" data-id="${bank.id}">
+        <span class="lex-bank-badge ${cat.cls}">${esc(bank.name.slice(0,1))}</span>
+        <span class="lex-bank-name">${esc(bank.name)}<small>${bank.words.length} 个词条</small></span>
+        <button class="lex-bank-more" data-act="lexiconBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button>
+      </div>`;
+    }).join("");
+    const canAdd = configRole !== "user";
+    return `<aside class="lex-bank-panel">
+      <div class="lex-bank-search"><div class="cfg-filter-field" style="min-width:0"><input data-lexicon-bank-search value="${esc(lexiconBankSearch)}" placeholder="搜索词库"></div></div>
+      ${canAdd ? `<button class="btn primary lex-bank-add" data-act="lexiconBankAdd">${svgi("i-plus",13)}新建词库</button>` : ""}
+      <div class="lex-bank-list">${items || `<div class="cfg-empty" style="padding:30px 10px"><b>暂无词库</b><p>${lexiconBankSearch ? "换个关键词试试" : "点击上方按钮新建词库"}</p></div>`}</div>
+    </aside>`;
+  }
+  function lexiconWordTableHTML() {
+    const bank = lexiconBankById(lexiconActiveBankId);
+    if (!bank) {
+      return `<section class="cfg-section-card lex-word-panel"><div class="cfg-section-body"><div class="cfg-empty"><b>请选择左侧词库</b><p>从左侧列表选择一个词库查看其词条。</p></div></div></section>`;
+    }
+    const canManage = lexiconCanManageBank(bank);
+    const cat = lexiconCatMeta(bank.category);
+    let words = bank.words.slice();
+    if (lexiconWordSearch) words = words.filter(item => item.word.toLowerCase().includes(lexiconWordSearch.toLowerCase()));
+    const rows = words.length ? words.map((item,index) => {
+      const act = lexiconActionMeta(item.action);
+      return `<tr>
+        <td>${String(index+1).padStart(2,"0")}</td>
+        <td><b>${esc(item.word)}</b></td>
+        <td><span class="lex-scope-badge">${esc(item.scope)}</span></td>
+        <td><span class="lex-action-badge ${act.cls}">${esc(act.label)}</span></td>
+        <td>${item.replaceSuggestion ? esc(item.replaceSuggestion) : '<span style="color:#aab5c1">—</span>'}</td>
+        <td><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? "启用" : "禁用"}</span></td>
+        <td>${esc(item.updatedAt || "")}</td>
+        <td>
+          <button class="btn" data-act="lexiconWordView" data-bank="${bank.id}" data-id="${item.id}">查看</button>
+          ${canManage ? `<button class="btn primary" data-act="lexiconWordEdit" data-bank="${bank.id}" data-id="${item.id}">${svgi("i-edit",12)}编辑</button>` : ""}
+          ${canManage ? `<button class="btn ${item.enabled ? "" : "primary"}" data-act="lexiconWordToggle" data-bank="${bank.id}" data-id="${item.id}">${item.enabled ? "禁用" : "启用"}</button>` : ""}
+          ${canManage ? `<button class="btn" data-act="lexiconWordDelete" data-bank="${bank.id}" data-id="${item.id}" style="color:#c44e49">${svgi("i-trash",12)}删除</button>` : ""}
+        </td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="8"><div class="cfg-empty"><b>暂无词条</b><p>${lexiconWordSearch ? "换个关键词试试" : (canManage ? "点击右上角添加词条" : "该词库暂无词条")}</p></div></td></tr>`;
+    const scopeText = lexiconScopeText(bank);
+    return `<section class="cfg-section-card lex-word-panel">
+      <div class="cfg-section-head">
+        <div class="cfg-section-head-copy"><h2><span class="lex-category-pill ${cat.cls}" style="margin-right:8px">${esc(cat.label)}</span>${esc(bank.name)}</h2><p>${esc(bank.desc || "暂无描述")} · 作用范围：${esc(scopeText)}</p></div>
+        <div class="cfg-section-head-actions"><button class="btn" data-act="lexiconExport" data-bank="${bank.id}">${svgi("i-download",13)}导出</button>${canManage ? `<button class="btn" data-act="lexiconImport" data-bank="${bank.id}">${svgi("i-upload",13)}导入</button><button class="btn primary" data-act="lexiconWordAdd" data-bank="${bank.id}">${svgi("i-plus",13)}添加词条</button>` : ""}</div>
+      </div>
+      <div class="cfg-section-body">
+        <div class="cfg-filter-bar" style="margin-bottom:12px">
+          <div class="cfg-filter-field wide"><label>词条搜索</label><input data-lexicon-word-search value="${esc(lexiconWordSearch)}" placeholder="请输入需要搜索的内容"></div>
+          <div class="cfg-filter-actions"><button class="btn primary" data-act="lexiconWordSearchApply">${svgi("i-search",13)}搜索</button><button class="btn" data-act="lexiconWordSearchReset">重置</button></div>
+        </div>
+        <div class="tbl-wrap"><table class="cfg-data-table"><thead><tr>
+          <th>序号</th><th>词语名称</th><th>检测范围</th><th>处理方式</th><th>建议替换内容</th><th>启用状态</th><th>更新时间</th><th>操作</th>
+        </tr></thead><tbody>${rows}</tbody></table></div>
+      </div>
+    </section>`;
+  }
+  function lexiconBanksPageHTML() {
+    return `<div class="lex-layout">${lexiconBankListHTML()}<div class="lex-main">${lexiconWordTableHTML()}</div></div>`;
+  }
+  function lexiconHitListHTML() {
+    const f = lexiconHitFilters;
+    let rows = LEXICON_HIT_RECORDS.slice();
+    if (f.keyword) rows = rows.filter(item => item.word.toLowerCase().includes(f.keyword.toLowerCase()) || item.content.toLowerCase().includes(f.keyword.toLowerCase()));
+    if (f.category !== "all") rows = rows.filter(item => item.category === f.category);
+    if (f.scope !== "all") rows = rows.filter(item => item.scope === f.scope);
+    if (f.startDate) rows = rows.filter(item => item.hitTime >= f.startDate);
+    if (f.endDate) rows = rows.filter(item => item.hitTime <= f.endDate + " 23:59");
+    const filterBar = `<div class="cfg-filter-bar">
+      <div class="cfg-filter-field wide"><label>关键词/内容</label><input data-lexicon-hit-filter="keyword" value="${esc(f.keyword || "")}" placeholder="词语或命中内容"></div>
+      <div class="cfg-filter-field"><label>词语分类</label><select data-lexicon-hit-filter="category"><option value="all">全部分类</option>${LEXICON_CATEGORIES.map(item => `<option value="${esc(item.value)}" ${f.category === item.value ? "selected" : ""}>${esc(item.label)}</option>`).join("")}</select></div>
+      <div class="cfg-filter-field"><label>检测范围</label><select data-lexicon-hit-filter="scope"><option value="all">全部范围</option>${LEXICON_SCOPES.map(item => `<option value="${esc(item.value)}" ${f.scope === item.value ? "selected" : ""}>${esc(item.label)}</option>`).join("")}</select></div>
+      <div class="cfg-filter-field"><label>开始日期</label><input type="date" data-lexicon-hit-filter="startDate" value="${esc(f.startDate || "")}"></div>
+      <div class="cfg-filter-field"><label>结束日期</label><input type="date" data-lexicon-hit-filter="endDate" value="${esc(f.endDate || "")}"></div>
+      <div class="cfg-filter-actions"><button class="btn primary" data-act="lexiconHitFilter">${svgi("i-search",13)}筛选</button><button class="btn" data-act="lexiconHitReset">重置</button></div>
+    </div>`;
+    const tableRows = rows.length ? rows.map((item,index) => {
+      const cat = lexiconCatMeta(item.category), act = lexiconActionMeta(item.action);
+      const handledCls = item.handled === "已拦截" ? "lex-cat-sensitive" : item.handled === "已替换" ? "lex-cat-irregular" : "lex-cat-negative";
+      return `<tr>
+        <td>${String(index+1).padStart(2,"0")}</td>
+        <td><b>${esc(item.word)}</b></td>
+        <td><span class="lex-category-pill ${cat.cls}">${esc(cat.label)}</span></td>
+        <td><span class="lex-scope-badge">${esc(item.scope)}</span></td>
+        <td><span class="lex-action-badge ${act.cls}">${esc(act.label)}</span></td>
+        <td><div class="lex-hit-content" title="${esc(item.content)}">${esc(item.content)}</div></td>
+        <td>${esc(item.agent)}</td>
+        <td>${esc(item.user)}</td>
+        <td>${esc(item.department)}</td>
+        <td>${esc(item.hitTime)}</td>
+        <td><span class="lex-category-pill ${handledCls}">${esc(item.handled)}</span></td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="11"><div class="cfg-empty"><b>暂无命中记录</b><p>当前筛选条件下没有命中数据。</p></div></td></tr>`;
+    return `<section class="cfg-section-card">
+      <div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>命中记录</h2><p>记录用户输入和模型输出中命中词库的详细情况，包括处理结果。</p></div></div>
+      <div class="cfg-section-body">${filterBar}<div class="tbl-wrap"><table class="cfg-data-table"><thead><tr>
+        <th>序号</th><th>命中词语</th><th>词语分类</th><th>检测范围</th><th>处理方式</th><th>命中内容</th><th>智能体</th><th>用户</th><th>所属部门</th><th>命中时间</th><th>处理结果</th>
+      </tr></thead><tbody>${tableRows}</tbody></table></div></div>
+    </section>`;
+  }
+  function cfgLexiconHTML() {
+    if (configRole === "user") {
+      return `<section class="cfg-section-card"><div class="cfg-section-body"><div class="cfg-empty"><b>无权访问</b><p>词库管理仅对系统管理员和委办局管理员开放。</p></div></div></section>`;
+    }
+    if (!["banks","hits"].includes(lexiconActiveTab)) lexiconActiveTab = "banks";
+    let body = "";
+    if (lexiconActiveTab === "banks") body = lexiconBanksPageHTML();
+    else if (lexiconActiveTab === "hits") body = lexiconHitListHTML();
+    return `${lexiconTabHTML()}${body}`;
+  }
+  function lexiconFindWordInBank(bankId, wordId) {
+    const bank = lexiconBankById(bankId);
+    return bank ? bank.words.find(item => item.id === wordId) : null;
+  }
+  function lexiconOpenBankEditor(id) {
+    const bank = id ? lexiconBankById(id) : null;
+    const title = bank ? `编辑词库 · ${bank.name}` : "新建词库";
+    const body = `<div class="cfg-form-grid">
+      <div class="cfg-form-field"><label>词库名称 <i>*</i></label><input id="lexBankName" maxlength="30" value="${esc(bank?.name || "")}" placeholder="请输入词库名称"></div>
+      <div class="cfg-form-field"><label>词库类型 <i>*</i></label><select id="lexBankCategory">${LEXICON_CATEGORIES.map(c => `<option value="${esc(c.value)}" ${bank?.category === c.value ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></div>
+      <div class="cfg-form-field full"><label>词库描述</label><textarea id="lexBankDesc" placeholder="说明该词库的使用场景与维护要求">${esc(bank?.desc || "")}</textarea></div>
+      <div class="cfg-form-field"><label>启用状态</label><select id="lexBankEnabled"><option value="true" ${!bank || bank.enabled ? "selected" : ""}>启用</option><option value="false" ${bank && !bank.enabled ? "selected" : ""}>禁用</option></select></div>
+    </div>`;
+    openModal(title, body, () => {
+      const name = ($("#lexBankName")?.value || "").trim();
+      if (!name) { showToast("词库名称不能为空"); return; }
+      const category = $("#lexBankCategory").value;
+      const desc = ($("#lexBankDesc")?.value || "").trim();
+      const enabled = $("#lexBankEnabled").value === "true";
+      if (!bank) {
+        if (LEXICON_BANKS.some(item => item.name === name)) { showToast("词库名称已存在"); return; }
+        const newBank = { id:`bank-${Date.now()}`, name, category, desc, scope: configRole === "dept" ? [cfgRoleMeta().dept] : lexiconAllDeptNames(), enabled, words:[] };
+        LEXICON_BANKS.push(newBank);
+        lexiconActiveBankId = newBank.id;
+        cfgRecordAudit("新建词库", "词库", name, `新建词库"${name}"（作用范围：${lexiconScopeText(newBank)}）`);
+      } else {
+        Object.assign(bank, { name, category, desc, enabled });
+        cfgRecordAudit("编辑词库", "词库", name, `修改词库"${name}"的基础信息`);
+      }
+      closeModal(); renderConfig(); showToast(bank ? "词库已更新" : "词库已新建");
+    }, { okText: bank ? "保存修改" : "确认新建", width:"680px" });
+  }
+  function lexiconOpenBankDetail(id) {
+    const bank = lexiconBankById(id); if (!bank) return;
+    const cat = lexiconCatMeta(bank.category);
+    openModal(`词库详情 · ${bank.name}`, `<table class="cfg-data-table"><tbody>
+      <tr><th style="width:120px">词库名称</th><td><b>${esc(bank.name)}</b></td></tr>
+      <tr><th>词库类型</th><td><span class="lex-category-pill ${cat.cls}">${esc(cat.label)}</span></td></tr>
+      <tr><th>词库描述</th><td>${esc(bank.desc || "暂无描述")}</td></tr>
+      <tr><th>作用范围</th><td>${esc(lexiconScopeText(bank))}</td></tr>
+      <tr><th>词条数量</th><td>${bank.words.length} 个</td></tr>
+      <tr><th>启用状态</th><td><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "启用" : "禁用"}</span></td></tr>
+    </tbody></table>`, null, { hideFooter:true, width:"620px" });
+  }
+  function lexiconOpenBankScope(id) {
+    const bank = lexiconBankById(id); if (!bank) return;
+    const selected = new Set(bank.scope || []);
+    const allOrgs = lexiconAllDeptNames();
+    const allChecked = allOrgs.length && allOrgs.every(name => selected.has(name));
+    const orgNodes = allOrgs.map(name => `<label class="lex-org-node"><input type="checkbox" name="lexBankScopeOrg" value="${esc(name)}" ${selected.has(name) ? "checked" : ""}><span>${svgi("i-landmark",14)}${esc(name)}</span></label>`).join("");
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">勾选该词库作用的委办局；全部勾选即作用全部委办局，仅勾选部分则只作用于所选委办局。</div>
+      <div class="lex-org-tree"><div class="lex-org-root"><label class="lex-org-node" style="padding:0"><input type="checkbox" id="lexBankScopeAll" ${allChecked ? "checked" : ""}><span>${svgi("i-landmark",16)}<b>南京江北新区管理委员会（全部委办局）</b></span></label></div><div class="lex-org-children">${orgNodes}</div></div>`;
+    openModal(`配置作用范围 · ${bank.name}`, body, () => {
+      const checked = $$('input[name="lexBankScopeOrg"]:checked').map(input => input.value);
+      if (!checked.length) { showToast("请至少勾选一个委办局"); return; }
+      bank.scope = checked;
+      cfgRecordAudit("配置作用范围", "词库", bank.name, `词库"${bank.name}"作用范围调整为：${lexiconScopeText(bank)}`);
+      closeModal(); renderConfig(); showToast("作用范围已更新");
+    }, { okText:"确定", width:"600px" });
+    const allBox = $("#lexBankScopeAll");
+    if (allBox) allBox.addEventListener("change", () => {
+      $$('input[name="lexBankScopeOrg"]').forEach(input => { input.checked = allBox.checked; });
+    });
+  }
+  function lexiconDeleteBank(id) {
+    const bank = lexiconBankById(id); if (!bank) return;
+    openModal("删除词库", `确认删除词库"${esc(bank.name)}"？词库下 ${bank.words.length} 个词条将一并删除，且不可恢复。`, () => {
+      const idx = LEXICON_BANKS.findIndex(item => item.id === id);
+      if (idx >= 0) LEXICON_BANKS.splice(idx, 1);
+      if (lexiconActiveBankId === id) lexiconActiveBankId = LEXICON_BANKS[0]?.id || "";
+      cfgRecordAudit("删除词库", "词库", bank.name, `删除词库"${bank.name}"及其 ${bank.words.length} 个词条`);
+      closeModal(); renderConfig(); showToast("词库已删除");
+    }, { okText:"确认删除" });
+  }
+  // ===== 词库导入/导出 =====
+  let lexiconImportFile = null;
+  function lexiconDownloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 800);
+  }
+  function lexiconBuildXlsx(rows) {
+    const xmlEscape = s => String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    const sheetRows = rows.map(row => `<Row>${row.map(cell => `<Cell><Data ss:Type="String">${xmlEscape(cell)}</Data></Cell>`).join("")}</Row>`).join("");
+    const content = `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="词条"><Table>${sheetRows}</Table></Worksheet></Workbook>`;
+    return new Blob(["﻿" + content], { type:"application/vnd.ms-excel;charset=utf-8" });
+  }
+  function lexiconDownloadTemplate() {
+    const rows = [
+      ["词语名称","检测范围","处理方式","建议替换内容","启用状态"],
+      ["示例词语","全部","自动替换","规范表述","启用"],
+      ["涉密词汇","用户输入","禁止提交","","启用"]
+    ];
+    lexiconDownloadBlob(lexiconBuildXlsx(rows), "词库词条导入模板.xlsx");
+    showToast("模板已开始下载，请按模板要求填写后上传");
+  }
+  function lexiconExportBank(bankId) {
+    const bank = lexiconBankById(bankId); if (!bank) return;
+    const rows = [["词语名称","检测范围","处理方式","建议替换内容","启用状态"]];
+    bank.words.forEach(item => rows.push([item.word, item.scope === "输入和输出" ? "全部" : item.scope, item.action, item.replaceSuggestion || "", item.enabled ? "启用" : "禁用"]));
+    lexiconDownloadBlob(lexiconBuildXlsx(rows), `${bank.name}-词条导出.xlsx`);
+    cfgRecordAudit("导出词条", "词库", bank.name, `导出词库"${bank.name}"的 ${bank.words.length} 个词条`);
+    showToast(`已导出"${bank.name}"共 ${bank.words.length} 个词条`);
+  }
+  function lexiconParseImportText(text) {
+    const lines = String(text || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    const scopeMap = { "用户输入":"用户输入", "模型输出":"模型输出", "全部":"输入和输出", "输入和输出":"输入和输出" };
+    const actionMap = { "禁止提交":"禁止提交", "自动替换":"自动替换" };
+    const words = [], errors = [];
+    lines.forEach((line, idx) => {
+      if (idx === 0 && line.includes("词语名称")) return;
+      const cells = line.split(/\t|,/).map(cell => cell.trim());
+      if (!cells[0]) return;
+      const [word, scopeRaw, actionRaw, replaceRaw, enabledRaw] = cells;
+      const scope = scopeMap[scopeRaw] || null;
+      const action = actionMap[actionRaw] || null;
+      if (!scope || !action) { errors.push(`第${idx+1}行"${word}"：检测范围或处理方式不符合要求`); return; }
+      if (action === "自动替换" && !replaceRaw) { errors.push(`第${idx+1}行"${word}"：自动替换需填写建议替换内容`); return; }
+      const enabled = enabledRaw === "禁用" ? false : true;
+      words.push({ word, scope, action, replaceSuggestion: replaceRaw || "", enabled });
+    });
+    return { words, errors };
+  }
+  function lexiconOpenImport(bankId) {
+    const bank = lexiconBankById(bankId); if (!bank) return;
+    lexiconImportFile = null;
+    const body = `
+      <div class="lex-import-step"><p>1、下载模板，按模板要求进行填写</p><button class="lex-template-link" data-act="lexiconTemplateDownload">${svgi("i-download",14)}模板下载</button></div>
+      <div class="lex-import-step" style="display:block;background:transparent;padding:0;border-radius:0;margin-bottom:0">
+        <p style="margin:0 0 4px;color:#3d4f63;font-size:13px;font-weight:550">2、上传文件进行导入</p>
+        <div class="lex-upload-zone" id="lexUploadZone">
+          <div class="lex-upload-ic">${svgi("i-upload",34)}</div>
+          <div class="lex-upload-main">拖拽文件至此,或者<a href="javascript:void(0)" id="lexUploadPick">选择文件</a></div>
+          <div class="lex-upload-hint">只能上传一个文件，支持xlsx格式,最多支持10000条</div>
+          <div id="lexUploadFileInfo"></div>
+        </div>
+        <input type="file" id="lexUploadInput" accept=".xlsx,.xls,.csv,.txt" style="display:none">
+      </div>`;
+    openModal(`导入 · ${bank.name}`, body, () => {
+      if (!lexiconImportFile) { showToast("请先选择要导入的文件"); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const { words, errors } = lexiconParseImportText(String(reader.result || ""));
+        if (!words.length) { showToast("未解析到有效词条，请检查文件内容"); return; }
+        if (words.length > 10000) { showToast("单次最多导入10000条"); return; }
+        let added = 0, skipped = 0;
+        words.forEach(item => {
+          if (bank.words.some(w => w.word === item.word)) { skipped++; return; }
+          bank.words.unshift({ id:`w-${Date.now()}-${added}`, ...item, updatedAt:formatDateTime(Date.now()) });
+          added++;
+        });
+        cfgRecordAudit("导入词条", "词库", bank.name, `批量导入词库"${bank.name}"：成功 ${added} 条，重复跳过 ${skipped} 条${errors.length ? `，异常 ${errors.length} 条` : ""}`);
+        closeModal(); renderConfig();
+        showToast(`导入完成：成功 ${added} 条${skipped ? `，跳过重复 ${skipped} 条` : ""}${errors.length ? `，${errors.length} 条格式异常` : ""}`);
+        if (errors.length) console.warn("词库导入异常行：", errors);
+      };
+      reader.readAsText(lexiconImportFile, "utf-8");
+    }, { okText:"开始导入", width:"560px" });
+    const zone = $("#lexUploadZone"), input = $("#lexUploadInput"), info = $("#lexUploadFileInfo");
+    const showFile = () => {
+      if (!lexiconImportFile) { info.innerHTML = ""; return; }
+      info.innerHTML = `<span class="lex-upload-file">${svgi("i-file",13)}${esc(lexiconImportFile.name)}（${(lexiconImportFile.size/1024).toFixed(1)}KB）<button type="button" id="lexUploadClear" title="移除文件">✕</button></span>`;
+      const clearBtn = $("#lexUploadClear");
+      if (clearBtn) clearBtn.onclick = ev => { ev.stopPropagation(); lexiconImportFile = null; input.value = ""; showFile(); };
+    };
+    zone.addEventListener("click", () => input.click());
+    zone.addEventListener("dragover", ev => { ev.preventDefault(); zone.classList.add("dragover"); });
+    zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+    zone.addEventListener("drop", ev => {
+      ev.preventDefault(); zone.classList.remove("dragover");
+      const file = ev.dataTransfer?.files?.[0];
+      if (file) { lexiconImportFile = file; showFile(); }
+    });
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      if (file) { lexiconImportFile = file; showFile(); }
+    });
+  }
+  function lexiconOpenWordEditor(bankId, wordId, isView) {
+    const bank = lexiconBankById(bankId); if (!bank) return;
+    const item = wordId ? lexiconFindWordInBank(bankId, wordId) : null;
+    const title = isView ? `查看词条 · ${item ? item.word : ""}` : (item ? `编辑词条 · ${item.word}` : `添加词条 · ${bank.name}`);
+    const v = key => esc(item?.[key] || "");
+    const readonly = isView ? "disabled" : "";
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">词条归属于词库"${esc(bank.name)}"，检测策略按词条维度配置；处理方式选择"自动替换"时需填写建议替换内容。</div>
+      <div class="cfg-form-grid">
+        <div class="cfg-form-field"><label>词语名称 <i>*</i></label><input id="lexWordName" maxlength="40" value="${v("word")}" placeholder="请输入词语名称" ${readonly}></div>
+        <div class="cfg-form-field"><label>检测范围 <i>*</i></label><select id="lexWordScope" ${readonly}>${LEXICON_SCOPES.map(s => `<option value="${esc(s.value)}" ${item?.scope === s.value ? "selected" : ""}>${esc(s.label)}</option>`).join("")}</select></div>
+        <div class="cfg-form-field"><label>处理方式 <i>*</i></label><select id="lexWordAction" ${readonly}>${LEXICON_ACTIONS.map(a => `<option value="${esc(a.value)}" ${item?.action === a.value ? "selected" : ""}>${esc(a.label)}</option>`).join("")}</select></div>
+        <div class="cfg-form-field"><label>建议替换内容</label><input id="lexWordReplace" maxlength="60" value="${v("replaceSuggestion")}" placeholder="选择'自动替换'时填写" ${readonly}></div>
+        <div class="cfg-form-field"><label>启用状态</label><select id="lexWordEnabled" ${readonly}><option value="true" ${!item || item.enabled ? "selected" : ""}>启用</option><option value="false" ${item && !item.enabled ? "selected" : ""}>禁用</option></select></div>
+      </div>`;
+    if (isView) { openModal(title, body, null, { hideFooter:true, width:"680px" }); return; }
+    openModal(title, body, () => {
+      const word = ($("#lexWordName")?.value || "").trim();
+      if (!word) { showToast("词语名称不能为空"); return; }
+      const scope = $("#lexWordScope").value;
+      const action = $("#lexWordAction").value;
+      const replaceSuggestion = ($("#lexWordReplace")?.value || "").trim();
+      const enabled = $("#lexWordEnabled").value === "true";
+      if (action === "自动替换" && !replaceSuggestion) { showToast("处理方式为自动替换时，建议替换内容不能为空"); return; }
+      if (!item) {
+        if (bank.words.some(w => w.word === word)) { showToast("该词语在当前词库中已存在"); return; }
+        bank.words.unshift({ id:`w-${Date.now()}`, word, scope, action, replaceSuggestion, enabled, updatedAt:formatDateTime(Date.now()) });
+        cfgRecordAudit("新增词条", "词库", word, `在词库"${bank.name}"中新增词条"${word}"`);
+      } else {
+        Object.assign(item, { word, scope, action, replaceSuggestion, enabled, updatedAt:formatDateTime(Date.now()) });
+        cfgRecordAudit("编辑词条", "词库", word, `修改词库"${bank.name}"中词条"${word}"的配置`);
+      }
+      closeModal(); renderConfig(); showToast(item ? "词条已更新" : "词条已添加");
+    }, { okText: item ? "保存修改" : "确认添加", width:"680px" });
   }
 function cfgRoleManagementHTML() {
     const visible = CFG_DIRECTORY_DATA.roles.filter(item => (!configRoleFilters.name || item.name.toLowerCase().includes(configRoleFilters.name.toLowerCase())) && (configRoleFilters.status === "all" || item.status === configRoleFilters.status));
@@ -8643,6 +9112,7 @@ function cfgRoleManagementHTML() {
     else if (configCenterSection === "menus") html = cfgMenuTreeHTML();
     else if (configCenterSection === "models") html = modelConfigHTML();
     else if (configCenterSection === "roles") html = cfgRoleManagementHTML();
+    else if (configCenterSection === "lexicon") html = cfgLexiconHTML();
     else html = cfgDirectoryHTML(configCenterSection);
     if (configCenterSection === "templates") {
       html = html.replaceAll("全局强制规则 ＞ 部门强制规则 ＞","平台基础约束 ＞").replaceAll("与全局强制规则冲突","与平台基础约束冲突").replaceAll("全局强制规则和部门规则","平台基础约束");
@@ -8720,9 +9190,12 @@ function cfgRoleManagementHTML() {
     next = next.replace(/data-speaker-style="[^"]*"/g, `data-speaker-style="${role.id}"`);
     return next;
   }
+  function speakerUnifiedMarkdown(role) {
+    const sp = role.stylePrompt || {};
+    return `- 讲话人：${role.name} · ${role.title}\n- 词汇偏好：${sp.vocabulary || "待补充"}\n- 句式结构：${sp.sentence || "待补充"}\n- 修辞习惯：${sp.rhetoric || "待补充"}\n- 表达特色：${sp.expression || "待补充"}`;
+  }
   function speakerSwitchFiveHTML(role) {
-    const values = role.switchDimensions || {};
-    return `<div class="speaker-switch-five">${SPEAKER_SWITCH_DIMENSIONS.map(([key,label]) => `<span class="speaker-switch-dim"><b>${label}</b><span>${esc(values[key] || "待补充")}</span></span>`).join("")}</div>`;
+    return `<div class="speaker-switch-md">${esc(speakerUnifiedMarkdown(role))}</div>`;
   }
   function regenerateSpeechWithStyle(source, messageIndex, role) {
     const conv = cur(); if (!conv || !role) return;
@@ -8772,6 +9245,17 @@ function cfgRoleManagementHTML() {
       if (!role) { showToast("请选择讲话人风格"); return; }
       setActiveSpeakerStyle(role.id, true); closeModal(); regenerateSpeechWithStyle(source || "direct", messageIndex, role); showToast(`已按“${role.name}”风格重新生成发言稿`);
     }, { okText:"切换并更新发言稿", width:"min(1040px, calc(100vw - 40px))" });
+    const manageBtn = document.createElement("button");
+    manageBtn.className = "btn"; manageBtn.type = "button"; manageBtn.id = "speechStyleManageBtn";
+    manageBtn.innerHTML = `${svgi("i-edit",13)}管理讲话人风格`;
+    $("#modalOk").before(manageBtn);
+    manageBtn.addEventListener("click", () => {
+      closeModal();
+      configCenterSection = "templates";
+      configTemplateDraft = null;
+      configSpeakerManagerOpen = true;
+      switchView("config");
+    });
     $$("[data-speech-style-option]", $("#modalBody")).forEach(card => card.addEventListener("click", () => {
       const hidden = $("#speechStyleSwitchValue"); if (hidden) hidden.value = card.dataset.speechStyleOption;
       $$("[data-speech-style-option]", $("#modalBody")).forEach(item => item.classList.toggle("active", item === card));
@@ -10585,6 +11069,32 @@ function cfgRoleManagementHTML() {
       }
     });
     document.addEventListener("input", (e) => {
+      if (e.target.matches("[data-lexicon-bank-search]")) {
+        lexiconBankSearch = e.target.value;
+        const list = e.target.closest(".lex-bank-panel")?.querySelector(".lex-bank-list");
+        if (list) {
+          const banks = lexiconVisibleBanks();
+          list.innerHTML = banks.map(bank => {
+            const cat = lexiconCatMeta(bank.category);
+            return `<div class="lex-bank-item ${bank.id === lexiconActiveBankId ? "active" : ""}" data-act="lexiconBankSelect" data-id="${bank.id}">
+              <span class="lex-bank-badge ${cat.cls}">${esc(bank.name.slice(0,1))}</span>
+              <span class="lex-bank-name">${esc(bank.name)}<small>${bank.words.length} 个词条</small></span>
+              <button class="lex-bank-more" data-act="lexiconBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button>
+            </div>`;
+          }).join("") || `<div class="cfg-empty" style="padding:30px 10px"><b>暂无词库</b><p>换个关键词试试</p></div>`;
+        }
+        return;
+      }
+      if (e.target.matches("[data-lexicon-word-search]")) {
+        lexiconWordSearch = e.target.value;
+        clearTimeout(window._lexWordSearchTimer);
+        window._lexWordSearchTimer = setTimeout(() => {
+          renderConfig();
+          const input = $("[data-lexicon-word-search]");
+          if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+        }, 220);
+        return;
+      }
       if (e.target.id === "cfgTemplateSearch" || e.target.id === "cfgTemplateOwnerFilter") {
         if (e.target.id === "cfgTemplateSearch") configTemplateSearch = e.target.value; else configTemplateOwnerFilter = e.target.value;
         const focusId = e.target.id;
@@ -10711,6 +11221,66 @@ function cfgRoleManagementHTML() {
       case "cfgMenuButtonAdd": cfgMenuButtonAdd(el.dataset.id); break;
       case "cfgMenuButtonRename": cfgMenuButtonRename(el.dataset.id,el.dataset.index); break;
       case "cfgMenuButtonDelete": cfgMenuButtonDelete(el.dataset.id,el.dataset.index); break;
+      case "lexiconTabSwitch": lexiconActiveTab = el.dataset.tab; lexiconCloseBankMenu(); renderConfig(); break;
+      case "lexiconBankSelect": lexiconActiveBankId = el.dataset.id; lexiconWordSearch = ""; lexiconCloseBankMenu(); renderConfig(); break;
+      case "lexiconBankAdd": lexiconOpenBankEditor(null); break;
+      case "lexiconBankMenuToggle": {
+        const bank = lexiconBankById(el.dataset.id); if (!bank) break;
+        const existing = $("#lexBankPopover");
+        if (existing && existing.dataset.bankId === bank.id) { existing.remove(); break; }
+        lexiconCloseBankMenu();
+        const canManage = lexiconCanManageBank(bank);
+        const pop = document.createElement("div");
+        pop.className = "lex-bank-popover";
+        pop.id = "lexBankPopover";
+        pop.dataset.bankId = bank.id;
+        pop.innerHTML = `${canManage ? `<button data-pop-act="scope">${svgi("i-globe",13)}作用范围</button>` : ""}${canManage ? `<button data-pop-act="edit">${svgi("i-edit",13)}编辑</button>` : ""}<button data-pop-act="detail">${svgi("i-clipboard",13)}详情</button>${canManage ? `<button class="danger" data-pop-act="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
+        document.body.appendChild(pop);
+        const rect = el.getBoundingClientRect();
+        pop.style.left = Math.min(rect.right - 150, window.innerWidth - 170) + "px";
+        pop.style.top = (rect.bottom + 4) + "px";
+        pop.addEventListener("click", ev => {
+          const btn = ev.target.closest("[data-pop-act]"); if (!btn) return;
+          const action = btn.dataset.popAct;
+          pop.remove();
+          if (action === "scope") lexiconOpenBankScope(bank.id);
+          else if (action === "edit") lexiconOpenBankEditor(bank.id);
+          else if (action === "detail") lexiconOpenBankDetail(bank.id);
+          else if (action === "delete") lexiconDeleteBank(bank.id);
+        });
+        setTimeout(() => document.addEventListener("click", function closer(ev2) { if (!pop.contains(ev2.target)) { pop.remove(); document.removeEventListener("click", closer); } }), 0);
+        break;
+      }
+      case "lexiconBankSearchApply": lexiconBankSearch = ($("[data-lexicon-bank-search]")?.value || "").trim(); renderConfig(); break;
+      case "lexiconWordSearchApply": lexiconWordSearch = ($("[data-lexicon-word-search]")?.value || "").trim(); renderConfig(); break;
+      case "lexiconWordSearchReset": lexiconWordSearch = ""; renderConfig(); break;
+      case "lexiconWordAdd": lexiconOpenWordEditor(el.dataset.bank, null, false); break;
+      case "lexiconImport": lexiconOpenImport(el.dataset.bank); break;
+      case "lexiconExport": lexiconExportBank(el.dataset.bank); break;
+      case "lexiconTemplateDownload": lexiconDownloadTemplate(); break;
+      case "lexiconWordEdit": lexiconOpenWordEditor(el.dataset.bank, el.dataset.id, false); break;
+      case "lexiconWordView": lexiconOpenWordEditor(el.dataset.bank, el.dataset.id, true); break;
+      case "lexiconWordToggle": {
+        const bank = lexiconBankById(el.dataset.bank); if (!bank) break;
+        const item = lexiconFindWordInBank(el.dataset.bank, el.dataset.id); if (!item) break;
+        item.enabled = !item.enabled;
+        item.updatedAt = formatDateTime(Date.now());
+        cfgRecordAudit(item.enabled ? "启用词条" : "禁用词条", "词库", item.word, `${item.enabled ? "启用" : "禁用"}词库"${bank.name}"中的词条"${item.word}"`);
+        renderConfig(); showToast(`词条"${item.word}"已${item.enabled ? "启用" : "禁用"}`);
+        break;
+      }
+      case "lexiconWordDelete": {
+        const bank = lexiconBankById(el.dataset.bank); if (!bank) break;
+        const item = lexiconFindWordInBank(el.dataset.bank, el.dataset.id); if (!item) break;
+        openModal("删除词条", `确认从词库"${esc(bank.name)}"中删除词条"${esc(item.word)}"？删除后该词语将不再参与检测。`, () => {
+          bank.words = bank.words.filter(w => w.id !== item.id);
+          cfgRecordAudit("删除词条", "词库", item.word, `从词库"${bank.name}"中删除词条"${item.word}"`);
+          closeModal(); renderConfig(); showToast("词条已删除");
+        }, { okText:"确认删除" });
+        break;
+      }
+      case "lexiconHitFilter": { const next = {}; $$('[data-lexicon-hit-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.lexiconHitFilter] = input.value.trim(); }); lexiconHitFilters = {...lexiconHitFilters,...next}; renderConfig(); break; }
+      case "lexiconHitReset": lexiconHitFilters = { keyword:"", category:"all", scope:"all", startDate:"", endDate:"" }; renderConfig(); break;
       case "cfgRoleMenuScope": cfgOpenRoleMenuScope(el.dataset.id); break;
       case "cfgDirectoryExport": showToast("操作日志已导出"); break;
       case "cfgRoleFilter": { const next = {}; $$('[data-cfg-role-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.cfgRoleFilter] = input.value.trim(); }); configRoleFilters = {...configRoleFilters,...next}; renderConfig(); break; }
