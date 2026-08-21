@@ -499,6 +499,53 @@
   .agent-template-select { flex:none; padding:3px 7px; border:1px solid #c9dcec; border-radius:6px; background:#fff; color:var(--gov-700); font-size:11px; font-weight:700; cursor:pointer; }
   .agent-card-facts { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; margin-top:10px; color:#718094; font-size:11px; }
   .agent-card-facts b { display:block; margin-top:2px; color:#34445a; font-size:11.5px; }
+  .agent-market-card { min-height:206px; padding:19px 20px; border-radius:17px; box-shadow:0 6px 20px rgba(15,51,81,.055); }
+  .agent-market-card .ac-top { align-items:flex-start; margin-bottom:13px; }
+  .agent-market-card .ac-ic { width:46px; height:46px; border-radius:14px; }
+  .agent-market-card .ac-name { padding-top:2px; font-size:16px; line-height:1.35; }
+  .agent-market-card .ac-desc { min-height:58px; color:#5e6878; font-size:12.5px; line-height:1.65; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
+  .agent-use-btn { margin-left:auto; flex:none; height:32px; padding:0 13px; border:1px solid #08734e; border-radius:8px; background:#08734e; color:#fff; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 4px 10px rgba(8,115,78,.14); }
+  .agent-use-btn:hover { background:#075f42; border-color:#075f42; }
+  .agent-card-tags { display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-top:13px; }
+  .agent-card-tag { display:inline-flex; align-items:center; min-width:0; height:25px; max-width:100%; padding:0 9px; border-radius:7px; background:#f2f4f6; color:#596474; font-size:11px; white-space:nowrap; }
+  .agent-card-tag.template { color:#0a6e73; background:#edf8f7; }
+  .agent-card-tag span { max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+  .agent-detail-modal { width:min(860px, calc(100vw - 40px)); border-radius:16px; }
+  .agent-detail-modal .modal-head { min-height:58px; padding:17px 22px; font-size:17px; }
+  .agent-detail-modal .modal-head > span { padding-left:11px; border-left:4px solid #08734e; }
+  .agent-detail-modal .modal-body { padding:0; }
+  .agent-detail-summary { padding:24px 28px 20px; border-bottom:1px solid var(--line-soft); }
+  .agent-detail-identity { display:flex; align-items:center; gap:14px; }
+  .agent-detail-icon { width:58px; height:58px; flex:none; display:grid; place-items:center; border-radius:16px; color:#fff; box-shadow:0 9px 22px rgba(17,104,90,.16); }
+  .agent-detail-name { min-width:0; }
+  .agent-detail-name b { display:block; color:var(--gov-900); font-size:20px; line-height:1.35; }
+  .agent-detail-name small { display:block; margin-top:4px; color:var(--muted); font-size:12px; }
+  .agent-detail-use { margin-left:auto; min-width:102px; height:38px; border:1px solid #08734e; border-radius:8px; background:#08734e; color:#fff; font-size:13px; font-weight:800; cursor:pointer; }
+  .agent-detail-use:hover { background:#075f42; }
+  .agent-detail-desc { margin:16px 0 0; color:#4d5868; font-size:13px; line-height:1.75; }
+  .agent-detail-meta { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin-top:16px; padding:12px 0; border:1px solid #e2e8ec; border-radius:10px; background:#fafcfd; }
+  .agent-detail-meta-item { min-width:0; padding:0 14px; border-right:1px solid #e5eaed; }
+  .agent-detail-meta-item:last-child { border-right:0; }
+  .agent-detail-meta-item small { display:block; margin-bottom:3px; color:#8a95a3; font-size:11px; }
+  .agent-detail-meta-item b { display:flex; align-items:center; gap:5px; min-width:0; color:#35465a; font-size:12px; font-weight:600; white-space:nowrap; }
+  .agent-detail-content { padding:20px 28px 24px; }
+  .agent-detail-section-head { display:flex; align-items:center; gap:9px; margin-bottom:13px; color:var(--gov-900); }
+  .agent-detail-section-head b { font-size:15px; }
+  .agent-detail-section-head .btn { margin-left:auto; }
+  .agent-current-template { display:flex; align-items:center; gap:11px; margin-bottom:13px; padding:11px 13px; border:1px solid #bfe1d4; border-radius:10px; background:#f1faf6; }
+  .agent-current-template-icon { width:30px; height:30px; flex:none; display:grid; place-items:center; border-radius:8px; background:#d9f1e7; color:#08734e; }
+  .agent-current-template-copy { min-width:0; flex:1; }
+  .agent-current-template-copy small { display:block; color:#5f7a70; font-size:10.5px; }
+  .agent-current-template-copy b { display:block; overflow:hidden; margin-top:1px; color:#145742; font-size:13px; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+  .agent-current-template-scope { flex:none; padding:2px 8px; border-radius:999px; background:#fff; color:#08734e; font-size:10.5px; }
+  .agent-template-single { min-height:42px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 12px; border:1px solid var(--line); border-radius:9px; background:#fff; color:#33445a; font-size:13px; }
+  .agent-template-single small { flex:none; color:var(--muted); }
+  .agent-template-empty { padding:22px; border:1px dashed #c9d9e3; border-radius:10px; background:#f8fbfd; color:var(--muted); text-align:center; font-size:13px; }
+  .agent-detail-modal .market-template-preview { max-height:270px; margin-top:12px; padding:15px 16px; border:0; border-radius:9px; background:#f4f6f8; color:#35465a; font-size:12.5px; line-height:1.75; }
+  .agent-detail-modal .modal-foot { padding:15px 22px; }
+  .agent-detail-modal .agent-detail-default { margin-right:auto; }
+  .agent-detail-modal .agent-detail-default[disabled] { border-color:#b8dccd; background:#eff8f4; color:#08734e; opacity:1; cursor:default; }
+  @media (max-width:760px) { .agent-market-card { min-height:0; } .agent-detail-summary,.agent-detail-content { padding-left:18px; padding-right:18px; } .agent-detail-use { min-width:86px; } .agent-detail-meta { grid-template-columns:repeat(2,minmax(0,1fr)); } .agent-detail-meta-item:nth-child(2) { border-right:0; } .agent-detail-meta-item:nth-child(n+3) { margin-top:10px; padding-top:10px; border-top:1px solid #e5eaed; } }
   @keyframes pulseRing { 0%,100% { box-shadow: 0 0 0 0 rgba(21,152,189,.12); } 50% { box-shadow: 0 0 0 5px rgba(21,152,189,.12); } }
   .picker-note { padding: 9px 10px 2px; color: var(--muted); font-size: 11px; line-height: 1.5; border-top: 1px solid var(--line); }
   @media (max-width: 680px) { .agent-confirm-grid { grid-template-columns: 1fr; } .agent-confirm-field.full { grid-column: auto; } }
@@ -2084,6 +2131,8 @@
   .lex-upload-hint{margin-top:8px;color:#98a5b2;font-size:11.5px}
   .lex-upload-file{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 12px;border:1px solid #cfe0ea;border-radius:8px;background:#eef7fc;color:#175f8a;font-size:12px;font-weight:600}.lex-upload-file button{border:0;background:none;color:#98a5b2;cursor:pointer;font-size:13px;line-height:1}.lex-upload-file button:hover{color:#c44e49}
   @media(max-width:1100px){.lex-layout{grid-template-columns:1fr}.lex-bank-panel{position:static}}
+  .review-rule-tree-root{display:flex;align-items:center;gap:8px;margin:4px 8px 5px;padding:9px 10px;border-radius:8px;background:#f5f9fb;color:#2c435a;font-size:12.5px;font-weight:700}.review-rule-tree-root small{margin-left:auto;color:#8a99a8;font-size:9.5px;font-weight:500}.review-rule-tree-list{position:relative;display:grid;gap:2px;margin:0 8px 12px;padding:2px 0 0 18px;max-height:calc(100vh - 400px);overflow:auto}.review-rule-tree-list::before{content:"";position:absolute;left:8px;top:0;bottom:13px;width:1px;background:#d5e1e8}.review-rule-tree-list .lex-bank-item::before{content:"";position:absolute;left:-10px;top:22px;width:10px;height:1px;background:#d5e1e8}.review-rule-tree-list .lex-bank-item:last-child::after{content:"";position:absolute;left:-11px;top:23px;bottom:-6px;width:2px;background:#fff}.review-rule-source{display:inline-flex;align-items:center;padding:3px 7px;border-radius:5px;background:#f0f5f8;color:#587083;font-size:9.5px;font-weight:600}.review-rule-doc{display:inline-flex;align-items:center;padding:3px 7px;border-radius:5px;background:#edf6fb;color:#176f9f;font-size:9.5px;font-weight:600}.review-rule-condition{max-width:240px;color:#536477;font-size:11px;line-height:1.5}.review-rule-scope-line{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.review-rule-panel-note{display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;padding:9px 11px;border:1px solid #dbe8ee;border-radius:8px;background:#f6fafc;color:#627486;font-size:10.5px;line-height:1.55}.review-rule-panel-note .svg-icon{flex:none;margin-top:1px;color:#197aa8}.review-rule-scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.review-rule-scope-box{border:1px solid #e0e7ec;border-radius:9px;padding:11px 12px;background:#fbfcfd}.review-rule-scope-box>div:first-child{margin-bottom:7px;color:#34495f;font-size:12px;font-weight:700}.review-rule-scope-options{display:grid;gap:5px}.review-rule-scope-options .check-row{margin:0}.review-rule-detail-grid{display:grid;grid-template-columns:130px minmax(0,1fr);border:1px solid #e1e8ed;border-radius:9px;overflow:hidden}.review-rule-detail-grid dt,.review-rule-detail-grid dd{margin:0;padding:10px 12px;border-bottom:1px solid #edf1f4;font-size:11.5px;line-height:1.6}.review-rule-detail-grid dt{background:#f7f9fb;color:#718093;font-weight:600}.review-rule-detail-grid dd{color:#34495f}.review-rule-detail-grid dt:last-of-type,.review-rule-detail-grid dd:last-of-type{border-bottom:0}@media(max-width:760px){.review-rule-scope-grid{grid-template-columns:1fr}}
+  .review-rule-doc-picker{position:relative}.review-rule-doc-trigger{width:100%;min-height:38px;display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#34495f;text-align:left;cursor:pointer}.review-rule-doc-trigger:hover,.review-rule-doc-picker.open .review-rule-doc-trigger{border-color:var(--gov-500);box-shadow:0 0 0 3px rgba(47,128,194,.09)}.review-rule-doc-trigger>span:first-child{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.review-rule-doc-arrow{flex:none;color:#8694a2;font-size:15px;transition:transform .15s}.review-rule-doc-picker.open .review-rule-doc-arrow{transform:rotate(180deg)}.review-rule-doc-menu{position:absolute;z-index:360;top:calc(100% + 5px);left:0;width:100%;max-height:230px;overflow:auto;padding:7px;border:1px solid #d6e1e7;border-radius:10px;background:#fff;box-shadow:0 14px 34px rgba(31,53,73,.16)}.review-rule-doc-menu[hidden]{display:none}.review-rule-doc-menu .check-row{margin:0;padding:7px 8px;border-radius:7px}.review-rule-doc-menu .check-row:hover{background:#f4f8fa}.review-rule-doc-readonly{display:flex;flex-wrap:wrap;gap:6px;min-height:38px;padding:7px 9px;border:1px solid #e0e7ec;border-radius:9px;background:#f8fafb}.review-rule-doc-readonly span{display:inline-flex;align-items:center;padding:3px 8px;border-radius:6px;background:#eaf5fa;color:#176f9f;font-size:11px}.review-rule-evidence-hint{display:block;margin-top:5px;color:#8593a2;font-size:10.5px;line-height:1.5}.review-rule-jurisdiction{display:inline-flex;align-items:center;padding:3px 7px;border:1px solid #dbe8ee;border-radius:999px;background:#fff;color:#4d6478;font-size:9.5px;font-weight:700;white-space:nowrap}.review-rule-official-link{display:inline-flex;align-items:center;gap:5px;margin-top:7px;color:#1478a8;font-size:10.5px;text-decoration:none}.review-rule-official-link:hover{text-decoration:underline}.review-rule-benchmark{display:flex;align-items:flex-start;gap:9px;margin-bottom:12px;padding:10px 12px;border:1px solid #dce9ee;border-radius:10px;background:linear-gradient(90deg,#f4fbf8,#f5f9fc);color:#526779;font-size:11px;line-height:1.6}.review-rule-benchmark b{color:#21465a}.review-rule-benchmark .svg-icon{flex:none;margin-top:2px;color:#0c9a77}
   .cfg-version-list{display:grid;gap:9px}.cfg-version-row{display:grid;grid-template-columns:120px minmax(0,1fr) 150px auto;gap:12px;align-items:center;padding:12px;border:1px solid #e2e8ed;border-radius:9px}.cfg-version-row.active{border-color:#91bed5;background:#f3f9fc}.cfg-version-row b{color:#284158}.cfg-version-row p{margin:0;color:#718091;font-size:11px;line-height:1.55}.cfg-version-row small{color:#8593a2}.cfg-rule-content{max-height:64px;overflow:hidden}
   .cfg-template-filter{padding:14px 16px;border:1px solid #dfe6ec;border-radius:11px;background:#fff}.cfg-filter-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid #edf1f4}.cfg-filter-row:first-child{padding-top:0;border-top:0}.cfg-filter-label{width:104px;flex:none;padding-top:7px;color:#788797;font-size:11px}.cfg-filter-tabs{display:flex;gap:6px;flex-wrap:wrap}.cfg-filter-tab{display:inline-flex;align-items:center;gap:6px;min-height:31px;padding:6px 9px;border:1px solid #dbe4ea;border-radius:7px;background:#fff;color:#596a7c;font-size:10.5px;cursor:pointer}.cfg-filter-tab:hover{border-color:#a9c8d8}.cfg-filter-tab.active{border-color:#1680b5;background:#1680b5;color:#fff}.cfg-filter-tab em{min-width:18px;padding:1px 5px;border-radius:999px;background:rgba(28,80,110,.08);font-size:9px;font-style:normal;text-align:center}.cfg-filter-tab.active em{background:rgba(255,255,255,.2)}
   .cfg-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:14px}.cfg-template-card{display:flex;flex-direction:column;min-height:202px;padding:15px;border:1px solid #dfe6ec;border-radius:11px;background:#fff;box-shadow:0 3px 12px rgba(35,58,78,.035)}.cfg-template-card:hover{border-color:#aac8d8;box-shadow:0 7px 20px rgba(35,78,106,.08)}.cfg-template-top{display:flex;align-items:flex-start;gap:9px}.cfg-template-icon{width:34px;height:34px;display:grid;place-items:center;flex:none;border-radius:9px;background:#eef7fb;color:#126f9f}.cfg-template-title{min-width:0;flex:1}.cfg-template-title b{display:block;color:#263b52;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cfg-template-title small{display:block;margin-top:4px;color:#8a97a5;font-size:10px}.cfg-template-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:auto;padding:14px 0 12px;border-bottom:1px solid #edf1f4}.cfg-template-meta span{min-width:0;color:#8b97a5;font-size:9.5px;white-space:nowrap}.cfg-template-meta b{display:block;margin-top:3px;color:#526276;font-size:10.5px;font-weight:550;white-space:nowrap}.cfg-template-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}.cfg-template-actions .btn{min-height:29px;padding:5px 8px;font-size:10px}
@@ -2102,7 +2151,8 @@
   @media(max-width:1180px){.cfg-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cfg-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cfg-editor-grid{grid-template-columns:1fr}.cfg-markdown-preview{position:static;max-height:none}.cfg-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   .cfg-simple-tree,.cfg-simple-tree ul{margin:0;padding:0;list-style:none}.cfg-simple-tree ul{margin:5px 0 10px 26px;padding-left:16px;border-left:1px solid #dbe4eb}.cfg-simple-tree li{margin:5px 0}.cfg-tree-node{min-height:38px;display:flex;align-items:center;gap:9px;padding:6px 10px;border:1px solid #edf1f4;border-radius:8px;background:#fff;color:#42536a}.cfg-tree-node.root{background:#f7fafc;border-color:#dde7ee}.cfg-tree-node b{color:#25384f}.cfg-tree-node em{margin-left:auto;color:#8a96a5;font-size:11px;font-style:normal}.cfg-tree-node .btn{margin-left:auto}.cfg-role-scope-tree{display:grid;gap:12px;margin-top:12px;max-height:62vh;overflow:auto;padding-right:4px}.cfg-role-scope-level1{overflow:hidden;border:1px solid #d7e3ea;border-radius:8px;background:#fff}.cfg-role-scope-head{display:flex;align-items:center;gap:10px;min-height:52px;padding:9px 12px;background:#f5f9fb;border-bottom:1px solid #e2ebf0}.cfg-role-scope-index{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:6px;background:var(--gov-700);color:#fff;font-size:11px;font-weight:800}.cfg-role-scope-title{display:flex;align-items:center;gap:8px;min-width:0;color:var(--gov-900);font-size:13.5px;font-weight:800}.cfg-role-scope-title small{color:var(--muted);font-size:10.5px;font-weight:500}.cfg-role-scope-content{position:relative;padding:9px 12px 11px 40px}.cfg-role-scope-content::before{content:"";position:absolute;left:25px;top:0;bottom:18px;width:1px;background:#d4e1e8}.cfg-role-scope-branch{position:relative;padding:6px 0}.cfg-role-scope-branch::before{content:"";position:absolute;left:-15px;top:21px;width:15px;height:1px;background:#d4e1e8}.cfg-role-scope-branch:last-child::after{content:"";position:absolute;left:-15px;top:22px;bottom:-12px;width:2px;background:#fff}.cfg-role-scope-node{overflow:hidden;border:1px solid #e1e9ee;border-radius:7px;background:#fbfdfe}.cfg-role-scope-node-head{display:flex;align-items:center;gap:8px;min-height:42px;padding:6px 10px;border-bottom:1px solid #e8eef2}.cfg-role-scope-buttons{position:relative;display:flex;align-items:flex-start;gap:10px;margin-left:28px;padding:9px 10px 10px 24px}.cfg-role-scope-buttons::before{content:"";position:absolute;left:11px;top:0;bottom:20px;width:1px;background:#d7e3ea}.cfg-role-scope-buttons::after{content:"";position:absolute;left:11px;top:20px;width:13px;height:1px;background:#d7e3ea}.cfg-role-scope-button-list{display:flex;flex-wrap:wrap;gap:6px}.cfg-scope-check{display:inline-flex;align-items:center;gap:7px;min-height:28px;cursor:pointer;color:#40546b;font-size:12px}.cfg-scope-check input{width:15px;height:15px;margin:0;accent-color:var(--gov-700);cursor:pointer}.cfg-scope-check.menu{font-weight:800}.cfg-scope-check.button{min-height:28px;padding:0 9px;border:1px solid #d4e2e9;border-radius:6px;background:#fff;font-size:11.5px}.cfg-scope-check.button:has(input:checked){border-color:#85b8ce;background:#edf7fb;color:var(--gov-700)}.cfg-role-scope-label{min-width:58px;padding:3px 6px;border-radius:5px;background:#eaf4f7;color:var(--gov-700);font-size:10px;text-align:center}.cfg-role-scope-empty{color:#8a98a8;font-size:11.5px;line-height:28px}
   .cfg-menu-map{display:grid;gap:12px}.cfg-menu-level1{overflow:hidden;border:1px solid #d7e3ea;border-radius:8px;background:#fff}.cfg-menu-level1-head{display:flex;align-items:center;gap:10px;min-height:58px;padding:10px 14px;background:#f5f9fb;border-bottom:1px solid #e2ebf0}.cfg-menu-level1-head .cfg-menu-index{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:6px;background:var(--gov-700);color:#fff;font-size:11px;font-weight:800}.cfg-menu-level1-name{display:flex;align-items:baseline;gap:9px;min-width:160px}.cfg-menu-level1-head b{color:var(--gov-900);font-size:14px}.cfg-menu-level1-head small{color:var(--muted);font-size:11px}.cfg-menu-level1-tools,.cfg-menu-node-tools{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.cfg-menu-level1-tools{margin-left:auto}.cfg-menu-tool{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:28px;padding:4px 8px;border:1px solid #ccdae3;border-radius:6px;background:#fff;color:#40566d;font:600 11px/1 inherit;cursor:pointer;white-space:nowrap}.cfg-menu-tool:hover{border-color:#7fb1ca;background:#eef7fb;color:var(--gov-700)}.cfg-menu-tool.danger{color:#b04b4b}.cfg-menu-tool.danger:hover{border-color:#e2b7b7;background:#fff4f4;color:#9a3030}.cfg-menu-tool .svg-icon{width:12px;height:12px}.cfg-menu-content{position:relative;padding:10px 14px 12px 42px}.cfg-menu-content::before{content:"";position:absolute;left:27px;top:0;bottom:18px;width:1px;background:#d4e1e8}.cfg-menu-branch{position:relative;padding:7px 0}.cfg-menu-branch::before{content:"";position:absolute;left:-15px;top:21px;width:15px;height:1px;background:#d4e1e8}.cfg-menu-branch:last-child::after{content:"";position:absolute;left:-15px;top:22px;bottom:-13px;width:2px;background:#fff}.cfg-menu-child{border:1px solid #e1e9ee;border-radius:7px;background:#fbfdfe}.cfg-menu-child-head{display:flex;align-items:center;gap:10px;min-height:44px;padding:7px 10px;border-bottom:1px solid #e8eef2}.cfg-menu-node-title{display:flex;align-items:center;gap:7px;min-width:0;min-height:28px;color:#35465d;font-size:12.5px;font-weight:800}.cfg-menu-node-name{min-width:0;white-space:normal;word-break:break-word}.cfg-menu-level-tag{min-width:56px;padding:3px 6px;border-radius:5px;background:#eaf4f7;color:var(--gov-700);font-size:10px;text-align:center}.cfg-menu-child-buttons{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;margin-left:28px;padding:10px 10px 10px 24px}.cfg-menu-child-buttons::before{content:"";position:absolute;left:11px;top:0;bottom:21px;width:1px;background:#d7e3ea}.cfg-menu-child-buttons::after{content:"";position:absolute;left:11px;top:21px;width:13px;height:1px;background:#d7e3ea}.cfg-menu-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;min-height:28px}.cfg-menu-action-chip{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:0 4px 0 9px;border:1px solid #d4e2e9;border-radius:6px;background:#fff;color:#465a70;font-size:11.5px}.cfg-menu-chip-tools{display:inline-flex;align-items:center;gap:1px}.cfg-menu-chip-tools button{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:4px;background:transparent;color:#76879a;cursor:pointer}.cfg-menu-chip-tools button:hover{background:#eaf4f7;color:var(--gov-700)}.cfg-menu-chip-tools button.danger:hover{background:#fff0f0;color:#aa3838}.cfg-menu-chip-tools .svg-icon{width:11px;height:11px}.cfg-menu-empty{color:#8a98a8;font-size:11.5px;line-height:28px}
-  @media(max-width:760px){.cfg-center-shell{grid-template-columns:1fr}.cfg-center-side{display:none}.cfg-center-head{padding:0 14px}.cfg-center-content{padding:14px}.cfg-template-grid,.cfg-overview-grid,.cfg-directory-grid{grid-template-columns:1fr}.cfg-form-grid{grid-template-columns:1fr}.cfg-form-field.full{grid-column:auto}.cfg-version-row{grid-template-columns:1fr}.cfg-data-table{min-width:980px}.cfg-section-body{overflow:auto}.cfg-user-layout{grid-template-columns:1fr}.cfg-user-org-panel{position:static}.cfg-filter-field,.cfg-filter-field.wide{min-width:calc(50% - 5px)}:is(#view-home,#view-newchat) .qa-btn{width:calc(50% - 5px)}}
+  .connector-icon-upload{display:flex;align-items:center;gap:12px;padding:12px;border:1px dashed #cbd8e2;border-radius:10px;background:#f8fafc}.connector-icon-upload>span{width:52px;height:52px;display:grid;place-items:center;flex:none;border:1px solid #dbe5ec;border-radius:12px;background:#fff;color:var(--gov-700);overflow:hidden}.connector-icon-upload img{width:100%;height:100%;object-fit:cover}.connector-icon-upload>div{display:grid;justify-items:start;gap:5px}.connector-icon-upload small{color:#8794a2;font-size:10px}.connector-dept-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.connector-form-divider{display:flex;align-items:baseline;gap:9px;margin-top:6px;padding:13px 0 3px;border-top:1px solid #e2e9ef}.connector-form-divider b{font-size:13px;color:#253c55}.connector-form-divider span{font-size:10px;color:#8492a0}.connector-json-input{min-height:112px!important;font-family:Consolas,Monaco,monospace!important;font-size:11px!important}.connector-op-desc{display:block;margin-top:4px;color:#8b97a5;font-size:10px;line-height:1.45}.connector-method{display:inline-flex;padding:3px 7px;border-radius:5px;background:#edf6ff;color:#176aa0;font-size:10px;font-weight:700}.connector-method.post{background:#eef9f2;color:#197247}.connector-metric-text{font-size:16px!important}.connector-info-grid{display:grid;grid-template-columns:1.5fr .7fr .6fr 1.2fr;gap:10px}.connector-info-grid span{display:grid;gap:5px;padding:12px;border:1px solid #e3eaf0;border-radius:9px;background:#fafcfd}.connector-info-grid small{color:#8492a0;font-size:10px}.connector-info-grid b{color:#344a61;font-size:11px;line-height:1.5;word-break:break-all}.connector-card .connector-op-count{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:#eef6fa;color:#1473a5;font-size:10px}.connector-operation-preview{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;padding:13px;border:1px solid #dce6ed;border-radius:10px;background:#f8fbfd}.connector-operation-preview>b{color:#2f455c;font:600 11px Consolas,Monaco,monospace}.connector-operation-preview p,.connector-operation-preview small{grid-column:1/-1;margin:0;color:#718093;font-size:11px;line-height:1.55}.connector-operation-preview small{color:#a26b1d}
+  @media(max-width:760px){.cfg-center-shell{grid-template-columns:1fr}.cfg-center-side{display:none}.cfg-center-head{padding:0 14px}.cfg-center-content{padding:14px}.cfg-template-grid,.cfg-overview-grid,.cfg-directory-grid{grid-template-columns:1fr}.cfg-form-grid{grid-template-columns:1fr}.cfg-form-field.full{grid-column:auto}.cfg-version-row{grid-template-columns:1fr}.cfg-data-table{min-width:980px}.cfg-section-body{overflow:auto}.cfg-user-layout{grid-template-columns:1fr}.cfg-user-org-panel{position:static}.cfg-filter-field,.cfg-filter-field.wide{min-width:calc(50% - 5px)}:is(#view-home,#view-newchat) .qa-btn{width:calc(50% - 5px)}.connector-dept-checks,.connector-info-grid{grid-template-columns:1fr}}
 </style>
 <meta name="prototype-version" content=""></head>
 <body>
@@ -2456,7 +2506,7 @@
         <div class="page"><div class="page-inner">
           <div class="market-hero">
             <img src="assets/agent-square-banner.svg" alt="政务智能体协同服务示意图">
-             <div class="market-hero-copy"><span class="eyebrow"><svg class="svg-icon"><use href="#i-bot"></use></svg>政务智能办公</span><h1>智能体广场</h1><p>12 个智能体支持在会话中快捷发起；5 个复杂智能体使用独立工作台。点击卡片即可按已选默认模板进入对应处理方式。</p></div>
+             <div class="market-hero-copy"><span class="eyebrow"><svg class="svg-icon"><use href="#i-bot"></use></svg>政务智能办公</span><h1>智能体广场</h1><p>集中查看智能体能力与当前模板；点击卡片查看详情，或点击“立即使用”直接进入对应处理场景。</p></div>
           </div>
           <div class="market-filter">
             <div class="market-tabs" id="agentTabs" aria-label="智能体分类">
@@ -2467,7 +2517,7 @@
               <select class="market-sort" id="agentSort" aria-label="智能体排序"><option value="calls">调用量优先</option><option value="latest">最新发布</option></select>
             </div>
           </div>
-           <div class="market-result"><span id="agentsCount"></span><span>会话生成类可直接使用；复杂任务点击卡片进入独立工作台</span></div>
+           <div class="market-result"><span id="agentsCount"></span><span>点击卡片查看详情；“立即使用”将进入对话或独立工作台</span></div>
           <div id="agentsFull"></div>
         </div></div>
       </div>
@@ -3024,7 +3074,11 @@
     communique: "i-badge", reply: "i-reply", motion: "i-scale", review: "i-scan",
     polish: "i-wand", meeting: "i-users", contract: "i-file-check", interpret: "i-compass", ppt: "i-presentation"
   };
-  const agentIcon = (agent, size) => `<span class="agent-symbol">${svgi(AGENT_ICON[agent && agent.id] || "i-bot", size || 16)}</span>`;
+  const agentIcon = (agent, size) => {
+    const iconSize = Number(size || 16);
+    if (agent && agent.iconData) return `<span class="agent-symbol"><img src="${esc(agent.iconData)}" alt="" style="width:${iconSize}px;height:${iconSize}px;display:block;object-fit:cover;border-radius:${Math.max(4,Math.round(iconSize * .24))}px"></span>`;
+    return `<span class="agent-symbol">${svgi(AGENT_ICON[agent && agent.id] || "i-bot",iconSize)}</span>`;
+  };
   const byId = (id) => AGENTS.find(a => a.id === id);
   const AGENT_STATS = {
     speech: { calls: 388, published: "2026-07-08" }, notice: { calls: 432, published: "2026-07-12" }, summary: { calls: 305, published: "2026-06-25" }, news: { calls: 271, published: "2026-07-03" },
@@ -3047,6 +3101,7 @@
   let activeAgent = null;   // null = 普通大模型对话；仅用户主动选择后才进入智能体工作流
   let activeTemplateId = null;
   let activeConnector = null;
+  let activeConnectorOperationId = null;
   let flowDraft = ["notice", "review", "polish"];
   let taskTab = "instances";
   let scheduleEditingId = null;
@@ -3162,6 +3217,7 @@ let sidebarCollapsed = false;
   function openModal(title, body, onOk, opts) {
     opts = opts || {};
     $$("#modalFoot button:not(#modalCancel):not(#modalOk)").forEach(b => b.remove());
+    $("#modalBox").className = `modal${opts.className ? ` ${opts.className}` : ""}`;
     $("#modalBox").style.width = opts.width || "";
     $("#modalTitle").textContent = title;
     $("#modalBody").innerHTML = body;
@@ -4002,6 +4058,7 @@ let sidebarCollapsed = false;
     agentV3Session = null;
     activeAgent = agentMsg.agent || null;
     activeConnector = null;
+    activeConnectorOperationId = null;
     switchView("chat");
     const ta = $("#composerInput");
     if (ta) { ta.value = userText; if (typeof syncPromptHighlight === "function") syncPromptHighlight(ta); if (typeof autoSize === "function") autoSize(); if (typeof toggleSend === "function") toggleSend(); }
@@ -5302,6 +5359,7 @@ let sidebarCollapsed = false;
     const modelText = pendingReplyContext ? `${text}\n\n引用上一条回答作为上下文：\n${pendingReplyContext.text}` : text;
     const enrichedText = withHomeContext(modelText);
     const connector = activeConnector ? connectorById(activeConnector) : null;
+    const connectorOperationId = activeConnectorOperationId;
     const previousGenerated = latestGeneratedMessage(c);
     const revisionRequest = !!(!activeAgent && !connector && previousGenerated && isRevisionRequest(text));
     const replyAgent = activeAgent ? byId(activeAgent) : revisionRequest ? byId(previousGenerated.agent) : null;
@@ -5351,7 +5409,7 @@ let sidebarCollapsed = false;
       return;
     }
     // 技能功能暂不开放；智能体与连接器互斥，知识库作为独立引用上下文。
-    if (connector) startConnectorAction(c, connector, enrichedText, attach);
+    if (connector) startConnectorAction(c, connector, enrichedText, attach, null, connectorOperationId);
     else if (revisionRequest && replyAgent) startRevisionGeneration(c, replyAgent, text, previousGenerated);
     else if (replyAgent) startDirectGeneration(c, replyAgent, enrichedText, attach, structuredValues, { knowledgeBases: c.knowledgeBases.slice(), attachment: attach || "" });
     else if (c.knowledgeBases.length) startKnowledgeChat(c, enrichedText, attach);
@@ -5364,6 +5422,7 @@ let sidebarCollapsed = false;
     activeAgent = null;
     activeTemplateId = null;
     activeConnector = null;
+    activeConnectorOperationId = null;
     homeSkills = [];
     homeKnowledgeBases = [];
     renderAgentPill();
@@ -5638,7 +5697,12 @@ let sidebarCollapsed = false;
   function autoSize() { const ta = $("#composerInput"); ta.style.height = "auto"; ta.style.height = Math.max(72, Math.min(ta.scrollHeight, 180)) + "px"; }
   function toggleSend() { $("#sendBtn").disabled = activeGeneration ? false : !($("#composerInput").value.trim() || pendingAttach); }
 
-  function connectorResultHTML(connector, text) {
+  function connectorResultHTML(connector, text, operation) {
+    if (connector.customRegistered && operation) {
+      const cleanText = text.replace(/【连接器：.*?】/, "");
+      if (operation.type === "query") return `<div class="connector-result"><p>已通过「${esc(connector.name)}」的“${esc(operation.name)}”完成业务查询。</p><div class="connector-result-doc"><div class="crd-title">${connectorIconHTML(connector,15)}查询结果</div><table class="connector-result-table"><thead><tr><th>返回字段</th><th>示例结果</th><th>状态</th></tr></thead><tbody><tr><td>业务数据</td><td>${esc(cleanText || "已按输入条件返回授权范围内数据")}</td><td><span class="tag green">查询成功</span></td></tr><tr><td>输出映射</td><td><code>${esc(operation.outputMapping || "{}")}</code></td><td><span class="tag blue">已映射</span></td></tr></tbody></table></div><div class="connector-result-foot"><span class="tag green">${esc(operation.method)} ${esc(operation.path)}</span><button class="btn" data-act="connectorOpenResult" data-id="${connector.id}">${svgi("i-arrow",14)}进入业务系统查看</button></div></div>`;
+      return `<div class="connector-result"><p>已通过「${esc(connector.name)}」执行“${esc(operation.name)}”。</p><div class="panel-note"><b>提交内容：</b>${esc(cleanText)}<br><b>调用操作：</b>${esc(operation.method)} ${esc(operation.path)}<br><b>执行结果：</b>外部业务系统已受理并返回业务编号 EXT-${String(Date.now()).slice(-6)}</div><div class="connector-result-foot"><button class="btn primary" data-act="connectorOpenResult" data-id="${connector.id}">${svgi("i-arrow",14)}查看业务结果</button><span class="tag green">执行成功</span></div></div>`;
+    }
     if (connector.id === "tencent-docs") return `<div class="connector-result"><p>已通过「${esc(connector.name)}」连接器创建学生花名册表格，并将文档权限设置为仅创建者可编辑。</p><div class="connector-result-doc"><div class="crd-title">${svgi("i-file",15)}学生花名册</div><table class="connector-result-table"><thead><tr><th>姓名</th><th>性别</th><th>班级</th><th>联系电话</th><th>备注</th></tr></thead><tbody><tr><td>张同学</td><td>男</td><td>一班</td><td>—</td><td>示例行，可编辑</td></tr><tr><td>李同学</td><td>女</td><td>一班</td><td>—</td><td>示例行，可编辑</td></tr></tbody></table></div><div class="connector-result-foot"><button class="btn primary" data-act="connectorOpenResult" data-id="${connector.id}">${svgi("i-arrow",14)}打开腾讯文档</button><button class="btn" data-act="connectorCopyLink" data-id="${connector.id}">${svgi("i-share",14)}复制文档链接</button><span class="tag green">创建成功</span></div></div>`;
     if (connector.resultType === "workflow") return `<div class="connector-result"><p>已通过「${esc(connector.name)}」连接器生成业务草稿。根据安全规则，提交前需要您确认。</p><div class="panel-note"><b>业务内容：</b>${esc(text.replace(/【连接器：.*?】/, ""))}<br><b>当前状态：</b>草稿已创建 · 待确认提交</div><div class="connector-result-foot"><button class="btn primary" data-act="connectorOpenResult" data-id="${connector.id}">${svgi("i-arrow",14)}查看业务草稿</button><span class="tag amber">待确认</span></div></div>`;
     if (connector.resultType === "message") return `<div class="connector-result"><p>已通过「${esc(connector.name)}」生成消息发送草稿。</p><div class="panel-note">${esc(text.replace(/【连接器：.*?】/, ""))}</div><div class="connector-result-foot"><button class="btn primary" data-act="connectorOpenResult" data-id="${connector.id}">${svgi("i-send",14)}确认并发送</button><span class="tag amber">待确认</span></div></div>`;
@@ -5667,19 +5731,24 @@ let sidebarCollapsed = false;
     if (!conversation) return;
     conversation.completionUnread = !(curId === conversation.id && currentView === "chat");
   }
-  function startConnectorAction(conv, connector, text, attach) {
+  function startConnectorAction(conv, connector, text, attach, confirmedOperationId, requestedOperationId) {
+    const operation = connectorOperationById(connector,requestedOperationId || confirmedOperationId || activeConnectorOperationId);
+    if (connector.customRegistered && operation?.confirmRequired && confirmedOperationId !== operation.id) {
+      openModal("确认执行外部系统操作",`<div class="cfg-readonly">该操作会向外部业务系统写入或提交数据。请确认连接器、操作和本次内容无误后再执行。</div><table class="cfg-data-table" style="margin-top:12px"><tbody><tr><th style="width:130px">业务连接器</th><td>${esc(connector.name)}</td></tr><tr><th>业务操作</th><td>${esc(operation.name)} · ${esc(operation.method)} ${esc(operation.path)}</td></tr><tr><th>调用身份</th><td>系统统一账号</td></tr><tr><th>本次内容</th><td>${esc(text.replace(/【连接器：.*?】/,""))}</td></tr></tbody></table>`,() => { closeModal(); startConnectorAction(conv,connector,text,attach,operation.id,operation.id); },{okText:"确认执行",width:"620px"});
+      return;
+    }
     if (currentView !== "chat") switchView("chat");
-    if (typeof cfgRecordAudit === "function") cfgRecordAudit("调用连接器", "连接器", connector.name, "发起业务连接器调用");
+    if (typeof cfgRecordAudit === "function") cfgRecordAudit("调用连接器", "连接器", connector.name, operation ? `调用业务操作：${operation.name} · ${operation.method} ${operation.path}` : "发起业务连接器调用");
     const generationState = beginShortGeneration("connector", conv);
     const inner = $("#threadInner");
-    inner.insertAdjacentHTML("beforeend", typingBubble(null, `正在调用${connector.name}`)); scrollBottom();
+    inner.insertAdjacentHTML("beforeend", typingBubble(null, `正在调用${connector.name}${operation ? ` · ${operation.name}` : ""}`)); scrollBottom();
     generationState.timer = setTimeout(() => {
       if (activeGeneration !== generationState) return;
       const tp = $("#typingBubble"); if (tp) tp.remove();
       const materialTitle = connectorMaterialTitle(connector);
       const refNames = (conv.knowledgeBases || []).map(id => (KB_ORDER.find(([kid]) => kid === id) || [,""])[1]).filter(Boolean);
       const refNote = refNames.length || attach ? `<div class="panel-note"><b>本次调用参考：</b>${refNames.length ? `知识库：${esc(refNames.join("、"))}` : ""}${refNames.length && attach ? "；" : ""}${attach ? `附件：${esc(attach)}` : ""}</div>` : "";
-      const message = { role:"agent", agent:null, html:`<div class="connector-result-head"><span class="crh-ic" style="background:${connector.color}">${svgi(connector.icon,18)}</span><div><b>${esc(connector.name)}连接器</b><small>普通对话调用 · 业务连接成功</small></div></div>${refNote}${connectorResultHTML(connector, text)}`, time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), materialTitle, generatedMaterial:!!materialTitle, materialSource:`${connector.name}连接器`, modelPayload:{ routeType:"connector",prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } };
+      const message = { role:"agent", agent:null, html:`<div class="connector-result-head"><span class="crh-ic" style="background:${connector.color}">${connectorIconHTML(connector,18)}</span><div><b>${esc(connector.name)}连接器</b><small>${operation ? esc(operation.name) : "普通对话调用"} · 业务连接成功</small></div></div>${refNote}${connectorResultHTML(connector,text,operation)}`, time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), materialTitle, generatedMaterial:!!materialTitle, materialSource:`${connector.name}连接器`, modelPayload:{ routeType:"connector",connectorId:connector.id,operationId:operation?.id || "",operationSnapshot:operation ? {...operation} : null,prompt:text,customInstructions:conv.customInstructionsSnapshot || activePersonalCustomPrompt(),attachments:attach ? [attach] : [],knowledgeBaseIds:(conv.knowledgeBases || []).slice() } };
       conv.msgs.push(message);
       if (materialTitle) archiveGeneratedMaterial(message, conv, { sourceType:"connector", sourceName:connector.name });
       conv.updatedAt = Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
@@ -7514,16 +7583,17 @@ let sidebarCollapsed = false;
     system:[
       ["agents","智能体管理","i-bot"],["connectors","业务连接器管理","i-plug"],["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],
       ["users","用户管理","i-users"],["orgs","组织机构","i-landmark"],["roles","角色管理","i-badge"],["menus","菜单管理","i-menu"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"],
-      ["lexicon","词库管理","i-shield"]
+      ["lexicon","词库管理","i-shield"],["reviewRules","核查规则管理","i-check"]
     ],
     dept:[
       ["templates","智能体模板管理","i-file"],["personalization","个性化","i-spark"],["users","用户管理","i-users"],["audit","操作日志","i-clipboard"],["models","模型配置","i-spark"],
-      ["lexicon","词库管理","i-shield"]
+      ["lexicon","词库管理","i-shield"],["reviewRules","核查规则管理","i-check"]
     ],
     user:[["personalization","个性化","i-spark"],["templates","智能体模板管理","i-file"],["models","模型配置","i-spark"]]
   };
   let configCenterSection = "agents";
   let configRuleDetailId = null;
+  let configConnectorDetailId = null;
   let configSpeakerManagerOpen = false;
   let configCenterPersonalMode = false;
   let configTemplateAgentFilter = "all";
@@ -7533,7 +7603,7 @@ let sidebarCollapsed = false;
   let configTemplateSearchTimer = null;
   const configServiceFilters = {
     agent:{name:"",type:"all",mode:"all",department:"all",status:"all"},
-    connector:{name:"",department:"all",status:"all"}
+    connector:{name:"",source:"all",category:"all",department:"all",status:"all"}
   };
   let configRoleFilters = {name:"",status:"all"};
   let configModelFilters = {name:"",provider:"all",scope:"all"};
@@ -7629,6 +7699,40 @@ let sidebarCollapsed = false;
     {id:"supervision",name:"督查督办",desc:"创建、分派和跟踪重点督办事项。",createdAt:"2026-07-05",updatedAt:"2026-08-05",endpoint:"connector-gateway://supervision/v1",departments:["新区各委办局"],enabled:false,health:"维护中"},
     {id:"enterprise-wechat",name:"企业微信",desc:"向授权联系人或工作群发送通知和文件。",createdAt:"2026-07-05",updatedAt:"2026-08-08",endpoint:"connector-gateway://enterprise-wechat/v1",departments:["新区各委办局"],enabled:true,health:"正常"}
   ];
+  const CFG_CONNECTOR_DEFAULT_OPERATIONS = {
+    "tencent-docs":[
+      {id:"create-document",name:"创建在线文档",desc:"创建文档、表格或收集表",type:"create",method:"POST",path:"/documents",inputParams:'{"title":"string","content":"string"}',outputMapping:'{"documentUrl":"data.url"}',confirmRequired:true,enabled:true},
+      {id:"query-document",name:"查询文档",desc:"查询本平台发起的在线文档",type:"query",method:"GET",path:"/documents/{id}",inputParams:'{"id":"string"}',outputMapping:'{"title":"data.title","url":"data.url"}',confirmRequired:false,enabled:true}
+    ],
+    "gov-oa":[
+      {id:"query-process",name:"查询审批进度",desc:"查询当前用户可见流程",type:"query",method:"GET",path:"/processes",inputParams:'{"keyword":"string"}',outputMapping:'{"items":"data.list"}',confirmRequired:false,enabled:true},
+      {id:"start-process",name:"发起公文流转",desc:"创建待办或发起审批流程",type:"submit",method:"POST",path:"/processes",inputParams:'{"title":"string","content":"string"}',outputMapping:'{"processId":"data.id","status":"data.status"}',confirmRequired:true,enabled:true}
+    ],
+    "project-center":[
+      {id:"query-project",name:"查询项目进度",desc:"按条件查询重点项目",type:"query",method:"GET",path:"/projects",inputParams:'{"keyword":"string"}',outputMapping:'{"items":"data.list"}',confirmRequired:false,enabled:true},
+      {id:"update-project",name:"更新项目节点",desc:"更新授权项目的节点状态",type:"update",method:"POST",path:"/projects/{id}/progress",inputParams:'{"id":"string","status":"string"}',outputMapping:'{"success":"success"}',confirmRequired:true,enabled:true}
+    ],
+    "data-catalog":[
+      {id:"search-catalog",name:"检索数据目录",desc:"检索当前用户可见的数据资源",type:"query",method:"GET",path:"/catalog/search",inputParams:'{"keyword":"string"}',outputMapping:'{"items":"data.resources"}',confirmRequired:false,enabled:true},
+      {id:"apply-data",name:"发起共享申请",desc:"创建数据共享申请草稿",type:"submit",method:"POST",path:"/applications",inputParams:'{"resourceId":"string","reason":"string"}',outputMapping:'{"applicationId":"data.id"}',confirmRequired:true,enabled:true}
+    ],
+    "supervision":[
+      {id:"query-supervision",name:"查询督办事项",desc:"查询授权范围内的督办事项",type:"query",method:"GET",path:"/tasks",inputParams:'{"keyword":"string"}',outputMapping:'{"items":"data.list"}',confirmRequired:false,enabled:true},
+      {id:"create-supervision",name:"创建督办任务",desc:"创建并分派督办事项",type:"create",method:"POST",path:"/tasks",inputParams:'{"title":"string","deadline":"date"}',outputMapping:'{"taskId":"data.id"}',confirmRequired:true,enabled:true}
+    ],
+    "enterprise-wechat":[
+      {id:"send-message",name:"发送工作消息",desc:"向授权联系人或工作群发送消息",type:"submit",method:"POST",path:"/messages/send",inputParams:'{"target":"string","content":"string"}',outputMapping:'{"messageId":"data.id","status":"data.status"}',confirmRequired:true,enabled:true}
+    ]
+  };
+  CFG_CONNECTOR_SERVICES.forEach(item => {
+    item.source = item.source || "智能体中台";
+    item.category = item.category || (item.id === "project-center" ? "项目管理" : item.id === "data-catalog" ? "数据服务" : item.id === "tencent-docs" ? "文档协作" : item.id === "enterprise-wechat" ? "沟通协作" : "政务办公");
+    item.connectionType = item.connectionType || "中台托管";
+    item.authType = item.authType || "managed";
+    item.identityMode = item.identityMode || "系统统一账号";
+    item.timeout = item.timeout || 30;
+    item.operations = item.operations || (CFG_CONNECTOR_DEFAULT_OPERATIONS[item.id] || []).map(operation => ({...operation}));
+  });
   const CFG_REGISTERED_ENDPOINTS = {
     agent:["agent-service://drafting-center/v1","agent-service://document-analysis/v1","agent-service://office-task/v1"],
     connector:["connector-gateway://oa-adapter/v1","connector-gateway://business-system/v1","connector-gateway://collaboration/v1"]
@@ -8128,8 +8232,8 @@ let sidebarCollapsed = false;
   }
   function cfgSectionMeta(section) {
     const meta = {
-      agents:["智能体管理","智能体基础信息由智能体中台同步，本平台仅配置作用业务部门及展示状态。"],
-      connectors:["业务连接器管理","业务连接器基础信息由智能体中台同步，本平台仅配置作用业务部门及运行状态。"],
+      agents:["智能体管理","统一维护同步及手动新增的智能体基础信息、接入参数、作用部门和启用状态。"],
+      connectors:["业务连接器管理","统一维护中台同步和外部接入的业务连接器、业务操作、部门权限、连接状态及启用状态。"],
       rules:["全局强制约束规则","已发布版本保持不可变；动态切换只影响新任务，运行中任务继续使用启动快照。"],
       templates:[configRole === "user" ? "我的智能体模板" : "智能体模板管理","每个智能体至少配置一个默认模板；模板修改留痕，并以结构化数据和Markdown同步维护。"],
       personalization:["个性化","维护当前用户的人设与人格描述，后续对话将自动携带该项内容。"],
@@ -8140,7 +8244,8 @@ let sidebarCollapsed = false;
       menus:["菜单管理","按角色配置可见菜单，菜单权限不得突破角色的数据权限范围。"],
       audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"],
       models:["模型配置","维护当前用户可用的内置模型和自定义模型连接配置。"],
-      lexicon:["词库管理","维护词库与词条，按委办局配置作用范围，支持批量导入与导出；查看命中记录。仅系统管理员与委办局管理员可见。"]
+      lexicon:["词库管理","维护词库与词条，按委办局配置作用范围，支持批量导入与导出；查看命中记录。仅系统管理员与委办局管理员可见。"],
+      reviewRules:["核查规则管理","维护政务行文、政策法规、制度和保密四类核查规则；规则作用范围不得超出所属规则库授权范围。"]
     };
     return meta[section] || ["配置治理中心","集中维护平台配置。"];
   }
@@ -8161,21 +8266,184 @@ let sidebarCollapsed = false;
     return `<div class="cfg-personal-page"><section class="cfg-personal-card"><h2>人设/人格描述</h2><p></p><textarea class="cfg-personal-textarea" id="cfgPersonalPrompt" maxlength="200" placeholder="选填，请输入人设、语气或工作偏好。">${esc(value)}</textarea><div class="cfg-personal-foot"><small>仅对当前用户生效，不随角色切换自动变化，不得覆盖权限、保密和平台安全约束。</small><span id="cfgPersonalPromptCount">${value.length} / 200</span></div><div class="cfg-personal-actions"><button class="btn primary" data-act="cfgPersonalPromptSave">${svgi("i-check",13)}保存并应用</button></div></section></div>`;
   }
   function cfgScopeHTML(departments) { return `<span class="cfg-scope-list">${departments.map(name => `<span class="cfg-scope-chip">${esc(name)}</span>`).join("")}</span>`; }
+  function cfgAgentServiceIconHTML(item,size) {
+    const iconSize = Number(size || 16);
+    if (item && item.iconData) return `<img src="${esc(item.iconData)}" alt="" style="width:${iconSize}px;height:${iconSize}px;display:block;object-fit:cover;border-radius:${Math.max(4,Math.round(iconSize * .24))}px">`;
+    return svgi(AGENT_ICON[item && item.id] || "i-bot",iconSize);
+  }
   function cfgOpenServiceAdd(kind) {
-    const isAgent = kind === "agent", endpointOptions = (CFG_REGISTERED_ENDPOINTS[kind] || []).map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join(""), checks = CFG_DEPARTMENTS.map((name,index) => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${index === 0 ? "checked" : ""}><span>${esc(name)}</span></label>`).join("");
-    openModal(`新增${isAgent ? "智能体" : "业务连接器"}`, `<div class="cfg-readonly">先从服务注册中心选择已登记端点，再配置业务名称和作用部门。认证密钥、Token等敏感信息不在本页面展示。</div><div class="cfg-form-grid" style="margin-top:12px"><div class="cfg-form-field"><label>${isAgent ? "智能体" : "连接器"}名称 <i>*</i></label><input id="cfgServiceName" placeholder="请输入名称"></div><div class="cfg-form-field"><label>注册服务端点 <i>*</i></label><select id="cfgServiceEndpoint">${endpointOptions}</select></div>${isAgent ? `<div class="cfg-form-field"><label>智能体类型</label><select id="cfgServiceBusinessType"><option>起草类</option><option>功能类</option></select></div><div class="cfg-form-field"><label>进入方式</label><select id="cfgServiceEntryMode"><option value="chat">会话型</option><option value="workbench">独立工作台型</option></select></div>` : ""}<div class="cfg-form-field full"><label>描述 <i>*</i></label><textarea id="cfgServiceDesc" placeholder="说明服务用途和适用场景"></textarea></div></div><div class="cfg-form-field" style="margin-top:12px"><label>作用业务部门 <i>*</i></label><div id="cfgServiceDeptChecks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${checks}</div></div>`, () => {
-      const name = ($("#cfgServiceName")?.value || "").trim(), desc = ($("#cfgServiceDesc")?.value || "").trim(), endpoint = $("#cfgServiceEndpoint")?.value || "", departments = $$("#cfgServiceDeptChecks input:checked").map(input => input.value);
-      if (!name || !desc || !endpoint) { showToast("请完整填写名称、描述和注册端点"); return; }
+    const checks = CFG_DEPARTMENTS.map((name,index) => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${index === 0 ? "checked" : ""}><span>${esc(name)}</span></label>`).join("");
+    if (kind === "agent") {
+      let iconData = "";
+      openModal("新增智能体", `<div class="cfg-readonly">填写智能体基础信息和调用参数，保存后将进入智能体清单。</div><div class="cfg-form-grid" style="margin-top:12px">
+        <div class="cfg-form-field full"><label>智能体图标</label><div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px dashed #cbd8e2;border-radius:10px;background:#f8fafc"><span id="cfgAgentIconPreview" style="width:52px;height:52px;display:grid;place-items:center;border:1px solid #dbe5ec;border-radius:12px;background:#fff;color:var(--gov-700)">${svgi("i-bot",25)}</span><div style="display:grid;gap:5px"><button class="btn" type="button" id="cfgAgentIconPick">${svgi("i-upload",13)}上传图标</button><small id="cfgAgentIconName">支持 PNG、JPG、SVG、WebP，建议使用正方形图片，不超过 2MB。</small></div><input id="cfgAgentIconFile" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden></div></div>
+        <div class="cfg-form-field"><label>智能体名称 <i>*</i></label><input id="cfgServiceName" maxlength="40" placeholder="请输入智能体名称"></div>
+        <div class="cfg-form-field"><label>智能体 ID <i>*</i></label><input id="cfgServiceAgentId" maxlength="80" placeholder="请输入唯一智能体 ID"></div>
+        <div class="cfg-form-field full"><label>智能体描述 <i>*</i></label><textarea id="cfgServiceDesc" maxlength="300" placeholder="说明智能体用途和适用场景"></textarea></div>
+        <div class="cfg-form-field full"><label>智能体 URL <i>*</i></label><input id="cfgServiceUrl" placeholder="https://example.gov.cn/api/agent/run"></div>
+        <div class="cfg-form-field full"><label>智能体输入参数（JSON 格式） <i>*</i></label><textarea id="cfgServiceInputParams" spellcheck="false" style="min-height:132px;font-family:Consolas,Monaco,monospace" placeholder='例如：{&#10;  "query": "用户输入内容"&#10;}'>{}</textarea><small>请输入合法的 JSON 对象，用于描述调用智能体时需要传递的输入参数。</small></div>
+        <div class="cfg-form-field"><label>智能体类型 <i>*</i></label><select id="cfgServiceBusinessType"><option>起草类</option><option>审查类</option><option>会议类</option><option>合同类</option><option>服务类</option><option>展示类</option><option>其他</option></select></div>
+        <div class="cfg-form-field"><label>使用方式 <i>*</i></label><select id="cfgServiceEntryMode"><option value="chat">对话型</option><option value="workbench">独立工作台</option></select></div>
+        <div class="cfg-form-field full"><label>作用业务部门（可多选） <i>*</i></label><div id="cfgServiceDeptChecks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${checks}</div></div>
+        <div class="cfg-form-field"><label>启用状态 <i>*</i></label><select id="cfgServiceEnabled"><option value="true">启用</option><option value="false">禁用</option></select></div>
+      </div>`, () => {
+        const name = ($("#cfgServiceName")?.value || "").trim(), id = ($("#cfgServiceAgentId")?.value || "").trim(), desc = ($("#cfgServiceDesc")?.value || "").trim(), endpoint = ($("#cfgServiceUrl")?.value || "").trim(), inputText = ($("#cfgServiceInputParams")?.value || "").trim(), departments = $$("#cfgServiceDeptChecks input:checked").map(input => input.value), enabled = $("#cfgServiceEnabled")?.value === "true";
+        if (!name || !id || !desc || !endpoint || !inputText) { showToast("请完整填写智能体名称、描述、URL、ID和输入参数"); return; }
+        if (!/^https?:\/\//i.test(endpoint)) { showToast("智能体 URL 须以 http:// 或 https:// 开头"); return; }
+        let inputParams;
+        try { inputParams = JSON.parse(inputText); } catch (error) { showToast("智能体输入参数不是合法的 JSON 格式"); return; }
+        if (!inputParams || typeof inputParams !== "object" || Array.isArray(inputParams)) { showToast("智能体输入参数必须是 JSON 对象"); return; }
+        if (!departments.length) { showToast("至少选择一个作用业务部门"); return; }
+        if (CFG_AGENT_SERVICES.some(item => item.name === name)) { showToast("智能体名称已存在，请修改后保存"); return; }
+        if (CFG_AGENT_SERVICES.some(item => item.id === id)) { showToast("智能体 ID 已存在，请修改后保存"); return; }
+        const today = cfgNowDate(), businessType = $("#cfgServiceBusinessType").value, entryMode = $("#cfgServiceEntryMode").value, normalizedInput = JSON.stringify(inputParams,null,2), item = { id,name,desc,endpoint,url:endpoint,inputParams:normalizedInput,businessType,entryMode,departments,enabled,iconData,createdAt:today,updatedAt:today,health:"已登记",environment:"手动接入" };
+        const marketplaceAgent = { id,name,desc,cat:businessType,glyph:(name || "智").slice(0,1),flow:"generate",docType:name,entryMode,url:endpoint,inputParams:normalizedInput,iconData,departments:departments.slice(),customRegistered:true,kb:[] };
+        CFG_AGENT_SERVICES.unshift(item); AGENTS.unshift(marketplaceAgent); AGENT_STATS[id] = { calls:0,published:today };
+        if (enabled) config.agentsOff.delete(id); else config.agentsOff.add(id);
+        closeModal(); renderConfig(); renderAgentsView(); showToast(`${name}已新增并${enabled ? "同步到智能体广场" : "保持禁用"}`);
+      }, { okText:"保存", width:"820px" });
+      const fileInput = $("#cfgAgentIconFile"), pickButton = $("#cfgAgentIconPick"), preview = $("#cfgAgentIconPreview"), fileName = $("#cfgAgentIconName");
+      if (pickButton && fileInput) pickButton.addEventListener("click", () => fileInput.click());
+      if (fileInput) fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0]; if (!file) return;
+        if (!/^image\//.test(file.type)) { showToast("请选择图片格式的智能体图标"); fileInput.value = ""; return; }
+        if (file.size > 2 * 1024 * 1024) { showToast("智能体图标不能超过 2MB"); fileInput.value = ""; return; }
+        const reader = new FileReader(); reader.onload = () => { iconData = String(reader.result || ""); if (preview) preview.innerHTML = `<img src="${esc(iconData)}" alt="智能体图标预览" style="width:100%;height:100%;object-fit:cover;border-radius:11px">`; if (fileName) fileName.textContent = file.name; }; reader.readAsDataURL(file);
+      });
+      return;
+    }
+    cfgOpenConnectorEditor(null);
+  }
+  function cfgConnectorService(id) { return CFG_CONNECTOR_SERVICES.find(item => item.id === id); }
+  function cfgConnectorIconHTML(item,size) {
+    const iconSize = Number(size || 16);
+    if (item?.iconData) return `<img src="${esc(item.iconData)}" alt="" style="width:${iconSize}px;height:${iconSize}px;display:block;object-fit:cover;border-radius:${Math.max(4,Math.round(iconSize*.24))}px">`;
+    return svgi(connectorById(item?.id)?.icon || "i-plug",iconSize);
+  }
+  function cfgConnectorAuthLabel(value) { return value === "apiKey" ? "API Key" : value === "bearer" ? "Bearer Token" : value === "managed" ? "中台托管" : "无需认证"; }
+  function cfgConnectorOperationTypeLabel(value) { return ({query:"查询",create:"新增",update:"更新",delete:"删除",submit:"提交",upload:"上传"})[value] || "查询"; }
+  function cfgConnectorIsWriteOperation(operation) { return !!operation && operation.type !== "query"; }
+  function cfgConnectorParseObject(text,label) {
+    const source = String(text || "").trim() || "{}";
+    try { const value = JSON.parse(source); if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(); return JSON.stringify(value,null,2); }
+    catch (error) { showToast(`${label}须为合法的 JSON 对象`); return null; }
+  }
+  function syncConnectorMarketplace(item) {
+    if (!item || typeof CONNECTORS === "undefined") return;
+    let connector = connectorById(item.id);
+    if (!connector) {
+      connector = {id:item.id,name:item.name,icon:"i-plug",color:"linear-gradient(135deg,#1473a5,#20a56b)",desc:item.desc,tag:item.category || "业务服务",calls:0,published:item.createdAt || cfgNowDate(),prompt:"",scopes:[],resultType:"list",customRegistered:true};
+      CONNECTORS.unshift(connector);
+    }
+    Object.assign(connector,{name:item.name,desc:item.desc,tag:item.category || "业务服务",published:item.updatedAt || connector.published,iconData:item.iconData || "",departments:(item.departments || []).slice(),operations:(item.operations || []).map(operation => ({...operation})),customRegistered:item.source === "手动接入"});
+    connector.scopes = (item.operations || []).filter(operation => operation.enabled).map(operation => operation.name);
+    connector.prompt = connectorDefaultPrompt(connector);
+  }
+  function cfgOpenConnectorEditor(id) {
+    const existing = id ? cfgConnectorService(id) : null;
+    const item = existing || {id:"",name:"",desc:"",endpoint:"",category:"政务办公",authType:"none",credential:"",authHeader:"Authorization",commonHeaders:"{}",timeout:30,identityMode:"系统统一账号",departments:[CFG_DEPARTMENTS[0]],enabled:true,iconData:""};
+    let iconData = item.iconData || "";
+    const checks = CFG_DEPARTMENTS.map(name => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${(item.departments || []).includes(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join("");
+    const firstOperation = existing ? "" : `<div class="cfg-form-field full"><div class="connector-form-divider"><b>首个业务操作</b><span>连接器至少配置一个可调用操作，保存后可继续添加。</span></div></div>
+      <div class="cfg-form-field"><label>操作名称 <i>*</i></label><input id="cfgConnectorOperationName" maxlength="40" placeholder="例如：查询审批进度"></div>
+      <div class="cfg-form-field"><label>操作 ID <i>*</i></label><input id="cfgConnectorOperationId" maxlength="60" placeholder="例如：query-process"></div>
+      <div class="cfg-form-field"><label>操作类型 <i>*</i></label><select id="cfgConnectorOperationType"><option value="query">查询</option><option value="create">新增</option><option value="update">更新</option><option value="delete">删除</option><option value="submit">提交</option><option value="upload">上传</option></select></div>
+      <div class="cfg-form-field"><label>请求方法 <i>*</i></label><select id="cfgConnectorOperationMethod"><option>GET</option><option>POST</option></select></div>
+      <div class="cfg-form-field full"><label>请求路径 <i>*</i></label><input id="cfgConnectorOperationPath" placeholder="例如：/api/v1/processes"></div>
+      <div class="cfg-form-field"><label>输入参数（JSON）</label><textarea id="cfgConnectorOperationInput" spellcheck="false" class="connector-json-input">{}</textarea></div>
+      <div class="cfg-form-field"><label>输出映射（JSON）</label><textarea id="cfgConnectorOperationOutput" spellcheck="false" class="connector-json-input">{}</textarea></div>
+      <div class="cfg-form-field full"><label class="check-row"><input id="cfgConnectorOperationConfirm" type="checkbox"><span>执行前需要用户确认（新增、更新、删除、提交、上传操作建议开启）</span></label></div>`;
+    openModal(existing ? `编辑连接器 · ${existing.name}` : "新增外部业务连接器", `<div class="cfg-readonly">一期支持 HTTP GET/POST、无需认证/API Key/Bearer Token，并采用系统统一账号调用。凭证仅用于连接配置，列表和日志中不展示明文。</div><div class="cfg-form-grid" style="margin-top:12px">
+      <div class="cfg-form-field full"><label>连接器图标</label><div class="connector-icon-upload"><span id="cfgConnectorIconPreview">${iconData ? `<img src="${esc(iconData)}" alt="连接器图标预览">` : svgi("i-plug",25)}</span><div><button class="btn" type="button" id="cfgConnectorIconPick">${svgi("i-upload",13)}上传图标</button><small id="cfgConnectorIconName">支持 PNG、JPG、SVG、WebP，不超过 2MB。</small></div><input id="cfgConnectorIconFile" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden></div></div>
+      <div class="cfg-form-field"><label>连接器名称 <i>*</i></label><input id="cfgConnectorName" maxlength="40" value="${esc(item.name)}" placeholder="请输入连接器名称"></div>
+      <div class="cfg-form-field"><label>连接器 ID <i>*</i></label><input id="cfgConnectorId" maxlength="80" value="${esc(item.id)}" ${existing ? "disabled" : ""} placeholder="例如：external-oa"></div>
+      <div class="cfg-form-field full"><label>连接器描述 <i>*</i></label><textarea id="cfgConnectorDesc" maxlength="300" placeholder="说明连接器用途和适用场景">${esc(item.desc)}</textarea></div>
+      <div class="cfg-form-field"><label>业务分类 <i>*</i></label><select id="cfgConnectorCategory">${["政务办公","文档协作","项目管理","数据服务","沟通协作","其他"].map(value => `<option ${item.category === value ? "selected" : ""}>${value}</option>`).join("")}</select></div>
+      <div class="cfg-form-field"><label>接入方式</label><input value="HTTP API" disabled></div>
+      <div class="cfg-form-field full"><label>基础地址 <i>*</i></label><input id="cfgConnectorEndpoint" value="${esc(item.endpoint || "")}" placeholder="https://api.example.gov.cn"></div>
+      <div class="cfg-form-field"><label>认证方式 <i>*</i></label><select id="cfgConnectorAuthType"><option value="none" ${item.authType === "none" ? "selected" : ""}>无需认证</option><option value="apiKey" ${item.authType === "apiKey" ? "selected" : ""}>API Key</option><option value="bearer" ${item.authType === "bearer" ? "selected" : ""}>Bearer Token</option></select></div>
+      <div class="cfg-form-field"><label>认证 Header</label><input id="cfgConnectorAuthHeader" value="${esc(item.authHeader || "Authorization")}" placeholder="Authorization 或 X-API-Key"></div>
+      <div class="cfg-form-field full" id="cfgConnectorCredentialField"><label>认证凭证 <i>*</i></label><input id="cfgConnectorCredential" type="password" value="${esc(item.credential || "")}" placeholder="请输入 API Key 或 Bearer Token"></div>
+      <div class="cfg-form-field"><label>公共请求头（JSON）</label><textarea id="cfgConnectorHeaders" spellcheck="false" class="connector-json-input">${esc(item.commonHeaders || "{}")}</textarea></div>
+      <div class="cfg-form-field"><label>超时时间（秒）</label><input id="cfgConnectorTimeout" type="number" min="3" max="120" value="${Number(item.timeout || 30)}"></div>
+      <div class="cfg-form-field"><label>调用身份</label><input value="系统统一账号" disabled><small>一期使用平台统一服务身份，后续可扩展用户授权身份。</small></div>
+      <div class="cfg-form-field"><label>启用状态 <i>*</i></label><select id="cfgConnectorEnabled"><option value="true" ${item.enabled ? "selected" : ""}>启用</option><option value="false" ${item.enabled ? "" : "selected"}>禁用</option></select></div>
+      <div class="cfg-form-field full"><label>作用业务部门（可多选） <i>*</i></label><div id="cfgConnectorDeptChecks" class="connector-dept-checks">${checks}</div></div>
+      ${firstOperation}
+    </div>`, () => {
+      const nextId = existing ? existing.id : ($("#cfgConnectorId")?.value || "").trim(), name = ($("#cfgConnectorName")?.value || "").trim(), desc = ($("#cfgConnectorDesc")?.value || "").trim(), endpoint = ($("#cfgConnectorEndpoint")?.value || "").trim(), authType = $("#cfgConnectorAuthType")?.value || "none", credential = ($("#cfgConnectorCredential")?.value || "").trim(), departments = $$("#cfgConnectorDeptChecks input:checked").map(input => input.value), commonHeaders = cfgConnectorParseObject($("#cfgConnectorHeaders")?.value,"公共请求头");
+      if (!nextId || !name || !desc || !endpoint) { showToast("请完整填写连接器名称、ID、描述和基础地址"); return; }
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(nextId)) { showToast("连接器 ID 仅支持字母、数字、下划线和短横线"); return; }
+      if (!/^https?:\/\//i.test(endpoint)) { showToast("基础地址须以 http:// 或 https:// 开头"); return; }
+      if (commonHeaders === null) return;
+      if (authType !== "none" && !credential) { showToast("选择认证方式后必须填写认证凭证"); return; }
       if (!departments.length) { showToast("至少选择一个作用业务部门"); return; }
-      const rows = isAgent ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES;
-      if (rows.some(item => item.name === name)) { showToast("名称已存在，请修改后保存"); return; }
-      const id = `${isAgent ? "agent" : "connector"}-${Date.now()}`, today = cfgNowDate();
-      const item = { id,name,desc,createdAt:today,updatedAt:today,endpoint,departments,enabled:true,health:"已登记",environment:"政务内网生产环境" };
-      if (isAgent) { item.businessType = $("#cfgServiceBusinessType").value; item.entryMode = $("#cfgServiceEntryMode").value; }
-      rows.unshift(item); closeModal(); renderConfig(); showToast(`${name}已新增并开启`);
-    }, { okText:"保存并开启", width:"760px" });
+      if (CFG_CONNECTOR_SERVICES.some(row => row.id === nextId && row !== existing)) { showToast("连接器 ID 已存在"); return; }
+      if (CFG_CONNECTOR_SERVICES.some(row => row.name === name && row !== existing)) { showToast("连接器名称已存在"); return; }
+      let operations = existing ? existing.operations : null;
+      if (!existing) {
+        const operationName = ($("#cfgConnectorOperationName")?.value || "").trim(), operationId = ($("#cfgConnectorOperationId")?.value || "").trim(), path = ($("#cfgConnectorOperationPath")?.value || "").trim(), inputParams = cfgConnectorParseObject($("#cfgConnectorOperationInput")?.value,"输入参数"), outputMapping = cfgConnectorParseObject($("#cfgConnectorOperationOutput")?.value,"输出映射");
+        if (!operationName || !operationId || !path) { showToast("请完整填写首个业务操作的名称、ID和请求路径"); return; }
+        if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(operationId)) { showToast("操作 ID 仅支持字母、数字、下划线和短横线"); return; }
+        if (inputParams === null || outputMapping === null) return;
+        operations = [{id:operationId,name:operationName,desc:"",type:$("#cfgConnectorOperationType").value,method:$("#cfgConnectorOperationMethod").value,path,inputParams,outputMapping,confirmRequired:$("#cfgConnectorOperationConfirm").checked,enabled:true}];
+      }
+      const today = cfgNowDate(), next = {id:nextId,name,desc,endpoint,url:endpoint,category:$("#cfgConnectorCategory").value,source:existing?.source || "手动接入",connectionType:"HTTP API",authType,authHeader:($("#cfgConnectorAuthHeader")?.value || "Authorization").trim(),credential,commonHeaders,timeout:Math.max(3,Math.min(120,Number($("#cfgConnectorTimeout")?.value || 30))),identityMode:"系统统一账号",departments,enabled:$("#cfgConnectorEnabled").value === "true",iconData,operations,health:existing?.health || "未检测",environment:"外部业务系统",createdAt:existing?.createdAt || today,updatedAt:today};
+      if (existing) Object.assign(existing,next); else CFG_CONNECTOR_SERVICES.unshift(next);
+      syncConnectorMarketplace(existing || next); cfgRecordAudit(existing ? "编辑连接器" : "新增连接器","业务连接器",name,`配置外部连接器及${operations.length}个业务操作`);
+      closeModal(); configConnectorDetailId = nextId; renderConfig(); renderConnectors(); showToast(`${name}已保存，业务连接器广场已同步`);
+    }, {okText:existing ? "保存修改" : "保存连接器",width:"860px"});
+    const authSelect = $("#cfgConnectorAuthType"), credentialField = $("#cfgConnectorCredentialField");
+    const syncAuth = () => { if (credentialField) credentialField.style.display = authSelect?.value === "none" ? "none" : ""; };
+    if (authSelect) authSelect.addEventListener("change",syncAuth); syncAuth();
+    const operationType = $("#cfgConnectorOperationType"), confirmInput = $("#cfgConnectorOperationConfirm");
+    if (operationType && confirmInput) operationType.addEventListener("change",() => { confirmInput.checked = operationType.value !== "query"; });
+    const fileInput = $("#cfgConnectorIconFile"), pickButton = $("#cfgConnectorIconPick"), preview = $("#cfgConnectorIconPreview"), fileName = $("#cfgConnectorIconName");
+    if (pickButton && fileInput) pickButton.addEventListener("click",() => fileInput.click());
+    if (fileInput) fileInput.addEventListener("change",() => { const file = fileInput.files?.[0]; if (!file) return; if (!/^image\//.test(file.type) || file.size > 2*1024*1024) { showToast("请选择不超过 2MB 的图片文件"); fileInput.value=""; return; } const reader = new FileReader(); reader.onload = () => { iconData = String(reader.result || ""); if (preview) preview.innerHTML = `<img src="${esc(iconData)}" alt="连接器图标预览">`; if (fileName) fileName.textContent = file.name; }; reader.readAsDataURL(file); });
+  }
+  function cfgOpenConnectorOperationEditor(connectorId,operationId) {
+    const connector = cfgConnectorService(connectorId); if (!connector) return;
+    const existing = (connector.operations || []).find(item => item.id === operationId), operation = existing || {id:"",name:"",desc:"",type:"query",method:"GET",path:"",inputParams:"{}",outputMapping:"{}",confirmRequired:false,enabled:true};
+    openModal(existing ? `编辑业务操作 · ${existing.name}` : `新增业务操作 · ${connector.name}`, `<div class="cfg-readonly">一个连接器可以配置多个独立业务操作。查询操作可直接执行，写入类操作建议开启执行前确认。</div><div class="cfg-form-grid" style="margin-top:12px">
+      <div class="cfg-form-field"><label>操作名称 <i>*</i></label><input id="cfgOpName" value="${esc(operation.name)}" placeholder="例如：查询审批进度"></div><div class="cfg-form-field"><label>操作 ID <i>*</i></label><input id="cfgOpId" value="${esc(operation.id)}" ${existing ? "disabled" : ""} placeholder="例如：query-process"></div>
+      <div class="cfg-form-field full"><label>操作描述</label><textarea id="cfgOpDesc" placeholder="说明该操作的用途和适用场景">${esc(operation.desc || "")}</textarea></div>
+      <div class="cfg-form-field"><label>操作类型 <i>*</i></label><select id="cfgOpType">${[["query","查询"],["create","新增"],["update","更新"],["delete","删除"],["submit","提交"],["upload","上传"]].map(([value,label]) => `<option value="${value}" ${operation.type === value ? "selected" : ""}>${label}</option>`).join("")}</select></div>
+      <div class="cfg-form-field"><label>请求方法 <i>*</i></label><select id="cfgOpMethod"><option ${operation.method === "GET" ? "selected" : ""}>GET</option><option ${operation.method === "POST" ? "selected" : ""}>POST</option></select></div>
+      <div class="cfg-form-field full"><label>请求路径 <i>*</i></label><input id="cfgOpPath" value="${esc(operation.path)}" placeholder="/api/v1/processes"></div>
+      <div class="cfg-form-field"><label>输入参数（JSON）</label><textarea id="cfgOpInput" spellcheck="false" class="connector-json-input">${esc(operation.inputParams || "{}")}</textarea></div><div class="cfg-form-field"><label>输出映射（JSON）</label><textarea id="cfgOpOutput" spellcheck="false" class="connector-json-input">${esc(operation.outputMapping || "{}")}</textarea></div>
+      <div class="cfg-form-field full"><label class="check-row"><input id="cfgOpConfirm" type="checkbox" ${operation.confirmRequired ? "checked" : ""}><span>执行前需要用户确认</span></label><label class="check-row"><input id="cfgOpEnabled" type="checkbox" ${operation.enabled ? "checked" : ""}><span>启用该业务操作</span></label></div>
+    </div>`,() => {
+      const nextId = existing ? existing.id : ($("#cfgOpId")?.value || "").trim(), name = ($("#cfgOpName")?.value || "").trim(), path = ($("#cfgOpPath")?.value || "").trim(), inputParams = cfgConnectorParseObject($("#cfgOpInput")?.value,"输入参数"), outputMapping = cfgConnectorParseObject($("#cfgOpOutput")?.value,"输出映射");
+      if (!nextId || !name || !path) { showToast("请完整填写操作名称、ID和请求路径"); return; }
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(nextId)) { showToast("操作 ID 仅支持字母、数字、下划线和短横线"); return; }
+      if (inputParams === null || outputMapping === null) return;
+      if ((connector.operations || []).some(row => row.id === nextId && row !== existing)) { showToast("同一连接器下操作 ID 不能重复"); return; }
+      const next = {id:nextId,name,desc:($("#cfgOpDesc")?.value || "").trim(),type:$("#cfgOpType").value,method:$("#cfgOpMethod").value,path,inputParams,outputMapping,confirmRequired:$("#cfgOpConfirm").checked,enabled:$("#cfgOpEnabled").checked};
+      if (existing) Object.assign(existing,next); else connector.operations.push(next);
+      connector.updatedAt = cfgNowDate(); syncConnectorMarketplace(connector); cfgRecordAudit(existing ? "编辑连接器操作" : "新增连接器操作","业务连接器",connector.name,`${next.name} · ${next.method} ${next.path}`);
+      closeModal(); renderConfig(); renderConnectors(); showToast(existing ? "业务操作已更新" : "业务操作已新增");
+    },{okText:"保存操作",width:"760px"});
+    const typeSelect = $("#cfgOpType"), confirm = $("#cfgOpConfirm"); if (typeSelect && confirm) typeSelect.addEventListener("change",() => { confirm.checked = typeSelect.value !== "query"; });
+  }
+  function cfgConnectorDetailHTML(item) {
+    const operations = (item.operations || []).map(operation => `<tr><td><b>${esc(operation.name)}</b><small class="connector-op-desc">${esc(operation.desc || operation.id)}</small></td><td><span class="tag ${operation.type === "query" ? "blue" : "amber"}">${cfgConnectorOperationTypeLabel(operation.type)}</span></td><td><code class="connector-method ${operation.method.toLowerCase()}">${operation.method}</code></td><td><code>${esc(operation.path)}</code></td><td>${operation.confirmRequired ? '<span class="cfg-status-pill off">需要确认</span>' : '<span class="cfg-status-pill">直接执行</span>'}</td><td><button class="toggle ${operation.enabled ? "on" : ""}" data-act="cfgConnectorOperationToggle" data-connector-id="${item.id}" data-id="${operation.id}" aria-label="切换操作状态"></button></td><td><button class="btn" data-act="cfgConnectorOperationEdit" data-connector-id="${item.id}" data-id="${operation.id}">编辑</button><button class="btn" data-act="cfgConnectorOperationDelete" data-connector-id="${item.id}" data-id="${operation.id}">删除</button></td></tr>`).join("");
+    return `<div class="cfg-editor-head"><button class="btn" data-act="cfgConnectorDetailBack">${svgi("i-chevron-left",13)}返回连接器清单</button><div class="cfg-editor-head-copy"><h2>${esc(item.name)}</h2><p>${esc(item.desc)}</p></div><button class="btn" data-act="cfgConnectorTest" data-id="${item.id}">${svgi("i-refresh",13)}测试连接</button>${item.source === "手动接入" ? `<button class="btn" data-act="cfgConnectorEdit" data-id="${item.id}">${svgi("i-edit",13)}编辑连接器</button>` : ""}<button class="btn primary" data-act="cfgConnectorOperationAdd" data-connector-id="${item.id}">${svgi("i-plus",13)}新增业务操作</button></div>
+      <div class="cfg-overview-grid"><div class="cfg-metric"><span>接入来源</span><b class="connector-metric-text">${esc(item.source)}</b><small>${esc(item.connectionType)}</small></div><div class="cfg-metric"><span>业务操作</span><b>${(item.operations || []).length}</b><small>${(item.operations || []).filter(operation => operation.enabled).length} 个已启用</small></div><div class="cfg-metric"><span>连接状态</span><b class="connector-metric-text">${esc(item.health || "未检测")}</b><small>最近更新 ${esc(item.updatedAt)}</small></div><div class="cfg-metric"><span>认证方式</span><b class="connector-metric-text">${cfgConnectorAuthLabel(item.authType)}</b><small>${esc(item.identityMode || "系统统一账号")}</small></div></div>
+      <section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>连接信息</h2><p>凭证仅在配置时维护，详情与日志中不展示明文。</p></div><button class="btn" data-act="cfgServiceScope" data-kind="connector" data-id="${item.id}">配置部门</button></div><div class="cfg-section-body"><div class="connector-info-grid"><span><small>基础地址</small><b>${esc(item.endpoint)}</b></span><span><small>业务分类</small><b>${esc(item.category)}</b></span><span><small>超时时间</small><b>${Number(item.timeout || 30)} 秒</b></span><span><small>作用部门</small><b>${esc((item.departments || []).join("、"))}</b></span></div></div></section>
+      <section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>业务操作</h2><p>每个操作独立配置请求方法、路径、输入输出映射和执行确认规则。</p></div></div><div class="cfg-section-body"><div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>操作名称</th><th>类型</th><th>方法</th><th>请求路径</th><th>执行规则</th><th>状态</th><th>操作</th></tr></thead><tbody>${operations || '<tr><td colspan="7"><div class="cfg-empty"><b>尚未配置业务操作</b><p>请新增至少一个业务操作后再启用连接器。</p></div></td></tr>'}</tbody></table></div></div></section>`;
+  }
+  function cfgConnectorManagerHTML() {
+    const detail = configConnectorDetailId ? cfgConnectorService(configConnectorDetailId) : null; if (detail) return cfgConnectorDetailHTML(detail);
+    const filters = configServiceFilters.connector, departments = Array.from(new Set(CFG_CONNECTOR_SERVICES.flatMap(item => item.departments || []))), categories = Array.from(new Set(CFG_CONNECTOR_SERVICES.map(item => item.category).filter(Boolean))), sources = Array.from(new Set(CFG_CONNECTOR_SERVICES.map(item => item.source).filter(Boolean)));
+    const visible = CFG_CONNECTOR_SERVICES.filter(item => (!filters.name || item.name.toLowerCase().includes(filters.name.toLowerCase())) && (filters.source === "all" || item.source === filters.source) && (filters.category === "all" || item.category === filters.category) && (filters.department === "all" || (item.departments || []).includes(filters.department)) && (filters.status === "all" || (filters.status === "enabled" ? item.enabled : !item.enabled)));
+    const rows = visible.map(item => `<tr><td><div class="cfg-data-title"><span class="pref-ic">${cfgConnectorIconHTML(item,16)}</span><span><b>${esc(item.name)}</b><small>${esc(item.desc)}</small></span></div></td><td><span class="tag ${item.source === "手动接入" ? "green" : "blue"}">${esc(item.source)}</span><small class="connector-op-desc">${esc(item.connectionType)}</small></td><td>${esc(item.category)}</td><td><b>${(item.operations || []).length}</b> 个<small class="connector-op-desc">${(item.operations || []).filter(operation => operation.enabled).length} 个启用</small></td><td>${cfgScopeHTML(item.departments)}</td><td><span class="cfg-status-pill ${item.health === "连接失败" || item.health === "未检测" ? "off" : ""}">${esc(item.health || "未检测")}</span></td><td><button class="toggle ${item.enabled ? "on" : ""}" data-act="cfgServiceToggle" data-kind="connector" data-id="${item.id}" aria-label="切换运行状态"></button><small class="connector-op-desc">${item.enabled ? "启用" : "禁用"}</small></td><td><button class="btn primary" data-act="cfgConnectorOpenDetail" data-id="${item.id}">配置操作</button><button class="btn" data-act="cfgConnectorTest" data-id="${item.id}">测试连接</button></td></tr>`).join("");
+    const enabled = CFG_CONNECTOR_SERVICES.filter(item => item.enabled).length, manual = CFG_CONNECTOR_SERVICES.filter(item => item.source === "手动接入").length, operationCount = CFG_CONNECTOR_SERVICES.reduce((sum,item) => sum + (item.operations || []).length,0);
+    const filterBar = `<div class="cfg-filter-bar"><div class="cfg-filter-field wide"><label>连接器名称</label><input data-cfg-service-filter="name" value="${esc(filters.name)}" placeholder="请输入连接器名称"></div><div class="cfg-filter-field"><label>接入来源</label><select data-cfg-service-filter="source"><option value="all">全部来源</option>${sources.map(value => `<option ${filters.source === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>业务分类</label><select data-cfg-service-filter="category"><option value="all">全部分类</option>${categories.map(value => `<option ${filters.category === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>作用业务部门</label><select data-cfg-service-filter="department"><option value="all">全部部门</option>${departments.map(value => `<option ${filters.department === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>启用状态</label><select data-cfg-service-filter="status"><option value="all">全部状态</option><option value="enabled" ${filters.status === "enabled" ? "selected" : ""}>启用</option><option value="disabled" ${filters.status === "disabled" ? "selected" : ""}>禁用</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="cfgServiceFilter" data-kind="connector">${svgi("i-search",13)}筛选</button><button class="btn" data-act="cfgServiceReset" data-kind="connector">重置</button></div></div>`;
+    return `<div class="cfg-overview-grid"><div class="cfg-metric"><span>连接器总数</span><b>${CFG_CONNECTOR_SERVICES.length}</b><small>中台同步与手动接入统一管理</small></div><div class="cfg-metric"><span>外部接入</span><b>${manual}</b><small>手动配置 HTTP API</small></div><div class="cfg-metric"><span>业务操作</span><b>${operationCount}</b><small>一个连接器可配置多个操作</small></div><div class="cfg-metric"><span>当前启用</span><b>${enabled}</b><small>已同步到业务连接器广场</small></div></div><section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>业务连接器清单</h2><p>统一管理中台同步及外部接入的连接器、业务操作、部门权限和运行状态。</p></div><button class="btn primary" data-act="cfgServiceAdd" data-kind="connector">${svgi("i-plus",13)}新增业务连接器</button></div><div class="cfg-section-body">${filterBar}<div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>连接器名称</th><th>接入来源</th><th>业务分类</th><th>业务操作</th><th>作用部门</th><th>连接状态</th><th>启用状态</th><th>操作</th></tr></thead><tbody>${rows || '<tr><td colspan="8"><div class="cfg-empty"><b>暂无符合条件的连接器</b><p>请调整筛选条件或新增外部业务连接器。</p></div></td></tr>'}</tbody></table></div></div></section>`;
   }
   function cfgServiceTable(kind) {
+    if (kind === "connector") return cfgConnectorManagerHTML();
     const isAgent = kind === "agent", allRows = isAgent ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, filters = configServiceFilters[kind];
     const departments = Array.from(new Set(allRows.flatMap(item => item.departments || [])));
     const types = isAgent ? Array.from(new Set(allRows.map(item => agentTypeLabel(byId(item.id) || item)))) : [];
@@ -8192,12 +8460,13 @@ let sidebarCollapsed = false;
       const agent = isAgent ? byId(item.id) : null;
       const connector = !isAgent ? connectorById(item.id) : null;
       const icon = isAgent ? (AGENT_ICON[item.id] || "i-bot") : (connector?.icon || "i-plug");
+      const iconHTML = isAgent ? cfgAgentServiceIconHTML(item,15) : svgi(icon,15);
       const type = isAgent ? agentTypeLabel(agent || item) : "";
       const useMode = isAgent ? (item.entryMode === "chat" ? "对话型" : "独立工作台") : "";
-      return `<tr><td><div class="cfg-data-title"><span class="pref-ic">${svgi(icon,15)}</span><span><b>${esc(item.name)}</b>${isAgent ? "" : `<small>${esc(item.desc)}</small>`}</span></div></td>${isAgent ? `<td><span class="tag blue">${esc(type)}</span></td><td>${esc(useMode)}</td>` : `<td>${esc(item.desc)}</td>`}<td>${cfgScopeHTML(item.departments)}<button class="btn" style="margin-top:6px" data-act="cfgServiceScope" data-kind="${kind}" data-id="${item.id}">配置部门</button></td><td>${esc(item.updatedAt)}</td><td>${esc(item.createdAt)}</td><td><button class="toggle ${item.enabled ? "on" : ""}" data-act="cfgServiceToggle" data-kind="${kind}" data-id="${item.id}" aria-label="切换运行状态"></button><div style="margin-top:5px"><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? (isAgent ? "启用" : "运行") : (isAgent ? "停用" : "停用")}</span></div></td><td><button class="btn" data-act="cfgServiceView" data-kind="${kind}" data-id="${item.id}">查看</button></td></tr>`;
+      return `<tr><td><div class="cfg-data-title"><span class="pref-ic">${iconHTML}</span><span><b>${esc(item.name)}</b>${isAgent ? "" : `<small>${esc(item.desc)}</small>`}</span></div></td>${isAgent ? `<td><span class="tag blue">${esc(type)}</span></td><td>${esc(useMode)}</td>` : `<td>${esc(item.desc)}</td>`}<td>${cfgScopeHTML(item.departments)}<button class="btn" style="margin-top:6px" data-act="cfgServiceScope" data-kind="${kind}" data-id="${item.id}">配置部门</button></td><td>${esc(item.updatedAt)}</td><td>${esc(item.createdAt)}</td><td><button class="toggle ${item.enabled ? "on" : ""}" data-act="cfgServiceToggle" data-kind="${kind}" data-id="${item.id}" aria-label="切换运行状态"></button><div style="margin-top:5px"><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? (isAgent ? "启用" : "运行") : (isAgent ? "停用" : "停用")}</span></div></td><td><button class="btn" data-act="cfgServiceView" data-kind="${kind}" data-id="${item.id}">查看</button></td></tr>`;
     }).join("");
     const filterBar = `<div class="cfg-filter-bar"><div class="cfg-filter-field wide"><label>${isAgent ? "智能体名称" : "连接器名称"}</label><input data-cfg-service-filter="name" value="${esc(filters.name)}" placeholder="请输入名称"></div>${isAgent ? `<div class="cfg-filter-field"><label>智能体类型</label><select data-cfg-service-filter="type"><option value="all">全部类型</option>${types.map(value => `<option ${filters.type === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>使用方式</label><select data-cfg-service-filter="mode"><option value="all">全部方式</option><option value="chat" ${filters.mode === "chat" ? "selected" : ""}>对话型</option><option value="workbench" ${filters.mode === "workbench" ? "selected" : ""}>独立工作台</option></select></div>` : ""}<div class="cfg-filter-field"><label>作用业务部门</label><select data-cfg-service-filter="department"><option value="all">全部部门</option>${departments.map(value => `<option ${filters.department === value ? "selected" : ""}>${esc(value)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>运行状态</label><select data-cfg-service-filter="status"><option value="all">全部状态</option><option value="enabled" ${filters.status === "enabled" ? "selected" : ""}>${isAgent ? "启用" : "运行"}</option><option value="disabled" ${filters.status === "disabled" ? "selected" : ""}>${isAgent ? "停用" : "停用"}</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="cfgServiceFilter" data-kind="${kind}">${svgi("i-search",13)}筛选</button><button class="btn" data-act="cfgServiceReset" data-kind="${kind}">重置</button></div></div>`;
-    return `<div class="cfg-overview-grid"><div class="cfg-metric"><span>${isAgent ? "智能体总数" : "连接器总数"}</span><b>${allRows.length}</b><small>由智能体中台同步</small></div><div class="cfg-metric"><span>当前启用</span><b>${enabled}</b><small>对授权部门可用</small></div><div class="cfg-metric"><span>当前停用</span><b>${allRows.length-enabled}</b><small>不允许发起新任务</small></div></div><section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${isAgent ? "智能体清单" : "业务连接器清单"}</h2><p>名称、图标、描述、类型和使用方式均从智能体中台同步，本页面不提供新增及服务地址修改。</p></div></div><div class="cfg-section-body">${filterBar}<div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>${isAgent ? "智能体名称" : "连接器名称"}</th>${isAgent ? "<th>智能体类型</th><th>使用方式</th>" : "<th>描述</th>"}<th>作用业务部门</th><th>更新时间</th><th>创建时间</th><th>运行状态</th><th>操作</th></tr></thead><tbody>${table || `<tr><td colspan="${isAgent ? 8 : 7}"><div class="cfg-empty"><b>暂无符合条件的数据</b><p>请调整筛选条件后重试。</p></div></td></tr>`}</tbody></table></div></div></section>`;
+    return `<div class="cfg-overview-grid"><div class="cfg-metric"><span>${isAgent ? "智能体总数" : "连接器总数"}</span><b>${allRows.length}</b><small>${isAgent ? "含同步及手动新增" : "由智能体中台同步"}</small></div><div class="cfg-metric"><span>当前启用</span><b>${enabled}</b><small>对授权部门可用</small></div><div class="cfg-metric"><span>当前停用</span><b>${allRows.length-enabled}</b><small>不允许发起新任务</small></div></div><section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${isAgent ? "智能体清单" : "业务连接器清单"}</h2><p>${isAgent ? "支持手动新增和查看智能体，作用业务部门及启用状态可随时调整。" : "连接器基础信息由智能体中台同步，本页面维护作用业务部门及运行状态。"}</p></div>${isAgent ? `<div class="cfg-section-head-actions"><button class="btn primary" data-act="cfgServiceAdd" data-kind="agent">${svgi("i-plus",13)}新增智能体</button></div>` : ""}</div><div class="cfg-section-body">${filterBar}<div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>${isAgent ? "智能体名称" : "连接器名称"}</th>${isAgent ? "<th>智能体类型</th><th>使用方式</th>" : "<th>描述</th>"}<th>作用业务部门</th><th>更新时间</th><th>创建时间</th><th>运行状态</th><th>操作</th></tr></thead><tbody>${table || `<tr><td colspan="${isAgent ? 8 : 7}"><div class="cfg-empty"><b>暂无符合条件的数据</b><p>请调整筛选条件后重试。</p></div></td></tr>`}</tbody></table></div></div></section>`;
   }
   function cfgRuleAgentText(rule) {
     if (rule.agents.includes("all")) return "全部智能体";
@@ -8233,7 +8502,7 @@ let sidebarCollapsed = false;
   function cfgTemplateActions(template) {
     const buttons = [`<button class="btn" data-act="cfgTemplateView" data-id="${template.id}">查看</button>`];
     const current = defaultTemplateForAgent(template.agentId);
-    if (!current || current.id !== template.id) buttons.push(`<button class="btn set-current" data-act="cfgTemplateUseCurrent" data-id="${template.id}">${svgi("i-check",11)}设为当前使用模板</button>`);
+    if (!current || current.id !== template.id) buttons.push(`<button class="btn set-current" data-act="cfgTemplateUseCurrent" data-id="${template.id}">${svgi("i-check",11)}设为默认模板模板</button>`);
     if (cfgTemplateCanEdit(template)) buttons.push(`<button class="btn" data-act="cfgTemplateEdit" data-id="${template.id}">修改</button>`);
     buttons.push(`<button class="btn" data-act="cfgTemplateCopy" data-id="${template.id}">复制模板</button>`);
     const publishTarget = cfgTemplatePublishTarget(template);
@@ -8249,7 +8518,7 @@ let sidebarCollapsed = false;
     const visibleAgents = AGENTS.filter(agent => configRole !== "user" || cfgAgentCanUse(agent.id));
     const agentTabs = [["all","全部"]].concat(visibleAgents.map(agent => [agent.id,agent.name])).map(([id,name]) => `<button class="cfg-filter-tab ${configTemplateAgentFilter === id ? "active" : ""}" data-act="cfgTemplateAgentFilter" data-id="${id}">${esc(name)}<em>${visibleAll.filter(template => id === "all" || template.agentId === id).length}</em></button>`).join("");
     const scopeTabs = [["all","全部"],["personal","个人"],["department","部门"],["public","公共"]].map(([id,name]) => `<button class="cfg-filter-tab ${id === "all" ? (!configTemplateScopeFilters.size ? "active" : "") : (configTemplateScopeFilters.has(id) ? "active" : "")}" data-act="cfgTemplateScopeFilter" data-id="${id}">${name}<em>${visibleAll.filter(template => id === "all" || template.scope === id).length}</em></button>`).join("");
-    const cards = list.map(template => { const agent = cfgAgentById(template.agentId), current = defaultTemplateForAgent(template.agentId), isCurrent = !!current && current.id === template.id; return `<article class="cfg-template-card ${isCurrent ? "current-use" : ""}"><div class="cfg-template-top"><span class="cfg-template-icon">${svgi(AGENT_ICON[template.agentId] || "i-file",17)}</span><span class="cfg-template-title"><b title="${esc(template.name)}">${esc(template.name)}</b><small>${esc(agent?.name || "")} · ${CFG_SCOPE_LABEL[template.scope]}模板 · ${esc(template.ownerName)}</small></span>${isCurrent ? `<span class="cfg-current-use-tag">${svgi("i-check",11)}当前使用</span>` : ""}<span class="cfg-status-pill ${template.scope === "personal" ? "off" : ""}">${CFG_SCOPE_LABEL[template.scope]}</span></div><div class="cfg-template-meta"><span>调用次数<b>${template.calls} 次</b></span><span>创建时间<b>${esc(template.createdAt)}</b></span><span>更新时间<b>${esc(template.updatedAt)}</b></span></div><div class="cfg-template-actions">${cfgTemplateActions(template)}</div></article>`; }).join("");
+    const cards = list.map(template => { const agent = cfgAgentById(template.agentId), current = defaultTemplateForAgent(template.agentId), isCurrent = !!current && current.id === template.id; return `<article class="cfg-template-card ${isCurrent ? "current-use" : ""}"><div class="cfg-template-top"><span class="cfg-template-icon">${svgi(AGENT_ICON[template.agentId] || "i-file",17)}</span><span class="cfg-template-title"><b title="${esc(template.name)}">${esc(template.name)}</b><small>${esc(agent?.name || "")} · ${CFG_SCOPE_LABEL[template.scope]}模板 · ${esc(template.ownerName)}</small></span>${isCurrent ? `<span class="cfg-current-use-tag">${svgi("i-check",11)}默认模板</span>` : ""}<span class="cfg-status-pill ${template.scope === "personal" ? "off" : ""}">${CFG_SCOPE_LABEL[template.scope]}</span></div><div class="cfg-template-meta"><span>调用次数<b>${template.calls} 次</b></span><span>创建时间<b>${esc(template.createdAt)}</b></span><span>更新时间<b>${esc(template.updatedAt)}</b></span></div><div class="cfg-template-actions">${cfgTemplateActions(template)}</div></article>`; }).join("");
     return `<div class="cfg-template-filter"><div class="cfg-filter-bar"><div class="cfg-filter-field wide"><label>模板名称</label><input id="cfgTemplateSearch" value="${esc(configTemplateSearch)}" placeholder="请输入模板名称"></div><div class="cfg-filter-field wide"><label>创建人</label><input id="cfgTemplateOwnerFilter" value="${esc(configTemplateOwnerFilter)}" placeholder="请输入创建人"></div><div class="cfg-filter-actions"><button class="btn" data-act="cfgTemplateFilterReset">重置</button><button class="btn primary" data-act="cfgTemplateAdd">${svgi("i-plus",14)}新增模板</button></div></div><div class="cfg-filter-row"><span class="cfg-filter-label">智能体</span><div class="cfg-filter-tabs">${agentTabs}</div></div><div class="cfg-filter-row"><span class="cfg-filter-label">模板所属范围</span><div class="cfg-filter-tabs">${scopeTabs}</div></div></div>${cards ? `<div class="cfg-template-grid">${cards}</div>` : `<div class="cfg-empty">${svgi("i-file",34)}<b>暂无符合条件的模板</b><p>调整筛选条件或新建个人模板。</p></div>`}`;
   }
   function cfgTemplateMarkdownText(draft) {
@@ -8615,16 +8884,17 @@ let sidebarCollapsed = false;
     ]},
     {id:"tasks",name:"任务空间",buttons:["前往查看"],children:[]},
     {id:"config",name:"配置治理中心",buttons:[],children:[
-      {id:"config-agents",name:"智能体管理",buttons:["查看"]},
-      {id:"config-connectors",name:"业务连接器管理",buttons:["查看"]},
-      {id:"config-templates",name:"智能体模板管理",buttons:["新增模板","查看","设为当前使用模板","复制模板","发布到部门","发布到公共","撤回"]},
+      {id:"config-agents",name:"智能体管理",buttons:["新增智能体","查看"]},
+      {id:"config-connectors",name:"业务连接器管理",buttons:["新增业务连接器","查看","编辑连接器","配置操作","测试连接","配置部门","启用/禁用"]},
+      {id:"config-templates",name:"智能体模板管理",buttons:["新增模板","查看","设为默认模板模板","复制模板","发布到部门","发布到公共","撤回"]},
       {id:"config-personalization",name:"个性化",buttons:["保存并应用"]},
       {id:"config-users",name:"用户管理",buttons:["编辑"]},
       {id:"config-orgs",name:"组织机构",buttons:[]},
       {id:"config-roles",name:"角色管理",buttons:["新建角色","查看","使用菜单范围"]},
       {id:"config-menus",name:"菜单管理",buttons:["修改菜单名称","新增按钮","重命名","删除"]},
       {id:"config-audit",name:"操作日志",buttons:["查看"]},
-      {id:"config-lexicon",name:"词库管理",buttons:["新增词语","查看","编辑","删除","启用/禁用"]}
+      {id:"config-lexicon",name:"词库管理",buttons:["新增词语","查看","编辑","删除","启用/禁用"]},
+      {id:"config-review-rules",name:"核查规则管理",buttons:["新增规则库","查看","编辑","删除","新增规则","作用范围","启用/禁用"]}
     ]}
   ];
   const CFG_ROLE_MENU_SCOPE = {
@@ -9142,6 +9412,265 @@ let sidebarCollapsed = false;
       closeModal(); renderConfig(); showToast(item ? "词条已更新" : "词条已添加");
     }, { okText: item ? "保存修改" : "确认添加", width:"680px" });
   }
+  // ===== 核查规则管理 =====
+  let reviewRuleActiveBankId = "review-bank-writing";
+  let reviewRuleBankSearch = "";
+  let reviewRuleFilters = { name:"", docType:"all", jurisdiction:"all", role:"all", status:"all" };
+  const REVIEW_RULE_DOC_TYPES = ["全部文种","决议","决定","命令（令）","公报","公告","通告","意见","通知","通报","报告","请示","批复","议案","函","纪要"];
+  const REVIEW_RULE_ALL_DEPARTMENTS = CFG_DIRECTORY_DATA.orgs.map(item => item.name);
+  const REVIEW_RULE_ALL_ROLES = CFG_DIRECTORY_DATA.roles.map(item => item.name);
+  const REVIEW_RULE_BANKS = [
+    {
+      id:"review-bank-writing", name:"政务行文规则库", code:"GOV-WRITING", desc:"检查文种、主送机关、行文方向和公文结构等政务行文规范。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:10",
+      rules:[
+        {id:"rr-writing-001",name:"请示应当一文一事",docType:"请示",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文种为请示，且正文识别出两个及以上相互独立的请示事项。",problemPrompt:"当前请示包含多个独立事项，不符合一文一事要求。",suggestion:"建议按独立请示事项拆分为多份请示文件。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-04",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:12"},
+        {id:"rr-writing-002",name:"请示主送机关规范",docType:"请示",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文种为请示，主送机关超过一个，或抄送对象中包含下级机关。",problemPrompt:"请示的主送或抄送机关设置不规范。",suggestion:"原则上只保留一个上级主送机关，并删除下级抄送机关。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-01",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:15"}
+      ]
+    },
+    {
+      id:"review-bank-policy", name:"政策法规库", code:"POLICY-LAW", desc:"结合知识中台同步的政策法规，检查政策口径、适用条件和依据一致性。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:20",
+      rules:[
+        {id:"rr-policy-001",name:"公共数据开放范围校验",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"正文出现“全部数据向社会开放”等无条件、无分类的数据开放表述。",problemPrompt:"数据开放范围表述过宽，未体现分类分级和安全审查要求。",suggestion:"调整为经分类分级、安全审查和脱敏处理后，依法依规开放可开放数据。",evidenceFileId:"KB-DOC-LAW-DS-001",evidenceClauseId:"KB-CLAUSE-LAW-DS-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:22"},
+        {id:"rr-policy-002",name:"政策依据名称一致性校验",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:["委办局管理员","普通使用人员"],condition:"正文引用的政策文件名称与知识中台当前文件名称不一致，或引用文件未被检索到。",problemPrompt:"引用的政策文件名称可能不准确或缺少有效依据。",suggestion:"请核对知识中台返回的文件名称和具体条款后再引用。",evidenceFileId:"KB-DOC-POLICY-INDEX",evidenceClauseId:"KB-CLAUSE-POLICY-NAME",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:25"}
+      ]
+    },
+    {
+      id:"review-bank-institution", name:"制度规则库", code:"INTERNAL-RULE", desc:"检查是否符合新区及各委办局内部立项、审批、采购和发文制度。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:["委办局管理员","普通使用人员"], enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:30",
+      rules:[
+        {id:"rr-institution-001",name:"信息化项目立项前置校验",docType:"请示",departments:["南京江北新区数据局"],roles:["委办局管理员","普通使用人员"],condition:"文稿包含信息化项目采购或直接确定供应商，但未体现需求论证、项目立项和采购审批程序。",problemPrompt:"当前文稿缺少信息化项目立项和采购审批程序说明。",suggestion:"补充需求论证、项目立项、预算审核及依法采购等程序表述。",evidenceFileId:"KB-DOC-DATA-IT-008",evidenceClauseId:"KB-CLAUSE-DATA-IT-08",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:32"},
+        {id:"rr-institution-002",name:"部门名称规范全称校验",docType:"全部文种",departments:["南京江北新区数据局"],roles:["委办局管理员","普通使用人员"],condition:"正文首次出现本部门简称，但未出现“南京江北新区数据局”规范全称。",problemPrompt:"部门名称未使用已维护的规范全称。",suggestion:"首次出现时使用部门全称，后续可使用规范简称。",evidenceFileId:"KB-DOC-DATA-OFFICE-002",evidenceClauseId:"KB-CLAUSE-DATA-OFFICE-03",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:35"}
+      ]
+    },
+    {
+      id:"review-bank-confidential", name:"保密规则库", code:"SECURITY-PRIVACY", desc:"检查正文和附件中的个人信息、账号密码、内网地址及不宜公开内容。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:40",
+      rules:[
+        {id:"rr-confidential-001",name:"系统账号密码检测",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"正文或附件中出现账号、用户名、密码、密钥等字段，并识别到对应值。",problemPrompt:"检测到疑似系统登录凭证，不应在文稿中直接展示。",suggestion:"删除账号密码；确需传递时应通过独立安全渠道发送。",evidenceFileId:"KB-DOC-SEC-BASELINE",evidenceClauseId:"KB-CLAUSE-SEC-CREDENTIAL",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:42"},
+        {id:"rr-confidential-002",name:"公开材料个人信息脱敏",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文件使用范围为公开发布，且正文或附件识别到身份证号、手机号等个人信息。",problemPrompt:"拟公开材料包含个人信息，请确认必要性并进行脱敏。",suggestion:"删除无关个人信息；必要字段采用掩码或去标识化方式处理。",evidenceFileId:"KB-DOC-LAW-PIPL-001",evidenceClauseId:"KB-CLAUSE-LAW-PIPL-06",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:45"}
+      ]
+    }
+  ];
+  const REVIEW_RULE_JURISDICTIONS = ["国家级","江苏省","南京市","江北新区","平台规则"];
+  function reviewRuleResearchItem(bankId,id,name,jurisdiction,docTypes,condition,problemPrompt,suggestion,evidenceFile,evidenceClause,sourceUrl) {
+    return { bankId, rule:{id,name,jurisdiction,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:`OFFICIAL-DOC-${id.toUpperCase()}`,evidenceClauseId:`OFFICIAL-CLAUSE-${id.toUpperCase()}`,sourceUrl,sourceSyncedAt:"2026-08-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 15:30"} };
+  }
+  const REVIEW_RULE_RESEARCH_ADDITIONS = [
+    reviewRuleResearchItem("review-bank-writing","rr-national-doc-kind","法定文种用途匹配","国家级",["全部文种"],"标题或正文使用了法定公文文种，但实际发文目的、行文方向与该文种适用范围不一致。","当前文种与文稿用途或行文方向可能不匹配。","根据发文目的重新选择决议、决定、通知、报告、请示、函等法定文种，并同步调整标题和正文用语。","《党政机关公文处理工作条例》","第八条规定了十五种主要公文文种及各自适用范围。","https://www.miit.gov.cn/xwdt/szyw/art/2020/art_6afb8ee6d07540dcacccbeb47dbc0fd4.html"),
+    reviewRuleResearchItem("review-bank-writing","rr-national-signer","上行文签发人要素校验","国家级",["报告","请示"],"文件为上行文，但公文要素中未填写签发人姓名。","上行文缺少签发人信息。","在版记要求位置补充签发人姓名，并与实际签发流程保持一致。","《党政机关公文处理工作条例》","第九条第六项规定，上行文应当标注签发人姓名。","https://www.miit.gov.cn/xwdt/szyw/art/2020/art_6afb8ee6d07540dcacccbeb47dbc0fd4.html"),
+    reviewRuleResearchItem("review-bank-writing","rr-national-layout","党政机关公文版式校验","国家级",["全部文种"],"上传文件的纸张、版心、标题、正文层级、页码等版式参数不符合现行公文格式标准。","检测到公文版式参数可能不规范。","按现行党政机关公文格式标准调整纸张、版心、字体字号、行距和页码。","GB/T 9704-2012《党政机关公文格式》","公文版面、版心、字体字号、行距、页码等应符合 GB/T 9704-2012。","https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F3CC9BEF482524C895FDA7A08BB4A70E"),
+    reviewRuleResearchItem("review-bank-writing","rr-national-punctuation","标点符号用法校验","国家级",["全部文种"],"正文出现连续标点、括号引号不配对、句末标点缺失或中英文标点混用。","检测到标点符号使用不规范。","按照现行标点符号国家标准修正，并保持同类结构用法一致。","GB/T 15834-2011《标点符号用法》","公文中的标点符号应符合 GB/T 15834-2011。","https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8"),
+    reviewRuleResearchItem("review-bank-writing","rr-national-numeral","数字用法一致性校验","国家级",["全部文种"],"日期、序号、计量数据或概数中的阿拉伯数字和汉字数字使用不一致。","检测到数字表达可能不规范或前后不一致。","按照现行数字用法国家标准统一日期、序号、计量值和概数表达。","GB/T 15835-2011《出版物上数字用法》","公文中的数字表达应符合 GB/T 15835-2011。","https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F5DAC3377DA99C8D78AE66735B6359C7"),
+    reviewRuleResearchItem("review-bank-writing","rr-jiangsu-name","行政规范性文件名称规范","江苏省",["决定","意见","通知","通告"],"文件被标记为行政规范性文件，且名称中使用“法”或“条例”，或者实施性文件名称未体现“实施”。","行政规范性文件名称可能不符合江苏省规定。","根据内容改用决定、办法、规定、意见、通告等名称；实施上位规定的文件可使用“实施”字样。","《江苏省行政规范性文件管理规定》","第十条规定行政规范性文件可称决定、办法、规定、意见、通告等，但不得称“法”“条例”。","https://www.jiangsu.gov.cn/art/2022/6/30/art_84418_10523711.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jiangsu-procedure","规范性文件制定程序完整性","江苏省",["全部文种"],"文件被标记为行政规范性文件，但任务材料中缺少评估论证、征求意见、合法性审核、集体审议或公开发布环节记录。","行政规范性文件制定程序材料不完整。","补充缺失的程序记录；紧急情形简化程序时也应保留合法性审核、集体审议和批准公布记录。","《江苏省行政规范性文件管理规定》","第十三条规定一般应经过评估论证、征求意见、合法性审核、集体审议决定和向社会公布。","https://www.jiangsu.gov.cn/art/2022/6/30/art_84418_10523711.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jiangsu-comment-period","公开征求意见期限校验","江苏省",["全部文种"],"行政规范性文件需要公开征求意见，但材料中的征求意见期限少于10日；涉及市场主体生产经营活动时少于30日。","公开征求意见期限可能不足。","一般文件将公开征求意见期限调整为不少于10日；与市场主体生产经营活动密切相关的调整为不少于30日。","《江苏省行政规范性文件管理规定》","第十五条规定公开征求意见期限一般不少于10日，与市场主体生产经营活动密切相关的一般不少于30日。","https://www.jiangsu.gov.cn/art/2022/6/30/art_84418_10523711.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jiangsu-legality","合法性审核前置校验","江苏省",["全部文种"],"行政规范性文件拟提交集体审议，但任务材料中未关联合法性审核意见，或审核结论为不合法。","当前文件不满足提交集体审议的合法性审核前置条件。","先完成合法性审核并根据审核意见修改；审核不合法的不得提交集体审议决定。","《江苏省行政规范性文件管理规定》","第十六条规定未经合法性审核或者经审核不合法的，不得提交制定机关集体审议决定。","https://www.jiangsu.gov.cn/art/2022/6/30/art_84418_10523711.html"),
+    reviewRuleResearchItem("review-bank-policy","rr-jiangsu-effective-term","规范性文件施行日期和有效期校验","江苏省",["决定","意见","通知","通告"],"行政规范性文件未明确施行日期或有效期，或者一般情形下设置为公布后不足30日施行。","文件的施行日期或有效期设置可能不完整。","补充施行日期和有效期；一般自公布之日起30日后施行，确需立即施行的应说明法定特殊情形。","《江苏省行政规范性文件管理规定》","第二十九条规定一般自公布之日起30日后施行；第三十八条规定应明确有效期。","https://www.jiangsu.gov.cn/art/2022/6/30/art_84418_10523711.html"),
+    reviewRuleResearchItem("review-bank-policy","rr-nanjing-data-source","政务数据一数一源校验","南京市",["全部文种"],"文稿要求重复采集已可通过共享方式获取的政务数据，或未明确唯一采集来源。","当前数据采集安排可能违反一数一源和避免重复采集要求。","优先通过共享平台获取已有数据，并明确权威数据源及更新责任单位。","《南京市政务数据管理暂行办法》","第十九条规定政务数据应当一数一源、一源多用，可通过共享获得的不得重复采集。","https://www.nanjing.gov.cn/zzb/zfxxgk/fdzdgknr/szfjbgtwj/201908/t20190827_1636111.html"),
+    reviewRuleResearchItem("review-bank-policy","rr-nanjing-share-class","政务数据共享分类依据校验","南京市",["全部文种"],"文稿将数据列为有条件共享或不予共享，但未说明理由或未引用相应法律法规依据。","有条件共享或不予共享的数据缺少依据说明。","补充共享分类、限制理由及相应法律法规依据；可共享数据明确访问权限和安全措施。","《南京市政务数据管理暂行办法》","第二十一条规定有条件共享类和不予共享类应说明理由，并提供相应法律法规和国家规定依据。","https://www.nanjing.gov.cn/zzb/zfxxgk/fdzdgknr/szfjbgtwj/201908/t20190827_1636111.html"),
+    reviewRuleResearchItem("review-bank-confidential","rr-nanjing-open-data","政务数据开放脱敏校验","南京市",["全部文种"],"文稿拟公开包含商业秘密、个人隐私或可识别个人信息的数据，但未说明脱敏、脱密处理措施。","拟开放数据可能包含商业秘密或个人隐私，缺少安全处理说明。","先完成脱敏、脱密和开放条件评估；涉及国家秘密或开放后可能危及安全的数据不得开放。","《南京市政务数据管理暂行办法》","第二十三、二十四条规定涉及商业秘密、个人隐私的数据符合脱敏脱密条件后开放，涉及国家秘密及安全风险的数据不得开放。","https://www.nanjing.gov.cn/zzb/zfxxgk/fdzdgknr/szfjbgtwj/201908/t20190827_1636111.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jbxq-interpret-range","新区政策文件解读范围校验","江北新区",["决定","意见","通知","通告","公告"],"文件属于新区管委会或各部局、直属单位、街道制定的规范性文件，或属于社会关注度高的重要政策文件，但未创建政策解读任务。","当前政策文件可能属于应当同步解读的范围。","创建政策解读任务并关联原政策文件；涉密文件除外。","《江北新区政策文件解读实施办法（试行）》","第三条规定新区管委会及相关单位规范性文件、重要政策文件等应当进行解读。","https://njna.nanjing.gov.cn/njsjbxqglwyh/xxgkzl/zfxxgkzd/201808/t20180815_604559.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jbxq-interpret-owner","政策解读责任主体校验","江北新区",["决定","意见","通知","通告","公告"],"政策解读责任单位与政策文件起草单位不一致，或者联合起草文件未明确牵头解读单位。","政策解读责任主体设置可能不正确。","按“谁起草、谁解读”确定责任主体；联合起草文件由牵头单位负责解读，其他单位配合。","《江北新区政策文件解读实施办法（试行）》","第四条规定各政策文件起草单位是政策解读责任主体，联合起草文件由牵头单位负责。","https://njna.nanjing.gov.cn/njsjbxqglwyh/xxgkzl/zfxxgkzd/201808/t20180815_604559.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jbxq-interpret-content","政策解读内容完整性校验","江北新区",["决定","意见","通知","通告","公告"],"解读材料缺少背景依据、目标任务、主要内容、涉及范围、执行标准、操作方法、注意事项或新旧政策差异等核心内容。","政策解读内容要素不完整，可能影响公众准确理解。","结合政策实际补齐适用要素，并使用通俗语言、案例或数据说明关键政策内容。","《江北新区政策文件解读实施办法（试行）》","第五条明确政策解读应覆盖背景依据、目标任务、主要内容、涉及范围、执行标准、操作方法、注意事项、新旧政策差异等。","https://njna.nanjing.gov.cn/njsjbxqglwyh/xxgkzl/zfxxgkzd/201808/t20180815_604559.html"),
+    reviewRuleResearchItem("review-bank-institution","rr-jbxq-interpret-sync","政策文件与解读三同步校验","江北新区",["决定","意见","通知","通告","公告"],"政策文件已进入审签或部署流程，但解读内容、解读方案未同步组织、同步审签或同步部署。","政策文件和解读材料未满足“三同步”要求。","在政策文件审签前补齐解读内容和方案，并确保同步组织、同步审签、同步部署。","《江北新区政策文件解读实施办法（试行）》","第六条规定政策文件制定与解读内容、解读方案应同步组织、同步审签、同步部署。","https://njna.nanjing.gov.cn/njsjbxqglwyh/xxgkzl/zfxxgkzd/201808/t20180815_604559.html")
+  ];
+  REVIEW_RULE_RESEARCH_ADDITIONS.forEach(({bankId,rule}) => { const bank = REVIEW_RULE_BANKS.find(item => item.id === bankId); if (bank && !bank.rules.some(item => item.id === rule.id)) bank.rules.push(rule); });
+  function reviewRuleBankById(id) { return REVIEW_RULE_BANKS.find(item => item.id === id); }
+  function reviewRuleFind(bankId, ruleId) { return reviewRuleBankById(bankId)?.rules.find(item => item.id === ruleId) || null; }
+  function reviewRuleVisibleBanks() {
+    let list = REVIEW_RULE_BANKS.slice();
+    if (configRole === "dept") list = list.filter(item => (item.departments || []).includes(cfgRoleMeta().dept));
+    if (reviewRuleBankSearch) list = list.filter(item => item.name.toLowerCase().includes(reviewRuleBankSearch.toLowerCase()));
+    return list;
+  }
+  function reviewRuleCanManageBank(bank) {
+    if (configRole === "system") return true;
+    return configRole === "dept" && bank.ownerLevel === "department" && bank.ownerDepartment === cfgRoleMeta().dept;
+  }
+  function reviewRuleCanAddRule(bank) {
+    if (configRole === "system") return true;
+    return configRole === "dept" && (bank.departments || []).includes(cfgRoleMeta().dept) && (bank.roles || []).some(role => role !== "系统管理员");
+  }
+  function reviewRuleCanManageRule(rule) {
+    if (configRole === "system") return true;
+    return configRole === "dept" && rule.ownerLevel === "department" && rule.ownerDepartment === cfgRoleMeta().dept && (rule.departments || []).every(name => name === cfgRoleMeta().dept);
+  }
+  function reviewRuleDepartmentText(values) {
+    const list = values || [];
+    return REVIEW_RULE_ALL_DEPARTMENTS.length && REVIEW_RULE_ALL_DEPARTMENTS.every(name => list.includes(name)) ? "全部委办局" : (list.join("、") || "未配置");
+  }
+  function reviewRuleRoleText(values) { return (values || []).join("、") || "未配置"; }
+  const REVIEW_RULE_EVIDENCE_TEXT = {
+    "KB-DOC-GW-0001": { file:"《党政机关公文处理工作条例》", clause:"请示应当一文一事，原则上只写一个主送机关。" },
+    "KB-DOC-LAW-DS-001": { file:"《中华人民共和国数据安全法》", clause:"开展数据处理活动应当依法依规，建立健全全流程数据安全管理制度。" },
+    "KB-DOC-POLICY-INDEX": { file:"知识中台政策文件目录", clause:"引用政策文件时应使用知识中台同步的完整、准确文件名称。" },
+    "KB-DOC-DATA-IT-008": { file:"《南京江北新区数据局信息化项目管理办法》", clause:"信息化项目应履行需求论证、立项、预算审核和采购审批程序。" },
+    "KB-DOC-DATA-OFFICE-002": { file:"《南京江北新区数据局机关公文规范》", clause:"部门名称首次出现时应使用规范全称，后续可使用规范简称。" },
+    "KB-DOC-SEC-BASELINE": { file:"《平台信息安全与保密管理规范》", clause:"账号、密码、密钥等登录凭证不得在普通文稿和公开材料中直接展示。" },
+    "KB-DOC-LAW-PIPL-001": { file:"《中华人民共和国个人信息保护法》", clause:"处理个人信息应当具有明确、合理的目的，并采取对个人权益影响最小的方式。" }
+  };
+  const REVIEW_RULE_EVIDENCE_CLAUSES = {
+    "KB-CLAUSE-GW-15-04":"请示应当一文一事，不得在报告等非请示性公文中夹带请示事项。",
+    "KB-CLAUSE-GW-15-01":"请示原则上只写一个主送机关，根据需要同时抄送相关机关。",
+    "KB-CLAUSE-LAW-DS-21":"开展数据处理活动应当依法依规，建立健全全流程数据安全管理制度。",
+    "KB-CLAUSE-POLICY-NAME":"引用政策文件时应使用知识中台同步的完整、准确文件名称。",
+    "KB-CLAUSE-DATA-IT-08":"信息化项目应履行需求论证、立项、预算审核和采购审批程序。",
+    "KB-CLAUSE-DATA-OFFICE-03":"部门名称首次出现时应使用规范全称，后续可使用规范简称。",
+    "KB-CLAUSE-SEC-CREDENTIAL":"账号、密码、密钥等登录凭证不得在普通文稿和公开材料中直接展示。",
+    "KB-CLAUSE-LAW-PIPL-06":"处理个人信息应当具有明确、合理的目的，并采取对个人权益影响最小的方式。"
+  };
+  function reviewRuleDocTypes(rule) {
+    const list = Array.isArray(rule?.docTypes) ? rule.docTypes : [rule?.docType || "全部文种"];
+    return list.filter((name,index) => REVIEW_RULE_DOC_TYPES.includes(name) && list.indexOf(name) === index);
+  }
+  function reviewRuleDocTypeText(rule) { return reviewRuleDocTypes(rule).join("、") || "未配置"; }
+  function reviewRuleJurisdiction(rule) { return rule?.jurisdiction || (rule?.ownerLevel === "department" ? "江北新区" : "平台规则"); }
+  function reviewRuleEvidenceFile(rule) { return rule?.evidenceFile || REVIEW_RULE_EVIDENCE_TEXT[rule?.evidenceFileId]?.file || ""; }
+  function reviewRuleEvidenceClause(rule) { return rule?.evidenceClause || REVIEW_RULE_EVIDENCE_CLAUSES[rule?.evidenceClauseId] || REVIEW_RULE_EVIDENCE_TEXT[rule?.evidenceFileId]?.clause || ""; }
+  function reviewRuleDocTypePickerHTML(selected,isView) {
+    const selectedSet = new Set(selected?.length ? selected : ["全部文种"]);
+    if (isView) return `<div class="review-rule-doc-readonly">${Array.from(selectedSet).map(name => `<span>${esc(name)}</span>`).join("")}</div>`;
+    return `<div class="review-rule-doc-picker" id="reviewRuleDocTypePicker"><button class="review-rule-doc-trigger" id="reviewRuleDocTypeTrigger" type="button"><span id="reviewRuleDocTypeText">${esc(Array.from(selectedSet).join("、"))}</span><span class="review-rule-doc-arrow">⌄</span></button><div class="review-rule-doc-menu" id="reviewRuleDocTypeMenu" hidden>${REVIEW_RULE_DOC_TYPES.map(name => `<label class="check-row"><input type="checkbox" name="reviewRuleDocType" value="${esc(name)}" ${selectedSet.has(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join("")}</div></div>`;
+  }
+  function reviewRuleAllowedDepartments(bank) { return configRole === "system" ? (bank.departments || []).slice() : (bank.departments || []).filter(name => name === cfgRoleMeta().dept); }
+  function reviewRuleAllowedRoles(bank) { return configRole === "system" ? (bank.roles || []).slice() : (bank.roles || []).filter(name => name !== "系统管理员"); }
+  function reviewRuleCloseBankMenu() { const pop = $("#reviewRuleBankPopover"); if (pop) pop.remove(); }
+  function reviewRuleScopeBoxes(prefix, allowedDepartments, selectedDepartments, allowedRoles, selectedRoles, disabled) {
+    const deptSet = new Set(selectedDepartments || []), roleSet = new Set(selectedRoles || []), lock = disabled ? "disabled" : "";
+    const depts = allowedDepartments.map(name => `<label class="check-row"><input type="checkbox" name="${prefix}Department" value="${esc(name)}" ${deptSet.has(name) ? "checked" : ""} ${lock}><span>${esc(name)}</span></label>`).join("");
+    const roles = allowedRoles.map(name => `<label class="check-row"><input type="checkbox" name="${prefix}Role" value="${esc(name)}" ${roleSet.has(name) ? "checked" : ""} ${lock}><span>${esc(name)}</span></label>`).join("");
+    return `<div class="review-rule-scope-grid"><div class="review-rule-scope-box"><div>作用委办局</div><div class="review-rule-scope-options">${depts || `<span class="cfg-role-scope-empty">无可选委办局</span>`}</div></div><div class="review-rule-scope-box"><div>作用角色</div><div class="review-rule-scope-options">${roles || `<span class="cfg-role-scope-empty">无可选角色</span>`}</div></div></div>`;
+  }
+  function reviewRuleBankListHTML() {
+    const banks = reviewRuleVisibleBanks();
+    const items = banks.map((bank,index) => `<div class="lex-bank-item ${bank.id === reviewRuleActiveBankId ? "active" : ""}" data-act="reviewRuleBankSelect" data-id="${bank.id}">
+      <span class="lex-bank-badge ${["lex-cat-irregular","lex-cat-negative","lex-cat-other","lex-cat-sensitive"][index % 4]}">${esc(bank.name.slice(0,1))}</span>
+      <span class="lex-bank-name">${esc(bank.name)}<small>${bank.rules.length} 条规则 · ${bank.departments.length} 个委办局</small></span>
+      <button class="lex-bank-more" data-act="reviewRuleBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button>
+    </div>`).join("");
+    return `<aside class="lex-bank-panel"><div class="lex-bank-search"><div class="cfg-filter-field" style="min-width:0"><input data-review-rule-bank-search value="${esc(reviewRuleBankSearch)}" placeholder="搜索规则库"></div></div>
+      <button class="btn primary lex-bank-add" data-act="reviewRuleBankAdd">${svgi("i-plus",13)}新增规则库</button>
+      <div class="review-rule-tree-root">${svgi("i-shield",14)}核查规则库<small>${banks.length} 个</small></div><div class="review-rule-tree-list">${items || `<div class="cfg-empty" style="padding:24px 8px"><b>暂无规则库</b><p>换个关键词试试</p></div>`}</div></aside>`;
+  }
+  function reviewRuleTableHTML() {
+    const bank = reviewRuleBankById(reviewRuleActiveBankId);
+    if (!bank) return `<section class="cfg-section-card"><div class="cfg-section-body"><div class="cfg-empty"><b>请选择左侧规则库</b><p>选择规则库后查看和维护规则。</p></div></div></section>`;
+    const canAdd = reviewRuleCanAddRule(bank), f = reviewRuleFilters;
+    let rules = bank.rules.slice();
+    if (f.name) rules = rules.filter(item => item.name.toLowerCase().includes(f.name.toLowerCase()));
+    if (f.docType !== "all") rules = rules.filter(item => { const types = reviewRuleDocTypes(item); return types.includes(f.docType) || types.includes("全部文种"); });
+    if (f.jurisdiction !== "all") rules = rules.filter(item => reviewRuleJurisdiction(item) === f.jurisdiction);
+    if (f.role !== "all") rules = rules.filter(item => (item.roles || []).includes(f.role));
+    if (f.status !== "all") rules = rules.filter(item => item.enabled === (f.status === "enabled"));
+    const rows = rules.length ? rules.map((item,index) => {
+      const canManage = reviewRuleCanManageRule(item);
+      const docTypeText = reviewRuleDocTypeText(item);
+      return `<tr><td>${String(index+1).padStart(2,"0")}</td><td><b>${esc(item.name)}</b><div class="review-rule-condition" title="${esc(item.condition)}">${esc(item.condition.length > 56 ? item.condition.slice(0,56) + "…" : item.condition)}</div></td><td><span class="review-rule-doc" title="${esc(docTypeText)}">${esc(docTypeText)}</span></td><td><span class="review-rule-jurisdiction">${esc(reviewRuleJurisdiction(item))}</span></td><td><span class="lex-scope-badge">${esc(reviewRuleDepartmentText(item.departments))}</span></td><td><span class="lex-scope-badge">${esc(reviewRuleRoleText(item.roles))}</span></td><td><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? "启用" : "禁用"}</span></td><td>${esc(item.updatedAt)}</td><td>
+        <button class="btn" data-act="reviewRuleView" data-bank="${bank.id}" data-id="${item.id}">查看</button>
+        ${canManage ? `<button class="btn primary" data-act="reviewRuleEdit" data-bank="${bank.id}" data-id="${item.id}">${svgi("i-edit",12)}编辑</button><button class="btn" data-act="reviewRuleScope" data-bank="${bank.id}" data-id="${item.id}">作用范围</button><button class="btn ${item.enabled ? "" : "primary"}" data-act="reviewRuleToggle" data-bank="${bank.id}" data-id="${item.id}">${item.enabled ? "禁用" : "启用"}</button><button class="btn" data-act="reviewRuleDelete" data-bank="${bank.id}" data-id="${item.id}" style="color:#c44e49">${svgi("i-trash",12)}删除</button>` : ""}
+      </td></tr>`;
+    }).join("") : `<tr><td colspan="9"><div class="cfg-empty"><b>暂无符合条件的规则</b><p>${canAdd ? "可点击右上角新增规则" : "请调整筛选条件"}</p></div></td></tr>`;
+    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${esc(bank.name)}</h2><p>${esc(bank.desc)} · ${esc(reviewRuleDepartmentText(bank.departments))} · ${esc(reviewRuleRoleText(bank.roles))}</p><div class="review-rule-scope-line"><span class="review-rule-source">${esc(bank.source)}</span><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "规则库已启用" : "规则库已禁用"}</span></div></div><div class="cfg-section-head-actions">${canAdd ? `<button class="btn primary" data-act="reviewRuleAdd" data-bank="${bank.id}">${svgi("i-plus",13)}新增规则</button>` : ""}</div></div>
+      <div class="cfg-section-body"><div class="review-rule-panel-note">${svgi("i-shield",14)}<span>规则的委办局与角色范围只能从所属规则库范围内选择；委办局管理员新增的规则固定归属本部门。</span></div><div class="cfg-filter-bar" style="margin-bottom:12px"><div class="cfg-filter-field wide"><label>规则名称</label><input data-review-rule-filter="name" value="${esc(f.name)}" placeholder="请输入规则名称"></div><div class="cfg-filter-field"><label>适用文种</label><select data-review-rule-filter="docType"><option value="all">全部文种</option>${REVIEW_RULE_DOC_TYPES.filter(name => name !== "全部文种").map(name => `<option value="${esc(name)}" ${f.docType === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>依据层级</label><select data-review-rule-filter="jurisdiction"><option value="all">全部层级</option>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${f.jurisdiction === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>作用角色</label><select data-review-rule-filter="role"><option value="all">全部角色</option>${bank.roles.map(name => `<option value="${esc(name)}" ${f.role === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>启用状态</label><select data-review-rule-filter="status"><option value="all">全部状态</option><option value="enabled" ${f.status === "enabled" ? "selected" : ""}>启用</option><option value="disabled" ${f.status === "disabled" ? "selected" : ""}>禁用</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="reviewRuleFilter">${svgi("i-search",13)}筛选</button><button class="btn" data-act="reviewRuleReset">重置</button></div></div><div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>序号</th><th>规则名称/命中条件</th><th>适用文种</th><th>依据层级</th><th>作用委办局</th><th>作用角色</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></div></section>`;
+  }
+  function cfgReviewRulesHTML() {
+    if (configRole === "user") return `<section class="cfg-section-card"><div class="cfg-section-body"><div class="cfg-empty"><b>无权访问</b><p>核查规则管理仅对系统管理员和委办局管理员开放。</p></div></div></section>`;
+    const visible = reviewRuleVisibleBanks();
+    if (!visible.some(item => item.id === reviewRuleActiveBankId)) reviewRuleActiveBankId = visible[0]?.id || "";
+    return `<div class="review-rule-benchmark">${svgi("i-spark",15)}<span><b>公开竞品能力参考：</b>文字与标点、知识性差错、内容导向、政治术语、敏感词、格式与行文规范、修改留痕。平台规则以国家及地方官方文件为依据，并叠加委办局与角色作用范围。</span></div><div class="lex-layout">${reviewRuleBankListHTML()}<div class="lex-main">${reviewRuleTableHTML()}</div></div>`;
+  }
+  function reviewRuleOpenBankEditor(id) {
+    const bank = id ? reviewRuleBankById(id) : null;
+    if (bank && !reviewRuleCanManageBank(bank)) { showToast("无权修改该公共规则库"); return; }
+    const body = `<div class="review-rule-panel-note">${svgi("i-book",14)}<span>知识中台维护依据文件原文，本页面维护可执行规则及其适用范围。</span></div><div class="cfg-form-grid"><div class="cfg-form-field"><label>规则库名称 <i>*</i></label><input id="reviewRuleBankName" maxlength="30" value="${esc(bank?.name || "")}" placeholder="请输入规则库名称"></div><div class="cfg-form-field"><label>规则库标识 <i>*</i></label><input id="reviewRuleBankCode" maxlength="30" value="${esc(bank?.code || "")}" placeholder="例如 DATA-INTERNAL"></div><div class="cfg-form-field"><label>依据来源</label><select id="reviewRuleBankSource">${["平台预置","知识中台同步","部门制度维护"].map(name => `<option ${bank?.source === name ? "selected" : ""}>${name}</option>`).join("")}</select></div><div class="cfg-form-field"><label>启用状态</label><select id="reviewRuleBankEnabled"><option value="true" ${!bank || bank.enabled ? "selected" : ""}>启用</option><option value="false" ${bank && !bank.enabled ? "selected" : ""}>禁用</option></select></div><div class="cfg-form-field full"><label>规则库描述</label><textarea id="reviewRuleBankDesc" placeholder="说明规则库检查内容和使用场景">${esc(bank?.desc || "")}</textarea></div></div>`;
+    openModal(bank ? `编辑规则库 · ${bank.name}` : "新增规则库",body,() => {
+      const name = ($("#reviewRuleBankName")?.value || "").trim(), code = ($("#reviewRuleBankCode")?.value || "").trim(), desc = ($("#reviewRuleBankDesc")?.value || "").trim();
+      if (!name || !code) { showToast("规则库名称和标识不能为空"); return; }
+      if (REVIEW_RULE_BANKS.some(item => item.id !== bank?.id && (item.name === name || item.code === code))) { showToast("规则库名称或标识已存在"); return; }
+      const source = $("#reviewRuleBankSource").value, enabled = $("#reviewRuleBankEnabled").value === "true", time = formatDateTime(Date.now());
+      if (bank) { Object.assign(bank,{name,code,desc,source,enabled,updatedAt:time}); cfgRecordAudit("编辑规则库","核查规则",name,`修改规则库“${name}”基础信息`); }
+      else {
+        const departments = configRole === "dept" ? [cfgRoleMeta().dept] : REVIEW_RULE_ALL_DEPARTMENTS.slice();
+        const roles = configRole === "dept" ? ["委办局管理员","普通使用人员"] : REVIEW_RULE_ALL_ROLES.slice();
+        const next = {id:`review-bank-${Date.now()}`,name,code,desc,source,departments,roles,enabled,ownerLevel:configRole === "dept" ? "department" : "system",ownerDepartment:cfgRoleMeta().dept,updatedAt:time,rules:[]};
+        REVIEW_RULE_BANKS.push(next); reviewRuleActiveBankId = next.id; cfgRecordAudit("新增规则库","核查规则",name,`新增规则库“${name}”`);
+      }
+      closeModal(); renderConfig(); showToast(bank ? "规则库已更新" : "规则库已新增");
+    },{okText:bank ? "保存修改" : "确认新增",width:"720px"});
+  }
+  function reviewRuleOpenBankDetail(id) {
+    const bank = reviewRuleBankById(id); if (!bank) return;
+    openModal(`规则库详情 · ${bank.name}`,`<dl class="review-rule-detail-grid"><dt>规则库名称</dt><dd><b>${esc(bank.name)}</b></dd><dt>规则库标识</dt><dd>${esc(bank.code)}</dd><dt>依据来源</dt><dd>${esc(bank.source)}</dd><dt>规则库描述</dt><dd>${esc(bank.desc || "暂无描述")}</dd><dt>作用委办局</dt><dd>${esc(reviewRuleDepartmentText(bank.departments))}</dd><dt>作用角色</dt><dd>${esc(reviewRuleRoleText(bank.roles))}</dd><dt>规则数量</dt><dd>${bank.rules.length} 条</dd><dt>维护范围</dt><dd>${bank.ownerLevel === "system" ? "平台公共规则库" : esc(bank.ownerDepartment + "部门规则库")}</dd><dt>启用状态</dt><dd><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "启用" : "禁用"}</span></dd><dt>更新时间</dt><dd>${esc(bank.updatedAt)}</dd></dl>`,null,{hideFooter:true,width:"680px"});
+  }
+  function reviewRuleOpenBankScope(id) {
+    const bank = reviewRuleBankById(id); if (!bank || !reviewRuleCanManageBank(bank)) { showToast("无权修改该规则库作用范围"); return; }
+    const allowedDepartments = configRole === "system" ? REVIEW_RULE_ALL_DEPARTMENTS.slice() : [cfgRoleMeta().dept];
+    const allowedRoles = configRole === "system" ? REVIEW_RULE_ALL_ROLES.slice() : ["委办局管理员","普通使用人员"];
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">规则库范围决定其下所有规则可选择的最大范围；缩小范围后，下属规则将同步收敛。</div>${reviewRuleScopeBoxes("reviewBankScope",allowedDepartments,bank.departments,allowedRoles,bank.roles,false)}`;
+    openModal(`配置规则库作用范围 · ${bank.name}`,body,() => {
+      const departments = $$('input[name="reviewBankScopeDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewBankScopeRole"]:checked').map(input => input.value);
+      if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; }
+      bank.departments = departments; bank.roles = roles; bank.updatedAt = formatDateTime(Date.now());
+      bank.rules.forEach(rule => { rule.departments = (rule.departments || []).filter(name => departments.includes(name)); rule.roles = (rule.roles || []).filter(name => roles.includes(name)); });
+      cfgRecordAudit("配置规则库作用范围","核查规则",bank.name,`作用范围调整为：${reviewRuleDepartmentText(departments)}；${reviewRuleRoleText(roles)}`);
+      closeModal(); renderConfig(); showToast("规则库及下属规则作用范围已更新");
+    },{okText:"保存范围",width:"760px"});
+  }
+  function reviewRuleDeleteBank(id) {
+    const bank = reviewRuleBankById(id); if (!bank || !reviewRuleCanManageBank(bank)) { showToast("无权删除该公共规则库"); return; }
+    openModal("删除规则库",`确认删除规则库“${esc(bank.name)}”？其下 ${bank.rules.length} 条规则将一并删除，且不可恢复。`,() => { const index = REVIEW_RULE_BANKS.findIndex(item => item.id === id); if (index >= 0) REVIEW_RULE_BANKS.splice(index,1); reviewRuleActiveBankId = reviewRuleVisibleBanks()[0]?.id || ""; cfgRecordAudit("删除规则库","核查规则",bank.name,`删除规则库“${bank.name}”及其 ${bank.rules.length} 条规则`); closeModal(); renderConfig(); showToast("规则库已删除"); },{okText:"确认删除"});
+  }
+  function reviewRuleOpenRuleEditor(bankId,ruleId,isView) {
+    const bank = reviewRuleBankById(bankId), rule = ruleId ? reviewRuleFind(bankId,ruleId) : null; if (!bank) return;
+    if (!isView && rule && !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则"); return; }
+    if (!isView && !rule && !reviewRuleCanAddRule(bank)) { showToast("无权在该规则库新增规则"); return; }
+    const allowedDepartments = reviewRuleAllowedDepartments(bank), allowedRoles = reviewRuleAllowedRoles(bank);
+    const selectedDepartments = rule ? (rule.departments || []).filter(name => allowedDepartments.includes(name)) : allowedDepartments.slice();
+    const selectedRoles = rule ? (rule.roles || []).filter(name => allowedRoles.includes(name)) : allowedRoles.slice();
+    const selectedDocTypes = rule ? reviewRuleDocTypes(rule) : ["全部文种"];
+    const disabled = isView ? "disabled" : "", value = key => esc(rule?.[key] || "");
+    const evidenceFileOptions = Array.from(new Set(Object.values(REVIEW_RULE_EVIDENCE_TEXT).map(item => item.file))).map(name => `<option value="${esc(name)}"></option>`).join("");
+    const officialSourceLink = isView && rule?.sourceUrl ? `<a class="review-rule-official-link" href="${esc(rule.sourceUrl)}" target="_blank" rel="noopener">${svgi("i-globe",12)}打开官方来源</a>` : "";
+    const body = `<div class="review-rule-panel-note">${svgi("i-shield",14)}<span>作用范围只能从所属规则库授权范围内选择；依据文件和条款由用户填写可读内容，内部文件ID与条款ID由系统自动关联。</span></div><div class="cfg-form-grid"><div class="cfg-form-field"><label>规则名称 <i>*</i></label><input id="reviewRuleName" maxlength="50" value="${value("name")}" ${disabled}></div><div class="cfg-form-field"><label>所属规则库</label><select disabled><option>${esc(bank.name)}</option></select></div><div class="cfg-form-field"><label>适用文种 <i>*</i></label>${reviewRuleDocTypePickerHTML(selectedDocTypes,isView)}</div><div class="cfg-form-field"><label>依据层级 <i>*</i></label><select id="reviewRuleJurisdiction" ${disabled}>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${reviewRuleJurisdiction(rule) === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-form-field"><label>启用状态</label><select id="reviewRuleEnabled" ${disabled}><option value="true" ${!rule || rule.enabled ? "selected" : ""}>启用</option><option value="false" ${rule && !rule.enabled ? "selected" : ""}>禁用</option></select></div><div class="cfg-form-field full"><label>作用范围 <i>*</i></label>${reviewRuleScopeBoxes("reviewRuleForm",allowedDepartments,selectedDepartments,allowedRoles,selectedRoles,isView)}</div><div class="cfg-form-field full"><label>命中条件 <i>*</i></label><textarea id="reviewRuleCondition" style="min-height:88px" placeholder="描述文种、文本特征、字段值或组合判断条件" ${disabled}>${value("condition")}</textarea></div><div class="cfg-form-field full"><label>问题提示 <i>*</i></label><textarea id="reviewRuleProblem" placeholder="命中后向用户展示的问题说明" ${disabled}>${value("problemPrompt")}</textarea></div><div class="cfg-form-field full"><label>修改建议 <i>*</i></label><textarea id="reviewRuleSuggestion" placeholder="给出清晰、可执行的修改建议" ${disabled}>${value("suggestion")}</textarea></div><div class="cfg-form-field full"><label>依据文件 <i>*</i></label><input id="reviewRuleEvidenceFile" list="reviewRuleEvidenceFileOptions" maxlength="120" value="${esc(reviewRuleEvidenceFile(rule))}" placeholder="输入或选择文件全称，例如：《党政机关公文处理工作条例》" ${disabled}><datalist id="reviewRuleEvidenceFileOptions">${evidenceFileOptions}</datalist><small class="review-rule-evidence-hint">可从已有文件名称中选择，也可输入部门制度文件全称；系统自动匹配内部文件ID。</small></div><div class="cfg-form-field full"><label>依据条款（一句话） <i>*</i></label><textarea id="reviewRuleEvidenceClause" maxlength="300" style="min-height:72px" placeholder="填写一条完整、可直接展示给用户的依据条款" ${disabled}>${esc(reviewRuleEvidenceClause(rule))}</textarea><small class="review-rule-evidence-hint">建议填写一句完整条款或规则原文，审查结果将直接展示该内容。</small></div><div class="cfg-form-field full"><label>官方来源链接</label><input id="reviewRuleSourceUrl" maxlength="500" value="${value("sourceUrl")}" placeholder="请输入官方网页地址，例如：https://www.gov.cn/..." ${disabled}>${officialSourceLink}<small class="review-rule-evidence-hint">建议填写政府门户或国家标准官方页面，便于复核规则依据；内部制度可留空。</small></div></div>`;
+    if (isView) { openModal(`查看规则 · ${rule?.name || ""}`,body,null,{hideFooter:true,width:"860px"}); return; }
+    openModal(rule ? `编辑规则 · ${rule.name}` : `新增规则 · ${bank.name}`,body,() => {
+      const name = ($("#reviewRuleName")?.value || "").trim(), condition = ($("#reviewRuleCondition")?.value || "").trim(), problemPrompt = ($("#reviewRuleProblem")?.value || "").trim(), suggestion = ($("#reviewRuleSuggestion")?.value || "").trim(), evidenceFile = ($("#reviewRuleEvidenceFile")?.value || "").trim(), evidenceClause = ($("#reviewRuleEvidenceClause")?.value || "").trim(), jurisdiction = $("#reviewRuleJurisdiction")?.value || "平台规则", sourceUrl = ($("#reviewRuleSourceUrl")?.value || "").trim();
+      const docTypes = $$('.review-rule-doc-menu input[name="reviewRuleDocType"]:checked').map(input => input.value);
+      const departments = $$('input[name="reviewRuleFormDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewRuleFormRole"]:checked').map(input => input.value);
+      if (!name || !condition || !problemPrompt || !suggestion || !evidenceFile || !evidenceClause) { showToast("请完整填写规则名称、判断内容、依据文件和依据条款"); return; }
+      if (!docTypes.length) { showToast("请至少选择一个适用文种"); return; }
+      if (sourceUrl && !/^https?:\/\//i.test(sourceUrl)) { showToast("官方来源链接需以 http:// 或 https:// 开头"); return; }
+      if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; }
+      if (bank.rules.some(item => item.id !== rule?.id && item.name === name)) { showToast("当前规则库中已存在同名规则"); return; }
+      if (!departments.every(name => allowedDepartments.includes(name)) || !roles.every(name => allowedRoles.includes(name))) { showToast("规则作用范围不能超出所属规则库或当前管理员权限"); return; }
+      const internalStamp = Date.now();
+      const payload = {name,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],jurisdiction,departments,roles,condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:rule?.evidenceFileId || `KB-DOC-LOCAL-${internalStamp}`,evidenceClauseId:rule?.evidenceClauseId || `KB-CLAUSE-LOCAL-${internalStamp}`,sourceUrl,sourceSyncedAt:sourceUrl ? cfgNowDate() : (rule?.sourceSyncedAt || ""),enabled:$("#reviewRuleEnabled").value === "true",updatedAt:formatDateTime(internalStamp)};
+      if (rule) { Object.assign(rule,payload); cfgRecordAudit("编辑核查规则","核查规则",name,`编辑规则库“${bank.name}”中的规则“${name}”`); }
+      else { bank.rules.unshift({id:`review-rule-${Date.now()}`,...payload,ownerLevel:configRole === "dept" ? "department" : "system",ownerDepartment:cfgRoleMeta().dept}); cfgRecordAudit("新增核查规则","核查规则",name,`在规则库“${bank.name}”中新增规则“${name}”`); }
+      closeModal(); renderConfig(); showToast(rule ? "规则已更新" : "规则已新增");
+    },{okText:rule ? "保存修改" : "确认新增",width:"860px"});
+    const picker = $("#reviewRuleDocTypePicker"), trigger = $("#reviewRuleDocTypeTrigger"), menu = $("#reviewRuleDocTypeMenu"), text = $("#reviewRuleDocTypeText");
+    if (picker && trigger && menu && text) {
+      trigger.addEventListener("click",() => { const willOpen = menu.hidden; menu.hidden = !willOpen; picker.classList.toggle("open",willOpen); });
+      menu.addEventListener("change",event => {
+        const changed = event.target.closest('input[name="reviewRuleDocType"]'); if (!changed) return;
+        const boxes = $$('input[name="reviewRuleDocType"]',menu), all = boxes.find(input => input.value === "全部文种");
+        if (changed.value === "全部文种" && changed.checked) boxes.forEach(input => { if (input !== changed) input.checked = false; });
+        else if (changed.checked && all) all.checked = false;
+        const selected = boxes.filter(input => input.checked).map(input => input.value);
+        text.textContent = selected.join("、") || "请选择适用文种";
+        trigger.title = text.textContent;
+      });
+    }
+  }
+  function reviewRuleOpenRuleScope(bankId,ruleId) {
+    const bank = reviewRuleBankById(bankId), rule = reviewRuleFind(bankId,ruleId); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则作用范围"); return; }
+    const allowedDepartments = reviewRuleAllowedDepartments(bank), allowedRoles = reviewRuleAllowedRoles(bank);
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">仅能选择所属规则库和当前管理员权限范围内的委办局与角色。</div>${reviewRuleScopeBoxes("reviewRuleScope",allowedDepartments,rule.departments,allowedRoles,rule.roles,false)}`;
+    openModal(`配置规则作用范围 · ${rule.name}`,body,() => { const departments = $$('input[name="reviewRuleScopeDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewRuleScopeRole"]:checked').map(input => input.value); if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; } rule.departments = departments; rule.roles = roles; rule.updatedAt = formatDateTime(Date.now()); cfgRecordAudit("配置规则作用范围","核查规则",rule.name,`规则“${rule.name}”作用范围调整为：${reviewRuleDepartmentText(departments)}；${reviewRuleRoleText(roles)}`); closeModal(); renderConfig(); showToast("规则作用范围已更新"); },{okText:"保存范围",width:"760px"});
+  }
+  function reviewRuleDeleteRule(bankId,ruleId) {
+    const bank = reviewRuleBankById(bankId), rule = reviewRuleFind(bankId,ruleId); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权删除该规则"); return; }
+    openModal("删除核查规则",`确认删除规则“${esc(rule.name)}”？删除后新发起的审查任务将不再执行该规则。`,() => { bank.rules = bank.rules.filter(item => item.id !== rule.id); cfgRecordAudit("删除核查规则","核查规则",rule.name,`从规则库“${bank.name}”删除规则“${rule.name}”`); closeModal(); renderConfig(); showToast("规则已删除"); },{okText:"确认删除"});
+  }
 function cfgRoleManagementHTML() {
     const visible = CFG_DIRECTORY_DATA.roles.filter(item => (!configRoleFilters.name || item.name.toLowerCase().includes(configRoleFilters.name.toLowerCase())) && (configRoleFilters.status === "all" || item.status === configRoleFilters.status));
     const rows = visible.map(item => `<tr><td><b>${esc(item.name)}</b></td><td>${esc(item.scope)}</td><td>${esc(item.users)}</td><td><span class="cfg-status-pill ${item.status === "停用" ? "off" : ""}">${esc(item.status)}</span></td><td>${esc(item.updatedAt)}</td><td><button class="btn" data-act="cfgDirectoryView" data-section="roles" data-id="${item.id}">查看</button><button class="btn primary" data-act="cfgRoleMenuScope" data-id="${item.id}">使用菜单范围</button></td></tr>`).join("");
@@ -9217,12 +9746,12 @@ function cfgRoleManagementHTML() {
     else if (configCenterSection === "models") html = modelConfigHTML();
     else if (configCenterSection === "roles") html = cfgRoleManagementHTML();
     else if (configCenterSection === "lexicon") html = cfgLexiconHTML();
+    else if (configCenterSection === "reviewRules") html = cfgReviewRulesHTML();
     else html = cfgDirectoryHTML(configCenterSection);
     if (configCenterSection === "templates") {
       html = html.replaceAll("全局强制规则 ＞ 部门强制规则 ＞","平台基础约束 ＞").replaceAll("与全局强制规则冲突","与平台基础约束冲突").replaceAll("全局强制规则和部门规则","平台基础约束");
     }
     $("#cfgWorkspace").innerHTML = html;
-    if (configCenterSection === "connectors") $$(".cfg-data-title small",$("#cfgWorkspace")).forEach(item => item.remove());
     if (configCenterSection === "templates" && configTemplateDraft) {
       const select = $('[data-cfg-template-agent]');
       const agents = configRole === "user" ? AGENTS.filter(agent => cfgAgentCanUse(agent.id)) : AGENTS;
@@ -9516,27 +10045,28 @@ function cfgRoleManagementHTML() {
 
   // 智能体小卡片
   function agentTypeLabel(a) {
-    return a && a.cat ? a.cat : "服务类";
+    return a && (a.cat || a.businessType) ? (a.cat || a.businessType) : "服务类";
   }
   function agentCardHTML(a, mode) {
-    const on = !config.agentsOff.has(a.id);
     const homeMode = mode === "home";
-    const stats = AGENT_STATS[a.id] || { calls: 0, published: "2026-01-01" };
     const templates = a.entryMode === "chat" ? templatesForAgent(a.id) : [];
     const template = templates.length ? (defaultTemplateForAgent(a.id) || templates[0]) : null;
     if (homeMode) return `<div class="a-card" data-home-agent="${a.id}"><div class="ac-top"><div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a,20)}</div><div style="min-width:0"><div class="ac-name">${esc(a.name)}</div><div class="ac-cat">${esc(a.cat)} · ${a.entryMode === "chat" ? "对话型" : "独立工作台"}</div></div></div><div class="ac-desc">${esc(a.desc)}</div></div>`;
-    const templateAction = templates.length === 1 ? `<button class="agent-template-select" type="button" data-act="marketTemplateManage" data-create-new="true" data-agent-id="${a.id}">配置更多模板</button>` : `<button class="agent-template-select" type="button" data-act="marketTemplateSelect" data-agent-id="${a.id}">选择模板</button>`;
-    const templateRow = a.entryMode === "chat" ? `<div class="agent-template-row"><span class="agent-template-name" title="${esc(template?.name || "默认模板")}">模板：${esc(template?.name || "默认模板")}</span>${templateAction}</div>` : "";
-    return `<div class="a-card" data-agent-card="${a.id}">
+    const usage = a.entryMode === "chat" ? "对话型" : "独立工作台";
+    const templateName = a.entryMode === "chat" ? (template?.name || "暂未配置") : "无需模板";
+    return `<article class="a-card agent-market-card" data-agent-card="${a.id}" title="查看${esc(a.name)}详情">
       <div class="ac-top">
         <div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a, 20)}</div>
-        <div style="min-width:0"><div class="ac-name">${esc(a.name)}</div><div class="ac-cat">${esc(a.cat)} · ${a.entryMode === "chat" ? "对话型" : "独立工作台"}</div></div>
-        <span class="ac-on" style="${on ? "" : "color:var(--muted);background:#eef1f5"}">${on ? "已上线" : "已停用"}</span>
+        <div style="min-width:0"><div class="ac-name">${esc(a.name)}</div></div>
+        <button class="agent-use-btn" type="button" data-act="marketAgentUse" data-agent-id="${a.id}">立即使用</button>
       </div>
       <div class="ac-desc">${esc(a.desc)}</div>
-      <div class="agent-card-facts"><span>智能体类型<b>${esc(a.cat)}</b></span><span>使用方式<b>${a.entryMode === "chat" ? "对话型" : "独立工作台"}</b></span><span>调用次数<b>${stats.calls} 次</b></span><span>发布时间<b>${esc(stats.published)}</b></span></div>
-      <div class="ac-foot">${templateRow || `<span class="ac-metric">${svgi("i-chart",12)}点击卡片进入处理</span>`}</div>
-    </div>`;
+      <div class="agent-card-tags">
+        <span class="agent-card-tag">智能体类型 · ${esc(agentTypeLabel(a))}</span>
+        <span class="agent-card-tag">使用方式 · ${usage}</span>
+        <span class="agent-card-tag template" title="当前使用模板：${esc(templateName)}">当前模板 · <span>${esc(templateName)}</span></span>
+      </div>
+    </article>`;
   }
   function agentsGrouped(container, source, flat) {
     const agents = source || AGENTS;
@@ -9616,9 +10146,26 @@ function cfgRoleManagementHTML() {
     updateComposerSelectionBars();
   }
   function connectorById(id) { return CONNECTORS.find(c => c.id === id); }
+  function connectorVisibleToCurrentRole(connector) {
+    const service = connector && cfgConnectorService(connector.id); if (!service) return true;
+    const departments = service.departments || [];
+    return service.enabled && (configRole === "system" || !departments.length || departments.includes("新区各委办局") || departments.includes(cfgRoleMeta().dept));
+  }
+  function connectorIconHTML(connector,size) { const s = Number(size || 16); return connector?.iconData ? `<img src="${esc(connector.iconData)}" alt="" style="width:${s}px;height:${s}px;display:block;object-fit:cover;border-radius:${Math.max(4,Math.round(s*.24))}px">` : svgi(connector?.icon || "i-plug",s); }
+  function connectorOperations(connector) { const service = connector && cfgConnectorService(connector.id); return (service?.operations || connector?.operations || []).filter(operation => operation.enabled !== false); }
+  function connectorOperationById(connector,operationId) { const list = connectorOperations(connector); return list.find(operation => operation.id === operationId) || list[0] || null; }
+  function chooseConnectorOperation(connector,onChoose) {
+    const operations = connectorOperations(connector); if (!operations.length) { showToast("该连接器暂无已启用的业务操作"); return; }
+    if (operations.length === 1 || !connector.customRegistered) { onChoose(operations[0]); return; }
+    const options = operations.map((operation,index) => `<option value="${operation.id}" ${index === 0 ? "selected" : ""}>${esc(operation.name)} · ${cfgConnectorOperationTypeLabel(operation.type)}</option>`).join("");
+    const preview = operation => `<div class="connector-operation-preview"><span class="tag ${operation.type === "query" ? "blue" : "amber"}">${cfgConnectorOperationTypeLabel(operation.type)}</span><b>${esc(operation.method)} ${esc(operation.path)}</b><p>${esc(operation.desc || "系统将根据本次对话提取输入参数并调用该操作。")}</p>${operation.confirmRequired ? '<small>该操作执行前需要再次确认。</small>' : '<small>该查询操作可直接执行。</small>'}</div>`;
+    openModal(`选择业务操作 · ${connector.name}`,`<div class="field"><label>本次要使用的操作</label><select id="connectorOperationChoice">${options}</select></div><div id="connectorOperationPreview" style="margin-top:12px">${preview(operations[0])}</div>`,() => { const operation = connectorOperationById(connector,$("#connectorOperationChoice")?.value); closeModal(); if (operation) onChoose(operation); },{okText:"确认选择",width:"560px"});
+    const select = $("#connectorOperationChoice"), host = $("#connectorOperationPreview"); if (select && host) select.addEventListener("change",() => { const operation = connectorOperationById(connector,select.value); if (operation) host.innerHTML = preview(operation); });
+  }
   function renderConnectorSelection() {
     const connector = activeConnector ? connectorById(activeConnector) : null;
-    const html = connector ? `<button class="selection-chip connector-selected" data-clear-resource="connector" title="点击移除已选连接器"><span class="sel-ic" style="background:${connector.color}">${svgi(connector.icon, 12)}</span>${esc(connector.name)}<i class="sel-x">×</i></button>` : "";
+    const operation = connector ? connectorOperationById(connector,activeConnectorOperationId) : null;
+    const html = connector ? `<button class="selection-chip connector-selected" data-clear-resource="connector" title="点击移除已选连接器"><span class="sel-ic" style="background:${connector.color}">${connectorIconHTML(connector,12)}</span>${esc(connector.name)}${operation ? ` · ${esc(operation.name)}` : ""}<i class="sel-x">×</i></button>` : "";
     ["#homeConnectorLive", "#newConnectorLive", "#chatConnectorLive"].forEach(sel => { const el = $(sel); if (el) el.innerHTML = html; });
     updateComposerSelectionBars();
   }
@@ -9631,7 +10178,8 @@ function cfgRoleManagementHTML() {
   }
   function requestConnectorUse(connectorId) {
     const connector = connectorById(connectorId); if (!connector) return;
-    useConnector(connectorId);
+    if (!connectorVisibleToCurrentRole(connector)) { showToast("该连接器当前未启用或不在您的部门权限范围内"); return; }
+    chooseConnectorOperation(connector,operation => useConnector(connectorId,operation?.id));
   }
   function currentComposerInput() {
     return currentView === "newchat" ? $("#newInput") : currentView === "chat" ? $("#composerInput") : $("#homeInput");
@@ -9682,8 +10230,8 @@ function cfgRoleManagementHTML() {
       const agent = byId(composerTemplateAgentId), templates = CFG_TEMPLATES.filter(item => item.agentId === composerTemplateAgentId && cfgTemplateCanSee(item)).filter(item => !query || `${item.name} ${CFG_SCOPE_LABEL[item.scope]} ${item.ownerName}`.toLowerCase().includes(query));
       html = `<div class="composer-template-banner">${svgi("i-file",14)}<span>已选择智能体：<b>${esc(agent?.name || "")}</b>，可继续选择模板</span></div><button class="composer-resource-row" data-composer-template=""><span class="composer-resource-icon" style="background:#7b8794">${svgi("i-file",15)}</span><span class="composer-resource-copy"><b>使用默认模板</b><small>由智能体根据当前对话自动组织结构</small></span><span class="composer-resource-state">${activeTemplateId ? "选择" : "当前"}</span></button>` + templates.map(template => `<button class="composer-resource-row" data-composer-template="${template.id}"><span class="composer-resource-icon" style="background:#7563a6">${svgi("i-file",15)}</span><span class="composer-resource-copy"><b>${esc(template.name)}<span class="tag ${template.scope === "public" ? "green" : template.scope === "department" ? "blue" : "amber"}">${CFG_SCOPE_LABEL[template.scope]}</span></b><small>${esc(template.outline.replace(/\n/g,"；"))}</small></span><span class="composer-resource-state">${activeTemplateId === template.id ? "已选" : "选择"}</span></button>`).join("");
     } else if (type === "connector") {
-      const rows = CONNECTORS.filter(connector => !query || `${connector.name} ${connector.desc} ${connector.tag}`.toLowerCase().includes(query));
-      html = rows.map(connector => `<button class="composer-resource-row" data-composer-connector="${connector.id}"><span class="composer-resource-icon" style="background:${connector.color}">${svgi(connector.icon, 15)}</span><span class="composer-resource-copy"><b>${esc(connector.name)}</b><small>${esc(connector.desc)}</small></span><span class="composer-resource-state">${activeConnector === connector.id ? "已选" : connector.connected ? "已连接" : "连接"}</span></button>`).join("");
+      const rows = CONNECTORS.filter(connectorVisibleToCurrentRole).filter(connector => !query || `${connector.name} ${connector.desc} ${connector.tag}`.toLowerCase().includes(query));
+      html = rows.map(connector => `<button class="composer-resource-row" data-composer-connector="${connector.id}"><span class="composer-resource-icon" style="background:${connector.color}">${connectorIconHTML(connector,15)}</span><span class="composer-resource-copy"><b>${esc(connector.name)}</b><small>${esc(connector.desc)} · ${connectorOperations(connector).length}个业务操作</small></span><span class="composer-resource-state">${activeConnector === connector.id ? "已选" : connector.connected ? "已连接" : "连接"}</span></button>`).join("");
     } else {
       const rootId = composerKbPath[0];
       if (!composerKbPath.length) {
@@ -9798,6 +10346,8 @@ function cfgRoleManagementHTML() {
   }
   function connectorDefaultPrompt(connector) {
     const mark = value => `${PROMPT_FIELD_MARKER}${value}${PROMPT_FIELD_MARKER}`;
+    const customOperation = connector?.customRegistered ? connectorOperationById(connector,activeConnectorOperationId) : null;
+    if (customOperation) return `请使用「${connector.name}」的「${customOperation.name}」操作，处理：${mark("请填写具体业务内容")}`;
     const prompts = {
       "tencent-docs": `帮我在腾讯文档里创建一个${mark("学生花名册表格")}，包含${mark("姓名、性别、班级、联系电话和备注")}字段。`,
       "gov-oa": `帮我在政务协同 OA 中发起一条关于${mark("重点项目协调会")}的${mark("会议通知")}。`,
@@ -9814,10 +10364,11 @@ function cfgRoleManagementHTML() {
     const c = cur(); if (c && !c.msgs.length) c.agent = null;
     renderAgentPill(); renderHomeSkill();
   }
-  function useConnector(connectorId) {
+  function useConnector(connectorId,operationId) {
     const connector = connectorById(connectorId); if (!connector) return;
     clearNonConnectorContext();
     activeConnector = connector.id;
+    activeConnectorOperationId = operationId || connectorOperationById(connector,null)?.id || null;
     switchView("home"); renderConnectorSelection(); syncExclusion();
     fillComposerPrompt(connectorDefaultPrompt(connector), $("#homeInput"));
     showToast(`已选择连接器「${connector.name}」`);
@@ -9999,8 +10550,8 @@ function cfgRoleManagementHTML() {
   }
   function renderConnectorPicker(keyword) {
     const q = (keyword || "").trim().toLowerCase();
-    const list = CONNECTORS.filter(c => !q || `${c.name} ${c.desc} ${c.tag}`.toLowerCase().includes(q));
-    $("#connectorPickerBody").innerHTML = list.length ? list.map(c => `<button class="resource-item" data-home-connector="${c.id}"><b><span class="common-skill-ic" style="background:${c.color};color:#fff;border-color:transparent">${svgi(c.icon, 15)}</span>${esc(c.name)}<span class="tag cyan">${esc(c.tag)}</span></b><small>${esc(c.desc)}</small></button>`).join("") : '<div class="skill-empty">未找到匹配连接器。</div>';
+    const list = CONNECTORS.filter(connectorVisibleToCurrentRole).filter(c => !q || `${c.name} ${c.desc} ${c.tag}`.toLowerCase().includes(q));
+    $("#connectorPickerBody").innerHTML = list.length ? list.map(c => `<button class="resource-item" data-home-connector="${c.id}"><b><span class="common-skill-ic" style="background:${c.color};color:#fff;border-color:transparent">${connectorIconHTML(c,15)}</span>${esc(c.name)}<span class="tag cyan">${esc(c.tag)}</span></b><small>${esc(c.desc)} · ${connectorOperations(c).length}个业务操作</small></button>`).join("") : '<div class="skill-empty">未找到匹配连接器。</div>';
   }
   function selectHomeSkill(skillId) {
     const skill = SKILLS.find(s => s.id === skillId);
@@ -10008,7 +10559,7 @@ function cfgRoleManagementHTML() {
     // 技能单选，且与智能体/连接器三选一互斥（知识库不受影响）
     homeSkills = [skill];
     if (activeAgent) { activeAgent = null; const c = cur(); if (c && !c.msgs.length) c.agent = null; }
-    if (activeConnector) { activeConnector = null; }
+    if (activeConnector) { activeConnector = null; activeConnectorOperationId = null; }
     $("#skillPickerMask").classList.remove("show");
     renderHomeSkill(); renderConnectorSelection(); renderAgentPill(); syncExclusion(); renderSidebar();
     fillComposerPrompt(skill.prompt);
@@ -10023,12 +10574,14 @@ function cfgRoleManagementHTML() {
   }
   function selectHomeConnector(connectorId) {
     const connector = connectorById(connectorId);
-    if (!connector) return;
-    clearNonConnectorContext(); activeConnector = connector.id;
-    $("#connectorPickerMask").classList.remove("show");
-    renderConnectorSelection(); syncExclusion(); renderSidebar();
-    fillComposerPrompt(connector.prompt);
-    showToast(`已选择连接器「${connector.name}」`);
+    if (!connector || !connectorVisibleToCurrentRole(connector)) return;
+    chooseConnectorOperation(connector,operation => {
+      clearNonConnectorContext(); activeConnector = connector.id; activeConnectorOperationId = operation?.id || null;
+      $("#connectorPickerMask").classList.remove("show");
+      renderConnectorSelection(); syncExclusion(); renderSidebar();
+      fillComposerPrompt(connectorDefaultPrompt(connector));
+      showToast(`已选择连接器「${connector.name}」${operation ? ` · ${operation.name}` : ""}`);
+    });
   }
   // 资源互斥：智能体 / 技能 / 连接器 三选一；知识库独立多选，永不锁定。
   function syncExclusion() {
@@ -10115,20 +10668,73 @@ function cfgRoleManagementHTML() {
     fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),$("#homeInput"));
     showToast(template ? `已带入默认模板“${template.name}”` : `已选择“${agent.name}”`);
   }
-  function openMarketplaceTemplatePicker(agentId,enterAfterSelect) {
-    const agent = byId(agentId), list = templatesForAgent(agentId); if (!agent || !list.length) return;
-    const current = defaultTemplateForAgent(agentId);
-    const initial = current || list[0];
-    openModal(`选择${agent.name}模板`,`<div class="cfg-readonly">选择后保存为该智能体的个人默认模板，后续从智能体广场进入时自动带入。</div><div class="field" style="margin-top:12px"><label>模板名称</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">管理模板</button></div>`,() => { const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agentId,selected.id); closeModal(); renderAgentsView(); showToast(`已将“${selected.name}”设为默认模板`); if (enterAfterSelect) enterAgentWithTemplate(agent,selected); },{okText:"设为默认模板",width:"680px"});
+  function openMarketplaceAgentDetail(agentId) {
+    const agent = byId(agentId); if (!agent) return;
+    const stats = AGENT_STATS[agent.id] || { calls:0, published:"暂无" };
+    const list = agent.entryMode === "chat" ? templatesForAgent(agentId) : [];
+    const current = list.length ? defaultTemplateForAgent(agentId) : null;
+    const initial = current || list[0] || null;
+    const usage = agent.entryMode === "chat" ? "对话型" : "独立工作台";
+    const templateControl = list.length > 1
+      ? `<div class="field"><label>切换预览模板</label><select id="marketTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial?.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div>`
+      : list.length === 1
+        ? ""
+        : `<div class="agent-template-empty">暂未配置可用模板，可先进入模板管理进行配置。</div>`;
+    const templateSection = agent.entryMode === "chat" ? `<section class="agent-detail-content">
+      <div class="agent-detail-section-head">${svgi("i-file",15)}<b>智能体模板</b><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">${svgi("i-edit",13)}管理模板</button></div>
+      ${initial ? `<div class="agent-current-template"><span class="agent-current-template-icon">${svgi("i-check",15)}</span><span class="agent-current-template-copy"><small>当前使用模板</small><b id="marketCurrentTemplateName">${esc(initial.name)}</b></span><span id="marketCurrentTemplateScope" class="agent-current-template-scope">${CFG_SCOPE_LABEL[initial.scope] || "公共"}模板</span></div>` : ""}
+      ${templateControl}
+      ${initial ? `<pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre>` : ""}
+    </section>` : `<section class="agent-detail-content"><div class="agent-detail-section-head">${svgi("i-layers",15)}<b>使用方式</b></div><div class="agent-template-empty">该智能体使用独立工作台，进入后可按步骤上传材料、设置参数并处理任务。</div></section>`;
+    const useSelected = () => {
+      const selected = list.find(template => template.id === $("#marketTemplateChoice")?.value) || initial;
+      closeModal();
+      if (agent.entryMode === "chat") enterAgentWithTemplate(agent, selected || null);
+      else openAgentFromMarketplace(agent.id);
+      if (selected) showToast(`已使用模板“${selected.name}”`);
+    };
+    openModal(agent.entryMode === "chat" ? `选择${agent.name}模板` : `${agent.name} · 智能体详情`, `<section class="agent-detail-summary">
+      <div class="agent-detail-identity">
+        <span class="agent-detail-icon" style="${ic(agent.cat)}">${agentIcon(agent,28)}</span>
+        <span class="agent-detail-name"><b>${esc(agent.name)}</b><small>政务智能体服务</small></span>
+        <button id="marketAgentUseNow" class="agent-detail-use" type="button">立即使用</button>
+      </div>
+      <div class="agent-detail-meta"><span class="agent-detail-meta-item"><small>智能体类型</small><b>${esc(agentTypeLabel(agent))}</b></span><span class="agent-detail-meta-item"><small>使用方式</small><b>${usage}</b></span><span class="agent-detail-meta-item"><small>调用次数</small><b>${svgi("i-chart",13)}${Number(stats.calls || 0).toLocaleString("zh-CN")} 次</b></span><span class="agent-detail-meta-item"><small>发布时间</small><b>${svgi("i-clock",13)}${esc(stats.published || "暂无")}</b></span></div>
+      <p class="agent-detail-desc">${esc(agent.desc)}</p>
+    </section>${templateSection}`, useSelected, { okText:agent.entryMode === "chat" ? (list.length ? "使用该模板" : "立即使用") : "进入工作台", width:"min(860px, calc(100vw - 40px))", className:"agent-detail-modal" });
     const choice = $("#marketTemplateChoice"), preview = $("#marketTemplatePreview");
-    if (choice && preview) choice.addEventListener("change", () => { const selected = list.find(template => template.id === choice.value) || list[0]; preview.textContent = cfgTemplateMarkdownText(selected); });
-    const useNowBtn = document.createElement("button");
-    useNowBtn.className = "btn primary";
-    useNowBtn.type = "button";
-    useNowBtn.textContent = "立即使用";
-    useNowBtn.addEventListener("click", () => { const selected = list.find(t => t.id === ($("#marketTemplateChoice")?.value)) || list[0]; closeModal(); enterAgentWithTemplate(agent, selected); showToast(`已使用模板“${selected.name}”`); });
-    const modalOk = $("#modalOk"); if (modalOk) modalOk.after(useNowBtn);
+    const defaultBtn = list.length ? document.createElement("button") : null;
+    const syncDefaultButton = () => {
+      if (!defaultBtn) return;
+      const selected = list.find(template => template.id === choice?.value) || initial;
+      const isDefault = !!selected && agentDefaultTemplates[agent.id] === selected.id;
+      defaultBtn.disabled = isDefault;
+      defaultBtn.innerHTML = isDefault ? `${svgi("i-check",13)}默认模板` : "设为默认模板";
+    };
+    if (choice && preview) choice.addEventListener("change", () => {
+      const selected = list.find(template => template.id === choice.value) || initial;
+      preview.textContent = cfgTemplateMarkdownText(selected);
+      syncDefaultButton();
+    });
+    if (defaultBtn) {
+      defaultBtn.className = "btn agent-detail-default";
+      defaultBtn.type = "button";
+      defaultBtn.addEventListener("click", () => {
+        const selected = list.find(template => template.id === choice?.value) || initial;
+        if (!selected) return;
+        saveDefaultTemplate(agent.id, selected.id);
+        renderAgentsView();
+        const currentName = $("#marketCurrentTemplateName"); if (currentName) currentName.textContent = selected.name;
+        const currentScope = $("#marketCurrentTemplateScope"); if (currentScope) currentScope.textContent = `${CFG_SCOPE_LABEL[selected.scope] || "公共"}模板`;
+        syncDefaultButton();
+        showToast(`已将“${selected.name}”设为默认模板`);
+      });
+      $("#modalCancel").before(defaultBtn);
+      syncDefaultButton();
+    }
+    const useNow = $("#marketAgentUseNow"); if (useNow) useNow.addEventListener("click", useSelected);
   }
+  function openMarketplaceTemplatePicker(agentId) { openMarketplaceAgentDetail(agentId); }
   function openAgentTemplateManager(agentId, createNew) {
     const agent = byId(agentId); if (!agent) return;
     closeModal();
@@ -10167,7 +10773,11 @@ function cfgRoleManagementHTML() {
   function renderAgentsView() {
     const q = ($("#agentSearch").value || "").trim().toLowerCase();
     const sort = $("#agentSort").value || "calls";
-    const list = AGENTS.filter(a => !config.agentsOff.has(a.id) && (agentCategory === "all" || a.cat === agentCategory) && (!q || `${a.name} ${a.cat} ${a.docType || ""} ${a.desc}`.toLowerCase().includes(q))).sort((a, b) => {
+    const list = AGENTS.filter(a => {
+      const service = CFG_AGENT_SERVICES.find(item => item.id === a.id), departments = (service && service.departments) || a.departments || [];
+      const departmentVisible = configRole === "system" || !departments.length || departments.includes("新区各委办局") || departments.includes(cfgRoleMeta().dept);
+      return departmentVisible && !config.agentsOff.has(a.id) && (agentCategory === "all" || a.cat === agentCategory) && (!q || `${a.name} ${a.cat} ${a.docType || ""} ${a.desc}`.toLowerCase().includes(q));
+    }).sort((a, b) => {
       const sa = AGENT_STATS[a.id] || { calls: 0, published: "" }, sb = AGENT_STATS[b.id] || { calls: 0, published: "" };
       return sort === "latest" ? sb.published.localeCompare(sa.published) : sb.calls - sa.calls;
     });
@@ -10178,14 +10788,14 @@ function cfgRoleManagementHTML() {
   }
   function connectorCardHTML(connector) {
     return `<article class="a-card connector-card" data-connector-use="${connector.id}" title="使用${esc(connector.name)}">
-      <div class="ac-top"><div class="ac-ic" style="background:${connector.color}">${svgi(connector.icon,20)}</div><div style="min-width:0"><div class="ac-name">${esc(connector.name)}</div><div class="ac-cat">${esc(connector.tag)} · 业务连接器系统</div></div></div>
+      <div class="ac-top"><div class="ac-ic" style="background:${connector.color}">${connectorIconHTML(connector,20)}</div><div style="min-width:0"><div class="ac-name">${esc(connector.name)}</div><div class="ac-cat">${esc(connector.tag)} · ${connector.customRegistered ? "外部接入" : "中台同步"}</div></div></div>
       <div class="ac-desc">${esc(connector.desc)}</div>
-      <div class="ac-foot"><span class="ac-metric">${svgi("i-chart",12)}${connector.calls} 次</span><span class="go">使用连接器 →</span></div>
+      <div class="ac-foot"><span class="connector-op-count">${svgi("i-layers",11)}${connectorOperations(connector).length} 个业务操作</span><span class="ac-metric">${svgi("i-chart",12)}${connector.calls} 次</span><span class="go">使用连接器 →</span></div>
     </article>`;
   }
   function renderConnectors() {
     const q = ($("#connectorSearch").value || "").trim().toLowerCase(), sort = $("#connectorSort").value || "calls";
-    const list = CONNECTORS.filter(c => (connectorCategory === "all" || c.tag === connectorCategory) && (!q || `${c.name} ${c.tag} ${c.desc}`.toLowerCase().includes(q))).sort((a, b) => sort === "latest" ? b.published.localeCompare(a.published) : b.calls - a.calls);
+    const list = CONNECTORS.filter(connectorVisibleToCurrentRole).filter(c => (connectorCategory === "all" || c.tag === connectorCategory) && (!q || `${c.name} ${c.tag} ${c.desc}`.toLowerCase().includes(q))).sort((a, b) => sort === "latest" ? b.published.localeCompare(a.published) : b.calls - a.calls);
     $$("#connectorTabs .market-tab").forEach(btn => btn.classList.toggle("active", btn.dataset.connectorCat === connectorCategory));
     $("#connectorCount").innerHTML = `共找到 <b>${list.length}</b> 个连接器${connectorCategory === "all" ? "" : ` · ${esc(connectorCategory)}`}`;
     $("#connectorGrid").innerHTML = list.length ? list.map(connectorCardHTML).join("") : '<div class="skill-empty">未找到匹配连接器，请尝试其他关键词或分类。</div>';
@@ -10373,7 +10983,7 @@ function cfgRoleManagementHTML() {
     return `<div class="schedule-form"><div class="schedule-form-grid">
       <div class="field full"><label>任务名称 <b style="color:var(--red)">*</b></label><input id="scheduleName" type="text" value="${esc(task.name || "")}" placeholder="例如：每日 8 点前生成政务工作日报"></div>
       <div class="field full"><label>提示词 / 工作指令 <b style="color:var(--red)">*</b></label><div class="schedule-prompt-box"><div class="schedule-resource-selected" id="scheduleResourceSelected">${scheduleSelectedResourcesHTML()}</div><textarea id="schedulePrompt" rows="5" placeholder="描述每次需要完成的工作、数据范围和输出要求">${esc(task.prompt || "")}</textarea><div class="schedule-resource-tools"><details class="schedule-resource-picker"><summary>${svgi("i-wand",14)}选择技能 <span id="scheduleSkillCount"></span></summary><div class="schedule-resource-menu" id="scheduleSkillOptions">${scheduleResourceOptionsHTML("skill")}</div></details><details class="schedule-resource-picker"><summary>${svgi("i-file",14)}选择知识库 <span id="scheduleKbCount"></span></summary><div class="schedule-resource-menu" id="scheduleKbOptions">${scheduleResourceOptionsHTML("kb")}</div></details></div></div><div class="hint">技能和知识库均支持多选，执行时会与提示词一起作为任务上下文。</div></div>
-      <div class="field full"><label>连接器</label><select id="scheduleConnector"><option value="">不使用连接器</option>${CONNECTORS.map(c => `<option value="${c.id}" ${task.connector === c.id ? "selected" : ""}>${esc(c.name)} · ${esc(c.tag)}</option>`).join("")}</select><div class="schedule-connector-note">选择后，任务可调用对应业务系统完成创建、查询或推送。</div></div>
+      <div class="field full"><label>连接器</label><select id="scheduleConnector"><option value="">不使用连接器</option>${CONNECTORS.filter(connectorVisibleToCurrentRole).map(c => `<option value="${c.id}" ${task.connector === c.id ? "selected" : ""}>${esc(c.name)} · ${esc(c.tag)}</option>`).join("")}</select><div class="schedule-connector-note">选择后，任务可调用对应业务系统完成创建、查询或推送。</div></div>
       <div class="schedule-form-section"><div class="section-label">${svgi("i-clock",15)}执行频率</div><div class="schedule-kind" id="scheduleKind"><button type="button" data-schedule-kind="cycle">周期</button><button type="button" data-schedule-kind="interval">按间隔</button><button type="button" data-schedule-kind="once">单次</button></div><div class="schedule-frequency-panel" id="scheduleFrequencyPanel">${scheduleFrequencyPanelHTML(scheduleFormKind)}</div></div>
       <div class="field full" id="scheduleDateRangeField"><label>生效日期区间 <span style="color:var(--muted);font-weight:400">（可选，留空表示始终生效）</span></label><div class="schedule-date-range"><input id="scheduleStart" type="date" value="${esc(task.startDate || "")}" aria-label="生效开始日期"><input id="scheduleEnd" type="date" value="${esc(task.endDate || "")}" aria-label="生效结束日期"></div></div>
       <div class="field"><label>生成结果与推送</label><select id="scheduleTarget"><option ${task.target === "站内通知" ? "selected" : ""}>站内通知</option><option ${task.target === "我的文档" ? "selected" : ""}>我的文档</option><option ${task.target === "站内通知 + 我的文档" ? "selected" : ""}>站内通知 + 我的文档</option></select></div>
@@ -10528,7 +11138,7 @@ function cfgRoleManagementHTML() {
 
   // ============ 内嵌完整工作台（iframe 加载 agent-workbench/{id}.html）============
  let wbAgent = null, wbPrevView = "home", pendingWorkbenchContext = null;
- function workbenchPath(id) { return "agent-workbench/" + id + ".html"; }
+ function workbenchPath(id) { const agent = byId(id); return agent && agent.customRegistered && agent.url ? agent.url : "agent-workbench/" + id + ".html"; }
   function reviewConfigSnapshot() {
     return { platformVersion: "REVIEW-BASE-v2.4", departmentVersion: "D-REVIEW-v2.3", department: "数据局", forcedCount: Object.values(config.compliance).filter(Boolean).length, departmentRuleCount: 31, strictness: config.department.strictness, audit: config.model.audit };
   }
@@ -10600,7 +11210,7 @@ function cfgRoleManagementHTML() {
     });
     $("#chatPlus").addEventListener("click", (e) => { e.stopPropagation(); openComposerActionMenu("chat", e.currentTarget); });
     $("#replyContextClose").addEventListener("click", clearReplyContext);
-    $("#newBtn").addEventListener("click", () => { activeAgent = null; activeConnector = null; homeSkills = []; homeKnowledgeBases = []; clearAttach(); renderAgentPill(); renderHomeSkill(); renderHomeKnowledge(); renderConnectorSelection(); switchView("newchat"); newConversation(); $("#newInput").focus(); });
+    $("#newBtn").addEventListener("click", () => { activeAgent = null; activeConnector = null; activeConnectorOperationId = null; homeSkills = []; homeKnowledgeBases = []; clearAttach(); renderAgentPill(); renderHomeSkill(); renderHomeKnowledge(); renderConnectorSelection(); switchView("newchat"); newConversation(); $("#newInput").focus(); });
     $("#pickBtn").addEventListener("click", () => openPickerGuarded());
     $("#chatSkillBtn").addEventListener("click", () => openSkillPickerGuarded("#chatSkillBtn"));
     $("#chatKbBtn").addEventListener("click", () => openKbPickerGuarded("#chatKbBtn"));
@@ -10701,10 +11311,8 @@ function cfgRoleManagementHTML() {
       const connectorRow = e.target.closest("[data-composer-connector]");
       if (connectorRow) {
         const connector = connectorById(connectorRow.dataset.composerConnector); if (!connector) return;
-        clearNonConnectorContext(); activeConnector = connector.id; renderConnectorSelection(); syncExclusion(); renderSidebar();
         const target = currentComposerInput(); closeComposerActionMenu();
-        fillComposerPrompt(connectorDefaultPrompt(connector), target);
-        showToast(`已选择连接器「${connector.name}」，请修改高亮内容后发送`); return;
+        chooseConnectorOperation(connector,operation => { clearNonConnectorContext(); activeConnector = connector.id; activeConnectorOperationId = operation?.id || null; renderConnectorSelection(); syncExclusion(); renderSidebar(); fillComposerPrompt(connectorDefaultPrompt(connector),target); showToast(`已选择连接器「${connector.name}」${operation ? ` · ${operation.name}` : ""}，请修改高亮内容后发送`); }); return;
       }
       const kbSelectRow = e.target.closest("[data-composer-kb-select]");
       if (kbSelectRow) {
@@ -11042,7 +11650,7 @@ function cfgRoleManagementHTML() {
       const connectorUse = e.target.closest("[data-connector-use]");
       if (connectorUse) { requestConnectorUse(connectorUse.dataset.connectorUse); return; }
       const marketplaceAgent = e.target.closest("[data-agent-card]");
-      if (marketplaceAgent && !e.target.closest("[data-act]")) { openAgentFromMarketplace(marketplaceAgent.dataset.agentCard); return; }
+      if (marketplaceAgent && !e.target.closest("[data-act]")) { openMarketplaceAgentDetail(marketplaceAgent.dataset.agentCard); return; }
       const businessSystem = e.target.closest("[data-business-system]");
       if (businessSystem) { openBusinessSystem(businessSystem.dataset.businessSystem); return; }
      const homeAgent = e.target.closest("[data-home-agent]");
@@ -11062,7 +11670,7 @@ function cfgRoleManagementHTML() {
         if (type === "template") { activeTemplateId = null; const c = cur(); if (c) c.templateId = null; renderAgentPill(); }
         if (type === "skill") { homeSkills = homeSkills.filter(s => s.id !== clearResource.dataset.resourceId); renderHomeSkill(); syncExclusion(); }
         if (type === "kb") { homeKnowledgeBases = homeKnowledgeBases.filter(k => k.id !== clearResource.dataset.resourceId); renderHomeKnowledge(); syncExclusion(); }
-        if (type === "connector") { activeConnector = null; renderConnectorSelection(); syncExclusion(); }
+        if (type === "connector") { activeConnector = null; activeConnectorOperationId = null; renderConnectorSelection(); syncExclusion(); }
         return;
       }
       // 主页试试 chip（按下标取问题；若该问题关联智能体则先选中）
@@ -11189,6 +11797,16 @@ function cfgRoleManagementHTML() {
       }
     });
     document.addEventListener("input", (e) => {
+      if (e.target.matches("[data-review-rule-bank-search]")) {
+        reviewRuleBankSearch = e.target.value;
+        const list = e.target.closest(".lex-bank-panel")?.querySelector(".review-rule-tree-list");
+        if (list) {
+          const banks = reviewRuleVisibleBanks();
+          list.innerHTML = banks.map((bank,index) => `<div class="lex-bank-item ${bank.id === reviewRuleActiveBankId ? "active" : ""}" data-act="reviewRuleBankSelect" data-id="${bank.id}"><span class="lex-bank-badge ${["lex-cat-irregular","lex-cat-negative","lex-cat-other","lex-cat-sensitive"][index % 4]}">${esc(bank.name.slice(0,1))}</span><span class="lex-bank-name">${esc(bank.name)}<small>${bank.rules.length} 条规则 · ${bank.departments.length} 个委办局</small></span><button class="lex-bank-more" data-act="reviewRuleBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button></div>`).join("") || `<div class="cfg-empty" style="padding:24px 8px"><b>暂无规则库</b><p>换个关键词试试</p></div>`;
+          const count = e.target.closest(".lex-bank-panel")?.querySelector(".review-rule-tree-root small"); if (count) count.textContent = `${banks.length} 个`;
+        }
+        return;
+      }
       if (e.target.matches("[data-lexicon-bank-search]")) {
         lexiconBankSearch = e.target.value;
         const list = e.target.closest(".lex-bank-panel")?.querySelector(".lex-bank-list");
@@ -11312,16 +11930,47 @@ function cfgRoleManagementHTML() {
       case "adminConfigSelect": adminConfigTarget = el.dataset.agentId || "global"; renderConfig(); break;
       case "adminViewTemplate": { const agent = byId(el.dataset.agentId); if (agent) openModal(`${agent.name} · 公文格式模板`, `<div class="cfg-readonly" style="margin-bottom:12px">仅供查看：标题、正文层级、落款、日期和版式规范由平台统一维护。</div><div class="editor-paper" style="min-height:360px;padding:32px">${v3TemplateHTML(agent.id)}</div>`, null, { hideFooter:true, width:"min(900px, calc(100vw - 40px))" }); break; }
       case "openMyTemplates": configCenterPersonalMode = true; configCenterSection = "templates"; configTemplateDraft = null; switchView("config"); break;
-      case "configBack": { configTemplateDraft = null; configRuleDetailId = null; configSpeakerManagerOpen = false; configCenterPersonalMode = false; switchView("home"); break; }
-      case "cfgCenterSection": configCenterSection = el.dataset.section || cfgMenuItems()[0][0]; configTemplateDraft = null; configRuleDetailId = null; configSpeakerManagerOpen = false; configTemplateMarkdownEditing = false; configTemplateMarkdownDraft = ""; configDirectorySearch = ""; configDirectoryStatus = "all"; renderConfig(); break;
+      case "configBack": { configTemplateDraft = null; configRuleDetailId = null; configConnectorDetailId = null; configSpeakerManagerOpen = false; configCenterPersonalMode = false; switchView("home"); break; }
+      case "cfgCenterSection": reviewRuleCloseBankMenu(); configCenterSection = el.dataset.section || cfgMenuItems()[0][0]; configTemplateDraft = null; configRuleDetailId = null; configConnectorDetailId = null; configSpeakerManagerOpen = false; configTemplateMarkdownEditing = false; configTemplateMarkdownDraft = ""; configDirectorySearch = ""; configDirectoryStatus = "all"; renderConfig(); break;
       case "cfgCenterRefresh": renderConfig(); showToast("配置数据已刷新"); break;
       case "cfgServiceFilter": { const kind = el.dataset.kind, filters = configServiceFilters[kind]; if (!filters) break; $$('[data-cfg-service-filter]',el.closest(".cfg-filter-bar")).forEach(input => { filters[input.dataset.cfgServiceFilter] = input.value.trim(); }); renderConfig(); break; }
-      case "cfgServiceReset": { const kind = el.dataset.kind; if (!configServiceFilters[kind]) break; configServiceFilters[kind] = kind === "agent" ? {name:"",type:"all",mode:"all",department:"all",status:"all"} : {name:"",department:"all",status:"all"}; renderConfig(); break; }
+      case "cfgServiceReset": { const kind = el.dataset.kind; if (!configServiceFilters[kind]) break; configServiceFilters[kind] = kind === "agent" ? {name:"",type:"all",mode:"all",department:"all",status:"all"} : {name:"",source:"all",category:"all",department:"all",status:"all"}; renderConfig(); break; }
+      case "marketAgentUse": openAgentFromMarketplace(el.dataset.agentId); break;
       case "marketTemplateSelect": openMarketplaceTemplatePicker(el.dataset.agentId,false); break;
       case "marketTemplateManage": openAgentTemplateManager(el.dataset.agentId, el.dataset.createNew === "true"); break;
-      case "cfgServiceToggle": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (item) { item.enabled = !item.enabled; if (el.dataset.kind === "agent") { if (item.enabled) config.agentsOff.delete(item.id); else config.agentsOff.add(item.id); } renderConfig(); showToast(`${item.name}已${item.enabled ? "开启" : "关闭"}；运行中任务继续使用启动快照`); } break; }
-      case "cfgServiceView": { const isAgent = el.dataset.kind === "agent", rows = isAgent ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break; const agent = isAgent ? byId(item.id) : null, connector = !isAgent ? connectorById(item.id) : null, fields = isAgent ? [["智能体图标",agentIcon(agent,20)],["智能体名称",item.name],["智能体描述",item.desc],["智能体类型",agent?.cat || item.businessType],["使用方式",item.entryMode === "chat" ? "对话型" : "独立工作台"],["作用业务部门",item.departments.join("、")],["运行状态",item.enabled ? "展示" : "隐藏"]] : [["业务连接器图标",svgi(connector?.icon || "i-plug",20)],["业务连接器名称",item.name],["描述",item.desc],["作用业务部门",item.departments.join("、")],["运行状态",item.enabled ? "运行" : "停用"]]; openModal(`${item.name} · 查看详情`,`<div class="cfg-readonly">基础信息由智能体中台同步，本平台仅维护作用业务部门与运行状态。</div><table class="cfg-data-table" style="margin-top:12px"><tbody>${fields.map(([label,value]) => `<tr><th style="width:150px">${label}</th><td>${value}</td></tr>`).join("")}</tbody></table>`,null,{hideFooter:true,width:"720px"}); break; }
-      case "cfgServiceScope": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break; const checks = CFG_DEPARTMENTS.map(name => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${item.departments.includes(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join(""); openModal(`配置作用业务部门 · ${item.name}`, `<div class="cfg-readonly">作用范围与规则、模板范围共同取交集；未授权部门不能调用该服务。</div><div id="cfgDeptChecks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">${checks}</div>`, () => { const selected = $$("#cfgDeptChecks input:checked").map(input => input.value); if (!selected.length) { showToast("至少选择一个作用业务部门"); return; } item.departments = selected; closeModal(); renderConfig(); showToast("作用业务部门已更新"); }, { okText:"保存范围" }); break; }
+      case "cfgConnectorOpenDetail": configConnectorDetailId = el.dataset.id; renderConfig(); break;
+      case "cfgConnectorDetailBack": configConnectorDetailId = null; renderConfig(); break;
+      case "cfgConnectorEdit": cfgOpenConnectorEditor(el.dataset.id); break;
+      case "cfgConnectorOperationAdd": cfgOpenConnectorOperationEditor(el.dataset.connectorId,null); break;
+      case "cfgConnectorOperationEdit": cfgOpenConnectorOperationEditor(el.dataset.connectorId,el.dataset.id); break;
+      case "cfgConnectorOperationToggle": { const connector = cfgConnectorService(el.dataset.connectorId), operation = connector?.operations?.find(item => item.id === el.dataset.id); if (!connector || !operation) break; operation.enabled = !operation.enabled; connector.updatedAt = cfgNowDate(); syncConnectorMarketplace(connector); cfgRecordAudit(operation.enabled ? "启用连接器操作" : "禁用连接器操作","业务连接器",connector.name,operation.name); renderConfig(); renderConnectors(); showToast(`${operation.name}已${operation.enabled ? "启用" : "禁用"}`); break; }
+      case "cfgConnectorOperationDelete": { const connector = cfgConnectorService(el.dataset.connectorId), operation = connector?.operations?.find(item => item.id === el.dataset.id); if (!connector || !operation) break; if (connector.operations.length <= 1) { showToast("连接器至少保留一个业务操作"); break; } openModal("删除业务操作",`确认删除“${esc(operation.name)}”？删除后业务连接器广场将不再提供该操作。`,() => { connector.operations = connector.operations.filter(item => item.id !== operation.id); connector.updatedAt = cfgNowDate(); syncConnectorMarketplace(connector); cfgRecordAudit("删除连接器操作","业务连接器",connector.name,operation.name); closeModal(); renderConfig(); renderConnectors(); showToast("业务操作已删除"); },{okText:"确认删除"}); break; }
+      case "cfgConnectorTest": { const connector = cfgConnectorService(el.dataset.id); if (!connector) break; connector.health = "检测中"; renderConfig(); setTimeout(() => { const valid = connector.source === "智能体中台" || /^https?:\/\//i.test(connector.endpoint || ""); connector.health = valid ? "正常" : "连接失败"; connector.updatedAt = cfgNowDate(); cfgRecordAudit("测试连接","业务连接器",connector.name,valid ? "连接测试成功" : "连接测试失败"); renderConfig(); showToast(valid ? `${connector.name}连接测试成功` : `${connector.name}连接测试失败，请检查基础地址和认证配置`); },700); break; }
+      case "cfgServiceToggle": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (item) { item.enabled = !item.enabled; if (el.dataset.kind === "agent") { if (item.enabled) config.agentsOff.delete(item.id); else config.agentsOff.add(item.id); renderAgentsView(); } else { item.updatedAt = cfgNowDate(); syncConnectorMarketplace(item); renderConnectors(); cfgRecordAudit(item.enabled ? "启用连接器" : "禁用连接器","业务连接器",item.name,"同步更新业务连接器广场可用状态"); } renderConfig(); showToast(`${item.name}已${item.enabled ? "开启" : "关闭"}；${el.dataset.kind === "agent" ? "智能体广场已同步" : "业务连接器广场已同步"}`); } break; }
+      case "cfgServiceView": {
+        const isAgent = el.dataset.kind === "agent", rows = isAgent ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break;
+        const connector = !isAgent ? connectorById(item.id) : null;
+        const fields = isAgent ? [
+          ["智能体图标",cfgAgentServiceIconHTML(item,32)],
+          ["智能体名称",esc(item.name)],
+          ["智能体描述",esc(item.desc)],
+          ["智能体 URL",`<span style="word-break:break-all">${esc(item.url || item.endpoint || "—")}</span>`],
+          ["智能体 ID",esc(item.id)],
+          ["智能体输入参数",`<pre style="margin:0;max-height:180px;overflow:auto;white-space:pre-wrap;font-family:Consolas,Monaco,monospace;font-size:12px">${esc(item.inputParams || "{}")}</pre>`],
+          ["智能体类型",esc(agentTypeLabel(byId(item.id) || item))],
+          ["使用方式",item.entryMode === "chat" ? "对话型" : "独立工作台"],
+          ["作用业务部门",esc(item.departments.join("、"))],
+          ["启用状态",item.enabled ? "启用" : "禁用"]
+        ] : [
+          ["业务连接器图标",svgi(connector?.icon || "i-plug",20)],
+          ["业务连接器名称",esc(item.name)],
+          ["描述",esc(item.desc)],
+          ["作用业务部门",esc(item.departments.join("、"))],
+          ["运行状态",item.enabled ? "运行" : "停用"]
+        ];
+        openModal(`${item.name} · 查看详情`,`<div class="cfg-readonly">${isAgent ? "查看智能体基础信息、调用参数、作用业务部门及启用状态。" : "基础信息由智能体中台同步，本平台仅维护作用业务部门与运行状态。"}</div><table class="cfg-data-table" style="margin-top:12px"><tbody>${fields.map(([label,value]) => `<tr><th style="width:150px">${label}</th><td>${value}</td></tr>`).join("")}</tbody></table>`,null,{hideFooter:true,width:"760px"}); break;
+      }
+      case "cfgServiceScope": { const rows = el.dataset.kind === "agent" ? CFG_AGENT_SERVICES : CFG_CONNECTOR_SERVICES, item = rows.find(row => row.id === el.dataset.id); if (!item) break; const checks = CFG_DEPARTMENTS.map(name => `<label class="check-row"><input type="checkbox" value="${esc(name)}" ${item.departments.includes(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join(""); openModal(`配置作用业务部门 · ${item.name}`, `<div class="cfg-readonly">未授权部门不能在广场看到或调用该服务；范围调整不影响已经启动的任务。</div><div id="cfgDeptChecks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">${checks}</div>`, () => { const selected = $$("#cfgDeptChecks input:checked").map(input => input.value); if (!selected.length) { showToast("至少选择一个作用业务部门"); return; } item.departments = selected; item.updatedAt = cfgNowDate(); const agent = el.dataset.kind === "agent" ? byId(item.id) : null; if (agent) agent.departments = selected.slice(); if (el.dataset.kind === "connector") { syncConnectorMarketplace(item); renderConnectors(); cfgRecordAudit("配置连接器部门","业务连接器",item.name,selected.join("、")); } closeModal(); renderConfig(); if (el.dataset.kind === "agent") renderAgentsView(); showToast(el.dataset.kind === "agent" ? "作用业务部门已更新，智能体广场已同步" : "作用业务部门已更新，业务连接器广场已同步"); }, { okText:"保存范围" }); break; }
       case "cfgServiceAdd": cfgOpenServiceAdd(el.dataset.kind === "agent" ? "agent" : "connector"); break;
       case "cfgRuleAdd": cfgOpenRuleAdd(); break;
       case "cfgRuleOpenDetail": configRuleDetailId = el.dataset.id; renderConfig(); break;
@@ -11402,6 +12051,29 @@ function cfgRoleManagementHTML() {
       }
       case "lexiconHitFilter": { const next = {}; $$('[data-lexicon-hit-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.lexiconHitFilter] = input.value.trim(); }); lexiconHitFilters = {...lexiconHitFilters,...next}; renderConfig(); break; }
       case "lexiconHitReset": lexiconHitFilters = { keyword:"", category:"all", scope:"all", startDate:"", endDate:"" }; renderConfig(); break;
+      case "reviewRuleBankSelect": reviewRuleActiveBankId = el.dataset.id; reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",role:"all",status:"all"}; reviewRuleCloseBankMenu(); renderConfig(); break;
+      case "reviewRuleBankAdd": reviewRuleOpenBankEditor(null); break;
+      case "reviewRuleBankMenuToggle": {
+        const bank = reviewRuleBankById(el.dataset.id); if (!bank) break;
+        const existing = $("#reviewRuleBankPopover");
+        if (existing && existing.dataset.bankId === bank.id) { existing.remove(); break; }
+        reviewRuleCloseBankMenu();
+        const canManage = reviewRuleCanManageBank(bank), pop = document.createElement("div");
+        pop.className = "lex-bank-popover"; pop.id = "reviewRuleBankPopover"; pop.dataset.bankId = bank.id;
+        pop.innerHTML = `<button data-review-bank-pop="detail">${svgi("i-clipboard",13)}查看详情</button>${canManage ? `<button data-review-bank-pop="scope">${svgi("i-globe",13)}作用范围</button><button data-review-bank-pop="edit">${svgi("i-edit",13)}编辑</button><button class="danger" data-review-bank-pop="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
+        document.body.appendChild(pop); const rect = el.getBoundingClientRect(); pop.style.left = Math.min(rect.right - 150,window.innerWidth - 170) + "px"; pop.style.top = rect.bottom + 4 + "px";
+        pop.addEventListener("click",event => { const btn = event.target.closest("[data-review-bank-pop]"); if (!btn) return; const action = btn.dataset.reviewBankPop; pop.remove(); if (action === "detail") reviewRuleOpenBankDetail(bank.id); else if (action === "scope") reviewRuleOpenBankScope(bank.id); else if (action === "edit") reviewRuleOpenBankEditor(bank.id); else if (action === "delete") reviewRuleDeleteBank(bank.id); });
+        setTimeout(() => document.addEventListener("click",function closer(event){ if (!pop.contains(event.target)) { pop.remove(); document.removeEventListener("click",closer); } }),0);
+        break;
+      }
+      case "reviewRuleAdd": reviewRuleOpenRuleEditor(el.dataset.bank,null,false); break;
+      case "reviewRuleView": reviewRuleOpenRuleEditor(el.dataset.bank,el.dataset.id,true); break;
+      case "reviewRuleEdit": reviewRuleOpenRuleEditor(el.dataset.bank,el.dataset.id,false); break;
+      case "reviewRuleScope": reviewRuleOpenRuleScope(el.dataset.bank,el.dataset.id); break;
+      case "reviewRuleFilter": { const next = {}; $$('[data-review-rule-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.reviewRuleFilter] = input.value.trim(); }); reviewRuleFilters = {...reviewRuleFilters,...next}; renderConfig(); break; }
+      case "reviewRuleReset": reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",role:"all",status:"all"}; renderConfig(); break;
+      case "reviewRuleToggle": { const bank = reviewRuleBankById(el.dataset.bank), rule = reviewRuleFind(el.dataset.bank,el.dataset.id); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则状态"); break; } rule.enabled = !rule.enabled; rule.updatedAt = formatDateTime(Date.now()); cfgRecordAudit(rule.enabled ? "启用核查规则" : "禁用核查规则","核查规则",rule.name,`${rule.enabled ? "启用" : "禁用"}规则库“${bank.name}”中的规则“${rule.name}”`); renderConfig(); showToast(`规则“${rule.name}”已${rule.enabled ? "启用" : "禁用"}`); break; }
+      case "reviewRuleDelete": reviewRuleDeleteRule(el.dataset.bank,el.dataset.id); break;
       case "cfgRoleMenuScope": cfgOpenRoleMenuScope(el.dataset.id); break;
       case "cfgDirectoryExport": showToast("操作日志已导出"); break;
       case "cfgRoleFilter": { const next = {}; $$('[data-cfg-role-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.cfgRoleFilter] = input.value.trim(); }); configRoleFilters = {...configRoleFilters,...next}; renderConfig(); break; }
@@ -11412,7 +12084,7 @@ function cfgRoleManagementHTML() {
       case "cfgTemplateScopeFilter": { const id = el.dataset.id; if (id === "all") configTemplateScopeFilters.clear(); else { if (configTemplateScopeFilters.has(id)) configTemplateScopeFilters.delete(id); else configTemplateScopeFilters.add(id); } renderConfig(); break; }
       case "cfgTemplateFilterReset": configTemplateSearch = ""; configTemplateOwnerFilter = ""; configTemplateAgentFilter = "all"; configTemplateScopeFilters.clear(); renderConfig(); break;
       case "cfgTemplateAdd": cfgOpenTemplateEditor(null,"edit",false); break;
-      case "cfgTemplateUseCurrent": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (!template || !cfgTemplateCanSee(template)) break; saveDefaultTemplate(template.agentId,template.id); renderConfig(); showToast(`已将“${template.name}”设为当前使用模板`); break; }
+      case "cfgTemplateUseCurrent": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (!template || !cfgTemplateCanSee(template)) break; saveDefaultTemplate(template.agentId,template.id); renderConfig(); showToast(`已将“${template.name}”设为默认模板模板`); break; }
       case "cfgTemplateView": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (template) cfgOpenTemplateEditor(template,"view",false); break; }
       case "cfgTemplateEdit": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id); if (template && cfgTemplateCanEdit(template)) cfgOpenTemplateEditor(template,"edit",false); break; }
       case "cfgTemplateCopy": { const template = CFG_TEMPLATES.find(item => item.id === el.dataset.id) || (configTemplateDraft?.id === el.dataset.id ? configTemplateDraft : null); if (template) cfgOpenTemplateEditor(template,"edit",true); break; }
