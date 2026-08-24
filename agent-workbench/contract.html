@@ -16,18 +16,21 @@
       --line-soft: #eef1f7;
       --text: #1b2436;
       --muted: #75809a;
-      --primary: #2455e6;
-      --primary-dark: #1740b8;
-      --primary-soft: #eef4ff;
-      --cyan: #0b8fa8;
-      --green: #10876a;
+      --primary: #0E4C92;
+      --primary-dark: #0A3573;
+      --primary-soft: #e8f1fa;
+      --cyan: #13A8A8;
+      --green: #43A047;
       --green-soft: #e8f7f1;
-      --red: #e0342a;
+      --red: #D9534F;
       --red-soft: #fdecea;
-      --orange: #d07a00;
+      --orange: #F0AD4E;
       --orange-soft: #fff4e0;
       --purple: #6a52d6;
       --purple-soft: #efecfd;
+      --ai-navy: #0A3573; --ai-blue: #0E4C92; --ai-cyan: #13A8A8; --ai-green: #43A047;
+      --ai-glow: 0 0 16px rgba(19,168,168,0.35);
+      --cyan-soft: #e2f4f4;
       --shadow: 0 16px 42px rgba(21, 32, 58, 0.09);
       --shadow-sm: 0 8px 20px rgba(21, 32, 58, 0.06);
     }
@@ -44,22 +47,65 @@
     button { border: 0; background: none; color: inherit; cursor: pointer; }
     a { color: inherit; text-decoration: none; }
 
-    .app { display: grid; grid-template-columns: 214px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
+    .app { display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
     .topbar { grid-column: 1 / -1; grid-row: 1; }
 
-    /* ============ 左侧全局菜单 ============ */
-    .leftnav { grid-column: 1; grid-row: 2; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px; background: rgba(255, 255, 255, 0.82); border-right: 1px solid var(--line); backdrop-filter: blur(8px); }
-    .leftnav .nav-cap { margin: 4px 8px 6px; color: #97a2b8; font-size: 11px; font-weight: 800; letter-spacing: .6px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 13px; border-radius: 11px; color: #46536e; font-weight: 600; transition: .16s; text-align: left; white-space: nowrap; }
-    .nav-item .ic { width: 20px; text-align: center; font-size: 16px; }
-    .nav-item:hover { color: var(--primary); background: #fff; }
-    .nav-item.active { color: #fff; background: var(--primary); box-shadow: 0 8px 16px rgba(36, 85, 230, 0.22); }
+    /* ============ Sidebar 草稿列表（移植自 notice/communique） ============ */
+    .sidebar { grid-column: 1; grid-row: 2; min-height: 0; display: flex; flex-direction: column; background: #fafbfc; border-right: 1px solid var(--line); }
+    .sidebar-header { padding: 18px 16px 14px; background: linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8); box-shadow: 0 4px 20px rgba(10,53,115,.18); }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.1)); border: 1px solid rgba(255,255,255,.3); box-shadow: var(--ai-glow); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+    .logo-text { font-size: 15px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .btn-new { width: 100%; padding: 9px 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .2s; white-space: nowrap; }
+    .btn-new:hover { background: var(--primary-dark); }
+    .filter-box { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); display: flex; flex-direction: column; gap: 8px; }
+    .search-wrap { position: relative; }
+    .search-input { width: 100%; padding: 7px 12px 7px 30px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; color: #1b2436; background: #fff; transition: border-color .2s; }
+    .search-input:focus { outline: none; border-color: var(--primary); }
+    .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; pointer-events: none; }
+    .search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--muted); cursor: pointer; font-size: 14px; }
+    .search-clear:hover { color: var(--red); }
+    .time-filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .time-chip { padding: 3px 9px; font-size: 12px; color: #46536e; background: #fff; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .time-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .time-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .custom-range { display: none; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .custom-range.show { display: flex; }
+    .custom-range-label { font-size: 11px; color: var(--muted); }
+    .custom-range-inputs { display: flex; align-items: center; gap: 4px; }
+    .custom-range-inputs input { flex: 1; min-width: 0; padding: 5px 6px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; color: #1b2436; }
+    .custom-range-inputs input:focus { outline: none; border-color: var(--primary); }
+    .custom-range-sep { color: var(--muted); font-size: 12px; }
+    .sidebar-section-title { padding: 12px 16px 6px; font-size: 12px; color: var(--muted); font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+    .record-count { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .history-list { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 8px 16px; }
+    .history-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 4px; transition: .25s ease; position: relative; }
+    .history-item:hover { background: #eef2f7; transform: translateX(2px); }
+    .history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: 0 8px 20px rgba(14,76,146,.25), var(--ai-glow); }
+    .history-item.active .history-title { color: #fff; }
+    .history-item.active .history-tag, .history-item.active .history-step, .history-item.active .history-time { color: rgba(255,255,255,.85); }
+    .history-title { font-size: 13px; color: #1b2436; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+    .history-meta { font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .history-tag { display: inline-block; padding: 1px 6px; background: #f0f2f5; border-radius: 3px; font-size: 11px; color: #46536e; }
+    .history-status { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 700; }
+    .history-status.s-draft { background: #fff7e6; color: #d48806; }
+    .history-status.s-submitted { background: #e6f4ff; color: #0958d9; }
+    .history-status.s-review { background: #fff2e8; color: #d46b08; }
+    .history-status.s-exported { background: #f6ffed; color: #2e7d32; }
+    .history-step { display: inline-block; padding: 1px 5px; background: #f0f2f5; border-radius: 3px; font-size: 10px; color: #909399; }
+    .history-time { font-size: 11px; color: var(--muted); margin-left: auto; }
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-info .user-name { font-size: 13px; font-weight: 700; color: #1b2436; }
+    .user-info .user-dept { font-size: 11px; color: var(--muted); }
 
     /* ============ 顶栏 ============ */
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px 0 20px; background: rgba(255, 255, 255, 0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); z-index: 5; }
-    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #16336f; white-space: nowrap; }
-    .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; color: #fff; font-size: 12px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--cyan)); box-shadow: 0 8px 18px rgba(36, 85, 230, 0.28); }
-    .brand small { display: block; font-size: 11px; font-weight: 600; color: #7d8aa6; margin-top: 1px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px 0 20px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; box-shadow: 0 4px 20px rgba(10,53,115,.18); z-index: 5; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #fff; white-space: nowrap; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #fff; flex: none; background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow), 0 8px 18px rgba(14,76,146,.28); }
+    .brand-mark .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    .brand small { display: block; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.7); margin-top: 1px; }
     .top-actions { display: flex; align-items: center; gap: 8px; }
     .safe-mode { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 11px; border-radius: 9px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; }
 
@@ -253,8 +299,12 @@
     .donut .c b { font-size: 24px; color: #1b2947; } .donut .c span { font-size: 12px; color: var(--muted); }
 
     /* 弹窗 */
-    .modal-mask { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(16, 24, 45, 0.4); backdrop-filter: blur(4px); }
-    .modal-mask.show { display: flex; }
+    .modal-mask { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(16, 24, 45, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: opacity .3s ease; opacity: 0; }
+    .modal-mask.show { display: flex; opacity: 1; }
+    .modal-mask .modal { animation: modalIn .4s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes modalIn { from { transform: translateY(-40px) scale(.88); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes modalOut { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-30px) scale(.9); opacity: 0; } }
+    .modal-mask .modal.closing { animation: modalOut .22s ease-in forwards; pointer-events: none; }
     .modal { width: min(600px, calc(100vw - 40px)); max-height: calc(100vh - 60px); display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28); }
     .modal.wide { width: min(880px, calc(100vw - 40px)); }
     .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 18px; border-bottom: 1px solid var(--line); font-weight: 800; font-size: 15px; }
@@ -327,21 +377,36 @@
     .elm-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .elm-chip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 700; }
 
-    .toast { position: fixed; right: 24px; top: 70px; z-index: 60; display: none; max-width: 380px; padding: 12px 15px; border-radius: 11px; color: #fff; background: rgba(23, 32, 51, 0.95); box-shadow: 0 16px 36px rgba(23, 32, 51, 0.22); font-size: 14px; }
-    .toast.show { display: block; animation: slideIn .2s ease; }
+    .toast { position: fixed; top: 24px; left: 50%; z-index: 2000; max-width: 380px; padding: 10px 20px; border-radius: 10px; color: #fff; background: rgba(23, 32, 51, 0.95); box-shadow: 0 6px 20px rgba(0,0,0,.18); backdrop-filter: blur(12px); font-size: 13px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-50%) translateY(-16px); transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1), visibility .3s ease; }
+    .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    /* —— AI 智能体视觉与动效规范（江北新区）—— */
+    @keyframes blink { 50% { opacity: 0; } }
+    .typing-cursor::after { content: '▍'; margin-left: 2px; color: var(--ai-cyan); animation: blink 1s steps(1) infinite; }
+    @keyframes dot-bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+    .thinking-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ai-cyan); display: inline-block; animation: dot-bounce 1.2s infinite ease-in-out; }
+    .thinking-dot:nth-child(2) { animation-delay: .15s; }
+    .thinking-dot:nth-child(3) { animation-delay: .3s; }
+    .agent-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .agent-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,76,146,.15); border-color: var(--ai-cyan); }
+    .agent-avatar { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow); }
+    .agent-avatar .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .bubble { animation: fadeUp .3s ease; }
+    .ai-gradient-text { background: linear-gradient(90deg, #0E4C92, #13A8A8, #43A047); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
     .hidden-input { display: none; }
     ::-webkit-scrollbar { width: 9px; height: 9px; }
     ::-webkit-scrollbar-thumb { background: #cfd8e8; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #b7c2d8; }
   </style>
-<meta name="prototype-version" content=""></head>
+</head>
 <body>
   <div class="app">
     <!-- ===================== 顶栏 ===================== -->
     <header class="topbar">
       <div class="brand">
-        <span class="brand-mark">政AI</span>
+        <span class="brand-mark agent-avatar"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></span>
         <span>合同智能生成及预审<small>江北新区政务AI智能体 · 智能拟制系统</small></span>
       </div>
       <div class="top-actions">
@@ -352,14 +417,31 @@
     </header>
 
     <!-- ===================== 左侧菜单（全局） ===================== -->
-    <aside class="leftnav">
-      <div class="nav-cap">功能菜单</div>
-      <button class="nav-item active" data-view="editor"><span class="ic">📝</span>合同智能生成</button>
-      <button class="nav-item" data-view="templates"><span class="ic">📁</span>合同模板库</button>
-      <button class="nav-item" data-view="clauses"><span class="ic">📑</span>合同条款库</button>
-      <button class="nav-item" data-view="rules"><span class="ic">🛡</span>预审规则库</button>
-      <button class="nav-item" data-view="history"><span class="ic">🕑</span>历史与版本</button>
-      <button class="nav-item" data-view="stats"><span class="ic">📊</span>统计报表</button>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo"><div class="logo-icon">合</div><span class="logo-text">合同智能生成</span></div>
+        <button class="btn-new" data-action="newTask"><span>+</span><span class="btn-text">新建合同</span></button>
+      </div>
+      <div class="filter-box">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索草稿..." /><span class="search-clear" id="searchClear" style="display:none;">✕</span></div>
+        <div class="time-filter-row" id="timeFilterRow">
+          <span class="time-chip active" data-range="all">全部</span>
+          <span class="time-chip" data-range="7d">近7天</span>
+          <span class="time-chip" data-range="30d">近30天</span>
+          <span class="time-chip" data-range="custom">自定义</span>
+        </div>
+        <div class="custom-range" id="customRange">
+          <span class="custom-range-label">选择起止日期</span>
+          <div class="custom-range-inputs">
+            <input type="date" id="dateStart" />
+            <span class="custom-range-sep">~</span>
+            <input type="date" id="dateEnd" />
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-section-title"><span>合同历史记录</span><span class="record-count" id="recordCount">0 条</span></div>
+      <div class="history-list" id="historyList"></div>
+      <div class="sidebar-footer"><div class="user-avatar">政</div><div class="user-info"><div class="user-name">政务用户</div><div class="user-dept">南京江北新区管委会</div></div></div>
     </aside>
 
     <!-- ===================== 视图：合同智能生成 ===================== -->
@@ -367,9 +449,8 @@
       <main class="tool-main">
         <section class="toolbar">
           <div class="toolbar-left">
-            <button class="primary-btn" data-action="newTask">＋ 新建合同拟制</button>
-            <button class="btn" data-action="save">💾 保存草稿</button>
-            <button class="btn" data-action="versions">🕒 版本记录（当前合同）</button>
+            <button class="btn" data-action="save">💾 保存版本</button>
+            <button class="btn" data-action="versions">🕒 合同版本记录</button>
           </div>
           <div class="toolbar-right">
             <span class="hint" id="taskMeta" style="color:#8b95a7;font-size:13px;">未创建拟制任务</span>
@@ -430,12 +511,9 @@
           <div class="pf-head">
             <div class="pf-head-top">
               <div class="pf-count">共检出 <b id="pfTotal">0</b> 项问题</div>
-              <div class="pf-score"><b id="pfScore">—</b><span>合规评分</span></div>
+              <div class="pf-score"><b id="pfScore">—</b><span>已处理</span></div>
             </div>
             <div class="pf-links">
-              <a data-view-jump="rules">🛡 预审规则库</a>
-              <a data-view-jump="clauses">📑 条款库</a>
-              <a data-view-jump="templates">📁 模板库</a>
             </div>
             <div class="pf-cats" id="pfCats">
               <label class="pf-cat on" data-bucket="完整"><span class="cbx">✓</span>条款完整性<span class="cnt" id="cnt-完整">0</span></label>
@@ -458,101 +536,6 @@
           <div class="pf-list" id="pfList"></div>
         </div>
       </aside>
-    </div>
-
-    <!-- ===================== 视图：合同模板库 ===================== -->
-    <div class="view" id="view-templates">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">合同模板库全生命周期管理</div>
-            <div class="page-sub">按业务场景 / 协议类型分类入库，支持版本管控、生效作废、历史回溯、变更留痕与权限分级，保障模板合规可用、可迭代更新</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="exportLib" data-lib="tpl">⬇ 导出清单</button>
-            <button class="primary-btn" data-action="addLib" data-lib="tpl">＋ 上传模板</button>
-          </div>
-        </div>
-        <div class="rule-layout">
-          <nav class="rule-nav" id="tplNav"></nav>
-          <div class="card">
-            <div class="card-head">
-              <div class="card-title" id="tplCatTitle">政企合作</div>
-              <div class="toolbar-inline">
-                <div class="search" style="position:relative;"><input class="select" id="tplSearch" type="text" placeholder="🔍 搜索模板名称" style="width:210px;"></div>
-                <button class="danger-btn sm" data-action="batchDelLib" data-lib="tpl">批量下架</button>
-              </div>
-            </div>
-            <div class="card-body" style="padding-top:12px;">
-              <div class="note-strip" id="tplNote"></div>
-              <div class="tbl-wrap"><table class="tbl" id="tplTable"></table></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：合同条款库 ===================== -->
-    <div class="view" id="view-clauses">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">合同条款库管理</div>
-            <div class="page-sub">维护政务合同标准化条款库，涵盖合规条款、权责条款、约束条款、保密条款等，支持条款变更、版本管控与必备性标记，供智能补全调用</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="exportLib" data-lib="clause">⬇ 导出条款</button>
-            <button class="primary-btn" data-action="addLib" data-lib="clause">＋ 新增条款</button>
-          </div>
-        </div>
-        <div class="rule-layout">
-          <nav class="rule-nav" id="clauseNav"></nav>
-          <div class="card">
-            <div class="card-head">
-              <div class="card-title" id="clauseCatTitle">合规条款</div>
-              <div class="toolbar-inline">
-                <div class="search"><input class="select" id="clauseSearch" type="text" placeholder="🔍 搜索条款名称" style="width:210px;"></div>
-                <button class="danger-btn sm" data-action="batchDelLib" data-lib="clause">批量删除</button>
-              </div>
-            </div>
-            <div class="card-body" style="padding-top:12px;">
-              <div class="note-strip" id="clauseNote"></div>
-              <div class="tbl-wrap"><table class="tbl" id="clauseTable"></table></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 视图：预审规则库 ===================== -->
-    <div class="view" id="view-rules">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">预审规则库</div>
-            <div class="page-sub">维护多维预审所依据的判定规则：条款完整性、逻辑一致性、权责对等性、法律合规性与敏感风控，支撑逐句校验与风险提示</div>
-          </div>
-          <div class="toolbar-inline">
-            <button class="primary-btn" data-action="addLib" data-lib="rule">＋ 添加规则</button>
-          </div>
-        </div>
-        <div class="rule-layout">
-          <nav class="rule-nav" id="ruleNav"></nav>
-          <div class="card">
-            <div class="card-head">
-              <div class="card-title" id="ruleCatTitle">条款完整性</div>
-              <div class="toolbar-inline">
-                <div class="search"><input class="select" id="ruleSearch" type="text" placeholder="🔍 搜索规则名称" style="width:210px;"></div>
-                <button class="danger-btn sm" data-action="batchDelLib" data-lib="rule">批量停用</button>
-              </div>
-            </div>
-            <div class="card-body" style="padding-top:12px;">
-              <div class="note-strip" id="ruleNote"></div>
-              <div class="tbl-wrap"><table class="tbl" id="ruleTable"></table></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- ===================== 视图：历史与版本 ===================== -->
@@ -682,9 +665,16 @@
       modalOk.textContent = opts.okText || "确认";
       modalBox.classList.toggle("wide", !!opts.wide);
       modalOk.onclick = onOk || closeModal;
+      modalBox.classList.remove("closing");
       modalMask.classList.add("show");
     }
-    function closeModal() { modalMask.classList.remove("show"); }
+    function closeModal() {
+      const modal = modalBox;
+      if (!modal) { modalMask.classList.remove("show"); return; }
+      modal.classList.add("closing");
+      const handler = (e) => { if (e.animationName !== "modalOut") return; modal.removeEventListener("animationend", handler); modal.classList.remove("closing"); modalMask.classList.remove("show"); };
+      modal.addEventListener("animationend", handler);
+    }
     function setStatus(t) { $("#statusText").textContent = t; }
 
     /* =========================================================================
@@ -843,11 +833,9 @@
       Object.keys(buckets).forEach(b => { const el = $("#cnt-" + b); if (el) el.textContent = buckets[b]; });
       const total = allIssues().filter(it => !it.resolved).length;
       $("#pfTotal").textContent = total;
-      // 合规评分：基线随未处理问题按风险加权扣减，处理越多分值越高
-      const w = { high: 6, mid: 3, low: 1 };
-      let deduct = 0;
-      allIssues().forEach(it => { if (!it.resolved) deduct += w[it.level] || 2; });
-      $("#pfScore").textContent = Math.max(40, 100 - deduct);
+      // 已处理进度（已采纳/忽略 / 总数）
+      const _all = allIssues();
+      $("#pfScore").textContent = _all.filter(it => it.resolved).length + "/" + _all.length;
     }
     function issueCard(it) {
       const model = it.llm ? '<span class="pf-model">大模型</span>' : "";
@@ -969,13 +957,98 @@
     function switchView(v) {
       state.view = v;
       $$(".view").forEach(el => el.classList.toggle("active", el.id === "view-" + v));
-      $$(".nav-item").forEach(t => t.classList.toggle("active", t.dataset.view === v));
       if (v === "stats") renderStats();
-      if (v === "history") renderHistory();
       if (v === "templates") renderLib("tpl");
       if (v === "clauses") renderLib("clause");
       if (v === "rules") renderLib("rule");
     }
+    /* ================= sidebar 草稿列表（移植自 communique） ================= */
+    const DRAFTS = [
+      {id:'d1', title:'数字政务能力平台建设战略合作框架协议', type:'战略合作', typeAbbr:'战', timeDisplay:'今天 10:20', dateIso:'2026-07-18', status:'draft', flow:3, snap:{taskName:'数字政务能力平台建设战略合作框架协议', scene:'战略合作', partyB:'江苏智数科技有限公司', docLoaded:true, prechecked:false}},
+      {id:'d2', title:'政务服务云平台采购合同', type:'采购合同', typeAbbr:'采', timeDisplay:'07-16 15:40', dateIso:'2026-07-16', status:'exported', flow:6, snap:{taskName:'政务服务云平台采购合同', scene:'采购', partyB:'华为技术有限公司', docLoaded:true, prechecked:true}},
+      {id:'d3', title:'政务数据治理服务外包合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-14 14:20', dateIso:'2026-07-14', status:'review', flow:4, snap:{taskName:'政务数据治理服务外包合同', scene:'服务外包', partyB:'中软国际有限公司', docLoaded:true, prechecked:true}},
+      {id:'d4', title:'政务APP技术开发合同', type:'技术开发', typeAbbr:'技', timeDisplay:'07-12 09:30', dateIso:'2026-07-12', status:'submitted', flow:5, snap:{taskName:'政务APP技术开发合同', scene:'技术开发', partyB:'东软集团股份有限公司', docLoaded:true, prechecked:true}},
+      {id:'d5', title:'政务大厅场地租赁合同', type:'租赁合同', typeAbbr:'租', timeDisplay:'07-10 11:18', dateIso:'2026-07-10', status:'draft', flow:2, snap:{taskName:'政务大厅场地租赁合同', scene:'租赁', partyB:'南京江北新区城建集团', docLoaded:false, prechecked:false}},
+      {id:'d6', title:'政务服务咨询合同', type:'咨询服务', typeAbbr:'咨', timeDisplay:'07-08 16:33', dateIso:'2026-07-08', status:'draft', flow:1, snap:{taskName:'政务服务咨询合同', scene:'咨询', partyB:'', docLoaded:false, prechecked:false}},
+      {id:'d7', title:'政务云资源服务合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-05 10:05', dateIso:'2026-07-05', status:'exported', flow:6, snap:{taskName:'政务云资源服务合同', scene:'服务外包', partyB:'阿里云计算有限公司', docLoaded:true, prechecked:true}}
+    ];
+    const DRAFT_STATUS = {draft:{text:'草稿',cls:'s-draft'},submitted:{text:'已提交',cls:'s-submitted'},review:{text:'待审核',cls:'s-review'},exported:{text:'已归档',cls:'s-exported'}};
+    const FLOW_LABELS = {1:'录入要素',2:'智能匹配',3:'生成初稿',4:'多维预审',5:'编辑修订',6:'导出归档'};
+    const TODAY_D = new Date('2026-07-18');
+    let historyKw = '', historyRange = 'all', activeDraftId = null, historyCustom = { start: '', end: '' };
+    function renderHistoryList() {
+      const list = $("#historyList"); if (!list) return;
+      const kw = historyKw.trim().toLowerCase();
+      let count = 0;
+      list.innerHTML = DRAFTS.map(d => {
+        if (kw && !d.title.toLowerCase().includes(kw) && !d.type.toLowerCase().includes(kw)) return '';
+        if (historyRange === '7d' || historyRange === '30d') {
+          const diff = (TODAY_D - new Date(d.dateIso)) / (1000*60*60*24);
+          if (diff < 0 || diff > (historyRange === '7d' ? 6 : 29)) return '';
+        } else if (historyRange === 'custom' && historyCustom.start && historyCustom.end) {
+          const ds = new Date(d.dateIso);
+          if (ds < new Date(historyCustom.start) || ds > new Date(historyCustom.end)) return '';
+        }
+        count++;
+        const st = DRAFT_STATUS[d.status];
+        return `<div class="history-item ${activeDraftId === d.id ? 'active' : ''}" data-hid="${d.id}">
+          <div class="history-title">${d.title}</div>
+          <div class="history-meta">
+            <span class="history-tag">${d.type}</span>
+            <span class="history-status ${st.cls}">${st.text}</span>
+            ${(d.status !== 'exported' && d.flow !== 6) ? `<span class="history-step">${FLOW_LABELS[d.flow]||''}</span>` : ''}
+            <span class="history-time">${d.timeDisplay}</span>
+          </div>
+        </div>`;
+      }).join('');
+      const rc = $("#recordCount"); if (rc) rc.textContent = count + ' 条';
+      const sc = $("#searchClear"); if (sc) sc.style.display = kw ? 'block' : 'none';
+    }
+    function selectHistory(id) {
+      const d = DRAFTS.find(x => x.id === id); if (!d) return;
+      activeDraftId = id;
+      if (state.view !== 'editor') switchView('editor');
+      state.taskName = d.snap.taskName; state.scene = d.snap.scene; state.partyB = d.snap.partyB;
+      setFlow(d.flow);
+      if (d.snap.docLoaded) {
+        loadContract({ name: d.snap.taskName });
+        state.prechecked = !!d.snap.prechecked;
+        setStatus(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
+        showToast(d.status === 'exported' ? '已加载归档记录，可查看' : `已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
+      } else {
+        state.docLoaded = false; state.prechecked = false;
+        setStatus(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，请录入要素`);
+        showToast(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
+      }
+      renderHistoryList();
+    }
+    // 新建合同 → 生成一条合同历史记录
+    function addNewDraft(docLoaded, flow) {
+      const id = 'n' + Date.now();
+      const title = state.taskName || '未命名合同';
+      const scene = state.scene || '战略合作';
+      DRAFTS.unshift({id, title, type: scene, typeAbbr: scene[0]||'合', timeDisplay:'刚刚', dateIso:'2026-07-18', status:'draft', flow: flow||1, snap:{taskName:title, scene, partyB:state.partyB||'', docLoaded:!!docLoaded, prechecked:false}});
+      activeDraftId = id;
+      renderHistoryList();
+    }
+    document.body.addEventListener("click", (e) => {
+      const item = e.target.closest(".history-item"); if (item) { selectHistory(item.dataset.hid); return; }
+      const chip = e.target.closest(".time-chip"); if (chip && chip.dataset.range) {
+        $$("#timeFilterRow .time-chip").forEach(c => c.classList.toggle("active", c === chip));
+        historyRange = chip.dataset.range;
+        $("#customRange").classList.toggle("show", chip.dataset.range === 'custom');
+        renderHistoryList(); return;
+      }
+      const sc = e.target.closest("#searchClear"); if (sc) { $("#historySearch").value = ''; historyKw = ''; renderHistoryList(); }
+    });
+    document.addEventListener("input", (e) => { if (e.target.id === "historySearch") { historyKw = e.target.value; renderHistoryList(); } });
+    document.addEventListener("change", (e) => {
+      if (e.target.id === "dateStart" || e.target.id === "dateEnd") {
+        historyCustom.start = $("#dateStart").value; historyCustom.end = $("#dateEnd").value;
+        renderHistoryList();
+      }
+    });
+    renderHistoryList();
 
     /* =========================================================================
        流程步骤条：steps < n 已完成，step == n 为当前
@@ -1217,7 +1290,7 @@
         });
         $("#srcSample") && ($("#srcSample").onclick = () => {
           state.partyB = "江苏智数科技有限公司"; state.taskName = $("#taskName").value.trim();
-          closeModal(); loadContract({ name: state.taskName }); showToast("已载入示例任务，协议初稿已生成");
+          closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("已载入示例任务，协议初稿已生成");
         });
         $("#srcImport") && ($("#srcImport").onclick = () => $("#fileInput").click());
       }, 0);
@@ -1225,6 +1298,7 @@
     // 步骤2：录入合作要素（含必填 / 手机号 / 日期范围校验）
     function goElementForm() {
       state.taskName = ($("#taskName") && $("#taskName").value.trim()) || state.taskName || "数字政务能力平台建设战略合作框架协议";
+      addNewDraft(false, 1);
       openModal("新建合同拟制 · 录入合作要素", `
         <div class="steps">
           <div class="s done"><span class="dot">✓</span><span class="t">选择类型</span></div><span class="bar"></span>
@@ -1376,14 +1450,14 @@
        ========================================================================= */
     function reportHtml(docName) {
       const total = allIssues().length, high = allIssues().filter(i => i.level === "high").length;
-      const score = /^\d+$/.test($("#pfScore").textContent) ? $("#pfScore").textContent : "72";
+      const score = $("#pfScore").textContent !== "—" ? $("#pfScore").textContent : "0/0";
       return `<div style="line-height:1.9;">
         <div style="font-weight:800;font-size:16px;color:#1b2947;margin-bottom:8px;">《${docName || state.taskName || "数字政务能力平台建设战略合作框架协议"}》预审校验报告</div>
         <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">预审时间：2026-07-13 10:20 · 经办人：合同归口管理岗 · 密级：内部 · 预审引擎：合同预审智能体 v2.1</div>
         <div class="grid-3" style="margin-bottom:14px;">
           <div class="kpi" style="box-shadow:none;"><div class="k-label">检出问题</div><div class="k-value" style="font-size:22px;">${total}</div></div>
           <div class="kpi" style="box-shadow:none;"><div class="k-label">高风险</div><div class="k-value" style="font-size:22px;color:var(--red);">${high}</div></div>
-          <div class="kpi" style="box-shadow:none;"><div class="k-label">合规评分</div><div class="k-value" style="font-size:22px;color:var(--primary);">${score}</div></div>
+          <div class="kpi" style="box-shadow:none;"><div class="k-label">已处理</div><div class="k-value" style="font-size:22px;color:var(--primary);">${score}</div></div>
         </div>
         <table class="tbl"><thead><tr><th>序号</th><th>预审维度</th><th>问题描述</th><th>原文 / 提示</th><th>修改建议</th><th>风险</th></tr></thead><tbody>
         ${allIssues().map((it, i) => `<tr><td>${i + 1}</td><td>${it.dim}</td><td>${it.cat}</td><td style="color:var(--red);">${it.del !== undefined ? it.del : (it.tip || "")}</td><td style="color:var(--green);">${it.ins}</td><td>${it.level === "high" ? "高" : it.level === "mid" ? "中" : "低"}</td></tr>`).join("")}
@@ -1402,7 +1476,8 @@
         <div class="tab-bar">
           <button class="tab-btn active" type="button" data-action="drTab" data-tab="draft">📄 协议草案</button>
           <button class="tab-btn" type="button" data-action="drTab" data-tab="report">🛡 预审校验报告</button>
-          <div style="margin-left:auto;display:flex;gap:8px;">
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+            <label style="font-size:12px;color:#46536e;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="drWatermark" checked style="width:14px;height:14px;"> 添加水印</label>
             <button class="btn sm" type="button" data-action="drExport" data-what="draft">⬇ 导出协议草案（Word）</button>
             <button class="btn sm" type="button" data-action="drExport" data-what="report">⬇ 导出校验报告（PDF）</button>
             <button class="primary-btn sm" type="button" data-action="drExport" data-what="all">⬇ 全部导出</button>
@@ -1449,9 +1524,9 @@
         case "newTask": newTaskFlow(); break;
         case "save":
           if (!state.docLoaded) { showToast("请先生成协议初稿"); break; }
-          pushVersion("草稿", "手动保存草稿");
-          setStatus("协议草案已保存为 " + state.versions[state.versions.length - 1].ver);
-          showToast("草稿已保存并记录版本，可在「版本记录」中查看"); break;
+          pushVersion("草稿", "手动保存版本");
+          setStatus("版本已保存为 " + state.versions[state.versions.length - 1].ver);
+          showToast("版本已保存，可在「合同版本记录」中查看"); break;
         case "versions":
           if (!state.docLoaded) { showToast("请先新建拟制任务并生成协议初稿；如需查看历史合同版本，请到「历史与版本」"); break; }
           openVersionsModal({ name: state.taskName || "当前合同", versions: state.versions, live: true });
@@ -1538,9 +1613,11 @@
         }
         case "drExport": {
           const w = t.dataset.what;
-          showToast(w === "draft" ? "协议草案已导出 Word（版式、编号、字体已统一）"
-            : w === "report" ? "预审校验报告已导出 PDF"
-            : "协议草案（Word）与预审校验报告（PDF）已一并导出");
+          const wm = document.getElementById("drWatermark");
+          const wmText = wm && wm.checked ? "（含水印：江北新区政务内部）" : "（无水印）";
+          showToast(w === "draft" ? "协议草案已导出 Word" + wmText + "，版式、编号、字体已统一"
+            : w === "report" ? "预审校验报告已导出 PDF" + wmText
+            : "协议草案（Word）与预审校验报告（PDF）已一并导出" + wmText);
           if (state.docReportLive && state.docLoaded) { pushVersion("导出定稿", "导出协议草案与预审报告，提交业务/法务审核归档"); setFlow(6); setStatus("已导出并提交业务/法务审核归档"); }
           break;
         }
@@ -1657,6 +1734,5 @@
     renderLib("tpl");
   })();
   </script>
-<script src="../assets/proto-version.js" data-proto-version></script>
 </body>
 </html>

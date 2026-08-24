@@ -29,10 +29,10 @@
   --gray-600: #475569;
   --gray-700: #334155;
   --gray-800: #1e293b;
-  --gold: #2563eb;
-  --gold-light: #3b82f6;
-  --gold-pale: #dbeafe;
-  --gold-dark: #1d4ed8;
+  --gold: #0E4C92;
+  --gold-light: #13A8A8;
+  --gold-pale: #e6f2f5;
+  --gold-dark: #0A3573;
   --red-gov: #b91c1c;
   --red-gov-light: #dc2626;
   --green: #16a34a;
@@ -59,6 +59,22 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* AI 智能体视觉规范变量 */
+  --ai-navy: #0A3573;
+  --ai-blue: #0E4C92;
+  --ai-cyan: #13A8A8;
+  --ai-green: #43A047;
+  --ai-glow: 0 0 16px rgba(19,168,168,.35);
+  --ai-glow-blue: 0 0 20px rgba(14,76,146,.25);
+}
+
+/* AI 渐变文字（青蓝→绿，克制使用） */
+.ai-gradient-text {
+  background: linear-gradient(90deg, var(--ai-blue), var(--ai-cyan), var(--ai-green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -97,7 +113,7 @@ input, textarea, select { font-family: inherit; outline: none; }
 .sidebar {
   width: 350px;
   flex-shrink: 0;
-  background: #fff;
+  background: #fafbfc;
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -125,11 +141,11 @@ input, textarea, select { font-family: inherit; outline: none; }
   justify-content: center;
   gap: 8px;
   transition: all .25s;
-  box-shadow: 0 3px 10px rgba(37,99,235,.25);
+  box-shadow: 0 3px 10px rgba(14,76,146,.25);
   flex-shrink: 0;
 }
 .sidebar-new-btn:hover {
-  box-shadow: 0 5px 16px rgba(37,99,235,.35);
+  box-shadow: 0 5px 16px rgba(14,76,146,.35);
   transform: translateY(-1px);
 }
 .sidebar-tabs {
@@ -174,6 +190,30 @@ input, textarea, select { font-family: inherit; outline: none; }
   background: var(--gold-pale);
   color: var(--gold);
 }
+/* 筛选区 */
+.filter-box { padding: 10px 14px 12px; border-bottom: 1px solid var(--border-light); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+.sidebar.collapsed .filter-box { display: none; }
+.search-wrap { position: relative; }
+.search-input { width: 100%; padding: 7px 12px 7px 30px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-primary); background: #fff; transition: border-color .2s; box-sizing: border-box; }
+.search-input:focus { outline: none; border-color: var(--ai-cyan); box-shadow: 0 0 0 2px rgba(19,168,168,.1); }
+.search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 13px; pointer-events: none; }
+.search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); cursor: pointer; font-size: 14px; display: none; }
+.search-clear:hover { color: var(--red, #e53e3e); }
+.time-filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.time-chip { padding: 3px 9px; font-size: 12px; color: var(--text-secondary); background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.time-chip:hover { border-color: var(--ai-cyan); color: var(--ai-cyan); }
+.time-chip.active { background: var(--ai-blue); color: #fff; border-color: var(--ai-blue); }
+.custom-range { display: none; flex-direction: column; gap: 6px; }
+.custom-range.show { display: flex; }
+.custom-range-label { font-size: 11px; color: var(--text-tertiary); }
+.custom-range-inputs { display: flex; align-items: center; gap: 4px; }
+.custom-range-inputs input { flex: 1; min-width: 0; padding: 5px 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-primary); }
+.custom-range-inputs input:focus { outline: none; border-color: var(--ai-cyan); }
+.custom-range-sep { color: var(--text-tertiary); font-size: 12px; }
+.filter-empty { padding: 20px 16px; text-align: center; color: var(--text-tertiary); font-size: 12px; }
+.date-group-label { padding: 10px 4px 4px; font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .03em; }
+.record-count { font-size: 11px; color: var(--text-tertiary); font-weight: normal; }
+
 .sidebar-list {
   flex: 1;
   overflow-y: auto;
@@ -192,13 +232,22 @@ input, textarea, select { font-family: inherit; outline: none; }
   position: relative;
 }
 .draft-item:hover {
-  background: var(--navy-50);
+  background: #eef2f7;
   border-color: var(--border-light);
+  transform: translateX(2px);
 }
 .draft-item.active {
-  background: var(--gold-pale);
-  border-color: #93c5fd;
+  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(14,76,146,0.25), var(--ai-glow);
 }
+.draft-item.active .draft-item-title { color: #fff; }
+.draft-item.active .draft-item-meta { color: rgba(255,255,255,.8); }
+.draft-item.active .draft-progress-bar { background: rgba(255,255,255,.25); }
+.draft-item.active .draft-progress-fill { background: #fff; }
+.draft-item.active .draft-progress-text { color: rgba(255,255,255,.9); }
+.draft-item.active .draft-item-status.editing { background: rgba(255,255,255,.2); color: #fff; }
+.draft-item.active .draft-item-status.done { background: rgba(255,255,255,.2); color: #fff; }
 .draft-item-header {
   display: flex;
   align-items: center;
@@ -216,7 +265,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   color: var(--navy-500);
 }
 .draft-item.active .draft-item-icon {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  background: rgba(255,255,255,.25);
   color: #fff;
 }
 .draft-item-title {
@@ -300,14 +349,16 @@ input, textarea, select { font-family: inherit; outline: none; }
   padding: 12px 14px;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all .2s;
+  transition: all .2s var(--ease-out);
   margin-bottom: 4px;
   border: 1px solid transparent;
 }
 .history-item:hover {
-  background: var(--navy-50);
+  background: #eef2f7;
   border-color: var(--border-light);
+  transform: translateX(2px);
 }
+.history-item:active { transform: translateX(2px) scale(0.98); }
 .history-item-icon {
   width: 28px; height: 28px;
   border-radius: 6px;
@@ -445,27 +496,27 @@ input, textarea, select { font-family: inherit; outline: none; }
   align-items: center;
   justify-content: space-between;
   height: 56px;
-  background: #ffffff;
+  background: linear-gradient(90deg, #0A3573 0%, #0E4C92 60%, #13A8A8 100%);
   padding: 0 28px;
   flex-shrink: 0;
   position: relative;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(37,99,235,.08);
-  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(10,53,115,.18);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .topbar::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
-  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ai-cyan) 50%, var(--ai-green) 100%);
+  opacity: .8;
 }
 .brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--navy-800);
+  color: #fff;
 }
 .brand-logo {
   width: 32px; height: 32px;
@@ -478,15 +529,15 @@ input, textarea, select { font-family: inherit; outline: none; }
   font-weight: 900;
   font-size: 16px;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(37,99,235,.3);
+  box-shadow: 0 2px 8px rgba(14,76,146,.4), var(--ai-glow);
 }
 .brand-text {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: .5px;
-  color: var(--navy-800);
+  color: #fff;
 }
-.brand-text span { color: var(--text-tertiary); font-weight: 400; }
+.brand-text span { color: rgba(255,255,255,.65); font-weight: 400; }
 
 /* 步骤导航 */
 .steps-nav {
@@ -512,39 +563,39 @@ input, textarea, select { font-family: inherit; outline: none; }
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
-  background: var(--gray-100);
-  color: var(--text-tertiary);
-  border: 1.5px solid var(--border);
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.75);
+  border: 1.5px solid rgba(255,255,255,.25);
   transition: all .3s var(--ease-bounce);
   flex-shrink: 0;
 }
 .step-item.active .step-circle {
-  background: var(--gold);
+  background: var(--ai-cyan);
   color: #fff;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 4px rgba(37,99,235,.15);
+  border-color: var(--ai-cyan);
+  box-shadow: 0 0 0 4px rgba(19,168,168,.28), var(--ai-glow);
 }
 .step-item.done .step-circle {
-  background: var(--navy-500);
+  background: rgba(255,255,255,.22);
   color: #fff;
-  border-color: var(--navy-500);
+  border-color: rgba(255,255,255,.4);
 }
 .step-label {
   font-size: 12px;
-  color: var(--text-tertiary);
+  color: rgba(255,255,255,.6);
   white-space: nowrap;
   transition: color .3s;
 }
-.step-item.active .step-label { color: var(--navy-800); font-weight: 500; }
-.step-item.done .step-label { color: var(--navy-600); }
+.step-item.active .step-label { color: #fff; font-weight: 500; }
+.step-item.done .step-label { color: rgba(255,255,255,.82); }
 .step-connector {
   width: 24px;
   height: 1.5px;
-  background: var(--border);
+  background: rgba(255,255,255,.22);
   margin: 0 -6px;
   border-radius: 1px;
 }
-.step-item.done + .step-connector { background: var(--navy-500); }
+.step-item.done + .step-connector { background: rgba(255,255,255,.5); }
 
 .topbar-right {
   display: flex;
@@ -555,7 +606,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,.88);
   font-size: 12px;
   position: relative;
   cursor: pointer;
@@ -594,7 +645,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   border-radius: 6px;
   flex-shrink: 0;
 }
-.role-admin { background: #1e3a5f; color: #fff; }
+.role-admin { background: #0A3573; color: #fff; }
 .role-dept { background: #0d9488; color: #fff; }
 .role-user { background: #94a3b8; color: #fff; }
 .user-avatar {
@@ -621,15 +672,16 @@ input, textarea, select { font-family: inherit; outline: none; }
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(30px);
-  transition: opacity .45s var(--ease-out), transform .45s var(--ease-out);
+  transform: translateX(30px) scale(0.99);
+  transition: opacity .35s var(--ease-out), transform .35s var(--ease-out);
   overflow-y: auto;
   overflow-x: hidden;
+  will-change: opacity, transform;
 }
 .screen.active {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(0);
+  transform: translateX(0) scale(1);
 }
 .admin-screen {
   position: fixed !important;
@@ -643,7 +695,8 @@ input, textarea, select { font-family: inherit; outline: none; }
   pointer-events: auto;
 }
 .screen.exit-left {
-  transform: translateX(-30px);
+  transform: translateX(-30px) scale(0.99);
+  opacity: 0;
 }
 
 /* ========== 通用组件 ========== */
@@ -656,19 +709,21 @@ input, textarea, select { font-family: inherit; outline: none; }
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
-  transition: all .25s var(--ease-out);
+  transition: all .2s var(--ease-out);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  will-change: transform;
 }
+.btn:active { transform: scale(0.96); }
 .btn-primary {
   background: var(--gold);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(37,99,235,.3);
+  box-shadow: 0 4px 12px rgba(14,76,146,.3);
 }
 .btn-primary:hover {
   background: var(--gold-dark);
-  box-shadow: 0 6px 20px rgba(37,99,235,.4);
+  box-shadow: 0 6px 20px rgba(14,76,146,.4);
   transform: translateY(-1px);
 }
 .btn-primary:active { transform: translateY(0); }
@@ -676,10 +731,10 @@ input, textarea, select { font-family: inherit; outline: none; }
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(37,99,235,.3);
+  box-shadow: 0 4px 14px rgba(14,76,146,.3);
 }
 .btn-gold:hover {
-  box-shadow: 0 6px 22px rgba(37,99,235,.4);
+  box-shadow: 0 6px 22px rgba(14,76,146,.4);
   transform: translateY(-1px);
 }
 .btn-secondary {
@@ -765,7 +820,12 @@ input, textarea, select { font-family: inherit; outline: none; }
   font-family: var(--font-serif);
   font-size: 18px;
   font-weight: 600;
-  color: var(--navy-800);
+  background: linear-gradient(135deg, var(--ai-navy), var(--ai-blue), var(--ai-cyan), var(--ai-green));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s ease infinite;
   margin-bottom: 1px;
   display: flex;
   align-items: center;
@@ -774,12 +834,12 @@ input, textarea, select { font-family: inherit; outline: none; }
 .ai-avatar {
   width: 30px; height: 30px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #6ba3ff 0%, #4a7eff 40%, #2d5ae0 100%);
+  background: radial-gradient(circle at 35% 30%, #6ba3ff 0%, #4a7eff 40%, var(--ai-blue) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(74,126,255,.25), inset 0 1px 2px rgba(255,255,255,.4);
+  box-shadow: var(--ai-glow-blue), inset 0 1px 2px rgba(255,255,255,.4);
   position: relative;
 }
 .ai-avatar .ai-eyes {
@@ -798,7 +858,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 1.5px solid rgba(74,126,255,.15);
+  border: 1.5px solid rgba(19,168,168,.3);
   animation: aiAvatarRing 3s infinite;
 }
 @keyframes aiAvatarRing {
@@ -1086,7 +1146,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   color: #fff;
 }
 .file-icon.pdf { background: #dc2626; }
-.file-icon.doc { background: #2563eb; }
+.file-icon.doc { background: #0E4C92; }
 .file-icon.txt { background: #64748b; }
 .file-info { flex: 1; min-width: 0; }
 .file-name {
@@ -1466,93 +1526,122 @@ input, textarea, select { font-family: inherit; outline: none; }
 }
 .drop-line.show { opacity: 1; }
 
-/* 右侧缩略图预览 */
-.preview-panel {
+/* 右侧缩略图面板 */
+.thumbnail-panel {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.preview-header {
+.thumbnail-panel-header {
   padding: 14px 20px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
-.preview-grid {
+.thumbnail-count {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.thumbnail-strip {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  align-content: start;
-}
-.thumb-card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 12px;
-  cursor: pointer;
-  transition: all .3s var(--ease-out);
-  position: relative;
-  overflow: hidden;
-}
-.thumb-card:hover {
-  border-color: var(--navy-400);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-.thumb-card.highlighted {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.15), var(--shadow-md);
-}
-.thumb-card.highlighted::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--gold);
-}
-.thumb-header {
+  padding: 10px 12px;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+  flex-direction: column;
+  gap: 8px;
 }
-.thumb-num {
+.thumbnail-strip::-webkit-scrollbar { width: 4px; }
+.thumbnail-strip::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+.thumbnail-strip::-webkit-scrollbar-track { background: transparent; }
+
+.thumbnail-card {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+  min-height: 110px;
+}
+.thumbnail-card:hover {
+  border-color: var(--navy-300);
+  background: var(--navy-25);
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+}
+.thumbnail-card.active {
+  border-color: var(--navy-500);
+  background: var(--navy-25);
+  box-shadow: 0 0 0 3px rgba(14,76,146,.1);
+}
+.thumbnail-card-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--navy-50);
+  color: var(--navy-600);
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
-  color: var(--navy-500);
-  background: var(--navy-50);
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
 }
-.thumb-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--navy-700);
+.thumbnail-card.active .thumbnail-card-num {
+  background: var(--navy-500);
+  color: #fff;
+}
+.thumbnail-card-info {
   flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }
-.thumb-body {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+.thumbnail-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-800);
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.thumb-footer {
-  margin-top: 8px;
+.thumbnail-card-chapter {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.thumbnail-card-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  width: fit-content;
+}
+.thumbnail-card-type.cover { background: #e6f2f5; color: #0E4C92; }
+.thumbnail-card-type.chapter { background: #fef3c7; color: #92400e; }
+.thumbnail-card-type.content { background: #f0f4f8; color: #475569; }
+
+.thumbnail-empty {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 10px;
+  justify-content: center;
+  font-size: 13px;
   color: var(--text-tertiary);
 }
 
@@ -1571,30 +1660,6 @@ input, textarea, select { font-family: inherit; outline: none; }
 }
 
 /* ========== 屏幕5: 模板匹配页 ========== */
-.match-dimensions {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 16px; padding: 12px 16px;
-  background: var(--navy-50); border-radius: var(--radius-md);
-  border: 1px solid var(--navy-100);
-}
-.match-dim {
-  display: flex; align-items: center; gap: 10px; flex: 1;
-  background: var(--card); border-radius: var(--radius-sm);
-  padding: 8px 12px;
-}
-.match-dim-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.match-dim-content { flex: 1; }
-.match-dim-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 2px; }
-.match-dim-value { font-size: 12px; font-weight: 500; color: var(--navy-700); }
-.match-dim-score {
-  font-size: 16px; font-weight: 700; font-family: var(--font-mono);
-  color: var(--green);
-}
-.match-dim-arrow { font-size: 14px; color: var(--gray-300); }
 
 /* ========== 模板库弹窗 ========== */
 .template-grid-wrap {
@@ -1706,7 +1771,7 @@ input, textarea, select { font-family: inherit; outline: none; }
 }
 .tpl-library-card.selected {
   border-color: var(--navy-600);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  box-shadow: 0 0 0 3px rgba(14,76,146,.12);
 }
 .tpl-library-card .tpl-thumb {
   width: 100%;
@@ -1796,13 +1861,13 @@ input, textarea, select { font-family: inherit; outline: none; }
   position: relative;
 }
 .template-card:hover {
-  border-color: var(--navy-400);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--ai-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(19,168,168,.12), var(--shadow-md);
 }
 .template-card.selected {
-  border-color: var(--navy-600);
-  box-shadow: 0 0 0 3px rgba(44,82,130,.12), var(--shadow-md);
+  border-color: var(--ai-cyan);
+  box-shadow: 0 0 0 3px rgba(19,168,168,.15), 0 8px 24px rgba(19,168,168,.1), var(--shadow-md);
 }
 .template-card.selected .check-badge {
   opacity: 1;
@@ -1831,18 +1896,6 @@ input, textarea, select { font-family: inherit; outline: none; }
   overflow: hidden;
   margin-bottom: 12px;
   position: relative;
-}
-.match-badge {
-  position: absolute;
-  top: 8px; left: 8px;
-  background: rgba(22,163,74,.95);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 20px;
-  z-index: 2;
-  backdrop-filter: blur(4px);
 }
 .template-name {
   font-size: 14px;
@@ -1980,7 +2033,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   content: '';
   position: absolute;
   inset: 8px;
-  border: 1px solid rgba(37,99,235,.3);
+  border: 1px solid rgba(14,76,146,.3);
   border-radius: 50%;
 }
 
@@ -2443,21 +2496,34 @@ input, textarea, select { font-family: inherit; outline: none; }
 }
 .chat-header {
   padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(19,168,168,.18);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: linear-gradient(135deg, rgba(10,53,115,.92), rgba(14,76,146,.88));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(10,53,115,.18), inset 0 0 24px rgba(19,168,168,.08);
+  position: relative;
+}
+.chat-header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ai-cyan), var(--ai-green), transparent);
+  opacity: .6;
 }
 .chat-title {
   font-family: var(--font-serif);
   font-size: 15px;
   font-weight: 600;
-  color: var(--navy-800);
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.chat-title .icon { color: var(--navy-500); }
+.chat-title .icon { color: var(--ai-cyan); }
 .chat-badge {
   font-size: 10px;
   padding: 2px 8px;
@@ -2494,8 +2560,9 @@ input, textarea, select { font-family: inherit; outline: none; }
   color: #fff;
 }
 .chat-msg.system .msg-avatar {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
   color: #fff;
+  box-shadow: var(--ai-glow);
 }
 .msg-content {
   max-width: 75%;
@@ -2505,17 +2572,20 @@ input, textarea, select { font-family: inherit; outline: none; }
   border-radius: var(--radius-md);
   font-size: 13px;
   line-height: 1.6;
+  animation: msgBubbleIn .4s var(--ease-out) both;
 }
 .chat-msg.user .msg-bubble {
-  background: var(--navy-600);
+  background: linear-gradient(135deg, var(--ai-blue), var(--navy-600));
   color: #fff;
   border-bottom-right-radius: 4px;
+  animation: slideInRight .35s var(--ease-out) both;
 }
 .chat-msg.system .msg-bubble {
   background: var(--navy-50);
   color: var(--text-primary);
   border: 1px solid var(--navy-100);
   border-bottom-left-radius: 4px;
+  animation: slideInLeft .35s var(--ease-out) both;
 }
 .msg-time {
   font-size: 10px;
@@ -2531,12 +2601,13 @@ input, textarea, select { font-family: inherit; outline: none; }
   border-radius: var(--radius-md);
   border: 1px solid var(--navy-100);
   width: fit-content;
+  animation: msgBubbleIn .3s var(--ease-out) both;
 }
 .chat-typing span {
-  width: 6px; height: 6px;
+  width: 7px; height: 7px;
   border-radius: 50%;
-  background: var(--navy-400);
-  animation: typingDot 1.4s infinite;
+  background: var(--ai-cyan);
+  animation: thinkingBounce 1.4s infinite;
 }
 .chat-typing span:nth-child(2) { animation-delay: .2s; }
 .chat-typing span:nth-child(3) { animation-delay: .4s; }
@@ -2557,12 +2628,20 @@ input, textarea, select { font-family: inherit; outline: none; }
   border-radius: 20px;
   color: var(--navy-600);
   cursor: pointer;
-  transition: all .2s;
+  transition: all .25s var(--ease-out);
   background: var(--gray-50);
+  animation: floatUp .4s var(--ease-out) both;
 }
+.suggestion-chip:nth-child(1) { animation-delay: 0s; }
+.suggestion-chip:nth-child(2) { animation-delay: .06s; }
+.suggestion-chip:nth-child(3) { animation-delay: .12s; }
+.suggestion-chip:nth-child(4) { animation-delay: .18s; }
 .suggestion-chip:hover {
-  border-color: var(--navy-500);
-  background: var(--navy-50);
+  border-color: var(--ai-cyan);
+  background: rgba(19,168,168,.08);
+  color: var(--ai-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(19,168,168,.15);
 }
 .chat-input-wrap {
   display: flex;
@@ -2575,9 +2654,9 @@ input, textarea, select { font-family: inherit; outline: none; }
   transition: all .25s;
 }
 .chat-input-wrap:focus-within {
-  border-color: var(--navy-500);
+  border-color: var(--ai-cyan);
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(59,110,165,.1);
+  box-shadow: 0 0 0 3px rgba(19,168,168,.12);
 }
 .chat-input {
   flex: 1;
@@ -2592,17 +2671,19 @@ input, textarea, select { font-family: inherit; outline: none; }
 .chat-input::placeholder { color: var(--gray-400); }
 .chat-send {
   width: 32px; height: 32px;
-  background: var(--navy-600);
+  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
   color: #fff;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all .2s;
+  transition: all .25s var(--ease-bounce);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(14,76,146,.2);
 }
-.chat-send:hover { background: var(--navy-500); transform: scale(1.05); }
-.chat-send:disabled { background: var(--gray-300); cursor: not-allowed; }
+.chat-send:hover { transform: scale(1.1) rotate(-5deg); box-shadow: var(--ai-glow); }
+.chat-send:active { transform: scale(0.95); }
+.chat-send:disabled { background: var(--gray-300); cursor: not-allowed; box-shadow: none; }
 
 .s4-footer {
   padding: 12px 32px;
@@ -2700,9 +2781,10 @@ input, textarea, select { font-family: inherit; outline: none; }
   box-shadow: 0 16px 48px rgba(15,41,66,.12);
   overflow: hidden;
   position: relative;
-  transition: transform .4s var(--ease-out), opacity .4s;
+  transition: transform .3s var(--ease-out), opacity .3s var(--ease-out), filter .3s;
+  will-change: transform, opacity;
 }
-.s5-slide.changing { opacity: .5; transform: scale(.98); }
+.s5-slide.changing { opacity: 0; transform: scale(.96) translateX(20px); filter: blur(2px); }
 .s5-notes-bar {
   position: relative;
   flex-shrink: 0;
@@ -2820,7 +2902,7 @@ input, textarea, select { font-family: inherit; outline: none; }
 .s5-filename:focus {
   border-color: var(--gold);
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  box-shadow: 0 0 0 3px rgba(14,76,146,.1);
 }
 .s5-toolbar-actions {
   display: flex;
@@ -3030,7 +3112,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   outline: none;
   transition: all .2s;
 }
-.manifest-filename-input:focus { border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.manifest-filename-input:focus { border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(14,76,146,.1); }
 .manifest-filename-ext {
   font-size: 13px;
   color: var(--text-tertiary);
@@ -3045,7 +3127,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   gap: 8px;
   padding: 10px 14px;
   background: var(--gold-pale);
-  border: 1px solid #93c5fd;
+  border: 1px solid #bfe3e3;
   border-radius: var(--radius-sm);
   font-size: 12px;
   color: var(--gold);
@@ -3106,6 +3188,49 @@ input, textarea, select { font-family: inherit; outline: none; }
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+/* ===== AI 智能体增强动效 ===== */
+@keyframes msgBubbleIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes thinkingBounce {
+  0%, 60%, 100% { opacity: .25; transform: translateY(0) scale(0.8); }
+  30% { opacity: 1; transform: translateY(-5px) scale(1.1); }
+}
+@keyframes typingCursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes aiGlowPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(19,168,168,.2); }
+  50% { box-shadow: 0 0 24px rgba(19,168,168,.45); }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== 无障碍：尊重 prefers-reduced-motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* SVG 图标 */
 svg { display: block; }
@@ -3161,7 +3286,7 @@ svg { display: block; }
   font-weight: 500; cursor: pointer; transition: all .2s;
 }
 .ner-entity:hover { filter: brightness(.95); transform: translateY(-1px); }
-.ner-entity.time { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.ner-entity.time { background: #e6f2f5; color: #0E4C92; border: 1px solid #bfe3e3; }
 .ner-entity.org { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 .ner-entity.person { background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4; }
 .ner-entity.data { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
@@ -3306,15 +3431,15 @@ svg { display: block; }
   transition: all .25s; cursor: pointer;
 }
 .kb-recall-card:hover { border-color: var(--navy-300); box-shadow: var(--shadow-xs); }
-.kb-recall-card.selected { border-color: var(--blue, #2563eb); border-width: 2px; background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(37,99,235,.02)); box-shadow: 0 0 0 3px rgba(37,99,235,.18), 0 2px 8px rgba(37,99,235,.1); position: relative; }
-.kb-recall-card.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(37,99,235,.3); }
+.kb-recall-card.selected { border-color: var(--blue, #0E4C92); border-width: 2px; background: linear-gradient(135deg, rgba(14,76,146,.06), rgba(14,76,146,.02)); box-shadow: 0 0 0 3px rgba(14,76,146,.18), 0 2px 8px rgba(14,76,146,.1); position: relative; }
+.kb-recall-card.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: #0E4C92; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(14,76,146,.3); }
 .kb-recall-header {
   display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
 }
 .kb-type-tag {
   font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 500;
 }
-.kb-type-tag.policy { background: #dbeafe; color: #1e40af; }
+.kb-type-tag.policy { background: #e6f2f5; color: #0E4C92; }
 .kb-type-tag.meeting { background: #fef3c7; color: #92400e; }
 .kb-type-tag.summary { background: #d1fae5; color: #065f46; }
 .kb-type-tag.report { background: #ede9fe; color: #5b21b6; }
@@ -3379,7 +3504,7 @@ svg { display: block; }
   display: inline-flex; align-items: center; gap: 3px;
 }
 .kb-recall-content mark {
-  background: rgba(37,99,235,.12); color: var(--gold-dark);
+  background: rgba(14,76,146,.12); color: var(--gold-dark);
   padding: 0 2px; border-radius: 2px; font-weight: 500;
 }
 
@@ -3392,7 +3517,7 @@ svg { display: block; }
 }
 .kb-time-filter.active {
   color: var(--gold); border-color: var(--gold); font-weight: 500;
-  background: rgba(37,99,235,.04);
+  background: rgba(14,76,146,.04);
 }
 .kb-time-filter:hover { color: var(--navy-600); }
 
@@ -3408,7 +3533,7 @@ svg { display: block; }
   font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
   margin-bottom: 4px;
 }
-.kb-enhance-category.term { background: #dbeafe; color: #1e40af; }
+.kb-enhance-category.term { background: #e6f2f5; color: #0E4C92; }
 .kb-enhance-category.standard { background: #ede9fe; color: #5b21b6; }
 .kb-enhance-category.case { background: #fef3c7; color: #92400e; }
 .kb-enhance-category.data { background: #d1fae5; color: #065f46; }
@@ -3520,12 +3645,6 @@ svg { display: block; }
 }
 .cc-notes-textarea:hover { border-color: #d0d5dd; }
 .cc-notes-textarea:focus { border-color: #1890ff; background: #fff; box-shadow: 0 0 0 2px rgba(24,144,255,.1); outline: none; }
-.cc-notes-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 11px; padding: 2px 8px; border-radius: 4px;
-  background: linear-gradient(135deg, #e6f7ff, #bae7ff); color: #096dd9;
-  font-weight: 500; margin-left: 6px;
-}
 .cc-textarea {
   min-height: 72px;
   resize: vertical;
@@ -3569,10 +3688,10 @@ svg { display: block; }
   font-size: 9px;
   padding: 1px 6px;
   border-radius: 3px;
-  background: #dbeafe;
-  color: #2563eb;
+  background: #e6f2f5;
+  color: #0E4C92;
   font-weight: 500;
-  border: 1px solid #93c5fd;
+  border: 1px solid #bfe3e3;
 }
 .cc-content-point-delete {
   width: 22px; height: 22px;
@@ -3692,7 +3811,7 @@ svg { display: block; }
 }
 .admin-nav-item:hover { background: rgba(255,255,255,.05); color: #fff; }
 .admin-nav-item.active {
-  background: rgba(37,99,235,.18);
+  background: rgba(14,76,146,.18);
   color: #fff;
   border-left-color: var(--gold);
   font-weight: 600;
@@ -3832,7 +3951,7 @@ svg { display: block; }
 .admin-tag .tag-remove { cursor: pointer; opacity: .5; font-size: 14px; line-height: 1; }
 .admin-tag .tag-remove:hover { opacity: 1; color: var(--red-gov); }
 .admin-slider { -webkit-appearance: none; appearance: none; flex: 1; max-width: 320px; height: 6px; border-radius: 3px; background: var(--gray-200); outline: none; }
-.admin-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--gold); cursor: pointer; box-shadow: 0 2px 6px rgba(37,99,235,.4); }
+.admin-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--gold); cursor: pointer; box-shadow: 0 2px 6px rgba(14,76,146,.4); }
 .admin-slider::-moz-range-thumb { width: 18px; height: 18px; border: none; border-radius: 50%; background: var(--gold); cursor: pointer; }
 .admin-slider-value { font-family: var(--font-mono); font-size: 13px; color: var(--gold-dark); font-weight: 600; margin-left: 12px; min-width: 48px; }
 .admin-pagination { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
@@ -3964,8 +4083,8 @@ svg { display: block; }
   background: var(--navy-50); transition: all .3s;
 }
 .np-step-item.active {
-  background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  border: 1px solid #93c5fd;
+  background: linear-gradient(135deg, #eff6ff, #e6f2f5);
+  border: 1px solid #bfe3e3;
 }
 .np-step-item.done {
   background: #f0fdf4; border: 1px solid #86efac;
@@ -4005,7 +4124,7 @@ svg { display: block; }
 .step-item.auto-done .step-circle > * { display: none; }
 
 </style>
-<meta name="prototype-version" content=""></head>
+</head>
 <body>
 <div id="app">
   <!-- 顶部导航 -->
@@ -4032,7 +4151,7 @@ svg { display: block; }
     <div class="topbar-right">
       <div class="topbar-user" id="topbarUser">
         <span id="topbarUserName">省数据局 · 张明（超管）</span>
-        <div class="user-avatar" id="topbarUserAvatar" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">张</div>
+        <div class="user-avatar" id="topbarUserAvatar" style="background:linear-gradient(135deg,#0E4C92,#13A8A8);">张</div>
         <div class="user-dropdown" id="userDropdown" style="display:none;">
           <div class="user-dropdown-item active" data-uid="admin" onclick="switchUser('admin')">
             <div class="user-role-tag role-admin">超管</div>
@@ -4065,6 +4184,28 @@ svg { display: block; }
         </div>
         <div class="sidebar-tab" data-tab="history">
           历史 <span class="tab-badge" id="historyBadge">0</span>
+        </div>
+      </div>
+      <div class="filter-box">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="sidebarSearch" placeholder="搜索标题、模板等" oninput="applySidebarFilter()">
+          <span class="search-clear" id="searchClear" onclick="clearSidebarSearch()">✕</span>
+        </div>
+        <div class="time-filter-row" id="timeFilterRow">
+          <span class="time-chip active" data-range="all" onclick="setSidebarTimeFilter(this)">全部</span>
+          <span class="time-chip" data-range="today" onclick="setSidebarTimeFilter(this)">今天</span>
+          <span class="time-chip" data-range="7d" onclick="setSidebarTimeFilter(this)">近七天</span>
+          <span class="time-chip" data-range="30d" onclick="setSidebarTimeFilter(this)">近三十天</span>
+          <span class="time-chip" data-range="custom" onclick="setSidebarTimeFilter(this)">自定义</span>
+        </div>
+        <div class="custom-range" id="customRange">
+          <span class="custom-range-label">选择起止日期</span>
+          <div class="custom-range-inputs">
+            <input type="date" id="dateStart" onchange="applySidebarFilter()">
+            <span class="custom-range-sep">~</span>
+            <input type="date" id="dateEnd" onchange="applySidebarFilter()">
+          </div>
         </div>
       </div>
       <div class="sidebar-list" id="sidebarList">
@@ -4316,10 +4457,7 @@ svg { display: block; }
             <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
             添加章节
           </button>
-          <button class="btn btn-secondary btn-sm">
-            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            导入大纲
-          </button>
+          
         </div>
       </div>
       <div class="s2-body">
@@ -4336,7 +4474,7 @@ svg { display: block; }
                 <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6M3 17a9 9 0 019-9 9 9 0 017 3l2 2"/></svg>
                 恢复
               </button>
-              <button class="toolbar-btn">
+              <button class="toolbar-btn" id="expandAllOutlineBtn">
                 <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                 全部展开
               </button>
@@ -4344,13 +4482,15 @@ svg { display: block; }
           </div>
           <div class="outline-tree" id="outlineTree"></div>
         </div>
-        <!-- 右侧缩略图 -->
-        <div class="card preview-panel">
-          <div class="preview-header">
-            <div class="section-title">页面要点缩略图预览</div>
-            <span style="font-size:12px;color:var(--text-tertiary);" id="thumbCount">共 15 页</span>
+        <!-- 右侧缩略图条 -->
+        <div class="card thumbnail-panel">
+          <div class="thumbnail-panel-header">
+            <div class="section-title">页面缩略图</div>
+            <span class="thumbnail-count" id="thumbnailCount">共 0 页</span>
           </div>
-          <div class="preview-grid" id="thumbGrid"></div>
+          <div class="thumbnail-strip" id="thumbnailStrip">
+            <!-- JS动态渲染 -->
+          </div>
         </div>
       </div>
       <div class="s2-footer">
@@ -4447,40 +4587,7 @@ svg { display: block; }
         <h2>选择视觉模板</h2>
         <p>AI已根据您的内容智能匹配以下政务风格模板，请选择最适合的版式</p>
       </div>
-      <div class="match-dimensions" id="matchDimensions">
-        <div class="match-dim">
-          <div class="match-dim-icon" style="background:#dbeafe;color:#1e40af;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-          </div>
-          <div class="match-dim-content">
-            <div class="match-dim-label">核心主题维度</div>
-            <div class="match-dim-value">检索主题标签 → "数字政府·工作汇报"</div>
-          </div>
-          <div class="match-dim-score">96%</div>
-        </div>
-        <div class="match-dim-arrow">→</div>
-        <div class="match-dim">
-          <div class="match-dim-icon" style="background:#fef3c7;color:#92400e;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          </div>
-          <div class="match-dim-content">
-            <div class="match-dim-label">使用场景维度</div>
-            <div class="match-dim-value">匹配分类模板 → "政务汇报·正式"</div>
-          </div>
-          <div class="match-dim-score">93%</div>
-        </div>
-        <div class="match-dim-arrow">→</div>
-        <div class="match-dim">
-          <div class="match-dim-icon" style="background:#d1fae5;color:#065f46;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-          </div>
-          <div class="match-dim-content">
-            <div class="match-dim-label">大纲结构维度</div>
-            <div class="match-dim-value">匹配版式密度 → "4章15页·中密度"</div>
-          </div>
-          <div class="match-dim-score">91%</div>
-        </div>
-      </div>
+      
       <div class="s3-body">
         <div class="template-grid-wrap">
           <div class="template-grid-header">
@@ -4496,7 +4603,6 @@ svg { display: block; }
           <div class="preview-tabs">
             <div class="preview-tab active" data-tab="cover">封面预览</div>
             <div class="preview-tab" data-tab="inner">内页版式</div>
-            <div class="preview-tab" data-tab="chart">图表页</div>
           </div>
           <div class="preview-content" id="templatePreviewContent"></div>
         </div>
@@ -5150,10 +5256,10 @@ const state = {
   thumbnails: [],
   selectedTemplate: 0,
   templates: [
-    { name: '党政汇报经典', desc: '庄重权威 · 适合正式汇报', match: 97, type: 'tpl-blue-white', tags: ['蓝白', '庄重', '正式'] },
-    { name: '红金政务风', desc: '红金搭配 · 适合党建主题', match: 94, type: 'tpl-red-gold', tags: ['红金', '党建', '喜庆'] },
-    { name: '现代简约工作风', desc: '简洁清爽 · 适合工作汇报', match: 91, type: 'tpl-modern', tags: ['简约', '现代', '清新'] },
-    { name: '深色科技政务', desc: '科技感强 · 适合数字化主题', match: 89, type: 'tpl-classic', tags: ['深色', '科技', '数字'] },
+    { name: '党政汇报经典', desc: '庄重权威 · 适合正式汇报', type: 'tpl-blue-white', tags: ['蓝白', '庄重', '正式'] },
+    { name: '红金政务风', desc: '红金搭配 · 适合党建主题', type: 'tpl-red-gold', tags: ['红金', '党建', '喜庆'] },
+    { name: '现代简约工作风', desc: '简洁清爽 · 适合工作汇报', type: 'tpl-modern', tags: ['简约', '现代', '清新'] },
+    { name: '深色科技政务', desc: '科技感强 · 适合数字化主题', type: 'tpl-classic', tags: ['深色', '科技', '数字'] },
   ],
   currentSlide: 0,
   slideView: 'single',
@@ -5437,19 +5543,18 @@ function navigateTo(step) {
   const current = document.querySelector('.screen.active');
   const next = document.getElementById('screen-' + step);
   if (!next) return;
-  
-  current.classList.add('exit-left');
-  current.classList.remove('active');
-  
-  setTimeout(() => {
-    current.classList.remove('exit-left');
+  // 当前页面淡出
+  if (current) {
+    current.classList.add('exit-left');
+    current.classList.remove('active');
+  }
+  // 下一页面立即激活（CSS过渡负责动画）
+  requestAnimationFrame(() => {
+    if (current) current.classList.remove('exit-left');
     next.classList.add('active');
-  }, 50);
-  
+  });
   state.currentScreen = step;
   updateStepsNav(step);
-  
-  // 初始化对应页面
   if (step === 2) renderParsing();
   if (step === 3) renderOutline();
   if (step === 4) renderKnowledge();
@@ -5480,11 +5585,9 @@ function syncSlideNotesToContent() {
 }
 
 function playGenerationAnimation() {
-  const screen7 = document.getElementById('screen-7');
-  // 创建生成遮罩
   const overlay = document.createElement('div');
   overlay.id = 'genOverlay';
-  overlay.style.cssText = 'position:absolute;inset:0;background:rgba(255,255,255,.96);z-index:100;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-lg);';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,.96);z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .4s;';
   const genSteps = [
     { name: '大纲与模板融合', desc: '加载选定模板，解析大纲结构...' },
     { name: '占位符自动填充', desc: '将大纲内容逐一注入模板占位符...' },
@@ -5495,25 +5598,25 @@ function playGenerationAnimation() {
   ];
   overlay.innerHTML = `
     <div style="width:440px;max-width:90%;text-align:center;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:var(--gold);margin-bottom:16px;">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));margin-bottom:16px;animation:aiGlowPulse 2s ease-in-out infinite;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       </div>
       <div style="font-size:18px;font-weight:700;color:var(--navy-800);margin-bottom:4px;">正在生成初版PPT</div>
       <div style="font-size:13px;color:var(--text-secondary);margin-bottom:22px;" id="genAnimDesc">${genSteps[0].desc}</div>
       <div style="height:6px;background:var(--navy-100);border-radius:3px;overflow:hidden;margin-bottom:16px;">
-        <div id="genAnimBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width .3s ease;"></div>
+        <div id="genAnimBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--ai-blue),var(--ai-cyan));border-radius:3px;transition:width .15s ease;"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;text-align:left;" id="genAnimSteps">
         ${genSteps.map((s, i) => `
           <div class="ga-step" data-idx="${i}" style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--navy-300);transition:all .3s;">
-            <span class="ga-dot" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--navy-200);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;"></span>
+            <span class="ga-dot" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--navy-200);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;transition:all .3s;"></span>
             <span>${i+1}. ${s.name}</span>
           </div>
         `).join('')}
       </div>
     </div>
   `;
-  screen7.appendChild(overlay);
+  document.body.appendChild(overlay);
 
   let currentStep = 0;
   const totalSteps = genSteps.length;
@@ -5523,43 +5626,40 @@ function playGenerationAnimation() {
 
   function updateGenStep() {
     if (currentStep >= totalSteps) {
-      // 完成
       barEl.style.width = '100%';
       setTimeout(() => {
-        overlay.style.transition = 'opacity .4s';
         overlay.style.opacity = '0';
         setTimeout(() => {
-          overlay.remove();
+          if (overlay.parentNode) overlay.remove();
           state.slides = generateSlides();
           renderSlide();
         }, 400);
-      }, 500);
+      }, 300);
       return;
     }
     const step = genSteps[currentStep];
     descEl.textContent = step.desc;
     barEl.style.width = Math.round(((currentStep + 1) / totalSteps) * 100) + '%';
-    // 更新步骤状态
     stepEls.forEach((el, i) => {
       const dot = el.querySelector('.ga-dot');
       if (i < currentStep) {
-        el.style.color = 'var(--green)';
+        el.style.color = 'var(--ai-cyan)';
         el.style.fontWeight = '500';
-        dot.style.background = 'var(--green)';
-        dot.style.borderColor = 'var(--green)';
+        dot.style.background = 'var(--ai-cyan)';
+        dot.style.borderColor = 'var(--ai-cyan)';
         dot.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
       } else if (i === currentStep) {
         el.style.color = 'var(--navy-700)';
         el.style.fontWeight = '600';
-        dot.style.background = 'var(--gold)';
-        dot.style.borderColor = 'var(--gold)';
-        dot.innerHTML = '<span style="width:5px;height:5px;border-radius:50%;background:#fff;display:inline-block;"></span>';
+        dot.style.borderColor = 'var(--ai-cyan)';
+        dot.style.background = 'rgba(19,168,168,.1)';
+        dot.innerHTML = '<div style="width:6px;height:6px;border-radius:50%;background:var(--ai-cyan);animation:aiGlowPulse 1.5s ease-in-out infinite;"></div>';
       }
     });
     currentStep++;
-    setTimeout(updateGenStep, 700);
+    setTimeout(updateGenStep, 500);
   }
-  setTimeout(updateGenStep, 400);
+  setTimeout(updateGenStep, 300);
 }
 
 function updateStepsNav(step) {
@@ -5613,8 +5713,8 @@ function updateFormality() {
     formalityTag.style.color = '#166534';
   } else if (level === 'mid') {
     formalityTag.textContent = '正式度中';
-    formalityTag.style.background = '#dbeafe';
-    formalityTag.style.color = '#1e40af';
+    formalityTag.style.background = '#e6f2f5';
+    formalityTag.style.color = '#0E4C92';
   } else {
     formalityTag.textContent = '正式度低';
     formalityTag.style.background = '#f1f5f9';
@@ -6100,7 +6200,7 @@ function renderParsing() {
 function renderParseNER() {
   const body = document.getElementById('parseBody');
   const entityTypes = [
-    {type: 'time', label: '时间', color: '#dbeafe', text: '#1e40af'},
+    {type: 'time', label: '时间', color: '#e6f2f5', text: '#0E4C92'},
     {type: 'org', label: '机关名称', color: '#dcfce7', text: '#166534'},
     {type: 'person', label: '人员', color: '#fce7f3', text: '#9d174d'},
     {type: 'data', label: '数据', color: '#fef3c7', text: '#92400e'}
@@ -6124,7 +6224,7 @@ function renderParseNER() {
       <div style="width:240px;display:flex;flex-direction:column;gap:10px;">
         <div class="section-title">实体统计</div>
         <div class="ner-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0;">
-          <div class="ner-stat-card"><div class="ner-stat-num" style="color:#1e40af;">8</div><div class="ner-stat-label">时间实体</div></div>
+          <div class="ner-stat-card"><div class="ner-stat-num" style="color:#0E4C92;">8</div><div class="ner-stat-label">时间实体</div></div>
           <div class="ner-stat-card"><div class="ner-stat-num" style="color:#166534;">12</div><div class="ner-stat-label">机关名称</div></div>
           <div class="ner-stat-card"><div class="ner-stat-num" style="color:#9d174d;">5</div><div class="ner-stat-label">人员实体</div></div>
           <div class="ner-stat-card"><div class="ner-stat-num" style="color:#92400e;">17</div><div class="ner-stat-label">数据实体</div></div>
@@ -6158,14 +6258,14 @@ function renderParseKeyInfo() {
   ];
   const catColors = {
     '建设成果': {bg: '#d1fae5', text: '#065f46'},
-    '核心数据': {bg: '#dbeafe', text: '#1e40af'},
+    '核心数据': {bg: '#e6f2f5', text: '#0E4C92'},
     '政策依据': {bg: '#fee2e2', text: '#991b1b'},
     '资金投入': {bg: '#fef3c7', text: '#92400e'},
     '组织架构': {bg: '#e0e7ff', text: '#3730a3'},
     '改革路径': {bg: '#f3e8ff', text: '#6b21a8'},
     '领导指示': {bg: '#fce7f3', text: '#9d174d'},
     '目标任务': {bg: '#ccfbf1', text: '#115e59'},
-    '技术支撑': {bg: '#dbeafe', text: '#1e40af'},
+    '技术支撑': {bg: '#e6f2f5', text: '#0E4C92'},
     '民生服务': {bg: '#d1fae5', text: '#065f46'},
     '制度建设': {bg: '#fee2e2', text: '#991b1b'},
     '下一步计划': {bg: '#fef3c7', text: '#92400e'}
@@ -6561,7 +6661,7 @@ function renderInitialGen() {
     {ts: '14:32:21', type: 'ok', msg: '内页11 ← 智能审批系统建设路线'},
     {ts: '14:32:22', type: 'ok', msg: '封底页 ← 致谢与联系方式'},
     {ts: '14:32:23', type: 'info', msg: '全部15页内容填充完成'},
-    {ts: '14:32:24', type: 'ok', msg: '色彩方案保持：蓝色(#2563eb) + 白色(#ffffff)'},
+    {ts: '14:32:24', type: 'ok', msg: '色彩方案保持：蓝色(#0E4C92) + 白色(#ffffff)'},
     {ts: '14:32:25', type: 'ok', msg: '字体方案保持：思源宋体 + 思源黑体'},
     {ts: '14:32:26', type: 'ok', msg: '视觉一致性检查通过 ✓'},
     {ts: '14:32:27', type: 'ok', msg: '初版文件生成完成，共15页'}
@@ -6649,6 +6749,18 @@ function renderOutline() {
     tree.appendChild(createTreeNode(chapter, true));
   });
   renderThumbnails();
+  updateExpandBtnState();
+}
+
+function updateExpandBtnState() {
+  const btn = document.getElementById('expandAllOutlineBtn');
+  if (!btn) return;
+  const allExpanded = state.outline.length > 0 && state.outline.every(ch => ch.expanded);
+  if (allExpanded) {
+    btn.innerHTML = '<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11l5-5 5 5M7 18l5-5 5 5"/></svg> 全部收起';
+  } else {
+    btn.innerHTML = '<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg> 全部展开';
+  }
 }
 
 function createTreeNode(node, isChapter) {
@@ -6714,7 +6826,7 @@ function createTreeNode(node, isChapter) {
     highlightThumbnail(node.id);
   });
   row.addEventListener('mouseleave', () => {
-    highlightThumbnail(null);
+    // 保持当前预览不切换
   });
   
   // 操作按钮
@@ -6964,42 +7076,85 @@ function setupDragDrop(nodeDiv, row) {
   });
 }
 
-// 缩略图
+// 页面预览
+let _previewNodeId = null;
+
 function renderThumbnails() {
-  const grid = document.getElementById('thumbGrid');
-  grid.innerHTML = '';
   state.thumbnails = [];
   let pageNum = 1;
-  
   state.outline.forEach(chapter => {
     chapter.children.forEach(child => {
-      const card = document.createElement('div');
-      card.className = 'thumb-card';
-      card.dataset.nodeId = child.id;
-      card.innerHTML = `
-        <div class="thumb-header">
-          <span class="thumb-num">P${String(pageNum).padStart(2,'0')}</span>
-          <span class="thumb-title">${chapter.title.replace(/第.章 /, '')}</span>
-        </div>
-        <div class="thumb-body">${child.title}</div>
-        <div class="thumb-footer">
-          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-          ${chapter.title}
-        </div>
-      `;
-      grid.appendChild(card);
-      state.thumbnails.push({ id: child.id, pageNum });
-      pageNum++;
+      state.thumbnails.push({ id: child.id, pageNum: pageNum++ });
     });
   });
-  
-  document.getElementById('thumbCount').textContent = `共 ${pageNum - 1} 页`;
+  _previewNodeId = state.thumbnails.length > 0 ? state.thumbnails[0].id : null;
+  renderThumbnailStrip();
 }
 
 function highlightThumbnail(nodeId) {
-  document.querySelectorAll('.thumb-card').forEach(card => {
-    card.classList.toggle('highlighted', card.dataset.nodeId == nodeId);
-  });
+  if (!nodeId) return;
+  _previewNodeId = nodeId;
+  renderThumbnailStrip();
+}
+
+function renderThumbnailStrip() {
+  const strip = document.getElementById('thumbnailStrip');
+  const countEl = document.getElementById('thumbnailCount');
+  if (!strip) return;
+
+  if (state.thumbnails.length === 0) {
+    strip.innerHTML = '<div class="thumbnail-empty">暂无页面</div>';
+    countEl.textContent = '共 0 页';
+    return;
+  }
+
+  countEl.textContent = '共 ' + state.thumbnails.length + ' 页';
+
+  strip.innerHTML = state.thumbnails.map(thumb => {
+    const chapter = state.outline.find(ch => ch.children.some(c => c.id === thumb.id));
+    const child = chapter ? chapter.children.find(c => c.id === thumb.id) : null;
+    if (!chapter || !child) return '';
+
+    const childIdx = chapter.children.indexOf(child);
+    const isFirst = childIdx === 0;
+    const pageType = thumb.pageNum === 1 ? '封面' : isFirst ? '章节页' : '内容页';
+    const typeClass = thumb.pageNum === 1 ? 'cover' : isFirst ? 'chapter' : 'content';
+    const chapterDisplay = chapter.title.replace(/第.章 /, '');
+    const isActive = _previewNodeId === thumb.id;
+
+    return '<div class="thumbnail-card' + (isActive ? ' active' : '') + '" data-id="' + thumb.id + '">' +
+      '<div class="thumbnail-card-num">' + String(thumb.pageNum).padStart(2, '0') + '</div>' +
+      '<div class="thumbnail-card-info">' +
+        '<div class="thumbnail-card-title">' + escapeHtml(child.title) + '</div>' +
+        '<div class="thumbnail-card-chapter">' + escapeHtml(chapterDisplay) + '</div>' +
+        '<span class="thumbnail-card-type ' + typeClass + '">' + pageType + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // 滚动到当前选中的缩略图
+  if (_previewNodeId) {
+    const activeCard = strip.querySelector('[data-id="' + _previewNodeId + '"]');
+    if (activeCard) {
+      activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+}
+
+// 缩略图点击事件委托
+document.getElementById('thumbnailStrip').addEventListener('click', (e) => {
+  const card = e.target.closest('.thumbnail-card');
+  if (!card) return;
+  const nodeId = card.dataset.id;
+  if (!nodeId) return;
+  _previewNodeId = nodeId;
+  renderThumbnailStrip();
+  scrollTreeToNode(nodeId);
+});
+
+function scrollTreeToNode(nodeId) {
+  const el = document.querySelector('[data-id="' + nodeId + '"]');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ========== 屏幕6: 内容确认 ========== */
@@ -7105,7 +7260,7 @@ function renderContentConfirm() {
       <div style="display:flex;align-items:center;gap:8px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span>共 <strong style="color:#1890ff;">${data.length}</strong> 页 · <strong style="color:#1890ff;">${contentPages.length}</strong> 个内容页 · <strong style="color:#1890ff;">${totalPoints}</strong> 条要点</span>
-        ${enhancedCount > 0 ? `<span style="margin-left:8px;padding:2px 8px;border-radius:4px;background:#dbeafe;color:#2563eb;font-size:11px;font-weight:500;border:1px solid #93c5fd;">知识库增强 ${enhancedCount} 条</span>` : ''}
+        ${enhancedCount > 0 ? `<span style="margin-left:8px;padding:2px 8px;border-radius:4px;background:#e6f2f5;color:#0E4C92;font-size:11px;font-weight:500;border:1px solid #bfe3e3;">知识库增强 ${enhancedCount} 条</span>` : ''}
       </div>
       <div style="display:flex;align-items:center;gap:4px;color:#8c8c8c;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -7168,7 +7323,7 @@ function renderContentConfirm() {
           <input class="cc-input" type="text" data-field="format" data-pidx="${pi}" value="${(page.format || '').replace(/"/g, '&quot;')}" placeholder="描述版式..." />
         </div>
         <div class="cc-field cc-notes-field">
-          <div class="cc-field-label">演讲备注 ${page.noteAI ? '<span class="cc-notes-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>AI生成</span>' : ''}<span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="${pi}" placeholder="输入演讲备注...">${page.note || ''}</textarea>
         </div>
       </div>
@@ -7262,7 +7417,6 @@ function renderTemplates() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
       <div class="template-thumb ${tpl.type}">
-        <div class="match-badge">匹配度 ${tpl.match}%</div>
         ${renderTemplateThumb(tpl.type)}
       </div>
       <div class="template-name">${tpl.name}</div>
@@ -7293,7 +7447,7 @@ function renderTemplateThumb(type) {
     return `<div class="slide-cover-content light"><div class="slide-cover-line" style="background:#3b6ea5;"></div><div class="slide-cover-title" style="font-size:13px;">工作汇报</div><div class="slide-cover-sub" style="color:#64748b;">简洁现代风格</div></div>`;
   }
   if (type === 'tpl-classic') {
-    return `<div class="slide-cover-content"><div class="slide-cover-line" style="background:#3b82f6;"></div><div class="slide-cover-title" style="font-size:13px;">数字化建设</div><div class="slide-cover-sub">科技赋能政务</div></div><div class="slide-cover-deco" style="border-color:rgba(59,130,246,.3);"></div>`;
+    return `<div class="slide-cover-content"><div class="slide-cover-line" style="background:#13A8A8;"></div><div class="slide-cover-title" style="font-size:13px;">数字化建设</div><div class="slide-cover-sub">科技赋能政务</div></div><div class="slide-cover-deco" style="border-color:rgba(59,130,246,.3);"></div>`;
   }
   if (type === 'tpl-green') {
     return `<div class="slide-cover-content light"><div class="slide-cover-line" style="background:#059669;"></div><div class="slide-cover-title" style="font-size:13px;color:#065f46;">生态建设汇报</div><div class="slide-cover-sub" style="color:#059669;">绿色发展 生态优先</div></div><div class="slide-cover-deco" style="border-color:rgba(5,150,105,.3);"></div>`;
@@ -7327,18 +7481,6 @@ function renderTemplatePreview() {
         <div style="flex:1;background:${c.contentBg};border-radius:6px;padding:8px;font-size:8px;color:#475569;">${tc.sections[0].contents[0].title}<br><span style="font-size:14px;font-weight:700;color:${c.pointColor};">${tc.sections[0].contents[0].points[0]}</span></div>
         <div style="flex:1;background:${c.contentBg};border-radius:6px;padding:8px;font-size:8px;color:#475569;">${tc.sections[0].contents[0].title}<br><span style="font-size:14px;font-weight:700;color:${c.pointColor};">${tc.sections[0].contents[0].points[1]}</span></div>
         <div style="flex:1;background:${c.contentBg};border-radius:6px;padding:8px;font-size:8px;color:#475569;">${tc.sections[0].contents[0].title}<br><span style="font-size:14px;font-weight:700;color:${c.pointColor};">${tc.sections[0].contents[0].points[2]}</span></div>
-      </div>
-    </div>`;
-  } else {
-    content.innerHTML = `<div class="preview-slide" style="background:#fff;padding:8%;display:flex;flex-direction:column;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-        <div style="width:3px;height:18px;background:${c.header};border-radius:2px;"></div>
-        <span style="font-family:var(--font-serif);font-size:14px;font-weight:600;color:${c.header};">数据成效对比</span>
-      </div>
-      <div style="flex:1;display:flex;align-items:flex-end;gap:10px;padding-bottom:10px;">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:100%;height:40%;background:#cbd5e1;border-radius:4px 4px 0 0;"></div><span style="font-size:7px;color:#64748b;">2025</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:100%;height:65%;background:${c.pointBorder};border-radius:4px 4px 0 0;"></div><span style="font-size:7px;color:#64748b;">2026H1</span></div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:100%;height:85%;background:${c.header};border-radius:4px 4px 0 0;"></div><span style="font-size:7px;color:#64748b;">目标</span></div>
       </div>
     </div>`;
   }
@@ -7470,6 +7612,8 @@ function confirmTplFromLibrary() {
 function renderSlide() {
   const container = document.getElementById('mainSlide');
   const slide = state.slides[state.currentSlide];
+  container.style.opacity = '0';
+  container.style.transform = 'translateX(12px)';
   container.innerHTML = generateSlideHTML(slide);
   updatePageIndicator();
   updateSlideNavButtons();
@@ -7477,6 +7621,11 @@ function renderSlide() {
   bindSlideEditEvents();
   bindSlideReorderEvents();
   updateS7Notes();
+  requestAnimationFrame(() => {
+    container.style.transition = 'opacity .3s var(--ease-out), transform .3s var(--ease-out)';
+    container.style.opacity = '1';
+    container.style.transform = 'translateX(0)';
+  });
 }
 function updateS7Notes() {
   const slide = state.slides[state.currentSlide];
@@ -7911,7 +8060,7 @@ function getTemplateColors() {
     'tpl-purple':     { bg: 'linear-gradient(160deg, #4c1d95 0%, #5b21b6 50%, #6d28d9 100%)', accent: '#c4b5fd', header: '#5b21b6', pointBorder: '#7c3aed', pointColor: '#7c3aed', contentBg: '#f5f3ff' },
     'tpl-modern':     { bg: 'linear-gradient(160deg, #1e293b 0%, #334155 50%, #475569 100%)', accent: '#38bdf8', header: '#1e293b', pointBorder: '#0ea5e9', pointColor: '#0ea5e9', contentBg: '#f0f9ff' },
     'tpl-classic':    { bg: 'linear-gradient(160deg, #0f2942 0%, #1a365d 50%, #2c5282 100%)', accent: '#c9a961', header: '#1a365d', pointBorder: '#3b6ea5', pointColor: '#3b6ea5', contentBg: '#f8fafc' },
-    'tpl-blue-white': { bg: 'linear-gradient(160deg, #0f2942 0%, #1a365d 50%, #2c5282 100%)', accent: '#60a5fa', header: '#1e3a5f', pointBorder: '#2563eb', pointColor: '#2563eb', contentBg: '#eff6ff' },
+    'tpl-blue-white': { bg: 'linear-gradient(160deg, #0f2942 0%, #1a365d 50%, #2c5282 100%)', accent: '#60a5fa', header: '#0A3573', pointBorder: '#0E4C92', pointColor: '#0E4C92', contentBg: '#eff6ff' },
   };
   return schemes[type] || schemes['tpl-classic'];
 }
@@ -8095,17 +8244,34 @@ function sendMessage(text) {
     sysMsg.innerHTML = `
       <div class="msg-avatar">AI</div>
       <div class="msg-content">
-        <div class="msg-bubble">${response}</div>
-        <div class="msg-time">${time}</div>
+        <div class="msg-bubble" id="streamingBubble"></div>
+        <div class="msg-time" id="streamingTime" style="visibility:hidden;">${time}</div>
       </div>
     `;
     chatMessages.appendChild(sysMsg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    chatSend.disabled = false;
-    
-    // 应用修改到幻灯片
-    applyChatModification(text);
-  }, 1500);
+
+    // 流式逐字输出
+    const bubble = document.getElementById('streamingBubble');
+    const timeEl = document.getElementById('streamingTime');
+    let idx = 0;
+    const cursor = '<span style="display:inline-block;width:2px;height:14px;background:var(--ai-cyan);margin-left:2px;vertical-align:text-bottom;animation:typingCursorBlink .8s steps(2) infinite;"></span>';
+    const streamTimer = setInterval(() => {
+      if (idx < response.length) {
+        bubble.innerHTML = response.substring(0, idx + 1) + cursor;
+        idx++;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } else {
+        bubble.innerHTML = response;
+        bubble.removeAttribute('id');
+        timeEl.style.visibility = 'visible';
+        timeEl.removeAttribute('id');
+        clearInterval(streamTimer);
+        chatSend.disabled = false;
+        applyChatModification(text);
+      }
+    }, 28);
+  }, 1200);
 }
 
 function generateAIResponse(text) {
@@ -8248,7 +8414,7 @@ document.getElementById('s5Prev').addEventListener('click', () => {
       state.exportSlide--;
       renderExportSlide();
       slide.classList.remove('changing');
-    }, 200);
+    }, 180);
   }
 });
 
@@ -8260,7 +8426,7 @@ document.getElementById('s5Next').addEventListener('click', () => {
       state.exportSlide++;
       renderExportSlide();
       slide.classList.remove('changing');
-    }, 200);
+    }, 180);
   }
 });
 
@@ -8294,21 +8460,30 @@ function initSidebarData() {
   try {
     history = JSON.parse(localStorage.getItem('sgp_history') || '[]');
   } catch(e) { history = []; }
-  // 如果没有历史记录，添加预设历史
-  if (history.length === 0) {
+  // 如果没有历史记录或版本过期，添加预设历史
+  const histVersion = localStorage.getItem('sgp_history_ver');
+  if (history.length === 0 || histVersion !== 'v2') {
     history = [
-      { id: 'h1', title: '2026上半年数字政府建设汇报', date: '2026-07-08 14:30', pages: 15, template: '蓝白政务经典', size: '8.6MB', format: 'PPTX' },
-      { id: 'h2', title: '放管服改革工作总结', date: '2026-07-05 09:15', pages: 12, template: '现代简约工作风', size: '6.2MB', format: 'PPTX' },
-      { id: 'h3', title: '营商环境优化政策宣讲', date: '2026-06-28 16:00', pages: 18, template: '红金政务风', size: '10.4MB', format: 'PDF' },
-      { id: 'h4', title: '2025年度政务服务年终总结', date: '2026-01-15 10:30', pages: 22, template: '蓝白政务经典', size: '12.8MB', format: 'PPTX' },
+      { id: 'h1', title: '2026上半年数字政府建设汇报', date: '2026-08-13 14:30', pages: 15, template: '蓝白政务经典', size: '8.6MB', format: 'PPTX' },
+      { id: 'h2', title: '放管服改革工作总结', date: '2026-08-12 09:15', pages: 12, template: '现代简约工作风', size: '6.2MB', format: 'PPTX' },
+      { id: 'h3', title: '营商环境优化政策宣讲', date: '2026-08-10 16:00', pages: 18, template: '红金政务风', size: '10.4MB', format: 'PDF' },
+      { id: 'h4', title: '政务服务标准化建设汇报', date: '2026-08-08 11:20', pages: 14, template: '蓝白政务经典', size: '7.8MB', format: 'PPTX' },
+      { id: 'h5', title: '2025年度政务服务年终总结', date: '2026-07-25 10:30', pages: 22, template: '蓝白政务经典', size: '12.8MB', format: 'PPTX' },
+      { id: 'h6', title: '智慧城市建设项目阶段性报告', date: '2026-07-15 14:00', pages: 16, template: '现代简约工作风', size: '9.2MB', format: 'PPTX' },
+      { id: 'h7', title: '2026年一季度工作总结汇报', date: '2026-04-05 09:30', pages: 10, template: '红金政务风', size: '5.6MB', format: 'PDF' },
     ];
     localStorage.setItem('sgp_history', JSON.stringify(history));
+    localStorage.setItem('sgp_history_ver', 'v2');
   }
 }
 
 // 保存草稿
 function saveDraft() {
-  const title = (document.getElementById('topicInput') && document.getElementById('topicInput').value) || '未命名草稿';
+  const title = (document.getElementById('themeInput') && document.getElementById('themeInput').value) || '未命名草稿';
+  // 同步表单到 state
+  state.topic = title;
+  const purposeSelect = document.getElementById('purposeSelect');
+  if (purposeSelect) state.purpose = purposeSelect.value;
   const now = new Date();
   const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
   const stepNames = ['需求输入', '智能解析', '大纲确认', '知识库调用', '内容生成', '内容确认', '模板选择', '预览导出'];
@@ -8340,17 +8515,54 @@ function saveDraft() {
 function loadDraft(draftId) {
   const draft = drafts.find(d => d.id === draftId);
   if (!draft) return;
-  
   // 恢复状态
+  const savedStep = (draft.state && draft.state.currentScreen) || draft.step || 1;
   if (draft.state) {
     Object.assign(state, JSON.parse(JSON.stringify(draft.state)));
   }
   currentDraftId = draft.id;
-  
-  // 导航到保存时的步骤
-  navigateTo(state.currentScreen || 1);
+  // 恢复表单
+  const themeInput = document.getElementById('themeInput');
+  if (themeInput && state.topic) themeInput.value = state.topic;
+  const purposeSelect = document.getElementById('purposeSelect');
+  if (purposeSelect && state.purpose) purposeSelect.value = state.purpose;
+  // 强制导航到保存时的步骤（绕过 navigateTo 的相同步骤拦截）
+  const targetStep = savedStep || 1;
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById('screen-' + targetStep);
+  if (current && current !== next) {
+    current.classList.add('exit-left');
+    current.classList.remove('active');
+    requestAnimationFrame(() => {
+      current.classList.remove('exit-left');
+      if (next) next.classList.add('active');
+    });
+  } else if (next && !next.classList.contains('active')) {
+    next.classList.add('active');
+  }
+  state.currentScreen = targetStep;
+  updateStepsNav(targetStep);
+  // 渲染对应页面内容
+  if (targetStep === 1) {
+    if (themeInput && state.topic) themeInput.value = state.topic;
+  }
+  if (targetStep === 2) renderParsing();
+  if (targetStep === 3) renderOutline();
+  if (targetStep === 4) renderKnowledge();
+  if (targetStep === 5) renderTemplates();
+  if (targetStep === 6) renderContentConfirm();
+  if (targetStep === 7) {
+    syncSlideNotesToContent();
+    state.slides = generateSlides();
+    renderSlide();
+  }
+  if (targetStep === 8) {
+    syncSlideNotesToContent();
+    state.slides = generateSlides();
+    renderExportSlide();
+  }
   renderSidebarList();
-  showToast('已恢复草稿：' + draft.title, 'success');
+  showToast('已恢复草稿：' + draft.title + '（' + (draft.stepName || '步骤' + targetStep) + '）', 'success');
 }
 
 // 删除草稿
@@ -8391,8 +8603,8 @@ function renameDraft(draftId, e) {
     localStorage.setItem('sgp_drafts', JSON.stringify(drafts));
     // 如果是当前草稿，同步更新主题输入框
     if (currentDraftId === draftId) {
-      const topicInput = document.getElementById('topicInput');
-      if (topicInput) topicInput.value = newTitle;
+      const themeInput = document.getElementById('themeInput');
+      if (themeInput) themeInput.value = newTitle;
     }
     renderSidebarList();
     showToast('已重命名为：' + newTitle, 'success');
@@ -8409,13 +8621,10 @@ function renameDraft(draftId, e) {
 function newPPT() {
   // 保存当前为草稿
   if (state.currentScreen > 1) saveDraft();
-  
-  // 重置状态
   currentDraftId = null;
-  state.currentScreen = 1;
   // 重置表单
-  const topicInput = document.getElementById('topicInput');
-  if (topicInput) topicInput.value = '';
+  const themeInput = document.getElementById('themeInput');
+  if (themeInput) themeInput.value = '';
   const purposeSelect = document.getElementById('purposeSelect');
   if (purposeSelect) purposeSelect.value = '汇报';
   navigateTo(1);
@@ -8467,6 +8676,79 @@ function showToast(msg, type) {
 }
 
 // 渲染侧边栏列表
+// 筛选状态
+let sidebarSearchKw = '';
+let sidebarTimeRange = 'all';
+
+function setSidebarTimeFilter(chip) {
+  document.querySelectorAll('#timeFilterRow .time-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  sidebarTimeRange = chip.dataset.range;
+  document.getElementById('customRange').classList.toggle('show', sidebarTimeRange === 'custom');
+  applySidebarFilter();
+}
+
+function clearSidebarSearch() {
+  document.getElementById('sidebarSearch').value = '';
+  sidebarSearchKw = '';
+  document.getElementById('searchClear').style.display = 'none';
+  applySidebarFilter();
+}
+
+function applySidebarFilter() {
+  const input = document.getElementById('sidebarSearch');
+  sidebarSearchKw = input.value.trim().toLowerCase();
+  document.getElementById('searchClear').style.display = sidebarSearchKw ? 'block' : 'none';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dateStart = document.getElementById('dateStart')?.value;
+  const dateEnd = document.getElementById('dateEnd')?.value;
+  let visibleCount = 0;
+  document.querySelectorAll('#sidebarList .draft-item, #sidebarList .history-item, #sidebarList .history-row').forEach(item => {
+    const title = (item.getAttribute('data-title') || item.querySelector('.draft-item-title, .history-item-title')?.textContent || '').toLowerCase();
+    const dateStr = item.getAttribute('data-date') || '';
+    let kwMatch = !sidebarSearchKw || title.includes(sidebarSearchKw);
+    let timeMatch = true;
+    if (sidebarTimeRange !== 'all' && dateStr) {
+      const itemDate = new Date(dateStr.substring(0, 10)); itemDate.setHours(0,0,0,0);
+      const diff = (today - itemDate) / (1000*60*60*24);
+      if (sidebarTimeRange === 'today') timeMatch = diff === 0;
+      else if (sidebarTimeRange === '7d') timeMatch = diff >= 0 && diff <= 6;
+      else if (sidebarTimeRange === '30d') timeMatch = diff >= 0 && diff <= 29;
+      else if (sidebarTimeRange === 'custom') {
+        if (dateStart && itemDate < new Date(dateStart)) timeMatch = false;
+        if (dateEnd) { const end = new Date(dateEnd); end.setHours(23,59,59,999); if (itemDate > end) timeMatch = false; }
+      }
+    }
+    const show = kwMatch && timeMatch;
+    item.style.display = show ? '' : 'none';
+    if (show) visibleCount++;
+  });
+  // 隐藏空日期分组标题
+  document.querySelectorAll('#sidebarList .date-group-label').forEach(label => {
+    let hasNext = false;
+    let next = label.nextElementSibling;
+    while (next && !next.classList.contains('date-group-label')) {
+      if (next.style.display !== 'none') { hasNext = true; break; }
+      next = next.nextElementSibling;
+    }
+    label.style.display = hasNext ? '' : 'none';
+  });
+  const empty = document.getElementById('filterEmpty');
+  if (empty) empty.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+function getDateGroupLabel(dateStr) {
+  if (!dateStr) return '其他';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dateStr.substring(0, 10)); d.setHours(0,0,0,0);
+  const diff = Math.round((today - d) / (1000*60*60*24));
+  if (diff === 0) return '今天';
+  if (diff === 1) return '昨天';
+  if (diff > 1 && diff <= 7) return '近七天';
+  if (diff > 7 && diff <= 30) return '近三十天';
+  return dateStr.substring(0, 7);
+}
+
 function renderSidebarList() {
   const list = document.getElementById('sidebarList');
   const draftBadge = document.getElementById('draftBadge');
@@ -8487,7 +8769,7 @@ function renderSidebarList() {
       const icon = d.progress >= 100 
         ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>'
         : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-      return `<div class="draft-item ${isActive ? 'active' : ''}" data-id="${d.id}" onclick="loadDraft('${d.id}')">
+      return `<div class="draft-item ${isActive ? 'active' : ''}" data-id="${d.id}" data-date="${d.date}" data-title="${d.title}" onclick="loadDraft('${d.id}')">
         <div class="draft-item-header">
           <div class="draft-item-icon">${icon}</div>
           <div class="draft-item-title">${d.title}</div>
@@ -8516,14 +8798,105 @@ function renderSidebarList() {
           </button>
         </div>
       </div>`;
-    }).join('');
+    }).join('') + '<div class="filter-empty" id="filterEmpty" style="display:none;">未找到匹配的记录</div>';
+    applySidebarFilter();
   } else {
     if (history.length === 0) {
       list.innerHTML = '<div class="sidebar-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><p>暂无历史记录<br>完成导出后会自动保存</p></div>';
       return;
     }
-    list.innerHTML = history.map(h => {
-      return `<div class="history-item" onclick="showToast('正在加载历史PPT：${h.title}', 'info')">
+    // 按时间分组
+    const groups = {};
+    history.forEach(h => {
+      const label = getDateGroupLabel(h.date);
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(h);
+    });
+    const groupOrder = ['今天', '昨天', '近七天', '近三十天'];
+    let html = '';
+    groupOrder.forEach(label => {
+      if (groups[label]) {
+        html += `<div class="date-group-label">${label}</div>`;
+        html += groups[label].map(h => renderHistoryItem(h)).join('');
+        delete groups[label];
+      }
+    });
+    Object.keys(groups).forEach(label => {
+      html += `<div class="date-group-label">${label}</div>`;
+      html += groups[label].map(h => renderHistoryItem(h)).join('');
+    });
+    list.innerHTML = html + '<div class="filter-empty" id="filterEmpty" style="display:none;">未找到匹配的记录</div>';
+    applySidebarFilter();
+  }
+}
+
+function loadHistoryPPT(id) {
+  const h = history.find(item => item.id === id);
+  if (!h) { showToast('未找到该历史记录', 'error'); return; }
+  // 设置主题
+  const input = document.getElementById('themeInput');
+  if (input) input.value = h.title;
+  // 选模板
+  if (state.templates) {
+    const tplIdx = state.templates.findIndex(t => t.name === h.template);
+    if (tplIdx >= 0) state.selectedTemplate = tplIdx;
+  }
+  state.generated = true;
+  // 先导航到预览页（navigateTo内部会生成幻灯片并渲染）
+  navigateTo(8);
+  // 创建草稿（导航后state.slides已生成）
+  const now = new Date();
+  const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+  const draft = {
+    id: 'h-' + id, title: h.title, date: dateStr,
+    step: 8, stepName: '预览导出', progress: 100,
+    state: JSON.parse(JSON.stringify(state)),
+    timestamp: Date.now()
+  };
+  const idx = drafts.findIndex(d => d.id === draft.id);
+  if (idx >= 0) drafts[idx] = draft; else drafts.push(draft);
+  currentDraftId = draft.id;
+  localStorage.setItem('sgp_drafts', JSON.stringify(drafts));
+  renderSidebarList();
+  // 播放加载动画
+  const overlay = document.createElement('div');
+  overlay.id = 'loadOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,.96);z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .4s;';
+  overlay.innerHTML = `
+    <div style="width:360px;max-width:90%;text-align:center;">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--ai-blue),var(--ai-cyan));margin-bottom:16px;animation:aiGlowPulse 2s ease-in-out infinite;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div style="font-size:18px;font-weight:700;color:var(--navy-800);margin-bottom:4px;">正在加载历史PPT</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;">正在从归档中恢复「${h.title}」…</div>
+      <div style="height:6px;background:var(--navy-100);border-radius:3px;overflow:hidden;">
+        <div id="loadBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--ai-blue),var(--ai-cyan));border-radius:3px;transition:width .15s ease;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-tertiary);">模板「${h.template}」· ${h.pages}页 · ${h.format}</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  // 进度条动画
+  const bar = document.getElementById('loadBar');
+  let p = 0;
+  function tick() {
+    p += 4;
+    if (p >= 100) {
+      bar.style.width = '100%';
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 400);
+      }, 200);
+      return;
+    }
+    bar.style.width = p + '%';
+    setTimeout(tick, 50);
+  }
+  tick();
+}
+
+function renderHistoryItem(h) {
+  return `<div class="history-item" data-date="${h.date}" data-title="${h.title}" onclick="loadHistoryPPT('${h.id}')">
         <div class="draft-item-header">
           <div class="history-item-icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
@@ -8541,15 +8914,20 @@ function renderSidebarList() {
           </button>
         </div>
       </div>`;
-    }).join('');
-  }
 }
 
 // 绑定事件
 function initSidebar() {
   initSidebarData();
-  renderSidebarList();
-  
+  // 先绑定事件，不阻塞初始渲染
+  bindSidebarEvents();
+  // 延迟渲染侧边栏列表，避免初始布局重排卡顿
+  requestAnimationFrame(() => {
+    renderSidebarList();
+  });
+}
+
+function bindSidebarEvents() {
   // Tab切换
   document.querySelectorAll('.sidebar-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -8728,6 +9106,15 @@ document.getElementById('addChapterBtn').addEventListener('click', () => {
   renderOutline();
 });
 
+// 全部展开/收起按钮
+document.getElementById('expandAllOutlineBtn').addEventListener('click', () => {
+  const allExpanded = state.outline.length > 0 && state.outline.every(ch => ch.expanded);
+  state.outline.forEach(ch => { ch.expanded = !allExpanded; });
+  renderOutline();
+});
+
+
+
 // 自动填充主题输入框
 if (!themeInput.value) {
   themeInput.value = '2026年上半年数字政府建设情况汇报，重点围绕一网通办、数据共享、营商环境优化三大方向，体现以人民为中心的服务理念。';
@@ -8742,7 +9129,7 @@ console.log('智能政务PPT助手 Demo 已加载完成');
 
 /* ---------- 用户与角色定义 ---------- */
 const adminUsers = {
-  admin: { name: '张明', dept: '省数据局', role: '超管', roleKey: 'admin', avatar: '张', avatarBg: 'linear-gradient(135deg,#1e3a5f,#2563eb)' },
+  admin: { name: '张明', dept: '省数据局', role: '超管', roleKey: 'admin', avatar: '张', avatarBg: 'linear-gradient(135deg,#0E4C92,#13A8A8)' },
   dept:  { name: '李华', dept: '教育厅',   role: '部门管理员', roleKey: 'dept', avatar: '李', avatarBg: 'linear-gradient(135deg,#0d9488,#14b8a6)' },
   user:  { name: '王芳', dept: '教育厅',   role: '普通用户', roleKey: 'user', avatar: '王', avatarBg: 'linear-gradient(135deg,#64748b,#94a3b8)' },
 };
@@ -8762,30 +9149,29 @@ function adminToast(msg) {
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
-/* ---------- 模板数据 ---------- */
+/* ---------- 模板数据 ----------
+ * scope 字段说明:
+ *   'personal' — 个人模板（仅上传者本人可见）
+ *   'dept'     — 部门模板（已被分享到部门模板库）
+ *   'global'   — 全部模板（已被上传到全局模板库）
+ * 模板可以同时存在于多个范围，用 sharedToDept / pushedToGlobal 标记
+ */
 let nextTemplateId = 100;
 const adminData = {
-  templateTab: 'all',
+  templateTab: 'global',
+  templateCat: 'all',
   templates: [
-    { id: 't1', name: '党政汇报经典',     category: '工作汇报', type: 'tpl-red-gold', desc: '红金配色·庄重严肃',       uploader: '张明', dept: '省数据局', role: 'admin', status: 'approved', enabled: true,  time: '2026-07-01 09:00' },
-    { id: 't2', name: '现代简约工作风',   category: '工作汇报', type: 'tpl-modern',   desc: '浅色简约·现代感',         uploader: '张明', dept: '省数据局', role: 'admin', status: 'approved', enabled: true,  time: '2026-07-02 10:30' },
-    { id: 't3', name: '深蓝经典·商务',   category: '年终总结', type: 'tpl-classic',  desc: '深蓝配色·商务正式',       uploader: '张明', dept: '省数据局', role: 'admin', status: 'approved', enabled: true,  time: '2026-07-01 14:00' },
-    { id: 't4', name: '教育督导检查模板', category: '教育培训', type: 'tpl-orange',   desc: '橙色配色·活力明快',       uploader: '李华', dept: '教育厅',   role: 'dept',  status: 'approved', enabled: true,  time: '2026-07-07 09:00' },
-    { id: 't5', name: '校园安全专项模板', category: '教育培训', type: 'tpl-orange',   desc: '校园安全专项检查',         uploader: '李华', dept: '教育厅',   role: 'dept',  status: 'approved', enabled: false, time: '2026-07-09 11:20' },
-    { id: 't6', name: '教育经费使用汇报', category: '教育培训', type: 'tpl-orange',   desc: '教育经费使用情况',         uploader: '王芳', dept: '教育厅',   role: 'user',  status: 'pending',  enabled: false, time: '2026-07-13 15:00' },
-    { id: 't7', name: '政务服务窗口模板', category: '工作汇报', type: 'tpl-blue-white', desc: '蓝白配色·正式庄重',       uploader: '王芳', dept: '教育厅',   role: 'user',  status: 'rejected', enabled: false, time: '2026-07-10 08:30' },
-    { id: 't8', name: '生态环境督察模板', category: '生态环保', type: 'tpl-green',    desc: '绿色配色·清新自然',       uploader: '张明', dept: '省数据局', role: 'admin', status: 'approved', enabled: true,  time: '2026-07-05 16:00' },
-    { id: 't9', name: '党建红金·精简',   category: '党建专题', type: 'tpl-red-gold', desc: '红金配色·精简版',         uploader: '张明', dept: '省数据局', role: 'admin', status: 'approved', enabled: true,  time: '2026-07-03 09:00' },
-    { id: 't10',name: '文化建设专题模板', category: '文化建设', type: 'tpl-purple',   desc: '紫色配色·典雅大气',       uploader: '李华', dept: '教育厅',   role: 'dept',  status: 'pending',  enabled: false, time: '2026-07-14 10:00' },
-    { id: 't11',name: '乡村振兴案例模板', category: '工作汇报', type: 'tpl-green',    desc: '绿色配色·乡村振兴',       uploader: '王芳', dept: '教育厅',   role: 'user',  status: 'pending',  enabled: false, time: '2026-07-15 08:00' },
-  ],
-  reviewRecords: [
-    { templateName: '教育督导检查模板', uploader: '李华', dept: '教育厅',   result: '通过', reviewer: '张明', time: '2026-07-08 10:00' },
-    { templateName: '校园安全专项模板', uploader: '李华', dept: '教育厅',   result: '通过', reviewer: '张明', time: '2026-07-10 14:00' },
-    { templateName: '政务服务窗口模板', uploader: '王芳', dept: '教育厅',   result: '驳回', reviewer: '李华', time: '2026-07-11 09:00', reason: '配色方案需调整' },
-    { templateName: '财政预算执行模板', uploader: '王芳', dept: '财政厅',   result: '通过', reviewer: '张明', time: '2026-07-06 16:00' },
-    { templateName: '发改项目立项模板', uploader: '王芳', dept: '发改委',   result: '通过', reviewer: '李华', time: '2026-07-05 11:00' },
-    { templateName: '卫健疫情防控模板', uploader: '王芳', dept: '卫健委',   result: '驳回', reviewer: '张明', time: '2026-07-04 15:00', reason: '内容需补充数据来源' },
+    { id: 't1', name: '党政汇报经典',     category: '工作汇报', type: 'tpl-red-gold', desc: '红金配色·庄重严肃',       uploader: '张明', dept: '省数据局', role: 'admin', enabled: true,  time: '2026-07-01 09:00', sharedToDept: false, pushedToGlobal: true },
+    { id: 't2', name: '现代简约工作风',   category: '工作汇报', type: 'tpl-modern',   desc: '浅色简约·现代感',         uploader: '张明', dept: '省数据局', role: 'admin', enabled: true,  time: '2026-07-02 10:30', sharedToDept: false, pushedToGlobal: true },
+    { id: 't3', name: '深蓝经典·商务',   category: '年终总结', type: 'tpl-classic',  desc: '深蓝配色·商务正式',       uploader: '张明', dept: '省数据局', role: 'admin', enabled: true,  time: '2026-07-01 14:00', sharedToDept: false, pushedToGlobal: true },
+    { id: 't4', name: '教育督导检查模板', category: '教育培训', type: 'tpl-orange',   desc: '橙色配色·活力明快',       uploader: '李华', dept: '教育厅',   role: 'dept',  enabled: true,  time: '2026-07-07 09:00', sharedToDept: true,  pushedToGlobal: true },
+    { id: 't5', name: '校园安全专项模板', category: '教育培训', type: 'tpl-orange',   desc: '校园安全专项检查',         uploader: '李华', dept: '教育厅',   role: 'dept',  enabled: false, time: '2026-07-09 11:20', sharedToDept: true,  pushedToGlobal: false },
+    { id: 't6', name: '教育经费使用汇报', category: '教育培训', type: 'tpl-orange',   desc: '教育经费使用情况',         uploader: '王芳', dept: '教育厅',   role: 'user',  enabled: true,  time: '2026-07-13 15:00', sharedToDept: true,  pushedToGlobal: false },
+    { id: 't7', name: '政务服务窗口模板', category: '工作汇报', type: 'tpl-blue-white', desc: '蓝白配色·正式庄重',       uploader: '王芳', dept: '教育厅',   role: 'user',  enabled: true,  time: '2026-07-10 08:30', sharedToDept: false, pushedToGlobal: false },
+    { id: 't8', name: '生态环境督察模板', category: '生态环保', type: 'tpl-green',    desc: '绿色配色·清新自然',       uploader: '张明', dept: '省数据局', role: 'admin', enabled: true,  time: '2026-07-05 16:00', sharedToDept: true,  pushedToGlobal: true },
+    { id: 't9', name: '党建红金·精简',   category: '党建专题', type: 'tpl-red-gold', desc: '红金配色·精简版',         uploader: '张明', dept: '省数据局', role: 'admin', enabled: true,  time: '2026-07-03 09:00', sharedToDept: false, pushedToGlobal: true },
+    { id: 't10',name: '文化建设专题模板', category: '文化建设', type: 'tpl-purple',   desc: '紫色配色·典雅大气',       uploader: '李华', dept: '教育厅',   role: 'dept',  enabled: true,  time: '2026-07-14 10:00', sharedToDept: true,  pushedToGlobal: true },
+    { id: 't11',name: '乡村振兴案例模板', category: '工作汇报', type: 'tpl-green',    desc: '绿色配色·乡村振兴',       uploader: '王芳', dept: '教育厅',   role: 'user',  enabled: true,  time: '2026-07-15 08:00', sharedToDept: true,  pushedToGlobal: false },
   ],
 };
 
@@ -8793,20 +9179,57 @@ const adminData = {
 function isAdmin() { return currentUserId === 'admin'; }
 function isDept() { return currentUserId === 'dept'; }
 function isUser() { return currentUserId === 'user'; }
-function canApprove(tpl) {
+function curUser() { return adminUsers[currentUserId]; }
+
+/* 模板是否在个人范围内可见：上传者本人，任何角色都能看到自己的 */
+function inPersonalScope(tpl) {
+  return tpl.uploader === curUser().name;
+}
+/* 模板是否在部门范围内可见：已被分享到部门 + 属于当前用户所在部门 */
+function inDeptScope(tpl) {
+  return tpl.sharedToDept && tpl.dept === curUser().dept;
+}
+/* 模板是否在全局范围内可见：已被上传到全局模板库，所有用户都能看到 */
+function inGlobalScope(tpl) {
+  return tpl.pushedToGlobal;
+}
+
+/* 能否分享到部门模板库：普通用户和部门管理员可以分享自己部门的模板 */
+function canShareToDept(tpl) {
+  if (tpl.sharedToDept) return false; // 已经分享过
+  if (isAdmin()) return false;        // 超管不需要分享
+  return tpl.uploader === curUser().name || (isDept() && tpl.dept === curUser().dept);
+}
+/* 能否撤回部门分享：分享者本人 或 部门管理员 */
+function canUnshareFromDept(tpl) {
+  if (!tpl.sharedToDept) return false;
+  if (tpl.uploader === curUser().name) return true;
+  if (isDept() && tpl.dept === curUser().dept) return true;
+  return false;
+}
+/* 能否上传到全部模板库：仅部门管理员 */
+function canPushToGlobal(tpl) {
+  if (tpl.pushedToGlobal) return false;
+  if (!isDept()) return false;
+  return tpl.sharedToDept && tpl.dept === curUser().dept;
+}
+/* 能否撤回全局上传：部门管理员（撤回自己上传的） 或 超级管理员（撤回任何） */
+function canUnpushFromGlobal(tpl) {
+  if (!tpl.pushedToGlobal) return false;
   if (isAdmin()) return true;
-  if (isDept() && tpl.role !== 'admin') return true;
+  if (isDept() && tpl.dept === curUser().dept) return true;
   return false;
 }
 function canToggle(tpl) {
   if (isAdmin()) return true;
-  if (isDept() && (tpl.role === 'dept' || tpl.role === 'user')) return true;
+  if (isDept() && tpl.dept === curUser().dept) return true;
+  if (isUser() && tpl.uploader === curUser().name) return true;
   return false;
 }
 function canDelete(tpl) {
   if (isAdmin()) return true;
-  if (isDept() && (tpl.role === 'dept' || tpl.role === 'user')) return true;
-  if (isUser() && tpl.uploader === adminUsers.user.name) return true;
+  if (isUser() && tpl.uploader === curUser().name) return true;
+  if (isDept() && tpl.uploader === curUser().name) return true;
   return false;
 }
 
@@ -8907,44 +9330,85 @@ function renderAdminTemplateBody() {
   const body = document.getElementById('adminBody');
   if (!body) return;
   const tab = adminData.templateTab;
+  const cat = adminData.templateCat;
 
-  const tabs = [
-    { key: 'all',     label: '全部模板',   icon: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
-    { key: 'pending', label: '待审核',     icon: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>', show: !isUser() },
-    { key: 'records', label: '审核记录',   icon: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>' },
+  /* 第一层：范围标签页 —— 全部模板 / 部门模板 / 个人模板 */
+  const scopeTabs = [
+    { key: 'global',   label: '全部模板' },
+    { key: 'dept',     label: '部门模板' },
+    { key: 'personal', label: '个人模板' },
   ];
+  var scopeCounts = {
+    personal: adminData.templates.filter(t => inPersonalScope(t)).length,
+    dept:     adminData.templates.filter(t => inDeptScope(t)).length,
+    global:   adminData.templates.filter(t => inGlobalScope(t)).length,
+  };
+  var scopeTabsHtml = '<div class="admin-tabs">' +
+    scopeTabs.map(function(s) {
+      return '<div class="admin-tab' + (s.key === tab ? ' active' : '') + '" onclick="switchTemplateTab(\'' + s.key + '\')">' +
+        esc(s.label) + '<span style="margin-left:4px;font-size:11px;opacity:.7;">(' + scopeCounts[s.key] + ')</span></div>';
+    }).join('') + '</div>';
 
-  const tabsHtml = '<div class="admin-tabs">' +
-    tabs.filter(t => t.show !== false).map(t =>
-      '<div class="admin-tab' + (t.key === tab ? ' active' : '') + '" onclick="switchTemplateTab(\'' + t.key + '\')">' + adminIcon(t.icon) + t.label + '</div>'
-    ).join('') + '</div>';
+  /* 第二层：按性质分类筛选 */
+  var filtered = adminData.templates.filter(function(t) {
+    if (tab === 'personal') return inPersonalScope(t);
+    if (tab === 'dept')     return inDeptScope(t);
+    if (tab === 'global')   return inGlobalScope(t);
+    return false;
+  });
+  var categories = ['all'];
+  filtered.forEach(function(t) {
+    if (!categories.includes(t.category)) categories.push(t.category);
+  });
+  var catFilterHtml = '<div class="admin-cat-filter">' +
+    '<span class="admin-cat-label">分类：</span>' +
+    categories.map(function(c) {
+      var label = c === 'all' ? '全部' : c;
+      var cnt = c === 'all' ? filtered.length : filtered.filter(function(t) { return t.category === c; }).length;
+      return '<div class="admin-cat-chip' + (c === cat ? ' active' : '') + '" onclick="switchTemplateCat(\'' + c + '\')">' +
+        esc(label) + ' <span style="opacity:.6;">' + cnt + '</span></div>';
+    }).join('') + '</div>';
 
-  let content = '';
-  if (tab === 'all') {
-    content = renderAllTemplatesTable();
-  } else if (tab === 'pending') {
-    content = renderPendingTable();
-  } else if (tab === 'records') {
-    content = renderReviewRecordsTable();
-  }
+  /* 最终过滤结果 */
+  var finalList = cat === 'all' ? filtered : filtered.filter(function(t) { return t.category === cat; });
 
-  body.innerHTML = tabsHtml + content;
+  var content = renderTemplateCards(finalList, tab);
+
+  body.innerHTML = scopeTabsHtml + catFilterHtml + content;
 }
 
-function switchTemplateTab(t) { adminData.templateTab = t; renderAdminTemplateBody(); }
+function switchTemplateTab(t) { adminData.templateTab = t; adminData.templateCat = 'all'; renderAdminTemplateBody(); }
+function switchTemplateCat(c) { adminData.templateCat = c; renderAdminTemplateBody(); }
 
-/* ---------- 全部模板表格 ---------- */
-function renderAllTemplatesTable() {
-  const templates = adminData.templates;
-  const cards = templates.map(t => {
-    const uploaderInfo = t.dept + ' - ' + t.uploader;
-    const statusClass = t.status === 'approved' ? 'ok' : t.status === 'pending' ? 'warn' : 'err';
-    const statusText = t.status === 'approved' ? '已通过' : t.status === 'pending' ? '待审核' : '已驳回';
-    const enableClass = t.enabled ? 'ok' : 'warn';
-    const enableText = t.enabled ? '启用中' : '已停用';
+/* ---------- 模板卡片渲染 ---------- */
+function renderTemplateCards(templates, tab) {
+  if (!templates.length) return '<div class="admin-card"><div class="admin-empty">该范围下暂无模板</div></div>';
+  var cards = templates.map(function(t) {
+    var uploaderInfo = t.dept + ' - ' + t.uploader;
+    var enableClass = t.enabled ? 'ok' : 'warn';
+    var enableText = t.enabled ? '启用中' : '已停用';
 
-    let ops = '';
-    if (canToggle(t) && t.status === 'approved') {
+    // 范围标记
+    var scopeBadges = '';
+    if (t.pushedToGlobal) scopeBadges += '<span class="admin-scope-badge global">全部</span>';
+    if (t.sharedToDept) scopeBadges += '<span class="admin-scope-badge dept">部门</span>';
+    if (!t.pushedToGlobal && !t.sharedToDept) scopeBadges += '<span class="admin-scope-badge personal">个人</span>';
+
+    // 操作按钮
+    var ops = '';
+    if (canShareToDept(t)) {
+      ops += '<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();shareToDept(\'' + t.id + '\')">分享到部门</button> ';
+    }
+    if (canUnshareFromDept(t)) {
+      ops += '<button class="btn btn-secondary btn-sm" style="color:#b45309;" onclick="event.stopPropagation();unshareFromDept(\'' + t.id + '\')">撤回部门分享</button> ';
+    }
+    if (canPushToGlobal(t)) {
+      ops += '<button class="btn btn-secondary btn-sm" style="color:#0E4C92;" onclick="event.stopPropagation();pushToGlobal(\'' + t.id + '\')">上传到全部模板</button> ';
+    }
+    if (canUnpushFromGlobal(t)) {
+      ops += '<button class="btn btn-secondary btn-sm" style="color:#dc2626;" onclick="event.stopPropagation();unpushFromGlobal(\'' + t.id + '\')">撤回全局上传</button> ';
+    }
+    if (canToggle(t)) {
       ops += '<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();toggleTpl(\'' + t.id + '\')">' + (t.enabled ? '停用' : '启用') + '</button> ';
     }
     if (canDelete(t)) {
@@ -8953,13 +9417,14 @@ function renderAllTemplatesTable() {
     if (!ops) ops = '<span style="color:var(--text-tertiary);font-size:12px;">——</span>';
 
     return '<div class="tpl-mgmt-card" onclick="viewTemplateStyle(\'' + t.id + '\')">' +
-      '<div class="tpl-mgmt-thumb ' + t.type + '">' + renderTemplateThumb(t.type) + '</div>' +
+      '<div class="tpl-mgmt-thumb ' + t.type + '">' + renderTemplateThumb(t.type) +
+        '<div class="tpl-mgmt-scope-badges">' + scopeBadges + '</div>' +
+      '</div>' +
       '<div class="tpl-mgmt-info">' +
         '<div class="tpl-mgmt-name">' + esc(t.name) + '</div>' +
         '<div class="tpl-mgmt-desc">' + esc(t.desc) + '</div>' +
         '<div class="tpl-mgmt-meta">' +
           '<span class="admin-tag">' + esc(t.category) + '</span>' +
-          '<span class="admin-status ' + statusClass + '">' + statusText + '</span>' +
           '<span class="admin-status ' + enableClass + '">' + enableText + '</span>' +
         '</div>' +
         '<div class="tpl-mgmt-uploader">' + adminIcon('<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>') + esc(uploaderInfo) + ' · ' + t.time + '</div>' +
@@ -9005,54 +9470,10 @@ function viewTemplateStyle(id) {
   document.body.appendChild(mask);
 }
 
-/* ---------- 待审核表格 ---------- */
-function renderPendingTable() {
-  if (isUser()) return '<div class="admin-card"><div class="admin-empty">您没有权限查看待审核内容</div></div>';
-
-  const pending = adminData.templates.filter(t => t.status === 'pending');
-  if (!pending.length) return '<div class="admin-card"><div class="admin-empty">暂无待审核的模板</div></div>';
-
-  const rows = pending.map(t => {
-    const uploaderInfo = t.dept + ' - ' + t.uploader;
-    let ops = '';
-    if (canApprove(t)) {
-      ops = '<button class="btn btn-primary btn-sm" onclick="approveTpl(\'' + t.id + '\')">通过</button> ' +
-            '<button class="btn btn-secondary btn-sm" onclick="openRejectTplModal(\'' + t.id + '\')">驳回</button>';
-    }
-    return '<tr><td><strong>' + esc(t.name) + '</strong><div style="font-size:11px;color:var(--text-tertiary);">' + esc(t.desc) + '</div></td>' +
-      '<td>' + esc(t.category) + '</td><td>' + esc(uploaderInfo) + '</td>' +
-      '<td style="font-size:12px;color:var(--text-secondary);">' + t.time + '</td>' +
-      '<td>' + ops + '</td></tr>';
-  }).join('');
-
-  return '<div class="admin-card"><div class="admin-card-body" style="padding:0;">' +
-    '<table class="admin-table"><thead><tr><th>模板名称</th><th>分类</th><th>上传者</th><th>提交时间</th><th>操作</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
-}
-
-/* ---------- 审核记录表格 ---------- */
-function renderReviewRecordsTable() {
-  const records = adminData.reviewRecords;
-  if (!records.length) return '<div class="admin-card"><div class="admin-empty">暂无审核记录</div></div>';
-
-  const rows = records.map(r => {
-    const resultClass = r.result === '通过' ? 'ok' : 'err';
-    let reasonCol = '<td style="font-size:12px;color:var(--text-tertiary);">——</td>';
-    if (r.reason) reasonCol = '<td style="font-size:12px;color:var(--text-secondary);">' + esc(r.reason) + '</td>';
-    return '<tr><td>' + esc(r.templateName) + '</td><td>' + esc(r.uploader) + '</td><td>' + esc(r.dept) + '</td>' +
-      '<td><span class="admin-status ' + resultClass + '">' + r.result + '</span></td>' +
-      '<td>' + esc(r.reviewer) + '</td>' + reasonCol +
-      '<td style="font-size:12px;color:var(--text-secondary);">' + r.time + '</td></tr>';
-  }).join('');
-
-  return '<div class="admin-card"><div class="admin-card-body" style="padding:0;">' +
-    '<table class="admin-table"><thead><tr><th>模板名称</th><th>上传者</th><th>部门</th><th>审核结果</th><th>审核人</th><th>驳回原因</th><th>审核时间</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
-}
-
 /* ---------- 模板操作 ---------- */
 function toggleTpl(id) {
   const t = adminData.templates.find(x => x.id === id);
   if (!t) return;
-  if (t.status !== 'approved') { adminToast('仅审核通过的模板可以启用/停用'); return; }
   t.enabled = !t.enabled;
   renderAdminTemplateBody();
   adminToast('已' + (t.enabled ? '启用' : '停用') + '「' + t.name + '」');
@@ -9061,39 +9482,42 @@ function deleteTpl(id) {
   const t = adminData.templates.find(x => x.id === id);
   if (!t) return;
   adminData.templates = adminData.templates.filter(x => x.id !== id);
-  adminData.reviewRecords = adminData.reviewRecords.filter(r => r.templateName !== t.name);
   renderAdminTemplateBody();
   adminToast('已删除模板「' + t.name + '」');
 }
-function approveTpl(id) {
+/* 分享到部门模板库 */
+function shareToDept(id) {
   const t = adminData.templates.find(x => x.id === id);
   if (!t) return;
-  t.status = 'approved';
-  t.enabled = true;
-  const u = adminUsers[currentUserId];
-  adminData.reviewRecords.unshift({ templateName: t.name, uploader: t.uploader, dept: t.dept, result: '通过', reviewer: u.name, time: new Date().toISOString().slice(0,16).replace('T',' ') });
+  t.sharedToDept = true;
   renderAdminTemplateBody();
-  adminToast('已通过审核「' + t.name + '」');
+  adminToast('「' + t.name + '」已分享到部门模板库');
 }
-function openRejectTplModal(id) {
-  const mask = document.createElement('div');
-  mask.className = 'admin-modal-mask';
-  mask.innerHTML = '<div class="admin-modal" onclick="event.stopPropagation()"><div class="admin-modal-header">驳回原因</div>' +
-    '<div class="admin-modal-body"><textarea class="admin-input" style="width:100%;height:80px;resize:vertical;" placeholder="请填写驳回原因..."></textarea></div>' +
-    '<div class="admin-modal-footer"><button class="btn btn-secondary" onclick="this.closest(\'.admin-modal-mask\').remove()">取消</button>' +
-    '<button class="btn btn-primary" onclick="rejectTpl(\'' + id + '\',this.closest(\'.admin-modal\').querySelector(\'textarea\').value)">确认驳回</button></div></div>';
-  mask.onclick = () => mask.remove();
-  document.body.appendChild(mask);
-}
-function rejectTpl(id, reason) {
+/* 撤回部门分享 */
+function unshareFromDept(id) {
   const t = adminData.templates.find(x => x.id === id);
   if (!t) return;
-  t.status = 'rejected';
-  const u = adminUsers[currentUserId];
-  adminData.reviewRecords.unshift({ templateName: t.name, uploader: t.uploader, dept: t.dept, result: '驳回', reviewer: u.name, time: new Date().toISOString().slice(0,16).replace('T',' '), reason: reason || '未填写原因' });
-  document.querySelector('.admin-modal-mask')?.remove();
+  t.sharedToDept = false;
+  // 如果已上传到全局，撤回部门分享时也一并撤回全局
+  if (t.pushedToGlobal) t.pushedToGlobal = false;
   renderAdminTemplateBody();
-  adminToast('已驳回「' + t.name + '」');
+  adminToast('已撤回「' + t.name + '」的部门分享');
+}
+/* 上传到全部模板库 */
+function pushToGlobal(id) {
+  const t = adminData.templates.find(x => x.id === id);
+  if (!t) return;
+  t.pushedToGlobal = true;
+  renderAdminTemplateBody();
+  adminToast('「' + t.name + '」已上传到全部模板库');
+}
+/* 撤回全局上传 */
+function unpushFromGlobal(id) {
+  const t = adminData.templates.find(x => x.id === id);
+  if (!t) return;
+  t.pushedToGlobal = false;
+  renderAdminTemplateBody();
+  adminToast('已撤回「' + t.name + '」的全局上传');
 }
 
 /* ---------- 上传模板弹窗 ---------- */
@@ -9103,29 +9527,27 @@ function openUploadModal() {
   mask.innerHTML = '<div class="admin-modal" onclick="event.stopPropagation()" style="width:520px;max-width:90vw;">' +
     '<div class="admin-modal-header">上传新模板</div>' +
     '<div class="admin-modal-body">' +
-      '<div id="uploadDropZone" style="border:2px dashed var(--gray-300);border-radius:var(--radius-lg);padding:24px;text-align:center;cursor:pointer;margin-bottom:16px;transition:all .2s;position:relative;">' +
+      '<div id="uploadDropZone" style="border:2px dashed var(--gray-300);border-radius:var(--radius-md);padding:14px;text-align:center;cursor:pointer;margin-bottom:14px;transition:all .2s;position:relative;">' +
         '<input type="file" id="uploadTplFile" accept=".pptx,.ppt" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="handleUploadFileSelect(this)">' +
-        adminIcon('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>') +
-        '<div id="uploadDropText" style="margin-top:8px;font-size:14px;color:var(--navy-600);font-weight:500;">点击或拖拽上传模板文件</div>' +
-        '<div id="uploadDropHint" style="margin-top:4px;font-size:12px;color:var(--text-tertiary);">支持 .pptx 格式，文件不超过 50MB</div>' +
-        '<div id="uploadFileName" style="display:none;margin-top:8px;padding:6px 12px;background:var(--blue-50,#eff6ff);border-radius:6px;font-size:13px;color:var(--blue,#2563eb);font-weight:500;align-items:center;gap:6px;"></div>' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>' +
+        '<span id="uploadDropText" style="margin-left:6px;font-size:13px;color:var(--navy-600);font-weight:500;vertical-align:middle;">点击或拖拽上传模板文件</span>' +
+        '<div id="uploadDropHint" style="margin-top:4px;font-size:11px;color:var(--text-tertiary);">支持 .pptx 格式，文件不超过 50MB</div>' +
+        '<div id="uploadFileName" style="display:none;margin-top:6px;padding:4px 10px;background:var(--blue-50,#eff6ff);border-radius:6px;font-size:12px;color:var(--blue,#0E4C92);font-weight:500;align-items:center;gap:6px;"></div>' +
       '</div>' +
-      '<div class="admin-form-row"><div class="admin-form-label">模板名称</div><div class="admin-form-control"><input class="admin-input" id="uploadTplName" placeholder="请输入模板名称"></div></div>' +
-      '<div class="admin-form-row"><div class="admin-form-label">分类</div><div class="admin-form-control"><select class="admin-select" id="uploadTplCat">' +
-        ['工作汇报','党建专题','科技信息','年终总结','生态环保','教育培训','文化建设','其他'].map(c => '<option>' + c + '</option>').join('') + '</select></div></div>' +
-      '<div class="admin-form-row"><div class="admin-form-label">描述</div><div class="admin-form-control"><input class="admin-input" id="uploadTplDesc" placeholder="模板描述"></div></div>' +
-      '<div style="font-size:12px;color:var(--text-tertiary);margin-top:6px;">' +
-        (isAdmin() ? '超级管理员上传的模板将自动通过审核' : '您上传的模板需要经过上级管理员审核后方可启用') +
-      '</div>' +
+      '<div class="admin-form-row"><div class="admin-form-label">模板名称 <span style="color:#dc2626;">*</span></div><div class="admin-form-control"><input class="admin-input" id="uploadTplName" placeholder="请输入模板名称"></div></div>' +
+      '<div class="admin-form-row"><div class="admin-form-label">分类</div><div class="admin-form-control"><select class="admin-select" id="uploadTplCat" onchange="toggleCustomCat()">' +
+        ['工作汇报','党建专题','科技信息','年终总结','生态环保','教育培训','文化建设','其他'].map(c => '<option>' + c + '</option>').join('') + '</select>' +
+        '<input class="admin-input" id="uploadTplCustomCat" placeholder="请输入自定义分类名称" style="display:none;margin-top:6px;">' +
+        '</div></div>' +
+      '<div class="admin-form-row"><div class="admin-form-label">描述</div><div class="admin-form-control"><input class="admin-input" id="uploadTplDesc" placeholder="模板描述（选填）"></div></div>' +
     '</div>' +
     '<div class="admin-modal-footer"><button class="btn btn-secondary" onclick="this.closest(\'.admin-modal-mask\').remove()">取消</button>' +
-    '<button class="btn btn-primary" onclick="submitUploadTpl()">提交' + (isAdmin() ? '并发布' : '审核') + '</button></div></div>';
+    '<button class="btn btn-primary" onclick="submitUploadTpl()">上传模板</button></div></div>';
   mask.onclick = () => mask.remove();
   document.body.appendChild(mask);
-  // Drag-and-drop support
   const dz = mask.querySelector('#uploadDropZone');
   if (dz) {
-    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = '#2563eb'; dz.style.background = '#eff6ff'; });
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = '#0E4C92'; dz.style.background = '#eff6ff'; });
     dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; dz.style.background = ''; });
     dz.addEventListener('drop', e => {
       e.preventDefault();
@@ -9153,23 +9575,35 @@ function handleUploadFileSelect(input) {
     nameInput.value = file.name.replace(/\.(pptx?|PPTX?)$/, '');
   }
 }
+function toggleCustomCat() {
+  const sel = document.getElementById('uploadTplCat');
+  const custom = document.getElementById('uploadTplCustomCat');
+  if (sel.value === '其他') {
+    custom.style.display = '';
+    custom.focus();
+  } else {
+    custom.style.display = 'none';
+    custom.value = '';
+  }
+}
+
 function submitUploadTpl() {
   const name = document.getElementById('uploadTplName').value.trim();
-  const cat = document.getElementById('uploadTplCat').value;
+  let cat = document.getElementById('uploadTplCat').value;
+  if (cat === '其他') {
+    cat = document.getElementById('uploadTplCustomCat').value.trim();
+    if (!cat) { adminToast('请输入自定义分类名称'); return; }
+  }
   const desc = document.getElementById('uploadTplDesc').value.trim();
   if (!name) { adminToast('请输入模板名称'); return; }
   const u = adminUsers[currentUserId];
   const id = 't' + (++nextTemplateId);
-  const status = isAdmin() ? 'approved' : 'pending';
-  const enabled = isAdmin();
   const now = new Date().toISOString().slice(0,16).replace('T',' ');
-  adminData.templates.push({ id, name, category: cat, type: 'tpl-blue-white', desc: desc || '未填写描述', uploader: u.name, dept: u.dept, role: u.roleKey, status, enabled, time: now });
-  if (isAdmin()) {
-    adminData.reviewRecords.unshift({ templateName: name, uploader: u.name, dept: u.dept, result: '自动通过', reviewer: '系统', time: now });
-  }
+  adminData.templates.push({ id, name, category: cat, type: 'tpl-blue-white', desc: desc || '未填写描述', uploader: u.name, dept: u.dept, role: u.roleKey, enabled: true, time: now, sharedToDept: false, pushedToGlobal: false });
   document.querySelector('.admin-modal-mask')?.remove();
+  adminData.templateTab = 'personal';
   renderAdminTemplateBody();
-  adminToast(isAdmin() ? '模板「' + name + '」已发布' : '模板「' + name + '」已提交审核');
+  adminToast('模板「' + name + '」已上传成功');
 }
 
 console.log('模板管理模块已加载');
@@ -9179,7 +9613,7 @@ console.log('模板管理模块已加载');
 /* ========== 模板管理卡片网格 ========== */
 .tpl-mgmt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .tpl-mgmt-card { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: all .2s; display: flex; flex-direction: column; }
-.tpl-mgmt-card:hover { border-color: var(--blue, #2563eb); box-shadow: 0 4px 16px rgba(37,99,235,.12); transform: translateY(-2px); }
+.tpl-mgmt-card:hover { border-color: var(--blue, #0E4C92); box-shadow: 0 4px 16px rgba(14,76,146,.12); transform: translateY(-2px); }
 .tpl-mgmt-thumb { width: 100%; aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--border-light); position: relative; }
 .tpl-mgmt-thumb .tpl-cover { width: 100%; height: 100%; }
 .tpl-mgmt-info { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
@@ -9188,9 +9622,27 @@ console.log('模板管理模块已加载');
 .tpl-mgmt-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .tpl-mgmt-uploader { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; padding-top: 4px; border-top: 1px solid var(--gray-100); }
 .tpl-mgmt-uploader svg { width: 12px; height: 12px; flex-shrink: 0; opacity: .6; }
-.tpl-mgmt-ops { display: flex; gap: 6px; margin-top: 4px; }
+.tpl-mgmt-ops { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+/* 分类子筛选器 */
+.admin-cat-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+.admin-cat-label { font-size: 12px; color: var(--text-tertiary); margin-right: 4px; flex-shrink: 0; }
+.admin-cat-chip {
+  font-size: 12px; padding: 4px 12px; border-radius: 16px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--text-secondary); cursor: pointer; transition: all .2s;
+}
+.admin-cat-chip:hover { border-color: var(--navy-300); color: var(--navy-600); }
+.admin-cat-chip.active { background: var(--navy-500); border-color: var(--navy-500); color: #fff; }
+/* 范围标记 */
+.tpl-mgmt-scope-badges { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 2; }
+.admin-scope-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+.admin-scope-badge.personal { background: rgba(100,116,139,.85); color: #fff; }
+.admin-scope-badge.dept { background: rgba(14,76,146,.85); color: #fff; }
+.admin-scope-badge.global { background: rgba(19,168,168,.85); color: #fff; }
 </style>
 
-<script src="../assets/proto-version.js" data-proto-version></script>
 </body>
 </html>

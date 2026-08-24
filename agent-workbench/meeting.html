@@ -9,79 +9,138 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
-        font-size: 14px; color: #333; background: #f5f7fa;
+        font-size: 14px; color: #333; background: #F4F6F9;
         height: 100vh; overflow: hidden;
     }
     :root {
-        --primary: #1e5aa8; --primary-hover: #164a8f;
-        --primary-light: #e8f0fa; --primary-lighter: #f4f8fd;
+        --primary: #0E4C92; --primary-hover: #1377B5; --primary-pressed: #0A3573;
+        --primary-light: #e8f1fa; --primary-lighter: #f4f8fd;
         --border: #dce3ec; --border-light: #eaeef3;
         --text-main: #333; --text-sub: #666; --text-tip: #999;
-        --success: #52c41a; --warning: #faad14; --danger: #f5222d;
+        --success: #43A047; --warning: #F0AD4E; --danger: #D9534F;
+        --ai-navy: #0A3573; --ai-blue: #0E4C92; --ai-cyan: #13A8A8; --ai-green: #43A047;
+        --ai-glow: 0 0 16px rgba(19,168,168,0.35);
+        --cyan: #13A8A8; --cyan-soft: #e2f4f4;
     }
     .layout { display: flex; height: 100vh; }
 
     /* ========== 侧边栏 ========== */
-    .sidebar { width: 260px; background: #fff; border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: width 0.25s ease; flex-shrink: 0; }
+    .sidebar { width: 300px; background: #fafbfc; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; transition: width 0.3s ease; position: relative; }
     .sidebar.collapsed { width: 56px; }
-    .sidebar-header { height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
-    .sidebar-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--primary); white-space: nowrap; overflow: hidden; }
-    .sidebar-logo-icon { width: 28px; height: 28px; background: var(--primary); color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .sidebar-header { padding: 20px 16px 16px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; box-shadow: 0 4px 20px rgba(10,53,115,0.18); }
+    .sidebar.collapsed .sidebar-header { padding: 20px 8px 16px; }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .sidebar-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1)); border: 1px solid rgba(255,255,255,0.3); box-shadow: var(--ai-glow); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 16px; flex-shrink: 0; }
+    .sidebar-logo-icon .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    .sidebar-logo-text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
     .sidebar.collapsed .sidebar-logo-text { display: none; }
-    .collapse-btn { width: 28px; height: 28px; border: none; background: transparent; cursor: pointer; color: var(--text-sub); border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .collapse-btn:hover { background: var(--primary-light); color: var(--primary); }
-    .sidebar.collapsed .collapse-btn { transform: rotate(180deg); }
-    .new-meeting-btn { margin: 12px; padding: 10px 12px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; transition: background 0.2s; white-space: nowrap; overflow: hidden; }
+    .sidebar.collapsed .sidebar-logo { justify-content: center; }
+    .collapse-btn { position: absolute; right: -12px; top: 20px; width: 24px; height: 24px; background: #fff; border: 1px solid var(--border); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-sub); font-size: 12px; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,.06); transition: all .2s; }
+    .collapse-btn:hover { color: var(--primary); border-color: var(--primary); }
+    .collapse-btn svg { transition: transform .3s; }
+    .sidebar.collapsed .collapse-btn svg { transform: rotate(180deg); }
+    .new-meeting-btn { width: 100%; padding: 10px 12px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .2s; white-space: nowrap; overflow: hidden; }
     .new-meeting-btn:hover { background: var(--primary-hover); }
-    .sidebar.collapsed .new-meeting-btn { padding: 10px 8px; }
+    .sidebar.collapsed .new-meeting-btn { padding: 10px 0; }
     .sidebar.collapsed .new-meeting-btn .btn-text { display: none; }
 
     /* 筛选区 */
-    .filter-section { padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
-    .sidebar.collapsed .filter-section { display: none; }
-    .filter-title { font-size: 12px; color: var(--text-tip); font-weight: 500; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-    .filter-input { width: 100%; height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; margin-bottom: 6px; font-family: inherit; }
-    .filter-input:focus { border-color: var(--primary); }
-    .filter-row { display: flex; gap: 6px; margin-bottom: 6px; }
-    .filter-row .filter-input { margin-bottom: 0; }
-    .filter-select { width: 100%; height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: #fff; outline: none; margin-bottom: 6px; font-family: inherit; }
-    .filter-btns { display: flex; gap: 6px; }
-    .filter-btn { flex: 1; height: 26px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: inherit; }
-    .filter-btn.primary { background: var(--primary); color: #fff; }
-    .filter-btn.primary:hover { background: var(--primary-hover); }
-    .filter-btn.ghost { background: #fff; color: var(--text-sub); border: 1px solid var(--border); }
-    .filter-btn.ghost:hover { color: var(--primary); border-color: var(--primary); }
+    .filter-box { padding: 12px 16px; border-bottom: 1px solid var(--border-light); display: flex; flex-direction: column; gap: 8px; }
+    .sidebar.collapsed .filter-box { display: none; }
+    .search-wrap { position: relative; }
+    .search-input { width: 100%; padding: 7px 12px 7px 30px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-main); background: #fff; transition: border-color .2s; }
+    .search-input:focus { outline: none; border-color: var(--primary); }
+    .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-tip); font-size: 13px; pointer-events: none; }
+    .search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--text-tip); cursor: pointer; font-size: 14px; display: none; }
+    .search-clear:hover { color: var(--danger); }
+    .time-filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .time-chip { padding: 3px 9px; font-size: 12px; color: var(--text-sub); background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .time-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .time-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .custom-range { display: none; flex-direction: column; gap: 6px; }
+    .custom-range.show { display: flex; }
+    .custom-range-label { font-size: 11px; color: var(--text-tip); }
+    .custom-range-inputs { display: flex; align-items: center; gap: 4px; }
+    .custom-range-inputs input { flex: 1; min-width: 0; padding: 5px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text-main); }
+    .custom-range-inputs input:focus { outline: none; border-color: var(--primary); }
+    .custom-range-sep { color: var(--text-tip); font-size: 12px; }
+    .filter-empty { padding: 20px 16px; text-align: center; color: var(--text-tip); font-size: 12px; }
 
     .history-section { flex: 1; overflow-y: auto; padding: 0 8px; }
     .history-title { padding: 12px 8px 6px; font-size: 12px; color: var(--text-tip); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
     .sidebar.collapsed .history-title, .sidebar.collapsed .history-list { display: none; }
-    .history-item { padding: 8px 10px; margin-bottom: 2px; border-radius: 6px; cursor: pointer; transition: background 0.15s; border: 1px solid transparent; }
-    .history-item:hover { background: var(--primary-lighter); }
-    .history-item.active { background: var(--primary-light); border-color: #cddfff; }
-    .history-item.active .history-item-title { color: var(--primary); font-weight: 500; }
-    .history-item-title { font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
-    .history-item-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-tip); }
+    .history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 4px; transition: .25s ease; position: relative; }
+    .history-item:hover { background: #eef2f7; transform: translateX(2px); }
+    .history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: 0 8px 20px rgba(14,76,146,0.25), var(--ai-glow); }
+    .history-item.active .history-item-title { color: #fff; font-weight: 600; }
+    .history-item.active .history-item-meta { color: rgba(255,255,255,.8); }
+    .history-item.active .history-status { color: #fff !important; background: rgba(255,255,255,.2) !important; }
+    .history-item-title { font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+    .history-item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-tip); }
     .history-status { padding: 1px 6px; border-radius: 8px; font-size: 10px; }
     .history-status.done { background: #f6ffed; color: var(--success); }
     .history-status.draft { background: #f0f5ff; color: var(--primary); }
     .history-status.review { background: #fff7e6; color: var(--warning); }
+    .history-time { font-size: 11px; color: var(--text-tip); margin-left: auto; }
     .history-empty { padding: 20px 8px; text-align: center; font-size: 12px; color: var(--text-tip); }
-    .sidebar-footer { padding: 10px 12px; border-top: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-sub); }
+    .sidebar-footer { padding: 10px 12px; border-top: 1px solid var(--border-light); display: flex; flex-direction: column; align-items: stretch; gap: 0; font-size: 12px; color: var(--text-sub); }
     .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
     .sidebar.collapsed .user-info { display: none; }
 
+    /* ========== 模板管理 ========== */
+    .sidebar-tpl-btn { width: 100%; padding: 9px 14px; margin-bottom: 10px; background: linear-gradient(135deg, var(--ai-navy), var(--ai-blue)); border: 1px solid var(--ai-navy); border-radius: var(--radius-sm); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .sidebar-tpl-btn:hover { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); border-color: var(--ai-cyan); box-shadow: var(--ai-glow); }
+    .sidebar-tpl-btn svg { width: 14px; height: 14px; }
+    .sidebar.collapsed .sidebar-tpl-btn { display: none; }
+    .sidebar-user-row { display: flex; align-items: center; gap: 8px; }
+
+    .tpl-mgmt-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tpl-mgmt-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tpl-mgmt-tab { padding: 6px 14px; font-size: 13px; color: var(--text-sub); background: #fff; border: 1px solid var(--border); border-radius: 16px; cursor: pointer; transition: .2s; }
+    .tpl-mgmt-tab:hover { border-color: var(--ai-cyan); color: var(--ai-cyan); }
+    .tpl-mgmt-tab.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); border-color: transparent; color: #fff; box-shadow: 0 2px 8px rgba(19,168,168,.25); }
+    .tpl-mgmt-tab .tab-cnt { font-size: 11px; opacity: .7; margin-left: 3px; }
+    .tpl-mgmt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+    .tpl-mgmt-card { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; cursor: pointer; transition: .2s; display: flex; flex-direction: column; }
+    .tpl-mgmt-card:hover { border-color: var(--ai-cyan); box-shadow: 0 6px 18px rgba(19,168,168,.14); transform: translateY(-2px); }
+    .tpl-mgmt-card.disabled { opacity: .62; }
+    .tpl-mgmt-card-head { padding: 14px 16px 12px; display: flex; gap: 12px; align-items: flex-start; border-bottom: 1px dashed var(--border-light); }
+    .tpl-mgmt-card-icon { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--ai-cyan)); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: var(--ai-glow); }
+    .tpl-mgmt-card-icon svg { width: 20px; height: 20px; }
+    .tpl-mgmt-card-info { flex: 1; min-width: 0; }
+    .tpl-mgmt-card-name { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+    .tpl-mgmt-card-desc { font-size: 12px; color: var(--text-tip); line-height: 1.5; }
+    .tpl-mgmt-card-body { padding: 10px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .tpl-mgmt-card-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .tpl-mgmt-cat-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--cyan-soft); color: var(--ai-cyan); }
+    .tpl-mgmt-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+    .tpl-mgmt-status.ok { background: #f6ffed; color: var(--success); }
+    .tpl-mgmt-status.warn { background: #fff7e6; color: var(--warning); }
+    .tpl-mgmt-sections { font-size: 11px; color: var(--text-tip); line-height: 1.7; }
+    .tpl-mgmt-uploader { font-size: 11px; color: var(--text-tip); display: flex; align-items: center; gap: 5px; padding-top: 8px; border-top: 1px solid var(--border-light); }
+    .tpl-mgmt-card-ops { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border-light); background: var(--primary-lighter); }
+    .tpl-mgmt-ops-btn { flex: 1; font-size: 12px; padding: 6px 0; border-radius: 4px; border: 1px solid var(--border); background: #fff; color: var(--text-sub); cursor: pointer; transition: .15s; text-align: center; }
+    .tpl-mgmt-ops-btn:hover { border-color: var(--ai-cyan); color: var(--ai-cyan); }
+    .tpl-mgmt-ops-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .tpl-mgmt-ops-btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+    .tpl-mgmt-ops-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+    .tpl-mgmt-empty { grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-tip); font-size: 13px; }
+    .tpl-upload-zone { position: relative; border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all .2s; background: var(--primary-lighter); }
+    .tpl-upload-zone:hover { border-color: var(--ai-cyan); background: var(--cyan-soft); }
+    .tpl-upload-zone.dragover { border-color: var(--ai-cyan); background: var(--cyan-soft); box-shadow: var(--ai-glow); }
+
     /* ========== 主区 ========== */
     .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .main-header { height: 56px; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .main-header { height: 56px; padding: 0 24px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: space-between; }
     .main-title { display: flex; align-items: center; gap: 10px; }
     .main-title-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), #3a7bc8); color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-    .main-title-text { font-size: 16px; font-weight: 600; color: var(--text-main); }
-    .main-title-sub { font-size: 12px; color: var(--text-tip); margin-top: 2px; }
+    .main-title-text { font-size: 16px; font-weight: 600; color: #fff; }
+    .main-title-sub { font-size: 12px; color: rgba(255,255,255,.7); margin-top: 2px; }
     .header-actions { display: flex; gap: 10px; align-items: center; }
-    .back-btn { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px solid var(--border); background: #fff; color: var(--text-sub); border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
-    .back-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .btn-text-primary { background: transparent; color: var(--primary); border: none; cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; }
-    .btn-text-primary:hover { background: var(--primary-light); }
+    .back-btn { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.1); color: rgba(255,255,255,.9); border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .back-btn:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.18); color: #fff; }
+    .btn-text-primary { background: transparent; color: rgba(255,255,255,.85); border: none; cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; }
+    .btn-text-primary:hover { background: rgba(255,255,255,.12); color: #fff; }
     .main-content { flex: 1; overflow-y: auto; padding: 24px 32px; }
 
     /* ========== 新建 ========== */
@@ -90,7 +149,8 @@
     .welcome-title { font-size: 22px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; }
     .welcome-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
 
-    .card { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; padding: 20px 24px; margin-bottom: 16px; }
+    .card { background: #fff; border: 1px solid var(--border-light); border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,76,146,.15); border-color: var(--ai-cyan); }
     .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
     .card-title { font-size: 15px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
     .card-title::before { content: ""; width: 3px; height: 14px; background: var(--primary); border-radius: 2px; }
@@ -174,7 +234,7 @@
     .secret-hint b { color: var(--primary); }
 
     /* 按钮 */
-    .btn { padding: 8px 20px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+    .btn { padding: 8px 20px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
     .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
     .btn-default { background: #fff; color: var(--text-main); border-color: var(--border); }
@@ -217,7 +277,7 @@
     /* 要素完善提醒（详细版内醒目提示） */
     .element-notice { display: flex; align-items: center; gap: 8px; padding: 10px 14px; margin-bottom: 12px; background: #fffbe6; border: 1px solid #ffc53d; border-left: 4px solid #faad14; border-radius: 6px; font-size: 13px; color: #874d00; line-height: 1.7; }
     .element-notice.completed { background: #f6ffed; border-color: #b7eb8f; border-left-color: var(--success); color: #389e0d; }
-    .result-header { padding: 16px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 8px 8px 0 0; }
+    .result-header { padding: 16px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 10px 10px 0 0; }
     .result-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .result-meta { font-size: 12px; color: var(--text-tip); margin-top: 4px; }
     .result-actions { display: flex; gap: 8px; }
@@ -363,9 +423,13 @@
     .transcript-text { color: var(--text-main); line-height: 1.7; }
 
     /* 弹窗 */
-    .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
-    .modal-mask.show { display: flex; }
-    .modal { background: #fff; border-radius: 8px; min-width: 400px; max-width: 580px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); }
+    .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(16, 24, 45, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 1000; transition: opacity .3s ease; opacity: 0; }
+    .modal-mask.show { display: flex; opacity: 1; }
+    .modal-mask .modal { animation: modalIn .4s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes modalIn { from { transform: translateY(-40px) scale(.88); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes modalOut { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-30px) scale(.9); opacity: 0; } }
+    .modal-mask .modal.closing { animation: modalOut .22s ease-in forwards; pointer-events: none; }
+    .modal { background: #fff; border-radius: 10px; min-width: 400px; max-width: 580px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); }
     .modal-header { padding: 14px 20px; border-bottom: 1px solid var(--border-light); font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
     .modal-close { cursor: pointer; color: var(--text-tip); font-size: 18px; line-height: 1; }
     .modal-close:hover { color: var(--text-main); }
@@ -429,6 +493,20 @@
     .loading-dot:nth-child(2) { animation-delay: 0.2s; }
     .loading-dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+    /* —— AI 智能体视觉与动效规范（江北新区）—— */
+    .typing-cursor::after { content: '▍'; margin-left: 2px; color: var(--ai-cyan); animation: blink 1s steps(1) infinite; }
+    @keyframes dot-bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+    .thinking-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ai-cyan); display: inline-block; animation: dot-bounce 1.2s infinite ease-in-out; }
+    .thinking-dot:nth-child(2) { animation-delay: .15s; }
+    .thinking-dot:nth-child(3) { animation-delay: .3s; }
+    .agent-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .agent-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,76,146,.15); border-color: var(--ai-cyan); }
+    .agent-avatar { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow); }
+    .agent-avatar .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .bubble { animation: fadeUp .3s ease; }
+    .ai-gradient-text { background: linear-gradient(90deg, #0E4C92, #13A8A8, #43A047); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
     .hidden { display: none !important; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -438,7 +516,7 @@
     .view.active { display: block; }
     .recognizing-tip { text-align: center; padding: 20px; color: var(--primary); font-size: 13px; }
 </style>
-<meta name="prototype-version" content=""></head>
+</head>
 <body>
 
 <div class="layout">
@@ -446,43 +524,59 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <div class="sidebar-logo-icon">纪</div>
+                <div class="sidebar-logo-icon agent-avatar"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></div>
                 <span class="sidebar-logo-text">会议纪要智能体</span>
             </div>
+            <button class="new-meeting-btn" id="newMeetingBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span class="btn-text">新建会议纪要</span>
+            </button>
             <button class="collapse-btn" id="collapseBtn" title="折叠侧边栏">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
         </div>
 
-        <button class="new-meeting-btn" id="newMeetingBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span class="btn-text">新建会议纪要</span>
-        </button>
-
         <!-- 筛选区 -->
-        <div class="filter-section">
-            <div class="filter-title"><span>历史记录筛选</span></div>
-            <input type="text" class="filter-input" id="filterKeyword" placeholder="搜索会议主题/名称" oninput="applyFilter()">
-            <div class="filter-row">
-                <input type="date" class="filter-input" id="filterDateStart" title="开始日期" onchange="applyFilter()">
-                <input type="date" class="filter-input" id="filterDateEnd" title="结束日期" onchange="applyFilter()">
+        <div class="filter-box">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="filterKeyword" placeholder="搜索会议主题/名称" oninput="applyFilter()">
+                <span class="search-clear" id="searchClear" onclick="clearSearch()">✕</span>
             </div>
-            <div class="filter-btns">
-                <button class="filter-btn ghost" onclick="resetFilter()">重置</button>
-                <button class="filter-btn primary" onclick="applyFilter()">筛选</button>
+            <div class="time-filter-row" id="timeFilterRow">
+                <span class="time-chip active" data-range="all" onclick="setTimeFilter(this)">全部</span>
+                <span class="time-chip" data-range="yesterday" onclick="setTimeFilter(this)">昨日</span>
+                <span class="time-chip" data-range="7d" onclick="setTimeFilter(this)">近七天</span>
+                <span class="time-chip" data-range="30d" onclick="setTimeFilter(this)">近三十天</span>
+                <span class="time-chip" data-range="custom" onclick="setTimeFilter(this)">自定义</span>
+            </div>
+            <div class="custom-range" id="customRange">
+                <span class="custom-range-label">选择起止日期</span>
+                <div class="custom-range-inputs">
+                    <input type="date" id="dateStart" onchange="applyFilter()">
+                    <span class="custom-range-sep">~</span>
+                    <input type="date" id="dateEnd" onchange="applyFilter()">
+                </div>
             </div>
         </div>
 
         <div class="history-section">
             <div class="history-title"><span>历史生成记录</span><span id="historyCount" style="color:var(--primary);"></span></div>
             <div class="history-list" id="historyList"></div>
+            <div class="filter-empty" id="filterEmpty" style="display:none;">未找到匹配的记录</div>
         </div>
 
         <div class="sidebar-footer">
-            <div class="user-avatar">张</div>
-            <div class="user-info">
-                <div style="color:var(--text-main);font-size:13px;">张秘书</div>
-                <div style="font-size:11px;color:var(--text-tip);">办公室</div>
+            <button class="sidebar-tpl-btn" onclick="navigateToTemplates()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+                模板管理
+            </button>
+            <div class="sidebar-user-row">
+                <div class="user-avatar">张</div>
+                <div class="user-info">
+                    <div style="color:var(--text-main);font-size:13px;">张秘书</div>
+                    <div style="font-size:11px;color:var(--text-tip);">办公室</div>
+                </div>
             </div>
         </div>
     </aside>
@@ -507,6 +601,16 @@
                 <div style="margin-left:12px;">
                     <div class="main-title-text" id="topResultName">会议纪要</div>
                     <div class="main-title-sub" id="topResultDesc">生成结果</div>
+                </div>
+            </div>
+            <div class="main-title hidden" id="templatesHeaderBlock">
+                <button class="back-btn" onclick="switchView('viewCreate')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    返回
+                </button>
+                <div style="margin-left:12px;">
+                    <div class="main-title-text">模板管理</div>
+                    <div class="main-title-sub">按类型分类的纪要模板，可预览、应用与管理</div>
                 </div>
             </div>
             <div class="header-actions">
@@ -582,15 +686,15 @@
                     <div class="card" id="infoCard">
                         <div class="card-header"><div class="card-title"><span class="step-number">2</span>填写会议信息</div></div>
                         <div class="form-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 24px;">
-                            <div class="form-item"><label class="form-label required">会议名称</label><input type="text" class="form-input" id="meetingName" placeholder="如：办公室工作例会（2026年第7次）"></div>
+                            <div class="form-item"><label class="form-label">会议名称</label><input type="text" class="form-input" id="meetingName" placeholder="如：办公室工作例会（2026年第7次）"></div>
                             <div class="form-item"><label class="form-label required">会议类型</label>
                                 <select class="form-select" id="meetingType" onchange="autoSelectTemplate()">
-                                    <option value="" selected>请选择会议类型</option><option value="1">工作例会</option><option value="2">专题协调会议</option><option value="3">项目推进会议</option><option value="4">工作调度会议</option><option value="5">部门会商会议</option>
+                                    <option value="0">通用会议</option><option value="1">工作例会</option><option value="2">专题协调会议</option><option value="3">项目推进会议</option><option value="4">工作调度会议</option><option value="5">部门会商会议</option>
                                 </select>
                             </div>
                             <div class="form-item"><label class="form-label required">纪要模板</label>
                                 <div style="display:flex;gap:6px;align-items:center;">
-                                    <select class="form-select" id="template"><option value="" selected>请选择纪要模板</option><option value="1">工作例会标准模板</option><option value="2">专题协调会议模板</option><option value="3">项目推进会议模板</option><option value="4">部门会商模板</option></select>
+                                    <select class="form-select" id="template"><option value="0">通用会议纪要模板</option><option value="1">工作例会标准模板</option><option value="2">专题协调会议模板</option><option value="3">项目推进会议模板</option><option value="4">部门会商模板</option></select>
                                     <button class="btn btn-default btn-sm" onclick="openTemplatePreview()" style="white-space:nowrap;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>查看模板</button>
                                 </div>
                             </div>
@@ -801,6 +905,17 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 视图：模板管理 -->
+            <div class="view" id="viewTemplates">
+                <div class="tpl-mgmt-toolbar">
+                    <div class="tpl-mgmt-tabs" id="tplMgmtTabs"></div>
+                    <button class="btn btn-primary btn-sm" onclick="openUploadTplModal()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>上传模板
+                    </button>
+                </div>
+                <div class="tpl-mgmt-grid" id="tplMgmtGrid"></div>
+            </div>
         </div>
     </main>
 </div>
@@ -809,7 +924,7 @@
 <div class="modal-mask" id="modalCancel"><div class="modal"><div class="modal-header">确认取消<span class="modal-close" onclick="hideModal('modalCancel')">×</span></div><div class="modal-body"><div class="modal-icon warning"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><div style="text-align:center;">是否确认取消本次生成任务？当前处理进度将会丢失。</div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalCancel')">继续生成</button><button class="btn btn-danger" onclick="confirmCancel()">确认取消</button></div></div></div>
 
 <!-- 弹窗：成功 -->
-<div class="modal-mask" id="modalSuccess"><div class="modal"><div class="modal-header">生成成功<span class="modal-close" onclick="hideModal('modalSuccess')">×</span></div><div class="modal-body"><div class="modal-icon success"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div><div style="text-align:center;"><div style="font-size:15px;color:var(--text-main);font-weight:500;margin-bottom:8px;">会议纪要已生成完成！</div><div>已智能识别 <b style="color:var(--primary);">3</b> 个议题、<b style="color:var(--primary);">9</b> 项结论、<b style="color:var(--primary);">6</b> 项待办事项<br>同步输出「详细版」与「概览版」双版本纪要<br><br><span style="color:var(--warning);">建议使用「一句话生成」快速补充会议要素</span></div></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="hideModal('modalSuccess')">查看结果</button></div></div></div>
+<div class="modal-mask" id="modalSuccess"><div class="modal"><div class="modal-header">生成成功<span class="modal-close" onclick="hideModal('modalSuccess')">×</span></div><div class="modal-body"><div class="modal-icon success"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div><div style="text-align:center;"><div style="font-size:15px;color:var(--text-main);font-weight:500;margin-bottom:8px;">会议纪要已生成完成！</div><div>已智能识别 <b style="color:var(--primary);">3</b> 个议题、<b style="color:var(--primary);">9</b> 项结论、<b style="color:var(--primary);">6</b> 项待办事项<br>同步输出「详细版」与「概览版」双版本纪要</div></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="hideModal('modalSuccess')">查看结果</button></div></div></div>
 
 <!-- 弹窗：导出 -->
 <div class="modal-mask" id="modalExport"><div class="modal"><div class="modal-header">导出会议纪要<span class="modal-close" onclick="hideModal('modalExport')">×</span></div><div class="modal-body"><div id="exportSecretWarn" style="display:none;padding:8px 12px;background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;color:var(--danger);font-size:12px;margin-bottom:14px;"><b>密级提示：</b>当前文件为「秘密」级别，导出后请通过安全通道传递，禁止上传至公开网络。</div><div id="exportInternalWarn" style="display:none;padding:8px 12px;background:#fff7e6;border:1px solid #ffd591;border-radius:4px;color:#d46b08;font-size:12px;margin-bottom:14px;"><b>密级提示：</b>当前文件为「内部」级别，仅限单位内部使用。</div><div style="margin-bottom:14px;"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;">选择导出内容</div><div style="display:flex;flex-wrap:wrap;gap:12px;"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" checked>详细版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" checked>概览版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox">议题结论</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox">待办事项清单</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="exportTranscript">转写文本</label></div></div><div><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;">导出格式</div><div style="display:flex;gap:16px;"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="radio" name="exportFormat" value="docx" checked>DOCX</label></div></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalExport')">取消</button><button class="btn btn-primary" onclick="doExport()">确认导出</button></div></div></div>
@@ -834,6 +949,12 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- 弹窗：模板预览（模板管理） -->
+<div class="modal-mask" id="modalTplView"><div class="modal" style="min-width:520px;max-width:620px;"><div class="modal-header">模板预览<span class="modal-close" onclick="hideModal('modalTplView')">×</span></div><div class="modal-body"><div id="tplViewContent"></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalTplView')">关闭</button><button class="btn btn-primary" id="tplViewUseBtn" onclick="useTemplateFromView()">使用此模板</button></div></div></div>
+
+<!-- 弹窗：上传模板（模板管理） -->
+<div class="modal-mask" id="modalTplUpload"><div class="modal" style="min-width:480px;max-width:560px;"><div class="modal-header">上传模板<span class="modal-close" onclick="hideModal('modalTplUpload')">×</span></div><div class="modal-body"><div class="tpl-upload-zone" id="tplUploadZone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleTplDrop(event)"><input type="file" id="tplUploadFile" accept=".docx,.doc,.txt,.wps" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="handleTplFileSelect(this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><span id="tplUploadText" style="margin-left:6px;font-size:13px;color:var(--primary);font-weight:500;vertical-align:middle;">点击或拖拽上传模板文件</span><div id="tplUploadHint" style="margin-top:6px;font-size:11px;color:var(--text-tip);">支持 .docx / .doc / .txt 格式，文件不超过 50MB</div><div id="tplUploadFileName" style="display:none;margin-top:8px;padding:5px 10px;background:var(--primary-light);border-radius:6px;font-size:12px;color:var(--primary);font-weight:500;align-items:center;gap:6px;"></div></div><div style="display:flex;flex-direction:column;gap:12px;margin-top:14px;"><div class="form-item"><label class="form-label required">模板名称</label><input type="text" class="form-input" id="newTplName" placeholder="如：季度工作总结会议模板"></div><div class="form-item"><label class="form-label">所属分类</label><select class="form-select" id="newTplCategory"><option>通用</option><option>工作例会</option><option>专题协调</option><option>项目推进</option><option>工作调度</option><option>部门会商</option><option>调研座谈</option></select></div><div class="form-item"><label class="form-label">模板说明</label><input type="text" class="form-input" id="newTplDesc" placeholder="模板描述（选填）"></div></div></div><div class="modal-footer"><button class="btn btn-default" onclick="hideModal('modalTplUpload')">取消</button><button class="btn btn-primary" onclick="submitUploadTpl()">上传模板</button></div></div></div>
 
 <!-- ============ JavaScript ============ -->
 <script>
@@ -912,9 +1033,6 @@ let docEditMode = { detailed: false, quick: false };
 let docEditTimers = { detailed: null, quick: null };
 let editHistory = { detailed: [], quick: [], todos: [] };
 
-/* 筛选状态 */
-let filterState = { keyword: '', dateStart: '', dateEnd: '' };
-
 /* ==================== 初始化 ==================== */
 document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
@@ -931,27 +1049,52 @@ document.getElementById('collapseBtn').addEventListener('click', () => {
 });
 
 /* ==================== 历史记录与筛选 ==================== */
-function applyFilter() {
-    filterState.keyword = (document.getElementById('filterKeyword').value || '').trim().toLowerCase();
-    filterState.dateStart = document.getElementById('filterDateStart').value;
-    filterState.dateEnd = document.getElementById('filterDateEnd').value;
-    renderHistory();
+let currentRange = 'all';
+const TODAY = new Date('2026-08-11');
+
+function setTimeFilter(el) {
+    document.querySelectorAll('#timeFilterRow .time-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    currentRange = el.getAttribute('data-range');
+    document.getElementById('customRange').classList.toggle('show', currentRange === 'custom');
+    applyFilter();
 }
 
-function resetFilter() {
+function clearSearch() {
     document.getElementById('filterKeyword').value = '';
-    document.getElementById('filterDateStart').value = '';
-    document.getElementById('filterDateEnd').value = '';
-    filterState = { keyword: '', dateStart: '', dateEnd: '' };
+    applyFilter();
+}
+
+function applyFilter() {
+    const kw = (document.getElementById('filterKeyword').value || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('searchClear');
+    clearBtn.style.display = kw ? 'block' : 'none';
     renderHistory();
-    showToast('已重置筛选条件');
 }
 
 function filterDataList(list) {
+    const kw = (document.getElementById('filterKeyword').value || '').trim().toLowerCase();
+    const dateStart = document.getElementById('dateStart').value;
+    const dateEnd = document.getElementById('dateEnd').value;
     return list.filter(item => {
-        if (filterState.keyword && !item.title.toLowerCase().includes(filterState.keyword) && !item.type.toLowerCase().includes(filterState.keyword)) return false;
-        if (filterState.dateStart && item.dateStr < filterState.dateStart) return false;
-        if (filterState.dateEnd && item.dateStr > filterState.dateEnd) return false;
+        // 关键词匹配
+        if (kw && !item.title.toLowerCase().includes(kw) && !item.type.toLowerCase().includes(kw)) return false;
+        // 时间范围匹配
+        const itemDate = new Date(item.dateStr);
+        if (currentRange === 'yesterday') {
+            const yesterday = new Date(TODAY);
+            yesterday.setDate(yesterday.getDate() - 1);
+            return item.dateStr === yesterday.toISOString().slice(0, 10);
+        } else if (currentRange === '7d') {
+            const diff = (TODAY - itemDate) / (1000 * 60 * 60 * 24);
+            if (diff < 0 || diff > 6) return false;
+        } else if (currentRange === '30d') {
+            const diff = (TODAY - itemDate) / (1000 * 60 * 60 * 24);
+            if (diff < 0 || diff > 29) return false;
+        } else if (currentRange === 'custom') {
+            if (dateStart && itemDate < new Date(dateStart)) return false;
+            if (dateEnd) { const end = new Date(dateEnd); end.setHours(23, 59, 59, 999); if (itemDate > end) return false; }
+        }
         return true;
     });
 }
@@ -959,12 +1102,15 @@ function filterDataList(list) {
 function renderHistory() {
     const filtered = filterDataList(historyData);
     const list = document.getElementById('historyList');
+    const emptyEl = document.getElementById('filterEmpty');
     document.getElementById('historyCount').textContent = filtered.length ? `(${filtered.length})` : '';
 
     if (filtered.length === 0) {
-        list.innerHTML = '<div class="history-empty">未找到匹配的记录</div>';
+        list.innerHTML = '';
+        if (emptyEl) emptyEl.style.display = 'block';
         return;
     }
+    if (emptyEl) emptyEl.style.display = 'none';
 
     const statusMap = { done: '已完成', draft: '草稿', review: '待审核' };
     list.innerHTML = filtered.map(item => {
@@ -1019,8 +1165,11 @@ function switchView(viewId) {
     document.getElementById(viewId).classList.add('active');
     document.querySelector('.main-content').scrollTop = 0;
     const isResult = (viewId === 'viewResult');
-    document.getElementById('mainTitleBlock').classList.toggle('hidden', isResult);
+    const isTemplates = (viewId === 'viewTemplates');
+    document.getElementById('mainTitleBlock').classList.toggle('hidden', isResult || isTemplates);
     document.getElementById('resultHeaderBlock').classList.toggle('hidden', !isResult);
+    const tplHdr = document.getElementById('templatesHeaderBlock');
+    if (tplHdr) tplHdr.classList.toggle('hidden', !isTemplates);
 }
 
 function backToCreate() {
@@ -1145,6 +1294,7 @@ function simulateUpload(type) {
         const wrap = document.querySelector('.attach-material');
         if (wrap && !wrap.classList.contains('expanded')) wrap.classList.add('expanded');
         renderFileList('material');
+        updateMainActionBtn();
         showToast('材料已上传，将辅助优化识别');
         return;
     }
@@ -1216,42 +1366,38 @@ function removeFile(type, idx) {
         if (type === 'audio' && audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
     }
     renderFileList(type);
-    if (!uploadFiles.audio && !uploadFiles.text) {
+    if (!uploadFiles.audio && !uploadFiles.text && uploadFiles.material.length === 0) {
         uploadMode = null;
     }
     updateMainActionBtn();
     showToast('文件已删除');
 }
 
-/* 主按钮状态：根据上传类型与填写情况更新 */
+/* 主按钮状态：录音/文本/材料 三者任一上传即可 */
 function updateMainActionBtn() {
     const btn = document.getElementById('mainActionBtn');
     const txt = document.getElementById('mainActionText');
     if (!btn || !txt) return;
-    if (!uploadMode) {
+    if (!uploadMode && uploadFiles.material.length === 0) {
         btn.disabled = true; txt.textContent = '请先上传会议资料';
         return;
     }
     btn.disabled = false;
-    txt.textContent = uploadMode === 'audio' ? '开始转写文本' : '开始智能生成';
+    txt.textContent = '开始智能生成';
 }
 
-/* 主操作入口：录音→转写标记视图；文本→直接生成 */
+/* 主操作入口：录音→转写标记视图；文本/材料→直接生成 */
 function mainAction() {
-    if (!uploadMode) { showToast('请先上传会议资料'); return; }
-    // 校验填写
-    const name = document.getElementById('meetingName').value.trim();
+    if (!uploadMode && uploadFiles.material.length === 0) { showToast('请先上传会议资料'); return; }
+    // 校验填写（会议名称非必填，不填则用默认名称）
+    const name = document.getElementById('meetingName').value.trim() || getDefaultMeetingName();
+    document.getElementById('meetingName').value = name;
     const typeVal = document.getElementById('meetingType').value;
     const tplVal = document.getElementById('template').value;
-    if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
     if (!typeVal) { showToast('请选择会议类型'); return; }
     if (!tplVal) { showToast('请选择纪要模板'); return; }
     currentSecretLevel = document.getElementById('secret').value;
-    if (uploadMode === 'audio') {
-        startTranscribeFlow();
-    } else {
-        startGenerate();
-    }
+    startGenerate();
 }
 
 /* 录音路径：开始转写文本 → 进度 → 转写标记视图 */
@@ -1382,9 +1528,9 @@ function updateSecretHint() {
 }
 
 function startGenerate() {
-    if (!uploadFiles.audio && !uploadFiles.text) { showToast('请先上传会议录音或转写文本'); return; }
-    const name = document.getElementById('meetingName').value.trim();
-    if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
+    if (!uploadFiles.audio && !uploadFiles.text && uploadFiles.material.length === 0) { showToast('请先上传会议资料'); return; }
+    const name = document.getElementById('meetingName').value.trim() || getDefaultMeetingName();
+    document.getElementById('meetingName').value = name;
     const typeVal = document.getElementById('meetingType').value;
     if (!typeVal) { showToast('请选择会议类型'); return; }
     const tplVal = document.getElementById('template').value;
@@ -1513,12 +1659,21 @@ function resetForm() {
     if (audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
     renderFileList('audio'); renderFileList('text'); renderFileList('material');
     document.getElementById('meetingName').value = '';
-    document.getElementById('meetingType').value = '';
-    document.getElementById('template').value = '';
+    document.getElementById('meetingType').value = '0';
+    document.getElementById('template').value = '0';
     document.getElementById('secret').value = '0';
     updateSecretHint();
     updateMainActionBtn();
     meetingInfo = { time:'', place:'', host:'', attendees:'', observers:'', recorder:'', remark:'' };
+}
+
+function getDefaultMeetingName() {
+    const now = new Date();
+    const m = now.getMonth() + 1;
+    const d = now.getDate();
+    const h = now.getHours();
+    const min = now.getMinutes().toString().padStart(2, '0');
+    return `${m}月${d}日${h}时${min}分会议`;
 }
 
 /* ==================== 议题 ==================== */
@@ -1897,8 +2052,8 @@ function renderTranscript() {
 function seekTo(sec) { if (uploadMode !== 'audio') return; audioPlayer.currentTime = sec; updatePlayerUI(); showToast(`已跳转至 ${formatTime(sec)}`); }
 
 /* ==================== 弹窗 ==================== */
-function showModal(id) { document.getElementById(id).classList.add('show'); }
-function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+function showModal(id) { const m = document.getElementById(id); const modal = m.querySelector('.modal'); if (modal) modal.classList.remove('closing'); m.classList.add('show'); }
+function hideModal(id) { const m = document.getElementById(id); const modal = m.querySelector('.modal'); if (!modal) { m.classList.remove('show'); return; } modal.classList.add('closing'); const handler = (e) => { if (e.animationName !== 'modalOut') return; modal.removeEventListener('animationend', handler); modal.classList.remove('closing'); m.classList.remove('show'); }; modal.addEventListener('animationend', handler); }
 
 function showExport() {
     document.getElementById('exportSecretWarn').style.display = currentSecretLevel === '2' ? 'block' : 'none';
@@ -2100,7 +2255,7 @@ const templateContentMap = {
 
 function openTemplatePreview() {
     const cur = document.getElementById('template').value;
-    document.getElementById('templatePreviewSelect').value = cur;
+    document.getElementById('templatePreviewSelect').value = (cur === '0' ? 'auto' : cur);
     renderTemplatePreview();
     showModal('modalTemplate');
 }
@@ -2120,7 +2275,7 @@ function renderTemplatePreview() {
 
 function applyTemplatePreview() {
     const val = document.getElementById('templatePreviewSelect').value;
-    document.getElementById('template').value = val;
+    document.getElementById('template').value = (val === 'auto' ? '0' : val);
     hideModal('modalTemplate');
     const name = templateContentMap[val] ? templateContentMap[val].name : '';
     showToast('已选择：' + name);
@@ -2142,7 +2297,201 @@ function escapeHtml(str) {
     if (str == null) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
+
+/* ==================== 模板管理（参考 PPT 助手：侧边栏底部入口 → 独立管理页） ==================== */
+const tplMgmtData = {
+    tab: 'all',
+    viewingId: null,
+    templates: [
+        { id:'t1',  name:'通用会议纪要模板',   category:'通用',     tplValue:'0', meetingType:'0', desc:'适用于各类常规会议，结构清晰通用。', sections:['标题','元信息（时间/地点/主持人/出席人员/记录人）','会议议题','议定事项','其他事项','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-01 09:00' },
+        { id:'t2',  name:'党政机关通用纪要模板', category:'通用',   tplValue:'0', meetingType:'0', desc:'符合党政机关公文规范的通用纪要结构。', sections:['标题','元信息','议题与讨论','决议事项','待办事项','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-02 10:30' },
+        { id:'t3',  name:'工作例会标准模板',   category:'工作例会',  tplValue:'1', meetingType:'1', desc:'适用于周例会、月度例会等例行工作会议。', sections:['标题','元信息','会议议题','议定事项（含责任分工）','下阶段工作安排','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-03 09:00' },
+        { id:'t4',  name:'月度工作例会模板',   category:'工作例会',  tplValue:'1', meetingType:'1', desc:'突出月度工作回顾与下月计划。', sections:['本月工作回顾','议题讨论','议定事项','下月工作计划','落款'], uploader:'李主任', dept:'综合处', enabled:true,  time:'2026-07-05 14:00' },
+        { id:'t5',  name:'周例会简明模板',     category:'工作例会',  tplValue:'1', meetingType:'1', desc:'精简版周例会纪要，快速记录要点。', sections:['本周进展','问题与协调','下周重点','落款'], uploader:'李主任', dept:'综合处', enabled:false, time:'2026-07-09 11:20' },
+        { id:'t6',  name:'专题协调会议模板',   category:'专题协调',  tplValue:'2', meetingType:'2', desc:'适用于跨部门专题协调、事项研究。', sections:['协调事项背景','各方意见与协调情况','协调意见','责任分工','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-07 09:00' },
+        { id:'t7',  name:'跨部门协调会议模板', category:'专题协调',  tplValue:'2', meetingType:'2', desc:'多部门协同推进事项的协调纪要。', sections:['事项背景','部门意见','协调结论','分工与时限','落款'], uploader:'王处长', dept:'发改局', enabled:true,  time:'2026-07-10 08:30' },
+        { id:'t8',  name:'项目推进会议模板',   category:'项目推进',  tplValue:'3', meetingType:'3', desc:'适用于项目进度调度、节点推进。', sections:['项目进展情况','存在问题与风险','下阶段节点','责任分工','落款'], uploader:'王处长', dept:'发改局', enabled:true,  time:'2026-07-12 15:00' },
+        { id:'t9',  name:'重点项目调度模板',   category:'项目推进',  tplValue:'3', meetingType:'3', desc:'突出关键节点与风险管控的调度纪要。', sections:['节点完成情况','风险与对策','下阶段调度安排','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-14 10:00' },
+        { id:'t10', name:'工作调度会议模板',   category:'工作调度',  tplValue:'4', meetingType:'4', desc:'适用于工作任务调度与落实安排。', sections:['调度事项','落实情况','下一步调度','责任分工','落款'], uploader:'李主任', dept:'综合处', enabled:true,  time:'2026-07-15 08:00' },
+        { id:'t11', name:'部门会商模板',       category:'部门会商',  tplValue:'4', meetingType:'5', desc:'适用于部门内部会商、事项研究。', sections:['会商事项','会商意见','结论与落实安排','落款'], uploader:'赵科长', dept:'财政局', enabled:true,  time:'2026-07-16 09:30' },
+        { id:'t12', name:'调研座谈会纪要模板', category:'调研座谈',  tplValue:'0', meetingType:'0', desc:'适用于调研走访、座谈交流类会议。', sections:['调研背景','座谈内容','意见建议','下一步举措','落款'], uploader:'张秘书', dept:'办公室', enabled:true,  time:'2026-07-18 14:30' },
+        { id:'t13', name:'党组会议纪要模板',   category:'调研座谈',  tplValue:'0', meetingType:'0', desc:'党组会议专用结构，体现议事决策。', sections:['议题','讨论情况','决议','责任落实','落款'], uploader:'李主任', dept:'综合处', enabled:true,  time:'2026-07-20 09:00' }
+    ]
+};
+const tplIconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>';
+
+function navigateToTemplates() {
+    switchView('viewTemplates');
+    renderTplMgmtTabs();
+    renderTplMgmtGrid();
+}
+function tplMgmtCategories() {
+    const cats = [];
+    tplMgmtData.templates.forEach(t => { if (!cats.includes(t.category)) cats.push(t.category); });
+    return cats;
+}
+function switchTplTab(cat) {
+    tplMgmtData.tab = cat;
+    renderTplMgmtTabs();
+    renderTplMgmtGrid();
+}
+function renderTplMgmtTabs() {
+    const cats = ['all'].concat(tplMgmtCategories());
+    const labels = { all: '全部模板' };
+    document.getElementById('tplMgmtTabs').innerHTML = cats.map(c => {
+        const count = c === 'all' ? tplMgmtData.templates.length : tplMgmtData.templates.filter(t => t.category === c).length;
+        return `<div class="tpl-mgmt-tab ${tplMgmtData.tab === c ? 'active' : ''}" onclick="switchTplTab('${escapeHtml(c)}')">${escapeHtml(labels[c] || c)}<span class="tab-cnt">(${count})</span></div>`;
+    }).join('');
+}
+function renderTplMgmtGrid() {
+    const list = tplMgmtData.tab === 'all' ? tplMgmtData.templates : tplMgmtData.templates.filter(t => t.category === tplMgmtData.tab);
+    if (!list.length) { document.getElementById('tplMgmtGrid').innerHTML = '<div class="tpl-mgmt-empty">该分类下暂无模板</div>'; return; }
+    const html = list.map(t => {
+        const statusCls = t.enabled ? 'ok' : 'warn';
+        const statusTxt = t.enabled ? '启用中' : '已停用';
+        const sectionsTxt = t.sections.slice(0, 4).join(' · ') + (t.sections.length > 4 ? ' …' : '');
+        return `
+        <div class="tpl-mgmt-card ${t.enabled ? '' : 'disabled'}" onclick="viewTemplate('${t.id}')">
+            <div class="tpl-mgmt-card-head">
+                <div class="tpl-mgmt-card-icon">${tplIconSvg}</div>
+                <div class="tpl-mgmt-card-info">
+                    <div class="tpl-mgmt-card-name">${escapeHtml(t.name)}</div>
+                    <div class="tpl-mgmt-card-desc">${escapeHtml(t.desc)}</div>
+                </div>
+            </div>
+            <div class="tpl-mgmt-card-body">
+                <div class="tpl-mgmt-card-meta">
+                    <span class="tpl-mgmt-cat-tag">${escapeHtml(t.category)}</span>
+                    <span class="tpl-mgmt-status ${statusCls}">${statusTxt}</span>
+                </div>
+                <div class="tpl-mgmt-sections">结构：${escapeHtml(sectionsTxt)}</div>
+                <div class="tpl-mgmt-uploader"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M4 21v-2a4 4 0 0 1 3-3.87"/><circle cx="12" cy="7" r="4"/></svg>${escapeHtml(t.uploader)} · ${escapeHtml(t.dept)} · ${escapeHtml(t.time)}</div>
+            </div>
+            <div class="tpl-mgmt-card-ops">
+                <button class="tpl-mgmt-ops-btn primary" onclick="event.stopPropagation(); useTemplate('${t.id}')">使用</button>
+                <button class="tpl-mgmt-ops-btn" onclick="event.stopPropagation(); viewTemplate('${t.id}')">预览</button>
+                <button class="tpl-mgmt-ops-btn" onclick="event.stopPropagation(); toggleTplStatus('${t.id}')">${t.enabled ? '停用' : '启用'}</button>
+                <button class="tpl-mgmt-ops-btn danger" onclick="event.stopPropagation(); deleteTemplate('${t.id}')">删除</button>
+            </div>
+        </div>`;
+    }).join('');
+    document.getElementById('tplMgmtGrid').innerHTML = html;
+}
+function useTemplate(id) {
+    const t = tplMgmtData.templates.find(x => x.id === id);
+    if (!t) return;
+    if (!t.enabled) { showToast('该模板已停用，请先启用'); return; }
+    const tplSel = document.getElementById('template');
+    const typeSel = document.getElementById('meetingType');
+    if (tplSel) tplSel.value = t.tplValue;
+    if (typeSel) typeSel.value = t.meetingType;
+    switchView('viewCreate');
+    const infoCard = document.getElementById('infoCard');
+    if (infoCard) setTimeout(() => infoCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+    showToast('已应用模板：' + t.name);
+}
+function viewTemplate(id) {
+    const t = tplMgmtData.templates.find(x => x.id === id);
+    if (!t) return;
+    tplMgmtData.viewingId = id;
+    const sectionsHtml = t.sections.map(s => `<div style="padding:5px 0;border-bottom:1px dashed var(--border-light);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>${escapeHtml(s)}</div>`).join('');
+    document.getElementById('tplViewContent').innerHTML = `
+        <div style="font-size:15px;font-weight:600;color:var(--primary);margin-bottom:6px;display:flex;align-items:center;gap:8px;">${escapeHtml(t.name)}<span style="font-size:11px;font-weight:400;color:var(--ai-cyan);background:var(--cyan-soft);padding:1px 7px;border-radius:8px;">${escapeHtml(t.category)}</span></div>
+        <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;line-height:1.7;">${escapeHtml(t.desc)}</div>
+        <div style="font-size:12px;color:var(--text-tip);margin-bottom:6px;font-weight:500;">模板结构：</div>
+        <div style="background:#fafbfc;border:1px solid var(--border-light);border-radius:6px;padding:10px 14px;font-size:13px;line-height:1.9;">${sectionsHtml}</div>
+        <div style="margin-top:12px;font-size:11px;color:var(--text-tip);">上传人：${escapeHtml(t.uploader)} · ${escapeHtml(t.dept)} · ${escapeHtml(t.time)}</div>
+    `;
+    showModal('modalTplView');
+}
+function useTemplateFromView() {
+    if (tplMgmtData.viewingId) { hideModal('modalTplView'); useTemplate(tplMgmtData.viewingId); }
+}
+function toggleTplStatus(id) {
+    const t = tplMgmtData.templates.find(x => x.id === id);
+    if (!t) return;
+    t.enabled = !t.enabled;
+    renderTplMgmtGrid();
+    showToast('已' + (t.enabled ? '启用' : '停用') + '：' + t.name);
+}
+function deleteTemplate(id) {
+    const t = tplMgmtData.templates.find(x => x.id === id);
+    if (!t) return;
+    tplMgmtData.templates = tplMgmtData.templates.filter(x => x.id !== id);
+    renderTplMgmtTabs();
+    renderTplMgmtGrid();
+    showToast('已删除模板：' + t.name);
+}
+let tplUploadSelectedFile = null;
+function openUploadTplModal() {
+    document.getElementById('newTplName').value = '';
+    document.getElementById('newTplCategory').value = '通用';
+    document.getElementById('newTplDesc').value = '';
+    document.getElementById('tplUploadFile').value = '';
+    document.getElementById('tplUploadFileName').style.display = 'none';
+    document.getElementById('tplUploadFileName').innerHTML = '';
+    document.getElementById('tplUploadText').textContent = '点击或拖拽上传模板文件';
+    document.getElementById('tplUploadHint').style.display = '';
+    tplUploadSelectedFile = null;
+    showModal('modalTplUpload');
+}
+function handleTplFileSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+    tplUploadSelectedFile = file;
+    const nameEl = document.getElementById('tplUploadFileName');
+    const textEl = document.getElementById('tplUploadText');
+    const hintEl = document.getElementById('tplUploadHint');
+    if (nameEl) {
+        nameEl.style.display = 'flex';
+        nameEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> ' + escapeHtml(file.name) + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
+    }
+    if (textEl) textEl.textContent = '已选择文件，可重新选择';
+    if (hintEl) hintEl.style.display = 'none';
+    const nameInput = document.getElementById('newTplName');
+    if (nameInput && !nameInput.value.trim()) {
+        nameInput.value = file.name.replace(/\.(docx?|txt|wps)$/i, '');
+    }
+}
+function handleTplDrop(e) {
+    e.preventDefault();
+    const zone = document.getElementById('tplUploadZone');
+    if (zone) zone.classList.remove('dragover');
+    const input = document.getElementById('tplUploadFile');
+    if (e.dataTransfer && e.dataTransfer.files.length && input) {
+        input.files = e.dataTransfer.files;
+        handleTplFileSelect(input);
+    }
+}
+function submitUploadTpl() {
+    const name = document.getElementById('newTplName').value.trim();
+    const category = document.getElementById('newTplCategory').value;
+    const desc = document.getElementById('newTplDesc').value.trim();
+    if (!name) { showToast('请输入模板名称'); return; }
+    if (!tplUploadSelectedFile) { showToast('请先选择模板文件'); return; }
+    const file = tplUploadSelectedFile;
+    // 原型：按所选分类给出默认章节结构（未实际解析文件内容）
+    const sectionMap = {
+        '通用': ['标题','元信息（时间/地点/主持人/出席人员/记录人）','会议议题','议定事项','待办事项','落款'],
+        '工作例会': ['标题','元信息','会议议题','议定事项（含责任分工）','下阶段工作安排','落款'],
+        '专题协调': ['协调事项背景','各方意见与协调情况','协调意见','责任分工','落款'],
+        '项目推进': ['项目进展情况','存在问题与风险','下阶段节点','责任分工','落款'],
+        '工作调度': ['调度事项','落实情况','下一步调度','责任分工','落款'],
+        '部门会商': ['会商事项','会商意见','结论与落实安排','落款'],
+        '调研座谈': ['调研背景','座谈内容','意见建议','下一步举措','落款']
+    };
+    const sections = sectionMap[category] || ['会议议题','议定事项','待办事项','落款'];
+    const id = 'u' + Date.now();
+    tplMgmtData.templates.unshift({ id, name, category, tplValue:'0', meetingType:'0', desc: desc || ('上传自文件：' + file.name), sections, uploader:'张秘书', dept:'办公室', enabled:true, time:'2026-08-13 10:00', file: file.name });
+    tplMgmtData.tab = 'all';
+    tplUploadSelectedFile = null;
+    hideModal('modalTplUpload');
+    renderTplMgmtTabs();
+    renderTplMgmtGrid();
+    showToast('模板「' + name + '」已上传成功');
+}
+
+
 </script>
-<script src="../assets/proto-version.js" data-proto-version></script>
 </body>
 </html>

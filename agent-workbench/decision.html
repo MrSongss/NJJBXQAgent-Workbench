@@ -557,24 +557,37 @@
         </div>
       </section>
 
-      <!-- 流程步骤条（对应业务流程图七个环节，合并为六步） -->
+      <!-- 流程步骤条（业务流程简化为三步：材料录入-公文生成-输出交付） -->
       <section class="flowbar" id="flowbar">
         <div class="flow-step"><button class="flow-node current" data-step="1"><span class="n">1</span>材料录入</button></div>
         <div class="flow-arrow"></div>
-        <div class="flow-step"><button class="flow-node" data-step="2"><span class="n">2</span>标准化·补全</button></div>
+        <div class="flow-step"><button class="flow-node" data-step="4"><span class="n">2</span>公文生成</button></div>
         <div class="flow-arrow"></div>
-        <div class="flow-step"><button class="flow-node" data-step="3"><span class="n">3</span>要素·文种识别</button></div>
-        <div class="flow-arrow"></div>
-        <div class="flow-step"><button class="flow-node" data-step="4"><span class="n">4</span>公文生成</button></div>
-        <div class="flow-arrow"></div>
-        <div class="flow-step"><button class="flow-node" data-step="5"><span class="n">5</span>合规校验</button></div>
-        <div class="flow-arrow"></div>
-        <div class="flow-step"><button class="flow-node" data-step="6"><span class="n">6</span>输出交付</button></div>
+        <div class="flow-step"><button class="flow-node" data-step="6"><span class="n">3</span>输出交付</button></div>
       </section>
 
       <div class="stage-scroll">
-        <!-- ========== 步骤1：材料录入 ========== -->
+        <!-- ========== 步骤1：材料录入（先选文种 → 录入事项 → 上传材料） ========== -->
         <section class="stage active" id="stage-1">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">选择文种</div>
+              <span class="page-sub" style="margin:0;">请先选择本次生成「决定」还是「决议」，再录入事项信息</span>
+            </div>
+            <div class="card-body">
+              <div class="doctype-switch" data-doctype-switch>
+                <div class="dt-opt on" data-dt="决议">
+                  <div class="dt-name">决议</div>
+                  <div class="dt-desc">会议审议 / 重大事项决策</div>
+                </div>
+                <div class="dt-opt" data-dt="决定">
+                  <div class="dt-name">决定</div>
+                  <div class="dt-desc">决策部署 / 奖惩任免</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-head">
               <div class="card-title"><span class="badge-step">STEP 1</span>决策事项信息录入</div>
@@ -588,16 +601,11 @@
                   <span class="err-msg">请填写决策事项名称</span>
                 </div>
                 <div class="field">
-                  <label>决策主体 <span class="req">*</span> <span class="hint-ic" title="作出该决定/决议的法定主体">?</span></label>
-                  <select id="f-subject">
-                    <option value="">请选择决策主体</option>
-                    <option>中共南京江北新区工作委员会</option>
-                    <option>南京江北新区管理委员会</option>
-                    <option>管委会主任办公会</option>
-                    <option>党工委委员会（部门）</option>
-                  </select>
-                  <span class="sub-note">作出决定/决议的法定主体，用于判定决策权限层级并作为落款机关</span>
-                  <span class="err-msg">请选择决策主体</span>
+                  <label>决策主体 <span class="req">*</span> <span class="hint-ic" title="作出该决定/决议的法定主体，可下拉选择或手动输入">?</span></label>
+                  <input type="text" id="f-subject" list="dl-subject" placeholder="请选择或手动输入决策主体">
+                  <datalist id="dl-subject"></datalist>
+                  <span class="sub-note">作出决定/决议的法定主体，用于判定决策权限层级并作为落款机关；可下拉选择或手动输入</span>
+                  <span class="err-msg">请填写决策主体</span>
                 </div>
                 <div class="field">
                   <label>会议名称</label>
@@ -609,24 +617,19 @@
                   <span class="err-msg">请选择审议时间</span>
                 </div>
                 <div class="field">
-                  <label>事项类型 <span class="hint-ic" title="影响“决定/决议”文种推荐">?</span></label>
-                  <select id="f-cat">
-                    <option>重大事项决策</option>
-                    <option>人事任免</option>
-                    <option>表彰奖惩</option>
-                    <option>重点工作部署</option>
-                    <option>制度文件修订审议</option>
-                  </select>
-                  <span class="sub-note">决定多用于决策部署/奖惩任免，决议多用于会议审议/重大事项，将影响文种推荐</span>
+                  <label>事项类型 <span class="hint-ic" title="影响决定/决议文种推荐，可下拉选择或手动输入">?</span></label>
+                  <input type="text" id="f-cat" list="dl-type" placeholder="请选择或手动输入事项类型">
+                  <datalist id="dl-type"></datalist>
+                  <span class="sub-note">决定多用于决策部署/奖惩任免，决议多用于会议审议/重大事项；可下拉选择或手动输入</span>
                 </div>
                 <div class="field full">
-                  <label>决定事项 <span class="req">*</span> <span class="hint-ic" title="会议拟决定/通过的核心事项">?</span></label>
+                  <label>决策事项描述 <span class="req">*</span> <span class="hint-ic" title="会议拟决定/通过的核心事项">?</span></label>
                   <textarea id="f-matter" placeholder="简述会议拟决定或审议通过的核心事项…"></textarea>
                   <span class="sub-note">会议拟决定或审议通过的核心事项，系统将自动提炼并按逻辑排序为「一、二、三」条</span>
-                  <span class="err-msg">请填写决定事项</span>
+                  <span class="err-msg">请填写决策事项描述</span>
                 </div>
                 <div class="field full">
-                  <label>表决情况 <span class="req">*</span> <span class="hint-ic" title="用于表决程序合规校验，缺失将进入人工补录">?</span></label>
+                  <label>表决情况 <span class="hint-ic" title="用于表决程序合规校验，选填，缺失仅作提醒">?</span></label>
                   <div class="vote-row">
                     <div class="vote-cell"><span>表决方式</span>
                       <select id="v-way" style="height:36px;border:1px solid var(--line);border-radius:9px;padding:0 8px;outline:none;">
@@ -638,37 +641,7 @@
                     <div class="vote-cell"><span>赞成 / 反对</span><input type="text" id="v-agree" placeholder="10 / 0"></div>
                     <div class="vote-cell"><span>弃权</span><input type="number" id="v-abstain" min="0" placeholder="0"></div>
                   </div>
-                  <span class="err-msg">请填写应到人数、实到人数与赞成票数</span>
-                </div>
-                <div class="field">
-                  <label>政策 / 依据</label>
-                  <input type="text" id="f-basis" placeholder="如：《中国共产党工作机关条例（试行）》">
-                </div>
-                <div class="field">
-                  <label>材料来源</label>
-                  <select id="f-source">
-                    <option>手动录入</option><option>文档上传</option><option>OA会议系统导入</option><option>批量导入</option>
-                  </select>
-                </div>
-                <div class="field full">
-                  <label>事项背景</label>
-                  <textarea id="f-bg" placeholder="简述事项提出背景、必要性与政策语境…"></textarea>
-                </div>
-                <div class="field">
-                  <label>密级</label>
-                  <div class="radio-row" data-radio="secret">
-                    <span class="opt on" data-val="非涉密"><span class="rd"></span>非涉密</span>
-                    <span class="opt" data-val="内部"><span class="rd"></span>内部</span>
-                    <span class="opt" data-val="秘密"><span class="rd"></span>秘密</span>
-                  </div>
-                </div>
-                <div class="field">
-                  <label>输出要求</label>
-                  <div class="check-row" data-check="output">
-                    <span class="opt on" data-val="正式稿"><span class="cbx">✓</span>正式稿</span>
-                    <span class="opt on" data-val="精简稿"><span class="cbx">✓</span>精简稿</span>
-                    <span class="opt on" data-val="校验报告"><span class="cbx">✓</span>校验报告</span>
-                  </div>
+                  <span class="sub-note">选填；未填写时合规校验仅作提醒，不阻断生成与交付</span>
                 </div>
               </div>
             </div>
@@ -680,7 +653,7 @@
               <div class="upload-zone" data-action="upload">
                 <div class="u-ic">📎</div>
                 <div class="u-t">点击上传或拖拽文件到此处</div>
-                <div class="u-s">支持 .doc / .docx / .pdf / .txt，单文件 ≤ 20MB；扫描件将自动触发 OCR 识别</div>
+                <div class="u-s">支持 .doc / .docx / .pdf / .txt，可多文件上传，单文件 ≤ 20MB；扫描件将自动触发 OCR 识别</div>
               </div>
               <div class="file-chip-list" id="fileChips"></div>
             </div>
@@ -689,109 +662,7 @@
           <div class="stage-actions">
             <button class="btn" data-action="resetForm">↺ 重置</button>
             <div class="right-group">
-              <button class="primary-btn" data-action="toStep2">下一步：标准化处理 ›</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========== 步骤2：标准化·补全 ========== -->
-        <section class="stage" id="stage-2">
-          <div class="stage-grid">
-            <div>
-              <div class="card">
-                <div class="card-head"><div class="card-title"><span class="badge-step">STEP 2</span>材料解析与标准化处理</div><span class="page-sub" style="margin:0;">去冗余 · 统一表述 · 结构化</span></div>
-                <div class="card-body" id="procList"></div>
-              </div>
-              <div class="card">
-                <div class="card-head"><div class="card-title">标准化事项数据包（预览）</div></div>
-                <div class="card-body">
-                  <table class="elem-table" id="normTable"></table>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="card">
-                <div class="card-head"><div class="card-title" style="color:var(--orange);">⚠ 缺失核心要素补录</div></div>
-                <div class="card-body">
-                  <div class="note-strip">核心要素不完整时无法进入要素抽取，请补全后重试。</div>
-                  <div id="missList"></div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-head"><div class="card-title">解析概况</div></div>
-                <div class="card-body" style="font-size:13.5px;color:#55617d;line-height:2;">
-                  <div>📄 解析文件：<b>3</b> 份（会议记录/表决单/政策依据）</div>
-                  <div>🔤 解析字数：<b>1,860</b> 字 · 涉及法定要素 <b>11</b> 项</div>
-                  <div>🧩 结构化要素：<b>已识别 9 / 11</b> 项</div>
-                  <div>⏱ 预计生成耗时：<b>约 8 秒</b></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="stage-actions">
-            <button class="btn" data-action="toStep1">‹ 上一步</button>
-            <div class="right-group">
-              <button class="btn" data-action="reparse">补充后重试</button>
-              <button class="primary-btn" data-action="toStep3">下一步：要素抽取 ›</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========== 步骤3：要素·文种识别 ========== -->
-        <section class="stage" id="stage-3">
-          <div class="stage-grid">
-            <div>
-              <div class="card">
-                <div class="card-head"><div class="card-title"><span class="badge-step">STEP 3</span>法定要素抽取</div><span class="page-sub" style="margin:0;">可直接点击内容进行人工修正</span></div>
-                <div class="card-body">
-                  <table class="elem-table" id="elemTable"></table>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="card">
-                <div class="card-head"><div class="card-title">文种类型识别</div></div>
-                <div class="card-body">
-                  <div class="doctype-card agent-card">
-                    <div class="doctype-reco">
-                      <div class="big" id="recoBig">决议</div>
-                      <div class="rc-info">
-                        <div class="l1">推荐文种：<span id="recoName">决议</span>（会议审议类）</div>
-                        <div class="l2">权限层级：党工委全会审议决策 · 文种来源：智能匹配（可人工切换）</div>
-                      </div>
-                    </div>
-                    <div class="doctype-switch" data-doctype-switch>
-                      <div class="dt-opt on" data-dt="决议">
-                        <div class="dt-name">决议</div>
-                        <div class="dt-desc">会议审议 / 重大事项决策</div>
-                      </div>
-                      <div class="dt-opt" data-dt="决定">
-                        <div class="dt-name">决定</div>
-                        <div class="dt-desc">决策部署 / 奖惩任免</div>
-                      </div>
-                    </div>
-                    <div style="margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.6;">
-                      💡 依据事项类型「制度文件修订审议」+ 存在会议表决程序，系统判定适用<b>决议</b>。如需切换文种，请点击上方选项，切换将记录调整原因与版本。
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-head"><div class="card-title">程序要件核对</div></div>
-                <div class="card-body" style="padding:6px 16px 12px;">
-                  <div class="check-item"><span>决策主体权限层级匹配</span><span class="tag done">✓ 符合</span></div>
-                  <div class="check-item"><span>会议审议程序留痕</span><span class="tag done">✓ 完整</span></div>
-                  <div class="check-item"><span>表决方式与比例</span><span class="tag mid">待正文体现</span></div>
-                  <div class="check-item" style="border-bottom:0;"><span>议事规则依据</span><span class="tag done">✓ 已匹配</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="stage-actions">
-            <button class="btn" data-action="toStep2">‹ 上一步</button>
-            <div class="right-group">
-              <button class="btn" data-action="adjustReason">记录调整原因</button>
-              <button class="primary-btn" data-action="toStep4">下一步：生成公文 ›</button>
+              <button class="primary-btn" data-action="toStep4">下一步：公文生成 ›</button>
             </div>
           </div>
         </section>
@@ -836,39 +707,16 @@
                   依据《党政机关公文格式》（GB/T9704-2012）及党委决议写作范式生成，含标准版头、标题、通过说明、正文层次与落款。<b style="color:var(--orange);">AI生成内容为初稿</b>，正式结论须经人工审核确认。
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="stage-actions">
-            <button class="btn" data-action="toStep3">‹ 上一步</button>
-            <div class="right-group">
-              <button class="primary-btn" data-action="toStep5">下一步：合规校验 ›</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========== 步骤5：合规校验 ========== -->
-        <section class="stage" id="stage-5">
-          <div class="stage-grid">
-            <div>
-              <div class="doc-wrap">
-                <div class="doc-tools">
-                  <span class="hint">合规校验 · 点击文稿标记或右侧卡片可联动定位</span>
-                  <button class="mini-btn" data-action="recheck">↻ 重新校验</button>
-                </div>
-                <article class="doc-page" id="docPageCheck"></article>
-              </div>
-            </div>
-            <div>
               <div class="card">
-                <div class="card-head"><div class="card-title">合规校验结果</div><span class="page-sub" id="checkSummary" style="margin:0;">—</span></div>
+                <div class="card-head"><div class="card-title">合规校验（参考性 · 不阻断）</div><span class="page-sub" id="checkSummary" style="margin:0;">—</span></div>
                 <div class="progress-box" id="checkProgress" style="display:none;">
                   <div class="pg-lbl"><span id="pgLbl">正在进行合规校验…</span><span id="pgPct">0%</span></div>
                   <div class="pg-bar"><i id="pgBar"></i></div>
                 </div>
                 <div class="card-body">
                   <div class="check-stats" style="display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap;">
-                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;"></span>阻断项 <b id="cntBlock">0</b> 项（须整改）</div>
-                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;"></span>提醒项 <b id="cntWarn">0</b> 项（建议优化）</div>
+                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;"></span>阻断项 <b id="cntBlock">0</b> 项</div>
+                    <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;"></span>提醒项 <b id="cntWarn">0</b> 项</div>
                     <div class="sm-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#55617d;"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>通过项 <b id="cntPass">0</b> 项</div>
                   </div>
                   <div id="checkList"></div>
@@ -877,10 +725,11 @@
             </div>
           </div>
           <div class="stage-actions">
-            <button class="btn" data-action="toStep4">‹ 上一步（返回修改）</button>
+            <button class="btn" data-action="toStep1">‹ 上一步</button>
             <div class="right-group">
+              <button class="btn" data-action="recheck">↻ 重新校验</button>
               <button class="btn" data-action="applyAllFix">一键采纳修复建议</button>
-              <button class="primary-btn" id="toStep6Btn" data-action="toStep6" disabled>下一步：输出交付 ›</button>
+              <button class="primary-btn" data-action="toStep6">下一步：输出交付 ›</button>
             </div>
           </div>
         </section>
@@ -948,7 +797,7 @@
           </div>
 
           <div class="stage-actions">
-            <button class="btn" data-action="toStep5">‹ 上一步</button>
+            <button class="btn" data-action="toStep4">‹ 上一步</button>
             <div class="right-group">
               <button class="btn" data-action="newTask">＋ 新建生成任务</button>
               <button class="primary-btn" data-action="finishTask">完成并归档</button>
@@ -1059,6 +908,36 @@
     ];
     let fileChips = [];
 
+    /* 决策主体 / 事项类型：跨页共享配置（与 index.html 配置治理中心一致）
+       localStorage key = jbai_cfg_decision；file:// 可能不可用，失败则用内置默认，且手填恒可用。 */
+    const DECISION_CFG_KEY = "jbai_cfg_decision";
+    const DECISION_CFG_DEFAULTS = {
+      subjects: ["中共南京江北新区工作委员会", "南京江北新区管理委员会", "管委会主任办公会", "部门党组（党委）"],
+      types: ["重大事项决策", "人事任免", "表彰奖惩", "重点工作部署", "制度文件修订审议"]
+    };
+    function loadDecisionConfig() {
+      try {
+        const raw = localStorage.getItem(DECISION_CFG_KEY);
+        if (!raw) return DECISION_CFG_DEFAULTS;
+        const parsed = JSON.parse(raw);
+        return {
+          subjects: Array.isArray(parsed.subjects) && parsed.subjects.length ? parsed.subjects : DECISION_CFG_DEFAULTS.subjects.slice(),
+          types: Array.isArray(parsed.types) && parsed.types.length ? parsed.types : DECISION_CFG_DEFAULTS.types.slice()
+        };
+      } catch (e) { return DECISION_CFG_DEFAULTS; }
+    }
+    // 填充决策主体 / 事项类型 combobox 的 datalist（支持配置选项 + 手动输入）
+    function loadDecisionOptions() {
+      const cfg = loadDecisionConfig();
+      const fillDatalist = (id, arr) => {
+        const dl = document.getElementById(id);
+        if (!dl) return;
+        dl.innerHTML = arr.map(v => `<option value="${v.replace(/"/g, "&quot;")}"></option>`).join("");
+      };
+      fillDatalist("dl-subject", cfg.subjects);
+      fillDatalist("dl-type", cfg.types);
+    }
+
     /* ============================================================
        表单：载入示例 / 读取 / 校验 / 重置
        ============================================================ */
@@ -1074,14 +953,12 @@
       $("#v-actual").value = SAMPLE.actual;
       $("#v-agree").value = SAMPLE.agree;
       $("#v-abstain").value = SAMPLE.abstain;
-      $("#f-basis").value = SAMPLE.basis;
-      $("#f-bg").value = SAMPLE.bg;
       fileChips = sampleFiles.slice();
       renderFileChips();
       $$(".field.err").forEach(f => f.classList.remove("err"));
       state.taskLoaded = true;
       $("#taskName").textContent = SAMPLE.title;
-      $("#asState").textContent = "· 决策主体：" + SAMPLE.subject + " · 密级：非涉密";
+      $("#asState").textContent = "· 决策主体：" + SAMPLE.subject + " · 事项类型：" + SAMPLE.cat;
     }
     function readForm() {
       return {
@@ -1095,10 +972,7 @@
         should: $("#v-should").value.trim(),
         actual: $("#v-actual").value.trim(),
         agree: $("#v-agree").value.trim(),
-        abstain: $("#v-abstain").value.trim(),
-        basis: $("#f-basis").value.trim(),
-        bg: $("#f-bg").value.trim(),
-        secret: (($(".radio-row[data-radio=secret] .opt.on") || {}).dataset || {}).val || "非涉密"
+        abstain: $("#v-abstain").value.trim()
       };
     }
     // 表单校验：仅校验关键必填项（表决等要素可在步骤2补录，尽量减少录入阻塞）
@@ -1122,8 +996,7 @@
     }
     function resetForm() {
       $$("#stage-1 input").forEach(i => i.value = "");
-      $("#f-subject").value = ""; $("#f-cat").selectedIndex = 0; $("#v-way").selectedIndex = 0;
-      $("#f-matter").value = ""; $("#f-bg").value = ""; $("#f-source").selectedIndex = 0;
+      $("#f-matter").value = ""; $("#v-way").selectedIndex = 0;
       fileChips = []; renderFileChips();
       $$(".field.err").forEach(f => f.classList.remove("err"));
       showToast("表单已重置");
@@ -1167,8 +1040,7 @@
         ["决策主体", f.subject || SAMPLE.subject],
         ["会议名称", f.meeting || SAMPLE.meeting],
         ["审议时间", f.date || SAMPLE.date],
-        ["表决方式", f.voteWay || SAMPLE.voteWay],
-        ["材料来源", $("#f-source").value + " + 文档上传"]
+        ["表决方式", f.voteWay || SAMPLE.voteWay]
       ];
       $("#normTable").innerHTML = "<thead><tr><th style='width:120px;'>要素</th><th>标准化内容</th></tr></thead><tbody>" +
         rows.map(r => `<tr><td class="elem-name">${r[0]}</td><td class="elem-val">${r[1]}</td></tr>`).join("") + "</tbody>";
@@ -1201,7 +1073,7 @@
         { name: "决策依据", val: f.basis || SAMPLE.basis },
         { name: "审议程序", val: (f.meeting || SAMPLE.meeting) + "审议" },
         { name: "表决情况", val: `应到${total}人，实到${actual}人，赞成${agree}票、反对0票、弃权0票` },
-        { name: "决定事项", val: f.matter || SAMPLE.matter },
+        { name: "决策事项描述", val: f.matter || SAMPLE.matter },
         { name: "执行要求", val: "各相关部门抓好落实，管委会办公室负责督促检查、跟踪问效" }
       ];
     }
@@ -1220,8 +1092,9 @@
     function setDocType(dt) {
       state.docType = dt;
       $$(".doctype-switch .dt-opt").forEach(o => o.classList.toggle("on", o.dataset.dt === dt));
-      $("#recoBig").textContent = dt;
-      $("#recoName").textContent = dt + (dt === "决议" ? "（会议审议类）" : "（决策部署 / 奖惩任免类）");
+      const recoBig = $("#recoBig"), recoName = $("#recoName");
+      if (recoBig) recoBig.textContent = dt;
+      if (recoName) recoName.textContent = dt + (dt === "决议" ? "（会议审议类）" : "（决策部署 / 奖惩任免类）");
     }
 
     /* ============================================================
@@ -1289,10 +1162,7 @@
     /* AI 状态条：随步骤联动智能体状态文案与徽章 */
     const STEP_STATUS = {
       1: { state: "正在录入决策事项材料，提取法定要素", pill: "录入中", gen: false },
-      2: { state: "正在解析材料、标准化与补全核心要素", pill: "解析中", gen: true },
-      3: { state: "正在抽取法定要素并识别文种类型", pill: "识别中", gen: true },
-      4: { state: "正在依 GB/T9704 规范生成决议公文", pill: "生成中", gen: true },
-      5: { state: "正在进行法定程序与格式合规校验", pill: "校验中", gen: true },
+      4: { state: "正在依 GB/T9704 规范生成公文并完成合规校验", pill: "生成中", gen: true },
       6: { state: "公文成果已生成，可导出交付与归档", pill: "已完成", gen: false }
     };
     function updateAIStatus(step) {
@@ -1312,7 +1182,7 @@
 
     /* 生成中相关控件禁用/恢复 */
     function setGenButtonsDisabled(disabled) {
-      $$("#stage-4 [data-action='regen'], #stage-4 [data-action='toggleSimple'], #stage-4 [data-action='toStep3'], #stage-4 [data-action='toStep5'], #stage-4 [data-action='cfgToggle'], [data-action='newTask']").forEach(b => { b.disabled = disabled; });
+      $$("#stage-4 [data-action='regen'], #stage-4 [data-action='toggleSimple'], #stage-4 [data-action='toStep1'], #stage-4 [data-action='toStep6'], #stage-4 [data-action='recheck'], #stage-4 [data-action='applyAllFix'], #stage-4 [data-action='cfgToggle'], [data-action='newTask']").forEach(b => { b.disabled = disabled; });
       const tpl = $("#tplSelect"); if (tpl) tpl.disabled = disabled;
     }
 
@@ -1353,6 +1223,8 @@
               state.generating = false;
               setGenButtonsDisabled(false);
               showToast("公文已生成");
+              // 合规校验并入公文生成：生成完成后自动运行（参考性、不阻断）
+              runCheck();
             }, 700);
             return;
           }
@@ -1400,20 +1272,16 @@
           <div class="to-txt">${t.txt}</div><div class="to-tag">${t.tag}</div>
         </div>`).join("");
     }
-    // 输出交付：按步骤1“输出要求”勾选项控制成果卡片显隐（修改指引清单始终提供）
+    // 输出交付：「输出要求」字段已移除，默认展示全部成果卡片
     function applyOutputPrefs() {
-      const chosen = $$(".check-row[data-check=output] .opt.on").map(o => o.dataset.val);
-      $$("#stage-6 [data-out]").forEach(card => {
-        const v = card.dataset.out;
-        card.style.display = (v === "修改指引" || chosen.indexOf(v) >= 0) ? "" : "none";
-      });
+      $$("#stage-6 [data-out]").forEach(card => { card.style.display = ""; });
     }
 
     /* ============================================================
        步骤5：合规校验
        ============================================================ */
     const checks = [
-      { id: "c1", dim: "表决合规", rule: "CX-BJ-03", level: "block", resolved: false,
+      { id: "c1", dim: "表决合规", rule: "CX-BJ-03", level: "warn", resolved: false,
         title: "正文未完整体现表决结果（应到/实到人数、赞成/反对/弃权票数）",
         fix: '在通过说明处补充：<b>会议应到11人，实到10人，表决赞成10票、反对0票、弃权0票，一致通过。</b>',
         basis: "《南京江北新区议事规则》：重大事项决议须在公文中载明表决方式与表决情况。" },
@@ -1467,15 +1335,15 @@
       $("#cntBlock").textContent = block;
       $("#cntWarn").textContent = warn;
       $("#cntPass").textContent = pass;
+      // 合规校验为参考性、不阻断：仅提示，不锁定下一步
       $("#checkSummary").innerHTML = block > 0
-        ? `<span style="color:var(--red);font-weight:700;">存在 ${block} 项阻断项，须整改后导出</span>`
-        : `<span style="color:var(--green);font-weight:700;">校验通过，可进入输出交付</span>`;
-      // 阻断项清零方可进入下一步
-      const canNext = block === 0 && state.checked;
-      $("#toStep6Btn").disabled = !canNext;
-      // 同步公文标记
+        ? `<span style="color:var(--red);font-weight:700;">存在 ${block} 项阻断项（参考性，可继续交付，建议整改）</span>`
+        : warn > 0
+          ? `<span style="color:var(--orange);font-weight:700;">${warn} 项提醒项建议优化（不阻断交付）</span>`
+          : `<span style="color:var(--green);font-weight:700;">校验通过，可进入输出交付</span>`;
+      // 同步公文标记（标记位于生成文稿 #docPage 上）
       checks.forEach(c => {
-        const mark = $(`.mark[data-check="${c.id}"]`, $("#docPageCheck"));
+        const mark = $(`.mark[data-check="${c.id}"]`, $("#docPage"));
         if (mark) mark.classList.toggle("resolved", c.resolved);
       });
     }
@@ -1483,13 +1351,13 @@
       const c = checks.find(x => x.id === id);
       if (!c || c.resolved) return;
       c.resolved = true;
-      // 若为表决阻断项，向校验用文稿注入修复文本
+      // 若为表决提醒项，向生成文稿注入修复文本
       if (id === "c1") {
-        const mark = $(`.mark[data-check="c1"]`, $("#docPageCheck"));
+        const mark = $(`.mark[data-check="c1"]`, $("#docPage"));
         if (mark) mark.textContent = "本次会议应到11人，实到10人，表决赞成10票、反对0票、弃权0票，一致通过。";
       }
       if (id === "c2") {
-        const mark = $(`.mark[data-check="c2"]`, $("#docPageCheck"));
+        const mark = $(`.mark[data-check="c2"]`, $("#docPage"));
         if (mark) mark.textContent = "2026年7月8日";
       }
       renderChecks();
@@ -1509,7 +1377,6 @@
     function runCheck() {
       state.checked = false;
       checks.forEach(c => c.resolved = false);
-      $("#docPageCheck").innerHTML = buildDoc();
       const prog = $("#checkProgress"), bar = $("#pgBar"), pct = $("#pgPct"), lbl = $("#pgLbl");
       prog.style.display = "block"; bar.style.width = "0%";
       // 思考态：校验进行中
@@ -1555,10 +1422,7 @@
       // AI 状态条联动
       updateAIStatus(n);
       // 各步骤进入时渲染
-      if (n === 2) { renderProc(); renderNormTable(); renderMiss(); }
-      if (n === 3) { renderElemTable(); }
       if (n === 4) { renderTitleOpts(); renderDocStreaming(); }
-      if (n === 5) { runCheck(); }
       if (n === 6) { applyOutputPrefs(); }
       $(".stage-scroll").scrollTop = 0;
     }
@@ -1637,7 +1501,7 @@
       exported: { text: "已归档", cls: "s-exported" }
     };
 
-    const STEP_LABELS = { 1: "事项信息", 2: "程序合规", 3: "要素抽取", 4: "公文生成", 5: "合规校验", 6: "导出归档" };
+    const STEP_LABELS = { 1: "材料录入", 4: "公文生成", 6: "输出交付" };
 
     function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
@@ -1707,35 +1571,27 @@
       if (fd.actual) $("#v-actual").value = fd.actual;
       if (fd.agree) $("#v-agree").value = fd.agree;
       if (fd.abstain) $("#v-abstain").value = fd.abstain;
-      if (fd.basis) $("#f-basis").value = fd.basis;
-      if (fd.bg) $("#f-bg").value = fd.bg;
-      // 密级
-      if (fd.secret) {
-        $$(".radio-row[data-radio=secret] .opt").forEach(opt => {
-          opt.classList.toggle("on", opt.dataset.val === fd.secret);
-        });
-      }
       // 更新顶部状态栏
       $("#taskName").textContent = fd.title || data.title;
-      $("#asState").textContent = "· 文种：" + data.type + " · 状态：" + (STATUS_MAP[data.status] || {}).text + " · 密级：" + (fd.secret || "非涉密");
-      // 跳转到对应步骤
-      const targetStep = data.step || 1;
+      $("#asState").textContent = "· 文种：" + data.type + " · 事项类型：" + (fd.cat || "—") + " · 状态：" + (STATUS_MAP[data.status] || {}).text;
+      // 跳转到对应步骤（三步流程：1 材料录入 / 4 公文生成 / 6 输出交付）
       const st = STATUS_MAP[data.status] || {};
       if (data.status === "exported") {
-        // 已归档：解锁全部步骤，跳到第6步查看结果
+        // 已归档：解锁全部步骤，跳到输出交付查看结果
         state.maxStep = 6;
         goStep(6, { unlock: true });
         showToast("已加载归档记录：" + data.title.substring(0, 18) + "...");
       } else if (data.status === "review" || data.status === "submitted") {
-        // 待审核/已提交：解锁到步骤5
-        state.maxStep = 5;
-        goStep(5, { unlock: true });
+        // 待审核/已提交：回到公文生成（含合规校验）继续处理
+        state.maxStep = 4;
+        goStep(4, { unlock: true });
         showToast("已加载「" + st.text + "」记录，可继续审核");
       } else {
-        // 草稿：解锁到保存时的步骤，继续编辑
-        state.maxStep = targetStep;
-        goStep(targetStep, { unlock: true });
-        showToast("已恢复草稿（第" + targetStep + "步·" + (STEP_LABELS[targetStep] || "") + "），可继续编辑");
+        // 草稿：原步骤≥3 视为已完成录入，回到公文生成；否则回到材料录入
+        const target = (data.step || 1) >= 3 ? 4 : 1;
+        state.maxStep = target;
+        goStep(target, { unlock: true });
+        showToast("已恢复草稿（" + (STEP_LABELS[target] || "") + "），可继续编辑");
       }
       $$(".field.err").forEach(f => f.classList.remove("err"));
     }
@@ -1766,7 +1622,7 @@
       const items = checks.filter(c => c.level !== "pass");
       return `<div style="line-height:1.9;">
         <div style="font-weight:800;font-size:16px;color:#1b2947;margin-bottom:8px;">《${docName || SAMPLE.title}》合规校验报告</div>
-        <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">生成时间：2026-07-08 15:20 · 经办人：综合办公室 · 密级：非涉密 · 文种：决议 · 引擎：决定决议生成智能体 v1.0</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">生成时间：2026-07-08 15:20 · 经办人：综合办公室 · 文种：决议 · 引擎：决定决议生成智能体 v1.0</div>
         <div class="grid-4" style="margin-bottom:14px;">
           <div class="kpi" style="box-shadow:none;"><div class="k-label">阻断项</div><div class="k-value" style="font-size:22px;color:var(--red);">${block}</div></div>
           <div class="kpi" style="box-shadow:none;"><div class="k-label">提醒项</div><div class="k-value" style="font-size:22px;color:var(--orange);">${warn}</div></div>
@@ -1876,22 +1732,16 @@
         case "resetForm": resetForm(); break;
         case "upload": $("#fileInput").click(); break;
         case "toStep1": goStep(1); break;
-        case "toStep2":
-          if (!validateForm()) { showToast("请完善必填项后继续"); break; }
-          state.taskLoaded = true;
-          $("#taskName").textContent = readForm().title;
-          $("#asState").textContent = "· 决策主体：" + readForm().subject + " · 密级：" + readForm().secret;
-          goStep(2, { unlock: true });
+        case "toStep4":
+          // 由材料录入进入公文生成：校验必填项；由输出交付返回则不校验
+          if (state.step === 1) {
+            if (!validateForm()) { showToast("请完善必填项后继续"); break; }
+            state.taskLoaded = true;
+            $("#taskName").textContent = readForm().title;
+            $("#asState").textContent = "· 决策主体：" + readForm().subject + " · 事项类型：" + readForm().cat;
+          }
+          goStep(4, { unlock: true });
           break;
-        case "reparse": renderProc(); showToast("已重新解析并补全核心要素"); break;
-        case "toStep3": goStep(3, { unlock: true }); break;
-        case "adjustReason":
-          openModal("记录要素/文种调整原因", `<div class="field"><label style="font-weight:700;color:#33405c;">调整说明</label>
-            <textarea placeholder="如：经复核，本事项属会议审议类，文种由决定调整为决议…"></textarea></div>
-            <div style="color:var(--muted);font-size:12.5px;">调整原因与操作人、时间、版本将一并留痕，便于后续审计追溯。</div>`,
-            () => { closeModal(); showToast("调整原因已记录并留痕"); });
-          break;
-        case "toStep4": goStep(4, { unlock: true }); break;
         case "regen":
           renderDocStreaming();
           break;
@@ -1906,7 +1756,6 @@
           showToast(({ redHead: "版头（红头）", order: "决定事项逻辑排序", exec: "执行主体/时限" }[cfg]) + (on ? " 已开启" : " 已关闭") + "，公文实时更新");
           break;
         }
-        case "toStep5": goStep(5, { unlock: true }); break;
         case "recheck": runCheck(); break;
         case "fixCheck": fixCheck(t.dataset.cid); break;
         case "ignoreCheck": ignoreCheck(t.dataset.cid); break;
@@ -1920,7 +1769,7 @@
           showToast("已采纳全部修复建议");
           break;
         case "toStep6":
-          if ($("#toStep6Btn").disabled) { showToast("存在未处理的阻断项，请先整改"); break; }
+          // 合规校验为参考性、不阻断：可直接进入输出交付
           goStep(6, { unlock: true });
           break;
         /* ---- 输出交付 ---- */
@@ -1960,11 +1809,6 @@
       const check = opt.closest("[data-check]");
       if (radio) {
         $$(".opt", radio).forEach(o => o.classList.remove("on")); opt.classList.add("on");
-        // 密级切换即时反映到任务信息栏
-        if (radio.dataset.radio === "secret") {
-          const f = readForm();
-          $("#asState").textContent = "· 决策主体：" + (f.subject || "—") + " · 密级：" + f.secret;
-        }
       }
       else if (check) { opt.classList.toggle("on"); }
     });
@@ -1982,8 +1826,8 @@
       renderMiss();
     });
 
-    // 校验步骤：点击文稿标记 / 卡片联动定位
-    $("#docPageCheck").addEventListener("click", (e) => {
+    // 合规校验：点击文稿标记 / 卡片联动定位（标记位于生成文稿 #docPage 上）
+    $("#docPage").addEventListener("click", (e) => {
       const m = e.target.closest(".mark");
       if (!m) return;
       const id = m.dataset.check;
@@ -1995,7 +1839,7 @@
       if (e.target.closest("a")) return;
       const card = e.target.closest(".check-card");
       if (!card) return;
-      const m = $(`.mark[data-check="${card.dataset.checkCard}"]`, $("#docPageCheck"));
+      const m = $(`.mark[data-check="${card.dataset.checkCard}"]`, $("#docPage"));
       if (m) {
         m.scrollIntoView({ behavior: "smooth", block: "center" });
         const orig = m.style.boxShadow;
@@ -2039,6 +1883,7 @@
     });
     renderFileChips();
     renderHistoryList();
+    loadDecisionOptions();
     goStep(1, { unlock: true });
 
     /* ---- 侧边栏事件监听 ---- */

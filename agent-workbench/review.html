@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <!-- 重构版本：采用问题整改后直接生成报告、问题清单和留痕记录的自动闭环。 -->
 <!--
   业务场景：南京江北新区政务 AI 智能体平台—辅助文本合规审查
@@ -37,6 +37,8 @@
 
     * { box-sizing: border-box; }
     html, body, #app { width: 100%; height: 100%; }
+    #app { display: flex; flex-direction: column; }
+    #app > .n-config-provider { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     body {
       margin: 0;
       color: var(--text);
@@ -55,7 +57,7 @@
       vertical-align: -0.125em;
     }
 
-    .app-shell { height: 100%; min-width: 1120px; display: flex; flex-direction: column; }
+    .app-shell { flex: 1; min-height: 0; height: 0; display: flex; flex-direction: column; overflow: hidden; }
     .topbar {
       height: 64px;
       flex: 0 0 64px;
@@ -100,73 +102,93 @@
       border: 1px solid rgba(255,255,255,.24);
     }
 
-    .body-shell { flex: 1; min-height: 0; display: grid; grid-template-columns: 188px minmax(0, 1fr); }
-    .sidenav {
-      min-height: 0;
-      padding: 18px 12px;
-      background: rgba(255,255,255,.94);
-      border-right: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-    }
-    .nav-caption {
-      padding: 0 12px 10px;
-      color: #98a2b3;
-      font-size: 11px;
-      letter-spacing: .5px;
-    }
-    .nav-btn {
-      width: 100%;
-      height: 44px;
-      margin-bottom: 6px;
-      padding: 0 13px;
-      border: 0;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #475467;
-      background: transparent;
-      cursor: pointer;
-      transition: background .2s ease, color .2s ease, transform .2s ease;
-      text-align: left;
-    }
-    .nav-btn:hover { color: var(--ai-blue); background: #f3f7fb; }
-    .nav-btn.active {
-      color: #fff;
-      background: linear-gradient(100deg, var(--ai-blue), #1377b5);
-      box-shadow: 0 8px 18px rgba(14,76,146,.2);
-    }
-    .nav-btn .icon { width: 18px; height: 18px; }
-    .side-note {
-      margin-top: auto;
-      padding: 12px;
-      border: 1px solid #dceaf2;
-      border-radius: 11px;
-      color: #5c6f81;
-      background: linear-gradient(145deg, #f6fbfe, #eff8f6);
-      font-size: 11px;
-      line-height: 1.65;
-    }
-    .side-note strong { color: var(--ai-blue); font-weight: 600; }
+    .body-shell { flex: 1; min-height: 0; height: 0; overflow: hidden; display: grid; grid-template-columns: 300px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+    .sidebar { width: 300px; min-height: 0; background: #fafbfc; border-right: 1px solid var(--line); display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; transition: width 0.3s ease; position: relative; }
+    .sidebar.collapsed { width: 56px; }
+    .sidebar-header { padding: 20px 16px 16px; flex-shrink: 0; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; box-shadow: 0 4px 20px rgba(10,53,115,0.18); }
+    .sidebar.collapsed .sidebar-header { padding: 20px 8px 16px; }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .sidebar-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1)); border: 1px solid rgba(255,255,255,0.3); box-shadow: var(--ai-glow); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 16px; flex-shrink: 0; }
+    .sidebar-logo-icon .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
+    .sidebar-logo-text { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
+    .sidebar.collapsed .sidebar-logo-text { display: none; }
+    .sidebar.collapsed .sidebar-logo { justify-content: center; }
+    .new-meeting-btn { width: 100%; padding: 10px 12px; background: var(--ai-blue); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .2s; white-space: nowrap; overflow: hidden; }
+    .new-meeting-btn:hover { background: var(--ai-cyan); }
+    .sidebar.collapsed .new-meeting-btn { padding: 10px 0; }
+    .sidebar.collapsed .new-meeting-btn .btn-text { display: none; }
+    .filter-box { padding: 12px 16px; flex-shrink: 0; border-bottom: 1px solid #eaeef3; display: flex; flex-direction: column; gap: 8px; }
+    .sidebar.collapsed .filter-box { display: none; }
+    .search-wrap { position: relative; }
+    .search-input { width: 100%; padding: 7px 12px 7px 30px; border: 1px solid var(--line); border-radius: 4px; font-size: 13px; color: var(--text); background: #fff; transition: border-color .2s; }
+    .search-input:focus { outline: none; border-color: var(--ai-blue); }
+    .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: #98a2b3; font-size: 13px; pointer-events: none; }
+    .search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: #98a2b3; cursor: pointer; font-size: 14px; display: none; }
+    .search-clear:hover { color: #d9534f; }
+    .time-filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+    .time-chip { padding: 3px 9px; font-size: 12px; color: #667085; background: #fff; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .time-chip:hover { border-color: var(--ai-blue); color: var(--ai-blue); }
+    .time-chip.active { background: var(--ai-blue); color: #fff; border-color: var(--ai-blue); }
+    .custom-range { display: none; flex-direction: column; gap: 6px; }
+    .custom-range.show { display: flex; }
+    .custom-range-label { font-size: 11px; color: #98a2b3; }
+    .custom-range-inputs { display: flex; align-items: center; gap: 4px; }
+    .custom-range-inputs input { flex: 1; min-width: 0; padding: 5px 6px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; color: var(--text); }
+    .custom-range-inputs input:focus { outline: none; border-color: var(--ai-blue); }
+    .custom-range-sep { color: #98a2b3; font-size: 12px; }
+    .history-section { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 8px; }
+    .history-section::-webkit-scrollbar { width: 5px; }
+    .history-section::-webkit-scrollbar-track { background: transparent; }
+    .history-section::-webkit-scrollbar-thumb { background: #c8d2de; border-radius: 3px; }
+    .history-section::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+    .all-records-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: calc(100% - 16px); height: 34px; margin: 8px; border: 1px solid #dbe5ed; border-radius: 9px; color: #41627f; background: #f8fafc; font-size: 11px; cursor: pointer; transition: all .18s ease; }
+    .all-records-btn:hover { color: var(--ai-blue); border-color: #a9c9df; background: var(--soft-blue); }
+    .all-records-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .history-title { padding: 12px 8px 6px; font-size: 12px; color: #98a2b3; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+    .sidebar.collapsed .history-title, .sidebar.collapsed .history-list, .sidebar.collapsed .history-empty { display: none; }
+    .history-list { padding-bottom: 8px; }
+    .history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 4px; transition: .25s ease; position: relative; }
+    .history-item:hover { background: #eef2f7; transform: translateX(2px); }
+    .history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: 0 8px 20px rgba(14,76,146,0.25), var(--ai-glow); }
+    .history-item.active .history-item-title { color: #fff; font-weight: 600; }
+    .history-item.active .history-item-meta { color: rgba(255,255,255,.8); }
+    .history-item.active .history-tag { color: rgba(255,255,255,.9) !important; background: rgba(255,255,255,.2) !important; }
+    .history-item.active .history-status { color: #fff !important; background: rgba(255,255,255,.2) !important; }
+    .history-item-title { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+    .history-item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11px; color: #98a2b3; }
+    .history-tag { padding: 1px 6px; border-radius: 8px; font-size: 10px; background: #f0f5ff; color: var(--ai-blue); }
+    .history-status { padding: 1px 6px; border-radius: 8px; font-size: 10px; }
+    .history-status.done { background: #f6ffed; color: #43a047; }
+    .history-status.draft { background: #f0f5ff; color: var(--ai-blue); }
+    .history-status.progress { background: #fff7e6; color: #f0ad4e; }
+    .history-time { font-size: 11px; color: #98a2b3; margin-left: auto; }
+    .history-empty { padding: 20px 8px; text-align: center; font-size: 12px; color: #98a2b3; }
+    .sidebar-footer { padding: 10px 12px; flex-shrink: 0; border-top: 1px solid #eaeef3; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #667085; }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--ai-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+    .sidebar.collapsed .user-info { display: none; }
+    .user-name { font-weight: 500; color: var(--text); }
+    .user-dept { font-size: 10px; color: #98a2b3; }
 
-    .main-view { min-width: 0; min-height: 0; overflow: auto; }
-    .review-view { height: 100%; min-height: 0; display: flex; flex-direction: column; }
+    .main-view { min-width: 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+    .review-view { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
     .page-head {
       flex: 0 0 auto;
-      padding: 18px 22px 14px;
+      padding: 14px 22px 10px;
       background: rgba(255,255,255,.92);
       border-bottom: 1px solid var(--line);
     }
+    .page-head.compact { padding: 10px 22px; }
+    .page-head.compact .workflow { margin-top: 0; }
     .page-head-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
     .page-title { margin: 0; color: #173454; font-size: 20px; font-weight: 600; letter-spacing: -.3px; }
-    .page-desc { margin-top: 5px; color: var(--muted); font-size: 12px; }
+    .page-desc { margin-top: 4px; color: var(--muted); font-size: 12px; }
 
     .workflow {
-      margin-top: 15px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      max-width: 780px;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
     .workflow-step { position: relative; display: flex; align-items: center; color: #98a2b3; font-size: 12px; }
     .workflow-step:not(:last-child)::after {
@@ -204,48 +226,171 @@
 
     .empty-stage {
       flex: 1;
-      min-height: 560px;
-      padding: 28px;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 32px;
+      background: var(--page-bg);
+    }
+    .welcome-emblem {
+      position: relative;
+      width: 132px;
+      height: 148px;
       display: grid;
       place-items: center;
-      background:
-        radial-gradient(circle at 50% 24%, rgba(19,168,168,.08), transparent 32%),
-        var(--page-bg);
+      color: var(--ai-blue);
     }
-    .empty-card {
-      width: min(820px, 92%);
-      padding: 36px 42px;
-      border-radius: 16px;
+    .welcome-emblem::before {
+      content: "";
+      position: absolute;
+      inset: 8px 0 0;
+      border: 1px solid rgba(14,76,146,.12);
+      border-radius: 50%;
+      transform: scaleX(.8);
+    }
+    .welcome-emblem svg {
+      position: relative;
+      z-index: 1;
+      width: 104px;
+      height: 120px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 10px 12px rgba(14,76,146,.12));
+    }
+    .emblem-scan {
+      position: absolute;
+      z-index: 2;
+      left: 29px;
+      right: 29px;
+      top: 47px;
+      height: 1px;
+      background: var(--ai-cyan);
+      box-shadow: 0 0 10px rgba(19,168,168,.7);
+      animation: documentScan 3.6s ease-in-out infinite;
+    }
+    .emblem-pulse {
+      position: absolute;
+      z-index: 3;
+      right: 14px;
+      bottom: 26px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
       background: #fff;
-      border: 1px solid #e0e8f0;
-      box-shadow: var(--shadow);
+      border: 1px solid var(--ai-cyan);
+      box-shadow: 0 0 0 5px rgba(19,168,168,.1);
+      animation: sealPulse 2.4s ease-in-out infinite;
+    }
+    .emblem-pulse::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      width: 5px;
+      height: 8px;
+      border: solid var(--ai-cyan);
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg);
+    }
+    @keyframes documentScan {
+      0%, 100% { transform: translateY(-20px); opacity: .25; }
+      50% { transform: translateY(58px); opacity: 1; }
+    }
+    @keyframes sealPulse {
+      0%, 100% { box-shadow: 0 0 0 5px rgba(19,168,168,.1); }
+      50% { box-shadow: 0 0 0 9px rgba(19,168,168,.03); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .emblem-scan, .emblem-pulse { animation: none; }
+    }
+    .welcome-title {
+      margin: 4px 0 0;
+      color: #173454;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .welcome-desc {
+      width: min(100%, 480px);
+      margin: 0;
+      color: #7d8b9d;
+      font-size: 14px;
+      line-height: 1.8;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    .welcome-dimensions {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-top: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .welcome-dimensions li {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 96px;
+      padding: 4px 18px;
+      color: #5b6b7e;
+      font-size: 12px;
       text-align: center;
     }
-    .agent-avatar {
-      width: 66px;
-      height: 66px;
-      margin: 0 auto 18px;
-      border-radius: 19px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
-      box-shadow: var(--ai-glow);
+    .welcome-dimensions li + li { border-left: 1px solid #e3e9f0; }
+    .recognition-strip { margin-top: 12px; padding: 12px 14px; border: 1px solid #dbe7f0; border-radius: 10px; background: #f8fbfd; }
+    .recognition-main { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .recognition-summary { display: flex; align-items: center; gap: 8px; min-width: 0; color: #3e5368; font-size: 12px; }
+    .recognition-summary b { color: #173b5f; font-size: 13px; font-weight: 600; }
+    .recognition-chip { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border: 1px solid #d9e6ef; border-radius: 999px; color: #597087; background: #fff; font-size: 10.5px; white-space: nowrap; }
+    .recognition-edit { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #dbe5ed; }
+    .recognition-edit label { display: block; margin-bottom: 5px; color: #75869a; font-size: 11px; }
+    .ocr-notice { display: flex; align-items: flex-start; gap: 9px; margin-top: 12px; padding: 10px 12px; border: 1px solid #f0d7a9; border-radius: 9px; color: #765525; background: #fffaf0; font-size: 11px; line-height: 1.6; }
+    .ocr-notice svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1px; fill: none; stroke: #d08b22; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .basis-source { display: block; margin-top: 5px; font-size: 10.5px; color: #98a2b3; }
+    .policy-basis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed #e4eaf0; }
+    .policy-basis-item { min-width: 0; color: #6f7f90; font-size: 10.5px; line-height: 1.5; }
+    .policy-basis-item b { color: #8795a5; font-weight: 500; }
+    .issue-applied-meta { font-size: 10.5px; color: #43a047; margin-right: auto; }
+    .quick-start { margin-top: 26px; width: min(720px, 100%); }
+    .quick-start-title { font-size: 14px; font-weight: 700; color: #2c3e50; margin-bottom: 12px; letter-spacing: .5px; }
+    .quick-start-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+    .quick-start-card {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+      padding: 16px 14px; border: 1px solid #e3e9f0; border-radius: 12px; background: #fff;
+      cursor: pointer; text-align: left; transition: .16s ease; font-family: inherit;
     }
-    .agent-avatar .icon { width: 31px; height: 31px; }
-    .empty-card h2 { margin: 0; color: #14365e; font-size: 25px; font-weight: 600; letter-spacing: -.5px; }
-    .empty-card p { max-width: 590px; margin: 12px auto 22px; color: var(--muted); font-size: 14px; line-height: 1.8; }
-    .capability-grid { margin: 28px 0 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: left; }
-    .capability {
-      padding: 14px;
-      border-radius: 11px;
-      border: 1px solid #e4ebf2;
-      background: #f9fbfd;
+    .quick-start-card:hover { border-color: var(--ai-blue); box-shadow: 0 6px 18px rgba(14,76,146,.10); transform: translateY(-2px); }
+    .quick-start-card .qs-ic { width: 24px; height: 24px; fill: none; stroke: var(--ai-blue); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 6px; }
+    .quick-start-card b { font-size: 13px; color: #2c3e50; }
+    .quick-start-card span { font-size: 11px; color: #8895a7; line-height: 1.5; }
+    @media (max-width: 900px) { .quick-start-grid { grid-template-columns: repeat(2, 1fr); } }
+    .welcome-dimensions svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: var(--ai-blue);
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .85;
     }
-    .capability b { display: block; margin-bottom: 5px; color: #294a6d; font-size: 13px; font-weight: 600; }
-    .capability span { color: #7a8697; font-size: 11px; line-height: 1.55; }
+    .welcome-dimensions strong {
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .3px;
+    }
 
-    .thinking-stage { flex: 1; min-height: 560px; display: grid; place-items: center; padding: 28px; }
+    .thinking-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 36px 28px 28px; }
     .thinking-card { width: 620px; padding: 34px 38px; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
     .thinking-title { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; color: #173f6c; font-size: 18px; font-weight: 600; }
     .thinking-mini-avatar {
@@ -358,17 +503,23 @@
       padding: 1px 2px;
       border-radius: 3px;
       cursor: pointer;
-      transition: box-shadow .2s ease, opacity .2s ease;
+      transition: box-shadow .2s ease, opacity .2s ease, background .3s ease, color .3s ease;
     }
     .doc-mark.high { color: #b42318; background: #fee4e2; box-shadow: inset 0 -1px 0 #f97066; }
     .doc-mark.medium { color: #9a6700; background: #fff0c2; box-shadow: inset 0 -1px 0 #fdb022; }
     .doc-mark.general { color: #175cd3; background: #dbeafe; box-shadow: inset 0 -1px 0 #53b1fd; }
-    .doc-mark.accepted { color: #067647; background: #dcfae6; box-shadow: inset 0 -1px 0 #32d583; }
+    .doc-mark.accepted { color: #067647 !important; background: #dcfae6 !important; box-shadow: inset 0 -1px 0 #32d583 !important; }
     .doc-mark.ignored { color: #667085; background: #f2f4f7; box-shadow: inset 0 -1px 0 #98a2b3; opacity: .78; }
     .doc-mark.active { box-shadow: 0 0 0 4px rgba(19,168,168,.2), inset 0 -1px 0 currentColor; }
 
     .issue-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: #fff; }
-    .issue-summary { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); }
+    .panel-tabs { display: flex; align-items: center; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .panel-tab { position: relative; height: 34px; padding: 0 12px; border: 0; color: #718096; background: transparent; font-family: inherit; font-size: 12px; cursor: pointer; }
+    .panel-tab.active { color: var(--ai-blue); font-weight: 600; }
+    .panel-tab.active::after { content: ""; position: absolute; right: 10px; bottom: -1px; left: 10px; height: 2px; border-radius: 2px; background: var(--ai-blue); }
+    .panel-tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; margin-left: 4px; padding: 0 5px; border-radius: 999px; color: #60758a; background: #edf2f6; font-size: 9px; }
+    .panel-tab.active .panel-tab-count { color: var(--ai-blue); background: #e3f0fa; }
+    .issue-summary { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); }
     .summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .summary-title { color: #253b53; font-size: 16px; font-weight: 600; }
     .summary-sub { margin-top: 4px; color: var(--muted); font-size: 11px; }
@@ -388,7 +539,11 @@
     }
     .filter-chip:hover { color: var(--ai-blue); border-color: #a9c9df; }
     .filter-chip.active { color: var(--ai-blue); background: var(--soft-blue); border-color: #9ec7e3; font-weight: 600; }
-    .issue-actions { padding: 11px 16px; display: flex; gap: 8px; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .issue-actions { padding: 11px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .issue-actions .action-spacer { flex: 1; min-width: 8px; }
+    .recheck-inline-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 10px 14px 0; padding: 9px; border: 1px solid #d9eadf; border-radius: 10px; background: #f5fbf7; }
+    .recheck-inline-summary span { color: #6f8177; font-size: 10px; text-align: center; }
+    .recheck-inline-summary b { display: block; margin-bottom: 2px; color: #256b47; font-size: 15px; font-weight: 600; }
     .issue-scroll { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px 18px; }
     .issue-card {
       margin-bottom: 10px;
@@ -402,6 +557,7 @@
     }
     .issue-card:hover, .issue-card.active { transform: translateY(-1px); border-color: #a7d5dc; box-shadow: 0 7px 18px rgba(16,78,112,.08); }
     .issue-card.resolved { background: #fbfcfd; opacity: .86; }
+    .issue-card.accepted { border-left: 3px solid #43a047; border-left-color: #43a047; }
     .issue-card-head { display: flex; align-items: center; gap: 7px; }
     .risk-dot { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; }
     .risk-dot.high { background: #d9534f; }
@@ -419,11 +575,37 @@
     .status-text.accepted { color: var(--ai-green); }
     .status-text.ignored { color: #667085; }
     .empty-issues { padding: 42px 16px; text-align: center; color: #98a2b3; font-size: 13px; }
+    .version-pane { flex: 1; min-height: 0; overflow-y: auto; padding: 14px; background: #f8fafc; }
+    .version-intro { margin-bottom: 12px; padding: 11px 12px; border: 1px solid #dfe8ef; border-radius: 10px; color: #617286; background: #fff; font-size: 11px; line-height: 1.6; }
+    .version-card { position: relative; margin: 0 0 10px 13px; padding: 12px 13px; border: 1px solid #e1e8ef; border-radius: 11px; background: #fff; cursor: pointer; transition: all .18s ease; }
+    .version-card::before { content: ""; position: absolute; top: 18px; left: -18px; width: 9px; height: 9px; border: 2px solid #fff; border-radius: 50%; background: #8fb5cf; box-shadow: 0 0 0 1px #b9cedd; }
+    .version-card:not(:last-child)::after { content: ""; position: absolute; top: 29px; bottom: -18px; left: -14px; width: 1px; background: #cfdae4; }
+    .version-card.active { border-color: #9ec7e3; box-shadow: 0 6px 16px rgba(28,76,112,.07); }
+    .version-card.active::before { background: var(--ai-blue); }
+    .version-head { display: flex; align-items: center; gap: 8px; }
+    .version-name { color: #29445e; font-size: 13px; font-weight: 600; }
+    .version-time { margin-left: auto; color: #98a2b3; font-size: 10px; }
+    .version-meta { margin-top: 5px; color: #77889a; font-size: 10.5px; }
+    .version-kpis { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .version-kpis span { padding: 3px 7px; border-radius: 999px; color: #617489; background: #f0f4f7; font-size: 9.5px; }
+    .version-kpis .fixed { color: #217449; background: #eaf8ef; }
+    .version-kpis .new { color: #a34b35; background: #fff0ec; }
+    .version-changes { margin-top: 11px; padding-top: 10px; border-top: 1px dashed #dfe6ed; }
+    .version-change { margin-top: 8px; padding: 9px 10px; border-radius: 8px; background: #f8fafc; font-size: 10.5px; line-height: 1.55; }
+    .version-change-title { color: #50657a; font-weight: 600; }
+    .version-change-before { margin-top: 5px; color: #9f4b43; text-decoration: line-through; }
+    .version-change-after { margin-top: 3px; color: #16704a; }
+    .version-empty { padding: 48px 16px; color: #98a2b3; text-align: center; font-size: 12px; }
 
-    .record-page { padding: 22px; min-height: 100%; background: var(--page-bg); }
+    .record-page { padding: 22px; flex: 1; min-height: 0; overflow-y: auto; background: var(--page-bg); }
     .record-head { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
     .record-card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 8px 24px rgba(32,60,86,.05); }
     .record-filter { padding: 14px 16px; display: flex; gap: 10px; border-bottom: 1px solid var(--line); background: #fbfcfd; }
+    .record-group-list { display: grid; gap: 10px; padding: 14px; }
+    .record-group { display: flex; align-items: center; gap: 14px; padding: 14px 15px; border: 1px solid #e2e8ef; border-radius: 11px; background: #fff; }
+    .record-group-main { min-width: 0; flex: 1; }
+    .record-group-title { overflow: hidden; color: #2d465f; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .record-group-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; color: #8795a5; font-size: 10.5px; }
     .version-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; color: var(--ai-blue); background: var(--soft-blue); font-size: 10px; font-weight: 600; }
 
     .report-hero {
@@ -444,6 +626,15 @@
     .report-table th, .report-table td { padding: 9px 8px; border-bottom: 1px solid #e9edf2; text-align: left; vertical-align: top; }
     .report-table th { color: #5f6c7b; background: #f7f9fb; font-weight: 600; }
     .report-table td { color: #445364; line-height: 1.55; }
+    .report-section { margin-top: 18px; }
+    .report-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+    .report-section-head h4 { margin: 0; color: #29445e; font-size: 13px; font-weight: 600; }
+    .report-section-head span { color: #98a2b3; font-size: 10.5px; }
+    .report-basis-list, .report-suggestion-list { display: grid; gap: 8px; }
+    .report-basis-row, .report-suggestion-row { padding: 10px 12px; border: 1px solid #e8edf2; border-radius: 9px; color: #526476; background: #fafbfd; font-size: 11px; line-height: 1.65; }
+    .report-basis-meta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 4px 18px; }
+    .report-basis-meta b { color: #7b8998; font-weight: 500; }
+    .report-suggestion-row strong { display: inline-block; margin-right: 6px; color: #31506d; font-weight: 600; }
     .log-list { margin: 0; padding: 0; list-style: none; }
     .log-list li { position: relative; padding: 0 0 13px 20px; color: #5f6d7b; font-size: 11px; line-height: 1.55; }
     .log-list li::before { content: ""; position: absolute; left: 3px; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--ai-cyan); }
@@ -465,15 +656,13 @@
     @media (max-width: 1120px) {
       .app-shell { min-width: 960px; }
       .body-shell { grid-template-columns: 76px minmax(0,1fr); }
-      .nav-caption, .nav-btn span, .side-note { display: none; }
-      .nav-btn { justify-content: center; padding: 0; }
       .workspace { grid-template-columns: minmax(470px,1fr) 360px; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
-<meta name="prototype-version" content=""></head>
+</head>
 <body>
   <div id="app">
     <div style="height:100%;display:grid;place-items:center;color:#667085;">正在加载辅助文本合规审查智能体…</div>
@@ -514,7 +703,9 @@
         const uploadFile = ref(null);
         const selectedDocType = ref("通知");
         const detectedDocType = ref("");
-        const detectConfidence = ref(null);
+        const showRecognitionEdit = ref(false);
+        const ocrReviewNeeded = ref(false);
+        const ocrLowConfidenceCount = ref(0);
         const hasInput = computed(() => sourceMode.value === "paste"
           ? pasteText.value.trim().length > 0
           : !!uploadFile.value);
@@ -524,14 +715,22 @@
         const activeIssueId = ref("");
         const resultsStale = ref(false);
         const staleReason = ref("");
-        const editingDocument = ref(false);
-        const documentDraft = ref("");
-        const editOriginalText = ref("");
         const savedAnalysisText = ref("");
         const savedAnalysisDocType = ref("");
         const recordKeyword = ref("");
         const recordType = ref("全部文种");
         const selectedRecord = ref(null);
+        const previousIssues = ref([]);
+        const previousIgnoredTitles = ref([]);
+        const recheckRound = ref(0);
+        const showRecheckResult = ref(false);
+        const recheckSummary = ref(null);
+        const activeRightTab = ref("issues");
+        const reviewVersions = ref([]);
+        const pendingChanges = ref([]);
+        const selectedVersionKey = ref("");
+        const documentDirty = ref(false);
+        const archived = ref(false);
 
         window.addEventListener("message", event => {
           const data = event.data || {};
@@ -546,7 +745,29 @@
           message.success("已带入会话生成正文，请确认后开始合规审查");
         });
 
-        const docTypes = ["通知", "报告", "请示", "会议纪要", "讲话稿", "工作总结"];
+        const FORMAL_DOC_TYPE_LIST = ["决议", "决定", "命令（令）", "公报", "公告", "通告", "意见", "通知", "通报", "报告", "请示", "批复", "议案", "函", "纪要"];
+        const OTHER_MATERIAL_TYPES = ["讲话稿", "汇报材料", "工作总结", "信息稿", "会议材料"];
+        const docTypes = FORMAL_DOC_TYPE_LIST.concat(OTHER_MATERIAL_TYPES);
+        // 文种确认只展示法定正式公文；其他政务材料由系统识别并按内容规则核查
+        const DOC_TYPE_GROUPS = [
+          { label: "正式公文", types: FORMAL_DOC_TYPE_LIST },
+          { label: "其他政务材料", types: OTHER_MATERIAL_TYPES }
+        ];
+        function docTypeGroup(t) {
+          const g = DOC_TYPE_GROUPS.find(x => x.types.includes(t));
+          return g ? g.label : "其他政务材料";
+        }
+        // “确认文种”仅提供正式公文选项
+        const docTypeOptions = FORMAL_DOC_TYPE_LIST.map(t => ({ label: t, value: t }));
+        // 主送机关为正式公文必备要素
+        const FORMAL_DOC_TYPES = new Set(FORMAL_DOC_TYPE_LIST);
+        const RECIPIENT_OPTIONAL_TYPES = new Set(["决议", "决定", "命令（令）", "公报", "公告", "通告", "通报", "纪要"]);
+
+        // 自动识别结果。所属组织、核查范围、经办人和提交时间由系统直接带入，不再要求用户填写。
+        const reviewParams = reactive({
+          issuer: "南京江北新区管理委员会",
+          usage: "内部使用"
+        });
         const dimensionOptions = [
           { value: "all", label: "全部维度" },
           { value: "format", label: "格式规范" },
@@ -578,6 +799,10 @@
           type: "通知",
           text: "",
           createdAt: "",
+          issuer: "",
+          usage: "",
+          ocrReviewNeeded: false,
+          ocrLowConfidenceCount: 0,
           issues: [],
           logs: []
         });
@@ -585,8 +810,8 @@
         const seedRecords = [
           {
             id: "R-20260728-001",
-            name: "新区重点项目推进会会议纪要",
-            type: "会议纪要",
+            name: "新区重点项目推进会纪要",
+            type: "纪要",
             version: "V1",
             time: "2026-07-28 16:42",
             total: 5,
@@ -595,7 +820,7 @@
             operator: "综合办公室",
             issues: [],
             logs: [
-              { time: "16:36:08", action: "上传DOCX文稿并识别为会议纪要" },
+              { time: "16:36:08", action: "上传DOCX文稿并识别为纪要" },
               { time: "16:36:12", action: "完成格式规范、行文规则、内容合规审查" },
               { time: "16:42:17", action: "生成审查报告和问题清单，保存V1版本" }
             ]
@@ -635,43 +860,202 @@
         }).replaceAll("/", "-");
         const clock = () => new Date().toLocaleTimeString("zh-CN", { hour12: false });
         const addLog = (action) => task.logs.push({ time: clock(), action });
+        const pendingChangeCount = computed(() => pendingChanges.value.length + (documentDirty.value ? 1 : 0));
+        const selectedReviewVersion = computed(() => reviewVersions.value.find(item => item.key === selectedVersionKey.value) || reviewVersions.value[0] || null);
+
+        function addPendingChange(change) {
+          const key = change.key || ("CHANGE-" + Date.now());
+          const existing = pendingChanges.value.findIndex(item => item.key === key);
+          const normalized = Object.assign({ key, field: "正文", source: "手动修改", position: "正文" }, change);
+          if (existing >= 0) pendingChanges.value[existing] = normalized;
+          else pendingChanges.value.push(normalized);
+          invalidateResults("文稿已修改，当前审查结果需要更新");
+        }
+
+        function removePendingChange(key) {
+          pendingChanges.value = pendingChanges.value.filter(item => item.key !== key);
+          if (pendingChanges.value.length === 0 && !documentDirty.value) {
+            resultsStale.value = false;
+            staleReason.value = "";
+          }
+        }
+
+        function onDocumentInput() {
+          documentDirty.value = true;
+          resultsStale.value = true;
+          staleReason.value = "正文已编辑，当前审查结果需要更新";
+          selectedRecord.value = null;
+          showReport.value = false;
+        }
+
+        function normalizeDocumentText(value) {
+          return String(value || "").split(/\n+/).map(line => line.trim()).filter(Boolean).join("\n");
+        }
+
+        function createReviewVersion(action, summary, previousIssuesSnapshot) {
+          const version = "V" + (reviewVersions.value.length + 1);
+          const item = {
+            key: task.id + "-" + version + "-" + Date.now(),
+            version,
+            time: now(),
+            operator: currentUserName,
+            action,
+            text: task.text,
+            docType: task.type,
+            issuer: task.issuer,
+            usage: task.usage,
+            changes: JSON.parse(JSON.stringify(pendingChanges.value)),
+            issues: JSON.parse(JSON.stringify(task.issues)),
+            previousIssues: JSON.parse(JSON.stringify(previousIssuesSnapshot || [])),
+            changeCount: pendingChanges.value.length,
+            total: task.issues.length,
+            fixed: summary && summary.fixed || 0,
+            remaining: summary && summary.remaining != null ? summary.remaining : task.issues.length,
+            newIssues: summary && summary.newIssues || 0
+          };
+          reviewVersions.value.unshift(item);
+          selectedVersionKey.value = item.key;
+          return item;
+        }
+
+        function buildClosureData(versionList) {
+          const chronological = (versionList || []).slice().reverse();
+          const first = chronological[0] || null;
+          const latest = chronological[chronological.length - 1] || null;
+          if (!first || !latest) {
+            return { items: [], initialTotal: 0, fixed: 0, remaining: 0, newIssues: 0, ignored: 0, conclusion: "暂无审查结果" };
+          }
+          const initialIssues = (first.issues && first.issues.length ? first.issues : (latest.issues || [])).map(issue => JSON.parse(JSON.stringify(issue)));
+          const latestIssues = (latest.issues || []).map(issue => JSON.parse(JSON.stringify(issue)));
+          const allChanges = chronological.flatMap(version => version.changes || []);
+          const handledSnapshots = chronological.flatMap(version => version.previousIssues || []);
+          const items = initialIssues.map(issue => {
+            let matchedChange = null;
+            allChanges.forEach(change => {
+              if (change.key === "ISSUE-" + issue.id || (change.title && change.title === issue.title)) matchedChange = change;
+            });
+            let handledIssue = null;
+            handledSnapshots.forEach(item => { if (item.title === issue.title) handledIssue = item; });
+            const latestIssue = latestIssues.find(item => item.title === issue.title);
+            const ignored = (handledIssue && handledIssue.status === "ignored") || (latestIssue && latestIssue.status === "ignored");
+            const hasRecheck = chronological.length > 1;
+            const passed = hasRecheck && !latestIssue && !ignored;
+            return {
+              key: "CLOSURE-" + issue.id,
+              issue,
+              original: issue.original,
+              suggestion: issue.suggestion,
+              modified: matchedChange ? matchedChange.after : (passed ? "已通过手动修改完成整改" : "—"),
+              handling: matchedChange ? "已采纳" : (ignored ? "已忽略" : (passed ? "已整改" : "待处理")),
+              recheckResult: ignored ? "已忽略，待人工确认" : (passed ? "复审通过" : (latestIssue ? "仍需处理" : "待复审")),
+              isNew: false
+            };
+          });
+          const initialTitles = new Set(initialIssues.map(issue => issue.title));
+          latestIssues.filter(issue => !initialTitles.has(issue.title)).forEach(issue => {
+            items.push({
+              key: "NEW-" + issue.id,
+              issue,
+              original: issue.original,
+              suggestion: issue.suggestion,
+              modified: "—",
+              handling: "待处理",
+              recheckResult: "复审新增",
+              isNew: true
+            });
+          });
+          const fixed = items.filter(item => !item.isNew && item.recheckResult === "复审通过").length;
+          const ignored = items.filter(item => item.handling === "已忽略").length;
+          const remaining = items.filter(item => item.recheckResult === "仍需处理").length;
+          const newIssues = items.filter(item => item.isNew).length;
+          const conclusion = remaining === 0 && newIssues === 0 && ignored === 0 && chronological.length > 1
+            ? "复审通过"
+            : (ignored > 0 ? "存在已忽略问题，需人工确认" : (chronological.length > 1 ? "仍有问题需要整改" : "初审完成，待整改复审"));
+          return { items, initialTotal: initialIssues.length, fixed, remaining, newIssues, ignored, conclusion };
+        }
 
         function detectDocType(text) {
           const content = String(text || "");
           const rules = [
-            ["会议纪要", /会议纪要|会议指出|会议强调|议定事项/],
+            ["纪要", /会议纪要|会议指出|会议强调|议定事项/],
+            ["决议", /决议|审议通过.{0,8}决议/],
+            ["决定", /关于.{0,24}的决定|作出如下决定/],
+            ["命令（令）", /命令|第.{0,8}号令/],
+            ["公报", /公报|新闻公报|联合公报/],
+            ["公告", /公告|现予公告/],
+            ["通告", /通告|现通告如下/],
             ["请示", /请示|妥否.{0,4}请批示|特此请示/],
+            ["批复", /批复|同意你|经研究.{0,4}同意/],
+            ["议案", /议案|提请.{0,12}审议/],
+            ["函", /商洽函|答复函|特此函|盼复/],
+            ["意见", /实施意见|指导意见|若干意见/],
+            ["通报", /通报批评|通报表扬|情况通报/],
             ["报告", /报告如下|特此报告|情况报告/],
             ["讲话稿", /讲话稿|同志们[：:]|会议上的讲话/],
+            ["汇报材料", /汇报材料|汇报如下/],
+            ["信息稿", /信息稿|工作信息|政务信息/],
             ["工作总结", /工作总结|现将.{0,10}总结如下|上半年工作/],
             ["通知", /通知如下|现就.{0,12}通知|请遵照执行/]
           ];
           for (const [name, regex] of rules) {
-            if (regex.test(content)) return { type: name, confidence: 96 };
+            if (regex.test(content)) return name;
           }
-          return { type: "通知", confidence: 72 };
+          return "通知";
         }
 
         watch(pasteText, (value) => {
           if (!value.trim()) {
             detectedDocType.value = "";
-            detectConfidence.value = null;
             return;
           }
           const result = detectDocType(value);
-          detectedDocType.value = result.type;
-          detectConfidence.value = result.confidence;
-          selectedDocType.value = result.type;
+          detectedDocType.value = result;
+          selectedDocType.value = result;
+          showRecognitionEdit.value = false;
         });
 
-        function openNewTask() {
-          sourceMode.value = "upload";
+        function openNewTask(mode) {
+          sourceMode.value = mode === "paste" ? "paste" : "upload";
           pasteText.value = "";
           uploadFile.value = null;
           selectedDocType.value = "通知";
           detectedDocType.value = "";
-          detectConfidence.value = null;
+          showRecognitionEdit.value = false;
+          ocrReviewNeeded.value = false;
+          ocrLowConfidenceCount.value = 0;
+          recheckRound.value = 0;
+          previousIgnoredTitles.value = [];
+          recheckSummary.value = null;
+          activeRightTab.value = "issues";
           showNewTask.value = true;
+        }
+
+        function quickStartFromChat() {
+          sourceMode.value = "paste";
+          pasteText.value = sampleDocument;
+          selectedDocType.value = detectDocType(sampleDocument);
+          detectedDocType.value = selectedDocType.value;
+          showRecognitionEdit.value = false;
+          ocrReviewNeeded.value = false;
+          ocrLowConfidenceCount.value = 0;
+          recheckRound.value = 0;
+          previousIgnoredTitles.value = [];
+          showNewTask.value = true;
+          message.success("已带入最近对话生成的文稿，请确认后开始核查");
+        }
+
+        function quickStartFromKB() {
+          sourceMode.value = "paste";
+          pasteText.value = sampleDocument;
+          selectedDocType.value = detectDocType(sampleDocument);
+          detectedDocType.value = selectedDocType.value;
+          showRecognitionEdit.value = false;
+          ocrReviewNeeded.value = false;
+          ocrLowConfidenceCount.value = 0;
+          recheckRound.value = 0;
+          previousIgnoredTitles.value = [];
+          showNewTask.value = true;
+          message.success("已从知识库选择文稿，请确认后开始核查");
         }
 
         function handleUploadChange(options) {
@@ -679,17 +1063,38 @@
           uploadFile.value = list.length ? list[list.length - 1] : null;
           if (uploadFile.value) {
             const result = detectDocType(uploadFile.value.name);
-            detectedDocType.value = result.type;
-            detectConfidence.value = result.confidence;
-            selectedDocType.value = result.type;
+            detectedDocType.value = result;
+            selectedDocType.value = result;
+            showRecognitionEdit.value = false;
+            const fileName = String(uploadFile.value.name || "");
+            ocrReviewNeeded.value = /\.pdf$/i.test(fileName);
+            ocrLowConfidenceCount.value = ocrReviewNeeded.value ? 2 : 0;
           } else {
             detectedDocType.value = "";
-            detectConfidence.value = null;
+            ocrReviewNeeded.value = false;
+            ocrLowConfidenceCount.value = 0;
           }
         }
 
-        function makeIssue(id, dimension, risk, title, original, suggestion, basis, position) {
-          return { id, dimension, risk, title, original, suggestion, basis, position, status: "pending" };
+        function makeIssue(id, dimension, risk, title, original, suggestion, basis, position, opts) {
+          opts = opts || {};
+          return {
+            id, dimension, risk, title, original, suggestion, basis, position,
+            status: "pending",
+            category: opts.category || dimensionLabel(dimension),
+            basisSource: opts.basisSource || "平台合规规则库",
+            basisUpdatedAt: opts.basisUpdatedAt || "2026-08",
+            basisFile: opts.basisFile || opts.basisSource || "平台合规规则库",
+            basisAgency: opts.basisAgency || "",
+            basisClause: opts.basisClause || basis,
+            basisSyncedAt: opts.basisSyncedAt || opts.basisUpdatedAt || "2026-08-20",
+            isPolicyBasis: !!opts.isPolicyBasis,
+            // 统一默认可自动应用到正文：applyMode 决定应用方式
+            replaceable: opts.replaceable !== false,
+            applyMode: opts.applyMode || "replace",
+            applyText: opts.applyText || "",
+            appliedBy: "", appliedAt: "", appliedVersion: ""
+          };
         }
 
         function analyzeDocument(text, docType) {
@@ -700,82 +1105,92 @@
           const push = (...args) => result.push(makeIssue(String(id++), ...args));
 
           if (content.includes("新区安全生产专项整治要求")) {
-            push("content", "high", "政策依据名称和文号不完整",
+            push("content", "high", "政策依据名称不完整",
               "新区安全生产专项整治要求",
-              "补充政策文件规范名称、发文机关和有效文号",
-              "政策合规校核要求：引用政策文件应准确、完整，并确认现行有效状态。",
-              "正文第1段");
+              "补充政策文件完整名称，并根据政策原文核对引用表述",
+              "引用政策文件时应使用完整、准确的文件名称和规范表述。",
+              "正文第1段",
+              { isPolicyBasis: true, basisFile: "《南京江北新区安全生产专项整治三年行动实施方案》", basisAgency: "南京江北新区安全生产委员会", basisClause: "第三部分 重点任务", basisSyncedAt: "2026-08-18 09:30", category: "政策依据" });
           }
           if (content.includes("确保所有隐患一次性清零")) {
             push("content", "high", "政策表述存在绝对化风险",
               "确保所有隐患一次性清零",
               "推动风险隐患排查整改形成闭环",
               "内容合规规则：避免无法客观验证的绝对化结果承诺。",
-              "正文第2段");
+              "正文第2段",
+              { isPolicyBasis: true, basisFile: "《政务文稿规范表述指引》", basisAgency: "南京江北新区管理委员会办公室", basisClause: "第四章 规范表述要求", basisSyncedAt: "2026-08-19 16:20", category: "内容导向" });
           }
           if (content.includes("于七月十五日前")) {
             push("format", "medium", "日期数字用法不规范",
               "于七月十五日前",
               "于7月15日前",
               "格式规范规则：公文中的具体日期应使用阿拉伯数字。",
-              "正文第4段");
+              "正文第4段",
+              { replaceable: true, basisSource: "GB/T 9704—2012《党政机关公文格式》", basisUpdatedAt: "现行有效", category: "公文要素" });
           }
           if (content.includes("立即上报")) {
             push("writing", "general", "向上行文用语不规范",
               "立即上报",
               "立即报告",
               "行文规则：向上级机关反映情况时建议使用“报告”等规范表述。",
-              "正文第4段");
+              "正文第4段",
+              { replaceable: true, basisSource: "《党政机关公文处理工作条例》", basisUpdatedAt: "现行有效", category: "行文规范" });
           }
           if (content.includes("南京江北新区综合办公室")) {
             push("content", "medium", "落款机关名称需核实",
               "南京江北新区综合办公室",
-              "请使用机构名录中的规范全称",
+              "南京江北新区管理委员会办公室",
               "制度规则库：发文机关和落款机关名称应与机构名录保持一致。",
-              "落款");
+              "落款",
+              { basisSource: "新区机构名录库", basisUpdatedAt: "2026-08", category: "机构名称" });
           }
           if (content.includes("问题清单") && !/[附\s]*件[：:]/.test(content)) {
             push("format", "medium", "正文提及附件但缺少附件说明",
               "报送检查情况和问题清单",
-              "在正文后补充“附件：安全生产检查问题清单”",
+              "在正文末尾补充附件说明",
               "格式规范规则：正文涉及附件时，应在正文后标注附件名称。",
-              "正文末尾");
+              "正文末尾",
+              { applyMode: "append", applyText: "附件：安全生产检查问题清单", basisSource: "GB/T 9704—2012《党政机关公文格式》", basisUpdatedAt: "现行有效", category: "公文要素" });
           }
           if (docType === "请示" && /报告如下|特此报告/.test(content)) {
             push("writing", "high", "请示与报告存在混用",
               content.match(/报告如下|特此报告/)[0],
-              "根据实际行文目的统一为请示用语",
+              "特此请示。",
               "行文规则：请示用于请求指示或批准，报告不得夹带请示事项。",
-              "正文");
+              "正文",
+              { basisSource: "《党政机关公文处理工作条例》", basisUpdatedAt: "现行有效", category: "行文规范" });
           }
           if (docType === "报告" && /妥否.{0,4}请批示|特此请示/.test(content)) {
             const original = content.match(/妥否.{0,4}请批示|特此请示/)[0];
             push("writing", "high", "报告中夹带请示事项",
               original,
-              "删除请示性表述，需批准的事项另行形成请示",
+              "特此报告。",
               "行文规则：报告不得夹带请示事项。",
-              "正文结尾");
+              "正文结尾",
+              { basisSource: "《党政机关公文处理工作条例》", basisUpdatedAt: "现行有效", category: "行文规范" });
           }
           const hasRecipient = lines.slice(1, 4).some(line => /[：:]$/.test(line));
-          if (!hasRecipient && ["通知", "请示", "报告"].includes(docType)) {
+          if (!hasRecipient && FORMAL_DOC_TYPES.has(docType) && !RECIPIENT_OPTIONAL_TYPES.has(docType)) {
             push("format", "high", "缺少主送机关",
               "未识别到主送机关",
               "在标题下方补充规范主送机关名称",
               "格式规范规则：存在明确行文对象的公文应标注主送机关。",
-              "标题下方");
+              "标题下方",
+              { applyMode: "afterTitle", applyText: "新区各部门、各街道办事处：", basisSource: "GB/T 9704—2012《党政机关公文格式》", basisUpdatedAt: "现行有效", category: "公文要素" });
           }
           const hasDate = /\d{4}年\d{1,2}月\d{1,2}日/.test(content);
-          if (!hasDate) {
+          if (!hasDate && FORMAL_DOC_TYPES.has(docType)) {
             push("format", "general", "缺少成文日期",
               "未识别到成文日期",
               "在落款下方补充成文日期",
               "格式规范规则：公文应标注完整成文日期。",
-              "文稿末尾");
+              "文稿末尾",
+              { applyMode: "append", applyText: new Date().getFullYear() + "年" + (new Date().getMonth() + 1) + "月" + new Date().getDate() + "日", basisSource: "GB/T 9704—2012《党政机关公文格式》", basisUpdatedAt: "现行有效", category: "公文要素" });
           }
           return result;
         }
 
-        function beginAnalysis(isRecheck = false) {
+        function beginAnalysis(isRecheck = false, prevIssues = []) {
           phase.value = "thinking";
           currentStep.value = 2;
           analysisStage.value = 0;
@@ -788,16 +1203,63 @@
               clearInterval(timer);
               setTimeout(() => {
                 task.issues = analyzeDocument(task.text, task.type);
+                if (task.ocrReviewNeeded) {
+                  task.issues.push(
+                    makeIssue("OCR-1", "format", "general", "OCR识别内容待人工核对", "消防设施配备", "请对照原PDF确认该处文字，确认无误后无需修改。", "OCR解析置信度低于自动确认阈值。", "正文第3段", { replaceable: false, basisSource: "文件解析服务", basisUpdatedAt: "本次解析", category: "OCR核对" }),
+                    makeIssue("OCR-2", "format", "general", "OCR识别数字待人工核对", "025-58150000", "请对照原PDF确认联系电话数字是否准确。", "OCR对连续数字的识别置信度较低。", "正文第5段", { replaceable: false, basisSource: "文件解析服务", basisUpdatedAt: "本次解析", category: "OCR核对" })
+                  );
+                }
                 savedAnalysisText.value = task.text;
                 savedAnalysisDocType.value = task.type;
                 resultsStale.value = false;
                 staleReason.value = "";
-                addLog((isRecheck ? "重新审查完成" : "完成格式规范、行文规则、内容合规审查") + "，生成" + task.issues.length + "项问题");
+                if (isRecheck && prevIssues.length > 0) {
+                  const prevMap = {};
+                  prevIssues.forEach(i => { prevMap[i.title] = i; });
+                  let resolved = 0, remaining = 0, newIssues = 0, stillIgnored = 0;
+                  const ignoredTitles = previousIgnoredTitles.value;
+                  task.issues.forEach(curr => {
+                    const prev = prevMap[curr.title];
+                    if (!prev) { newIssues++; }
+                    else if (prev.status === "accepted") { resolved++; }
+                    else if (prev.original !== curr.original) { resolved++; }
+                    else {
+                      if (ignoredTitles.includes(curr.title)) {
+                        curr.status = "ignored";
+                        stillIgnored++;
+                      } else {
+                        remaining++;
+                      }
+                    }
+                  });
+                  const fixedCount = prevIssues.filter(i => i.status === "accepted" || !task.issues.some(c => c.title === i.title)).length;
+                  recheckSummary.value = {
+                    prevTotal: prevIssues.length,
+                    currTotal: task.issues.length,
+                    fixed: fixedCount,
+                    remaining: remaining,
+                    newIssues: newIssues,
+                    stillIgnored: stillIgnored,
+                    prevAccepted: prevIssues.filter(i => i.status === "accepted").length
+                  };
+                  createReviewVersion("重新审查", recheckSummary.value, prevIssues);
+                  pendingChanges.value = [];
+                  showRecheckResult.value = false;
+                  addLog("复审完成：整改" + fixedCount + "项，遗留" + remaining + "项，新增" + newIssues + "项" + (stillIgnored > 0 ? "，已忽略" + stillIgnored + "项" : ""));
+                  message.success("复审完成，已自动比对修改前后内容");
+                } else {
+                  if (reviewVersions.value.length === 0) createReviewVersion("首次审查", null);
+                  pendingChanges.value = [];
+                  addLog((isRecheck ? "重新审查完成" : "完成格式规范、行文规则、内容合规审查") + "，生成" + task.issues.length + "项问题");
+                  message.success(isRecheck ? "重新审查完成，问题清单已更新" : "合规审查完成");
+                }
                 phase.value = "results";
                 currentStep.value = 3;
                 activeDimension.value = "all";
                 activeRisk.value = "all";
-                message.success(isRecheck ? "重新审查完成，问题清单已更新" : "合规审查完成");
+                activeRightTab.value = "issues";
+                documentDirty.value = false;
+                saveDraft();
               }, 320);
             }
           }, 380);
@@ -822,17 +1284,30 @@
           task.type = selectedDocType.value;
           task.text = sourceText;
           task.createdAt = now();
+          task.issuer = reviewParams.issuer;
+          task.usage = reviewParams.usage;
+          task.ocrReviewNeeded = ocrReviewNeeded.value;
+          task.ocrLowConfidenceCount = ocrLowConfidenceCount.value;
           task.issues = [];
           task.logs = [];
+          reviewVersions.value = [];
+          pendingChanges.value = [];
+          selectedVersionKey.value = "";
+          documentDirty.value = false;
+          activeRightTab.value = "issues";
+          recheckSummary.value = null;
           resultsStale.value = false;
           staleReason.value = "";
-          editingDocument.value = false;
-          documentDraft.value = "";
           savedAnalysisText.value = "";
           savedAnalysisDocType.value = "";
+          recheckRound.value = 0;
+          previousIgnoredTitles.value = [];
           addLog(sourceMode.value === "paste"
             ? "粘贴文本并识别为“" + task.type + "”"
             : "上传“" + uploadFile.value.name + "”并识别为“" + task.type + "”");
+          if (task.ocrReviewNeeded) {
+            addLog("PDF已完成OCR解析，" + task.ocrLowConfidenceCount + "处低置信度内容标记为待人工核对");
+          }
           showNewTask.value = false;
           view.value = "review";
           beginAnalysis();
@@ -846,45 +1321,64 @@
           currentStep.value = 3;
         }
 
-        function startEditing() {
-          editOriginalText.value = task.text;
-          documentDraft.value = task.text;
-          editingDocument.value = true;
-        }
-
-        function cancelDocumentEdit() {
-          documentDraft.value = editOriginalText.value;
-          editingDocument.value = false;
-        }
-
-        function saveDocumentEdit() {
-          const changed = documentDraft.value.trim() !== task.text.trim();
-          task.text = documentDraft.value;
-          editingDocument.value = false;
-          if (changed) {
+        function onDocumentBlur(event) {
+          const el = event.target;
+          const current = normalizeDocumentText(el.innerText);
+          const analyzedText = normalizeDocumentText(savedAnalysisText.value);
+          if (current !== analyzedText && analyzedText) {
+            const previousText = normalizeDocumentText(task.text);
+            task.text = current;
+            savedAnalysisText.value = current;
+            addPendingChange({
+              key: "MANUAL-" + Date.now(),
+              field: "正文",
+              source: "手动编辑",
+              position: "正文内容",
+              before: previousText,
+              after: current
+            });
+            documentDirty.value = false;
             addLog("用户编辑正文，当前审查结果失效");
-            invalidateResults("正文已编辑，当前问题清单和审查报告已失效");
             message.warning("正文已修改，请重新审查");
+            saveDraft();
+          } else {
+            documentDirty.value = false;
+            if (pendingChanges.value.length === 0) {
+              resultsStale.value = false;
+              staleReason.value = "";
+            }
           }
         }
 
         function changeTaskDocType(value) {
           if (!value || value === task.type) return;
+          const previousType = task.type;
           task.type = value;
+          addPendingChange({
+            key: "META-docType",
+            field: "文种",
+            source: "手动修改",
+            position: "文稿属性",
+            before: previousType,
+            after: value
+          });
           addLog("文种由“" + (savedAnalysisDocType.value || "未确认") + "”调整为“" + value + "”");
-          invalidateResults("文种已变更，当前问题清单和审查报告已失效");
           message.warning("文种已变更，请重新审查");
         }
 
         function recheckCurrentTask() {
-          if (editingDocument.value) saveDocumentEdit();
           if (!task.text.trim()) {
             message.warning("正文不能为空");
             return;
           }
-          task.issues = [];
-          addLog("针对编辑后的正文重新发起合规审查");
-          beginAnalysis(true);
+          if (pendingChangeCount.value === 0) {
+            message.info("当前文稿尚未修改，无需重新审查");
+            return;
+          }
+          previousIssues.value = JSON.parse(JSON.stringify(task.issues));
+          recheckRound.value++;
+          addLog("针对" + pendingChangeCount.value + "处修改重新发起合规审查（第" + recheckRound.value + "轮复审）");
+          beginAnalysis(true, previousIssues.value);
         }
 
         const visibleIssues = computed(() => task.issues.filter(issue =>
@@ -926,11 +1420,14 @@
         const renderedDocument = computed(() => {
           let html = task.text.split(/\n+/).map(line => "<p>" + escapeHtml(line) + "</p>").join("");
           task.issues.forEach(issue => {
-            if (!issue.original || issue.original.startsWith("未识别")) return;
-            const safeOriginal = escapeHtml(issue.original);
+            const highlightText = issue.status === "accepted"
+              ? (issue.applyText || issue.suggestion)
+              : issue.original;
+            if (!highlightText || highlightText.startsWith("未识别")) return;
+            const safeText = escapeHtml(highlightText);
             const css = "doc-mark " + issue.risk + " " + issue.status + (activeIssueId.value === issue.id ? " active" : "");
-            html = html.replace(safeOriginal,
-              '<mark class="' + css + '" data-issue-id="' + issue.id + '">' + safeOriginal + "</mark>");
+            html = html.replace(safeText,
+              '<mark class="' + css + '" data-issue-id="' + issue.id + '">' + safeText + "</mark>");
           });
           return html;
         });
@@ -943,41 +1440,117 @@
           });
         }
 
+        // 文稿版本快照（每次真实修改正文时记录）
+        const textVersions = ref([]);
+        const currentUserName = "张政";
+        function snapshotText(action) {
+          textVersions.value.push({ version: "V" + (textVersions.value.length + 1), time: now(), action, text: task.text });
+          if (textVersions.value.length > 30) textVersions.value.shift();
+        }
+        // 将建议真实应用到正文；返回是否成功。支持 replace / append / afterTitle 三种模式
+        function applyIssueToText(issue) {
+          if (!issue.replaceable) return false;
+          snapshotText("采纳前快照：" + issue.title);
+          const mode = issue.applyMode || "replace";
+          const insertText = issue.applyText || issue.suggestion;
+          let applied = false;
+          if (mode === "replace") {
+            if (!issue.original || issue.original.startsWith("未识别")) return false;
+            if (!task.text.includes(issue.original)) return false;
+            task.text = task.text.split(issue.original).join(issue.suggestion);
+            applied = true;
+          } else if (mode === "append") {
+            task.text = task.text.replace(/\s+$/, "") + "\n" + insertText;
+            applied = true;
+          } else if (mode === "afterTitle") {
+            const lines = task.text.split(/\n/);
+            lines.splice(1, 0, insertText);
+            task.text = lines.join("\n");
+            applied = true;
+          }
+          if (!applied) return false;
+          savedAnalysisText.value = task.text;
+          issue.appliedBy = currentUserName;
+          issue.appliedAt = now();
+          issue.appliedVersion = "V" + (textVersions.value.length + 1);
+          addPendingChange({
+            key: "ISSUE-" + issue.id,
+            field: "正文",
+            source: "采纳建议",
+            position: issue.position || "正文",
+            title: issue.title,
+            before: issue.original && !issue.original.startsWith("未识别") ? issue.original : "未补充",
+            after: mode === "replace" ? issue.suggestion : insertText
+          });
+          return true;
+        }
+        // 撤销已应用的修改（把正文改回采纳前状态）
+        function revertIssueFromText(issue) {
+          if (!issue.replaceable) return false;
+          const mode = issue.applyMode || "replace";
+          const insertText = issue.applyText || issue.suggestion;
+          if (mode === "replace") {
+            if (!issue.suggestion || !task.text.includes(issue.suggestion)) return false;
+            task.text = task.text.split(issue.suggestion).join(issue.original);
+            savedAnalysisText.value = task.text;
+            return true;
+          }
+          if (mode === "append" || mode === "afterTitle") {
+            if (!task.text.includes(insertText)) return false;
+            task.text = task.text.split("\n" + insertText).join("").split(insertText + "\n").join("").split(insertText).join("");
+            savedAnalysisText.value = task.text;
+            return true;
+          }
+          return false;
+        }
+
         function acceptIssue(issue) {
           if (issue.status === "accepted") return;
-          if (issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.original)) {
-            task.text = task.text.replace(issue.original, issue.suggestion);
-          }
+          const applied = applyIssueToText(issue);
           issue.status = "accepted";
-          addLog("采纳整改：“" + issue.title + "”");
-          message.success("已采纳修改");
+          if (applied) {
+            addLog("采纳并修改正文：“" + issue.title + "”，操作人：" + currentUserName);
+            message.success("已采纳并修改正文");
+          } else {
+            addLog("采纳整改：“" + issue.title + "”，操作人：" + currentUserName);
+            message.success("已采纳该修改建议");
+          }
+          saveDraft();
         }
 
         function ignoreIssue(issue) {
           if (issue.status === "ignored") return;
           issue.status = "ignored";
+          if (!previousIgnoredTitles.value.includes(issue.title)) {
+            previousIgnoredTitles.value.push(issue.title);
+          }
           addLog("忽略问题：“" + issue.title + "”");
           message.info("已忽略该问题");
         }
 
         function undoIssue(issue) {
-          if (issue.status === "accepted" && issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.suggestion)) {
-            task.text = task.text.replace(issue.suggestion, issue.original);
+          const wasAccepted = issue.status === "accepted";
+          if (wasAccepted && revertIssueFromText(issue)) {
+            removePendingChange("ISSUE-" + issue.id);
+            addLog("撤销采纳并恢复正文：“" + issue.title + "”");
+          } else {
+            addLog("撤销问题处理：“" + issue.title + "”");
           }
           issue.status = "pending";
-          addLog("撤销问题处理：“" + issue.title + "”");
+          issue.appliedBy = ""; issue.appliedAt = ""; issue.appliedVersion = "";
           message.info("已恢复为待处理");
+          saveDraft();
         }
 
         function acceptAll() {
+          let appliedCount = 0;
           task.issues.filter(i => i.status === "pending").forEach(issue => {
-            if (issue.original && !issue.original.startsWith("未识别") && task.text.includes(issue.original)) {
-              task.text = task.text.replace(issue.original, issue.suggestion);
-            }
+            if (applyIssueToText(issue)) appliedCount++;
             issue.status = "accepted";
           });
-          addLog("批量采纳全部待处理问题");
-          message.success("已采纳全部待处理问题");
+          addLog("批量采纳全部待处理问题，其中" + appliedCount + "项已自动替换正文，操作人：" + currentUserName);
+          message.success(appliedCount > 0 ? ("已采纳全部待处理问题，" + appliedCount + "项已替换正文") : "已采纳全部待处理问题");
+          saveDraft();
         }
 
         function ignoreAll() {
@@ -1000,23 +1573,43 @@
             message.warning("当前审查结果已失效，请重新审查后再生成报告");
             return;
           }
-          const existing = records.value.filter(record => record.name === task.name);
-          const version = "V" + (existing.length + 1);
-          addLog("生成审查报告和问题清单，保存" + version + "审查版本");
+          if (reviewVersions.value.length === 0) createReviewVersion("首次审查", null);
+          const closure = buildClosureData(reviewVersions.value);
+          const newestVersion = reviewVersions.value[0];
+          const oldestVersion = reviewVersions.value[reviewVersions.value.length - 1];
+          const version = reviewVersions.value.length > 1 ? (oldestVersion.version + "—" + newestVersion.version) : newestVersion.version;
+          addLog("生成" + version + "闭环审查报告，保留初审问题、整改内容和复审结论");
           const record = {
             id: "R-" + Date.now(),
             name: task.name,
             type: task.type,
             version,
             time: now(),
-            total: task.issues.length,
-            accepted: acceptedCount.value,
-            ignored: ignoredCount.value,
-            pending: pendingCount.value,
+            reportMode: "closure",
+            reportTitle: "闭环审查报告",
+            total: closure.initialTotal,
+            initialTotal: closure.initialTotal,
+            fixed: closure.fixed,
+            remaining: closure.remaining,
+            newIssues: closure.newIssues,
+            accepted: closure.items.filter(item => item.handling === "已采纳").length,
+            ignored: closure.ignored,
+            pending: closure.remaining + closure.newIssues,
+            high: closure.items.filter(item => item.issue.risk === "high").length,
+            medium: closure.items.filter(item => item.issue.risk === "medium").length,
+            general: closure.items.filter(item => item.issue.risk === "general").length,
+            conclusion: closure.conclusion,
+            closureItems: JSON.parse(JSON.stringify(closure.items)),
             operator: "综合办公室",
+            issuer: task.issuer,
+            usage: task.usage,
+            ocrReviewNeeded: task.ocrReviewNeeded,
+            ocrLowConfidenceCount: task.ocrLowConfidenceCount,
             text: task.text,
             issues: JSON.parse(JSON.stringify(task.issues)),
-            logs: JSON.parse(JSON.stringify(task.logs))
+            logs: JSON.parse(JSON.stringify(task.logs)),
+            reviewVersions: JSON.parse(JSON.stringify(reviewVersions.value)),
+            archived: false
           };
           records.value.unshift(record);
           persistRecord(record);
@@ -1024,12 +1617,79 @@
           phase.value = "report";
           currentStep.value = 4;
           showReport.value = true;
-          message.success("审查报告、问题清单和版本记录已生成");
+          message.success("闭环审查报告已生成，初审问题和整改复审过程已完整保留");
+        }
+
+        function archiveRecord(record) {
+          record.archived = true;
+          persistRecord(record);
+          currentStep.value = 4;
+          addLog("审查记录" + record.version + "已闭环归档");
+          message.success("已归档，审查流程闭环完成");
         }
 
         function viewRecord(record) {
+          if (record.initialTotal == null) record.initialTotal = record.total || 0;
+          if (record.fixed == null) record.fixed = record.accepted || 0;
+          if (record.remaining == null) record.remaining = Math.max(0, (record.total || 0) - (record.accepted || 0) - (record.ignored || 0));
+          if (record.newIssues == null) record.newIssues = 0;
+          if (!record.conclusion) record.conclusion = record.remaining === 0 ? "审查处理完成" : "仍有问题需要处理";
           selectedRecord.value = record;
           showRecordDetail.value = true;
+        }
+
+        function openRecordReport(record) {
+          viewRecord(record);
+          showRecordDetail.value = false;
+          showReport.value = true;
+        }
+
+        function viewVersionReport(version) {
+          const versionIssues = JSON.parse(JSON.stringify(version.issues || []));
+          const previousTitles = new Set((version.previousIssues || []).map(issue => issue.title));
+          const versionItems = versionIssues.map(issue => {
+            const matchedChange = (version.changes || []).find(change => change.key === "ISSUE-" + issue.id || change.title === issue.title);
+            return {
+              key: "VERSION-" + version.key + "-" + issue.id,
+              issue,
+              original: issue.original,
+              suggestion: issue.suggestion,
+              modified: matchedChange ? matchedChange.after : "—",
+              handling: statusLabel(issue.status),
+              recheckResult: version.action === "首次审查" || version.action === "历史审查"
+                ? "本版本检出"
+                : (previousTitles.has(issue.title) ? "仍需处理" : "复审新增")
+            };
+          });
+          const versionConclusion = versionIssues.length === 0
+            ? "本版本审查通过"
+            : (version.action === "首次审查" || version.action === "历史审查" ? "本版本发现" + versionIssues.length + "项问题" : "本版本仍有" + versionIssues.length + "项问题需要处理");
+          selectedRecord.value = {
+            id: "VERSION-" + version.key,
+            name: task.name,
+            type: version.docType || task.type,
+            version: version.version,
+            time: version.time,
+            operator: version.operator,
+            reportMode: "version",
+            reportTitle: version.version + "版本审查报告",
+            total: versionIssues.length,
+            initialTotal: versionIssues.length,
+            fixed: version.fixed || 0,
+            remaining: version.remaining != null ? version.remaining : versionIssues.length,
+            newIssues: version.newIssues || 0,
+            accepted: versionIssues.filter(issue => issue.status === "accepted").length,
+            ignored: versionIssues.filter(issue => issue.status === "ignored").length,
+            pending: versionIssues.filter(issue => issue.status === "pending").length,
+            conclusion: versionConclusion,
+            closureItems: versionItems,
+            issues: versionIssues,
+            text: version.text,
+            logs: JSON.parse(JSON.stringify(task.logs || [])),
+            reviewVersions: [JSON.parse(JSON.stringify(version))],
+            archived: false
+          };
+          showReport.value = true;
         }
 
         const filteredRecords = computed(() => records.value.filter(record =>
@@ -1038,26 +1698,39 @@
         ));
 
         const recordColumns = [
-          { title: "文稿名称", key: "name", minWidth: 260, ellipsis: { tooltip: true } },
-          { title: "文种", key: "type", width: 100 },
+          { title: "文稿名称", key: "name", minWidth: 240, ellipsis: { tooltip: true } },
+          { title: "文种", key: "type", width: 90 },
           {
-            title: "审查版本", key: "version", width: 100,
+            title: "审查版本", key: "version", width: 90,
             render: row => Vue.h("span", { class: "version-tag" }, row.version)
           },
-          { title: "问题数", key: "total", width: 90 },
+          { title: "初审问题", key: "total", width: 90 },
           {
-            title: "处理情况", key: "handled", width: 150,
-            render: row => (row.accepted || 0) + "项采纳 / " + (row.ignored || 0) + "项忽略"
+            title: "整改情况", key: "handled", width: 170,
+            render: row => row.initialTotal != null
+              ? (row.fixed || 0) + "项已整改 / " + ((row.remaining || 0) + (row.newIssues || 0)) + "项待处理"
+              : (row.accepted || 0) + "项已处理 / " + (row.ignored || 0) + "项忽略"
           },
-          { title: "生成时间", key: "time", width: 170 },
-          { title: "操作人", key: "operator", width: 120 },
+          { title: "生成时间", key: "time", width: 160 },
           {
-            title: "操作", key: "actions", width: 100,
-            render: row => Vue.h(naive.NButton, {
-              text: true,
-              type: "primary",
-              onClick: () => viewRecord(row)
-            }, { default: () => "查看详情" })
+            title: "状态", key: "archived", width: 90,
+            render: row => row.archived
+              ? Vue.h("span", { style: "color:#43a047;font-weight:600" }, "已归档")
+              : Vue.h("span", { style: "color:#f0ad4e;font-weight:600" }, "待导出")
+          },
+          { title: "操作人", key: "operator", width: 100 },
+          {
+            title: "操作", key: "actions", width: 200,
+            render: row => Vue.h("div", { style: "display:flex;gap:6px" }, [
+              Vue.h(naive.NButton, {
+                text: true, type: "primary",
+                onClick: () => viewRecord(row)
+              }, { default: () => "详情" }),
+              Vue.h(naive.NButton, {
+                text: true, type: "success",
+                onClick: () => downloadAll(row)
+              }, { default: () => "下载报告" })
+            ])
           }
         ];
 
@@ -1073,52 +1746,344 @@
           URL.revokeObjectURL(url);
         }
 
-        function downloadReport(record) {
-          const rows = (record.issues || []).map((issue, index) =>
-            "<tr><td>" + (index + 1) + "</td><td>" + dimensionLabel(issue.dimension) + "</td><td>" +
-            riskLabel(issue.risk) + "</td><td>" + escapeHtml(issue.title) + "</td><td>" +
-            escapeHtml(issue.original) + "</td><td>" + escapeHtml(issue.suggestion) + "</td><td>" +
-            statusLabel(issue.status) + "</td></tr>"
-          ).join("");
-          const html = '<html><head><meta charset="UTF-8"></head><body>' +
-            "<h1>" + escapeHtml(record.name) + "—合规审查报告</h1>" +
+        function buildReportHtml(record) {
+          const isVersionReport = record.reportMode === "version";
+          const closureItems = record.closureItems || (record.issues || []).map(issue => ({
+            issue, original: issue.original, suggestion: issue.suggestion, modified: "—", handling: statusLabel(issue.status), recheckResult: "待复审"
+          }));
+          const rows = closureItems.length ? closureItems.map((item, index) =>
+            "<tr><td>" + (index + 1) + "</td><td>" + escapeHtml(item.issue.title) + "</td><td>" +
+            escapeHtml(item.original) + "</td><td>" + escapeHtml(item.suggestion) + "</td><td>" +
+            escapeHtml(item.modified) + "</td><td>" + escapeHtml(item.handling) + "</td><td>" +
+            escapeHtml(item.recheckResult) + "</td></tr>"
+          ).join("") : ((record.initialTotal || 0) > 0
+            ? "<tr><td colspan='7'>该历史记录未保存逐项问题明细，请以原始归档报告为准。</td></tr>"
+            : "<tr><td colspan='7' class='pass'>本版本未检出问题，审查通过。</td></tr>");
+          const basisRows = closureItems.map((item, index) => {
+            const issue = item.issue;
+            return "<div class='detail'><b>" + (index + 1) + ". " + escapeHtml(issue.title) + "</b>" +
+            "<p>文件名称：" + escapeHtml(issue.basisFile || issue.basisSource || "平台合规规则库") + "</p>" +
+            "<p>发布机关：" + escapeHtml(issue.basisAgency || "—") + "</p>" +
+            "<p>具体条款：" + escapeHtml(issue.basisClause || issue.basis || "—") + "</p>" +
+            "<p>最后同步时间：" + escapeHtml(issue.basisSyncedAt || issue.basisUpdatedAt || "—") + "</p></div>";
+          }).join("");
+          const unresolved = closureItems.filter(item => item.recheckResult !== "复审通过");
+          const suggestionRows = unresolved.length
+            ? unresolved.map((item, index) => "<li><b>" + (index + 1) + ". " + escapeHtml(item.issue.position || "位置待确认") + "：</b>" + escapeHtml(item.suggestion) + "</li>").join("")
+            : ((record.initialTotal || 0) > 0 && closureItems.length === 0
+              ? "<li>该历史记录未保存逐项修订建议。</li>"
+              : "<li class='pass'>初审问题已全部整改并通过复审，无遗留修订建议。</li>");
+          return '<html><head><meta charset="UTF-8"><title>' + escapeHtml(record.reportTitle || "闭环审查报告") + '</title><style>' +
+            'body{font-family:"Microsoft YaHei",sans-serif;color:#24384b;max-width:1060px;margin:28px auto;padding:0 24px;line-height:1.7}h1{font-size:24px;margin-bottom:8px}h2{font-size:17px;margin-top:26px;border-bottom:1px solid #dfe6ed;padding-bottom:7px}p{margin:3px 0}.summary{margin:18px 0;padding:12px 14px;border:1px solid #dce8e1;border-radius:8px;background:#f5fbf7}.summary b{color:#16704a}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #dfe6ed;padding:7px;text-align:left;vertical-align:top}th{background:#f5f7fa}.detail{padding:10px 12px;margin:8px 0;border:1px solid #e2e8ef;border-radius:6px}.detail p{font-size:12px;color:#526476}li{margin:8px 0}.pass{color:#16704a}@media print{body{margin:0;max-width:none}.no-print{display:none}}' +
+            '</style></head><body>' +
+            "<h1>" + escapeHtml(record.name) + "—" + escapeHtml(record.reportTitle || "闭环审查报告") + "</h1>" +
             "<p>文种：" + record.type + "　版本：" + record.version + "　生成时间：" + record.time + "</p>" +
-            "<p>共发现" + record.total + "项问题，采纳" + (record.accepted || 0) + "项，忽略" + (record.ignored || 0) + "项。</p>" +
-            '<table border="1" cellspacing="0" cellpadding="6"><tr><th>序号</th><th>审查维度</th><th>风险</th><th>问题</th><th>原文</th><th>整改建议</th><th>处理状态</th></tr>' +
-            rows + "</table><p>说明：本报告为智能预审结果，供文稿定稿前整改参考。</p></body></html>";
-          downloadBlob("\ufeff" + html, record.name + "_合规审查报告_" + record.version + ".doc", "application/msword;charset=utf-8");
-          message.success("审查报告已下载");
+            "<div class='summary'>" + (isVersionReport ? "本版本检出" : "初审发现") + " <b>" + (record.initialTotal || 0) + "</b> 项，" + (isVersionReport ? "本轮解决" : "已整改") + " <b>" + (record.fixed || 0) + "</b> 项，复审遗留 <b>" + (record.remaining || 0) + "</b> 项，复审新增 <b>" + (record.newIssues || 0) + "</b> 项。" + (isVersionReport ? "本版本结论" : "最终结论") + "：<b>" + escapeHtml(record.conclusion || "待确认") + "</b></div>" +
+            '<h2>' + (isVersionReport ? '本版本问题明细' : '整改闭环明细') + '</h2><table><tr><th>序号</th><th>问题</th><th>原文</th><th>修改建议</th><th>修改后文字</th><th>处理方式</th><th>审查结果</th></tr>' + rows + "</table>" +
+            "<h2>审查依据</h2>" + basisRows +
+            "<h2>遗留修订建议</h2><ol>" + suggestionRows + "</ol>" +
+            "<p style='margin-top:24px;color:#748295;font-size:12px'>说明：" + (isVersionReport ? "本报告仅反映该版本冻结时点的审查结果，可与其他版本报告分别查看。" : "本报告完整记录初审问题、整改内容和复审结果，供文稿定稿与审查留痕使用。") + "</p></body></html>";
+        }
+
+        function downloadReport(record) {
+          const html = buildReportHtml(record);
+          downloadBlob("\ufeff" + html, record.name + "_" + (record.reportTitle || "闭环审查报告") + "_" + record.version + ".doc", "application/msword;charset=utf-8");
+          message.success((record.reportTitle || "闭环审查报告") + "已下载");
+        }
+
+        function printReport(record) {
+          const printWindow = window.open("", "_blank", "width=1040,height=760");
+          if (!printWindow) {
+            message.warning("浏览器已阻止打印窗口，请允许弹出窗口后重试");
+            return;
+          }
+          printWindow.document.open();
+          printWindow.document.write(buildReportHtml(record));
+          printWindow.document.close();
+          printWindow.focus();
+          setTimeout(() => printWindow.print(), 260);
         }
 
         function downloadIssueList(record) {
-          const head = ["序号","审查维度","风险等级","问题","原文","整改建议","审查依据","处理状态"];
-          const lines = [head].concat((record.issues || []).map((issue, index) => [
+          const closureItems = record.closureItems || (record.issues || []).map(issue => ({ issue, original: issue.original, suggestion: issue.suggestion, modified: "—", handling: statusLabel(issue.status), recheckResult: "待复审" }));
+          const head = ["序号","初审问题","位置","原文","修改建议","修改后文字","处理方式","复审结果","文件名称","发布机关","具体条款","最后同步时间"];
+          const lines = [head].concat(closureItems.map((item, index) => [
             index + 1,
-            dimensionLabel(issue.dimension),
-            riskLabel(issue.risk),
-            issue.title,
-            issue.original,
-            issue.suggestion,
-            issue.basis,
-            statusLabel(issue.status)
+            item.issue.title,
+            item.issue.position,
+            item.original,
+            item.suggestion,
+            item.modified,
+            item.handling,
+            item.recheckResult,
+            item.issue.basisFile || item.issue.basisSource,
+            item.issue.basisAgency,
+            item.issue.basisClause || item.issue.basis,
+            item.issue.basisSyncedAt || item.issue.basisUpdatedAt
           ]));
           const csv = lines.map(row => row.map(cell => '"' + String(cell || "").replaceAll('"', '""') + '"').join(",")).join("\r\n");
-          downloadBlob("\ufeff" + csv, record.name + "_问题清单_" + record.version + ".csv", "text/csv;charset=utf-8");
-          message.success("问题清单已下载");
+          downloadBlob("\ufeff" + csv, record.name + "_整改闭环明细_" + record.version + ".csv", "text/csv;charset=utf-8");
+          message.success("整改闭环明细已下载");
         }
+
+        function downloadAll(record) {
+          downloadReport(record);
+          setTimeout(() => { downloadIssueList(record); }, 300);
+          if (record.reportMode === "version") {
+            message.success(record.version + "版本报告与明细已导出");
+            return;
+          }
+          record.archived = true;
+          persistRecord(record);
+          currentStep.value = 4;
+          addLog("审查记录" + record.version + "已导出并归档");
+          message.success("闭环审查报告和整改明细已导出，流程闭环完成");
+        }
+
+        function downloadDocument(record) {
+          downloadBlob(record.text || "", record.name + "_" + record.version + ".txt", "text/plain;charset=utf-8");
+          message.success("文稿已导出");
+        }
+
+        // 侧边栏/草稿相关
+        const sidebarCollapsed = ref(false);
+        const sidebarSearch = ref('');
+        const sidebarRange = ref('all');
+        const sidebarDateStart = ref('');
+        const sidebarDateEnd = ref('');
+        const currentDraftId = ref('');
+        const TODAY = new Date(new Date().toLocaleDateString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit'}).replaceAll('/','-'));
+
+        function loadDrafts() {
+          try {
+            const raw = localStorage.getItem('jiangbeiComplianceDrafts');
+            if (raw) return JSON.parse(raw);
+          } catch (e) {}
+          const todayStr = TODAY.toISOString().split('T')[0];
+          const yesterday = new Date(TODAY.getTime() - 86400000);
+          const yesterdayStr = yesterday.toISOString().split('T')[0];
+          const d7 = new Date(TODAY.getTime() - 5 * 86400000);
+          const d7Str = d7.toISOString().split('T')[0];
+          const d14 = new Date(TODAY.getTime() - 12 * 86400000);
+          const d14Str = d14.toISOString().split('T')[0];
+          const d21 = new Date(TODAY.getTime() - 20 * 86400000);
+          const d21Str = d21.toISOString().split('T')[0];
+          return [
+            { id:'DR-001', name:'关于开展2026年度安全生产大检查的通知', type:'通知', text:'关于开展2026年度安全生产大检查的通知\n各街道办事处、新区各相关部门：\n为深入贯彻落实新区安全生产专项整治要求，进一步压紧压实安全生产主体责任，现就开展2026年度安全生产大检查有关事项通知如下：\n一、检查范围。围绕重点企业、建筑工地、人员密集场所等重点区域，全面排查各类风险隐患，确保所有隐患一次性清零。\n二、检查内容。重点检查消防设施配备、应急预案演练、值班值守安排等情况，各单位要对照有关要求逐项核查。\n三、工作要求。请各单位高度重视，明确专人负责，于七月十五日前报送检查情况和问题清单。检查中发现的重大隐患，应当立即上报。\n联系人：李某某，联系电话：025-58150000。\n南京江北新区综合办公室\n2026年7月9日', issues:[], logs:[], createdAt:'2026-08-10 14:30:00', updatedAt:'2026-08-10 15:20:00', timeDisplay:'昨天 15:20', dateIso:yesterdayStr, status:'done' },
+            { id:'DR-002', name:'新区重点项目推进会纪要', type:'纪要', text:'新区重点项目推进会纪要\n2026年8月5日，新区管委会召开重点项目推进会，会议由王主任主持，各相关部门负责人参加。\n会议指出，上半年新区重点项目推进总体顺利，但部分项目存在进度滞后、资金拨付不及时等问题。\n会议强调，各责任单位要倒排工期、挂图作战，确保三季度项目建设取得实质性进展。\n议定事项：一是由经发局牵头，每月通报项目进展情况；二是财政局加快资金拨付进度；三是各街道落实属地责任。', issues:[], logs:[], createdAt:'2026-08-05 09:00:00', updatedAt:'2026-08-08 16:45:00', timeDisplay:'08-05 09:00', dateIso:d7Str, status:'done' },
+            { id:'DR-003', name:'关于申请2026年度信息化建设专项经费的请示', type:'请示', text:'关于申请2026年度信息化建设专项经费的请示\n新区管委会：\n为加快推进数字政府建设，提升政务服务水平，我办拟开展2026年度信息化建设项目，主要包括政务云平台扩容、数据共享交换平台升级、网络安全防护体系建设等内容。\n经测算，项目总投资约1200万元，资金来源为财政拨款。\n妥否，请批示。\n江北新区综合办公室\n2026年7月28日', issues:[], logs:[], createdAt:'2026-07-28 10:15:00', updatedAt:'2026-07-30 11:30:00', timeDisplay:'07-28 10:15', dateIso:d14Str, status:'progress' },
+            { id:'DR-004', name:'2026年上半年政务服务工作汇报', type:'报告', text:'2026年上半年政务服务工作汇报\n新区管委会：\n现将2026年上半年政务服务工作开展情况汇报如下：\n一、工作成效。上半年共受理各类审批事项2.8万件，按时办结率99.2%，群众满意度95.6%。\n二、主要做法。一是深化“一网通办”改革，二是推进“一件事一次办”，三是加强窗口人员培训。\n三、存在问题。部分事项审批流程仍需优化，部门间数据共享仍有堵点。\n四、下半年工作计划。重点推进政务服务标准化建设，力争年底前实现高频事项“掌上办”全覆盖。\n特此报告。\n江北新区政务服务中心\n2026年7月15日', issues:[], logs:[], createdAt:'2026-07-20 08:30:00', updatedAt:'2026-07-21 09:00:00', timeDisplay:'07-20 08:30', dateIso:d21Str, status:'done' },
+            { id:'DR-005', name:'干部培训工作专题协调会纪要', type:'纪要', text:'干部培训工作专题协调会纪要\n2026年8月11日，新区组织人事局召开干部培训工作专题协调会。\n会议指出，当前干部培训工作存在课程设置不够精准、培训方式较为单一、培训效果评估机制不完善等问题。\n会议强调，要聚焦新区发展需要，围绕招商引资、项目建设、基层治理等重点领域，精准设置培训课程。\n议定事项：一是由组织人事局牵头制定下半年培训计划；二是各街道推荐优秀干部参加专题培训；三是建立培训效果跟踪评估机制。', issues:[], logs:[], createdAt:'2026-08-11 08:00:00', updatedAt:'2026-08-11 08:30:00', timeDisplay:'今天 08:30', dateIso:todayStr, status:'draft' }
+          ];
+        }
+
+        const draftHistory = ref(loadDrafts());
+
+        function persistDrafts() {
+          try {
+            localStorage.setItem('jiangbeiComplianceDrafts', JSON.stringify(draftHistory.value));
+          } catch (e) {}
+        }
+
+        function saveDraft() {
+          if (!task.id) return;
+          const now = new Date();
+          const timeDisplay = (() => {
+            const diff = Math.floor((TODAY.getTime() - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) / 86400000);
+            const hm = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+            if (diff === 0) return '今天 ' + hm;
+            if (diff === 1) return '昨天 ' + hm;
+            return (now.getMonth()+1)+'-'+now.getDate().toString().padStart(2,'0')+' '+hm;
+          })();
+          const existing = draftHistory.value.findIndex(d => d.id === task.id);
+          const draft = {
+            id: task.id,
+            name: task.name,
+            type: task.type,
+            text: task.text,
+            issuer: task.issuer,
+            usage: task.usage,
+            issues: JSON.parse(JSON.stringify(task.issues)),
+            logs: JSON.parse(JSON.stringify(task.logs)),
+            reviewVersions: JSON.parse(JSON.stringify(reviewVersions.value)),
+            pendingChanges: JSON.parse(JSON.stringify(pendingChanges.value)),
+            createdAt: task.createdAt || now.toLocaleString('zh-CN'),
+            updatedAt: now.toLocaleString('zh-CN'),
+            timeDisplay,
+            dateIso: now.toISOString().split('T')[0],
+            status: phase.value === 'report' ? 'done' : (phase.value === 'results' ? 'progress' : 'draft')
+          };
+          if (existing >= 0) {
+            draftHistory.value[existing] = draft;
+          } else {
+            draftHistory.value.unshift(draft);
+          }
+          persistDrafts();
+        }
+
+        function selectDraft(draft) {
+          currentDraftId.value = draft.id;
+          task.id = draft.id;
+          task.name = draft.name;
+          task.type = draft.type;
+          task.text = draft.text;
+          task.issuer = draft.issuer || "南京江北新区管理委员会";
+          task.usage = draft.usage || "内部使用";
+          task.issues = JSON.parse(JSON.stringify(draft.issues));
+          task.logs = JSON.parse(JSON.stringify(draft.logs));
+          reviewVersions.value = JSON.parse(JSON.stringify(draft.reviewVersions || []));
+          pendingChanges.value = JSON.parse(JSON.stringify(draft.pendingChanges || []));
+          documentDirty.value = false;
+          selectedVersionKey.value = reviewVersions.value[0] ? reviewVersions.value[0].key : "";
+          activeRightTab.value = "issues";
+          task.createdAt = draft.createdAt;
+          resultsStale.value = pendingChanges.value.length > 0;
+          staleReason.value = resultsStale.value ? "文稿存在尚未重新审查的修改" : '';
+          view.value = 'review';
+          if (draft.status === 'done') {
+            phase.value = 'results';
+            currentStep.value = 4;
+          } else if (draft.status === 'progress') {
+            phase.value = 'results';
+            currentStep.value = 3;
+          } else {
+            phase.value = 'results';
+            currentStep.value = 3;
+          }
+        }
+
+        function deleteDraft(id) {
+          draftHistory.value = draftHistory.value.filter(d => d.id !== id);
+          if (currentDraftId.value === id) currentDraftId.value = '';
+          persistDrafts();
+        }
+
+        const filteredDrafts = computed(() => {
+          let list = draftHistory.value;
+          // search filter
+          const kw = sidebarSearch.value.trim().toLowerCase();
+          if (kw) {
+            list = list.filter(d => (d.name || '').toLowerCase().includes(kw) || (d.type || '').toLowerCase().includes(kw));
+          }
+          // time range filter
+          const range = sidebarRange.value;
+          if (range === 'today') {
+            const todayStr = TODAY.toISOString().split('T')[0];
+            list = list.filter(d => d.dateIso === todayStr);
+          } else if (range === '7d') {
+            const sevenDaysAgo = new Date(TODAY.getTime() - 6 * 86400000);
+            const cutDate = sevenDaysAgo.toISOString().split('T')[0];
+            list = list.filter(d => d.dateIso >= cutDate);
+          } else if (range === '30d') {
+            const thirtyDaysAgo = new Date(TODAY.getTime() - 29 * 86400000);
+            const cutDate = thirtyDaysAgo.toISOString().split('T')[0];
+            list = list.filter(d => d.dateIso >= cutDate);
+          } else if (range === 'custom') {
+            if (sidebarDateStart.value) list = list.filter(d => d.dateIso >= sidebarDateStart.value);
+            if (sidebarDateEnd.value) list = list.filter(d => d.dateIso <= sidebarDateEnd.value);
+          }
+          return list;
+        });
+
+        const filteredReviewGroups = computed(() => draftHistory.value.filter(draft =>
+          (recordType.value === "全部文种" || draft.type === recordType.value) &&
+          (!recordKeyword.value.trim() || draft.name.includes(recordKeyword.value.trim()))
+        ));
+
+        function openDraftVersions(draft) {
+          selectDraft(draft);
+          if (reviewVersions.value.length === 0) {
+            const fallback = {
+              key: draft.id + "-V1-history",
+              version: "V1",
+              time: draft.updatedAt || draft.createdAt,
+              operator: currentUserName,
+              action: "历史审查",
+              text: draft.text,
+              docType: draft.type,
+              issuer: draft.issuer || "—",
+              usage: draft.usage || "—",
+              changes: [],
+              issues: JSON.parse(JSON.stringify(draft.issues || [])),
+              previousIssues: [],
+              changeCount: 0,
+              total: (draft.issues || []).length,
+              fixed: 0,
+              remaining: (draft.issues || []).length,
+              newIssues: 0
+            };
+            reviewVersions.value = [fallback];
+            selectedVersionKey.value = fallback.key;
+          }
+          activeRightTab.value = "versions";
+          phase.value = "results";
+          showReport.value = false;
+        }
+
+        function setSidebarRange(range) {
+          sidebarRange.value = range;
+          applySidebarFilter();
+        }
+
+        function clearSidebarSearch() {
+          sidebarSearch.value = '';
+          applySidebarFilter();
+        }
+
+        function applySidebarFilter() {
+          // trigger computed re-evaluation via dummy assignment
+          sidebarSearch.value = sidebarSearch.value;
+        }
+
+        // 修改 generateResult: 保存草稿
+        const origGenerateResult = generateResult;
+        generateResult = function() {
+          origGenerateResult();
+          saveDraft();
+        };
+
+        // acceptIssue/undoIssue/acceptAll/ignoreAll 已在实现内调用 saveDraft
+
+        // 修改 ignoreIssue: 保存草稿
+        const origIgnoreIssue = ignoreIssue;
+        ignoreIssue = function(issue) {
+          origIgnoreIssue(issue);
+          saveDraft();
+        };
+
+        // 修改 ignoreAll: 保存草稿
+        const origIgnoreAll = ignoreAll;
+        ignoreAll = function() {
+          origIgnoreAll();
+          saveDraft();
+        };
+
+        // 修改 startTask: 自动保存草稿
+        const origStartTask = startTask;
+        startTask = function() {
+          origStartTask();
+          saveDraft();
+        };
 
         return {
           themeOverrides, view, phase, currentStep, showNewTask, showReport, showRecordDetail,
-          sourceMode, pasteText, uploadFile, selectedDocType, detectedDocType, detectConfidence, hasInput,
+          sourceMode, pasteText, uploadFile, selectedDocType, detectedDocType, hasInput,
+          showRecognitionEdit, ocrReviewNeeded, ocrLowConfidenceCount,
           analysisStage, activeDimension, activeRisk, activeIssueId, recordKeyword, recordType,
-          selectedRecord, docTypes, dimensionOptions, riskOptions, task, records, filteredRecords,
-          resultsStale, staleReason, editingDocument, documentDraft,
+          selectedRecord, docTypes, docTypeOptions, docTypeGroup, dimensionOptions, riskOptions, task, records, filteredRecords,
+          reviewParams,
+          resultsStale, staleReason,
+          showRecheckResult, recheckSummary, archived,
+          activeRightTab, reviewVersions, pendingChanges, pendingChangeCount, selectedVersionKey, selectedReviewVersion, documentDirty,
           recordColumns, visibleIssues, pendingCount, acceptedCount, ignoredCount,
           highCount, mediumCount, generalCount, renderedDocument,
           openNewTask, handleUploadChange, startTask, focusIssue, acceptIssue, ignoreIssue,
-          undoIssue, acceptAll, ignoreAll, generateResult, viewRecord, startEditing,
-          cancelDocumentEdit, saveDocumentEdit, changeTaskDocType, recheckCurrentTask,
-          dimensionLabel, riskLabel, statusLabel, downloadReport, downloadIssueList
+          undoIssue, acceptAll, ignoreAll, generateResult, viewRecord, openRecordReport, viewVersionReport, archiveRecord,
+          changeTaskDocType, recheckCurrentTask, onDocumentInput, onDocumentBlur, quickStartFromChat, quickStartFromKB,
+          dimensionLabel, riskLabel, statusLabel, downloadReport, downloadIssueList, downloadAll, downloadDocument, printReport,
+          sidebarCollapsed, sidebarSearch, sidebarRange, sidebarDateStart, sidebarDateEnd,
+          currentDraftId, draftHistory, filteredDrafts, filteredReviewGroups, selectDraft, openDraftVersions, deleteDraft,
+          setSidebarRange, clearSidebarSearch, applySidebarFilter, saveDraft
         };
       },
 
@@ -1143,39 +2108,84 @@
               </header>
 
               <div class="body-shell">
-                <aside class="sidenav">
-                  <div class="nav-caption">功能导航</div>
-                  <button class="nav-btn" :class="{active:view==='review'}" @click="view='review'">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
-                    <span>合规审查</span>
+                <aside class="sidebar">
+                  <div class="sidebar-header">
+                    <div class="sidebar-logo">
+                      <div class="sidebar-logo-icon">
+                        <svg class="ic-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+                      </div>
+                      <span class="sidebar-logo-text">合规审查</span>
+                    </div>
+                    <button class="new-meeting-btn" @click="openNewTask">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                      <span class="btn-text">新建审查</span>
+                    </button>
+                  </div>
+                  <div class="filter-box">
+                    <div class="search-wrap">
+                      <span class="search-icon">🔍</span>
+                      <input class="search-input" v-model="sidebarSearch" @input="applySidebarFilter" placeholder="搜索审查记录…">
+                      <span class="search-clear" :style="{display:sidebarSearch?'block':'none'}" @click="clearSidebarSearch">✕</span>
+                    </div>
+                    <div class="time-filter-row">
+                      <span class="time-chip" :class="{active:sidebarRange==='all'}" @click="setSidebarRange('all')">全部</span>
+                      <span class="time-chip" :class="{active:sidebarRange==='today'}" @click="setSidebarRange('today')">今天</span>
+                      <span class="time-chip" :class="{active:sidebarRange==='7d'}" @click="setSidebarRange('7d')">近七天</span>
+                      <span class="time-chip" :class="{active:sidebarRange==='30d'}" @click="setSidebarRange('30d')">近三十天</span>
+                      <span class="time-chip" :class="{active:sidebarRange==='custom'}" @click="setSidebarRange('custom')">自定义</span>
+                    </div>
+                    <div class="custom-range" :class="{show:sidebarRange==='custom'}">
+                      <span class="custom-range-label">自定义日期范围</span>
+                      <div class="custom-range-inputs">
+                        <input type="date" v-model="sidebarDateStart" @change="applySidebarFilter">
+                        <span class="custom-range-sep">~</span>
+                        <input type="date" v-model="sidebarDateEnd" @change="applySidebarFilter">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="history-section">
+                    <div class="history-title">
+                      最近审查
+                      <span style="font-size:10px;color:#98a2b3">{{filteredDrafts.length}}条</span>
+                    </div>
+                    <div class="history-list" v-if="filteredDrafts.length>0">
+                      <div v-for="draft in filteredDrafts" :key="draft.id"
+                           class="history-item" :class="{active:currentDraftId===draft.id}"
+                           @click="selectDraft(draft)">
+                        <div class="history-item-title">{{draft.name || '未命名审查'}}</div>
+                        <div class="history-item-meta">
+                          <span class="history-tag">{{draft.type}}</span>
+                          <span class="history-status" :class="draft.status">{{draft.status==='done'?'已完成':draft.status==='draft'?'草稿':'进行中'}}</span>
+                          <span class="history-time">{{draft.timeDisplay}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else class="history-empty">暂无审查记录</div>
+                  </div>
+                  <button class="all-records-btn" @click="view='records';showReport=false">
+                    <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/><path d="M8 3v4M8 10v4M8 17v4"/></svg>
+                    查看全部审查记录
                   </button>
-                  <button class="nav-btn" :class="{active:view==='records'}" @click="view='records'">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>
-                    <span>审查记录</span>
-                  </button>
-                  <div class="side-note">
-                    <strong>审查范围</strong><br>
-                    格式规范、行文规则、内容合规同步核查，结果用于定稿前问题整改。
+                  <div class="sidebar-footer">
+                    <div class="user-avatar">政</div>
+                    <div class="user-info">
+                      <div class="user-name">张政</div>
+                      <div class="user-dept">办公室 · 秘书科</div>
+                    </div>
                   </div>
                 </aside>
 
                 <main class="main-view">
                   <section v-if="view==='review'" class="review-view">
-                    <div class="page-head">
-                      <div class="page-head-row">
+                    <div class="page-head" :class="{compact: phase==='empty'}">
+                      <div class="page-head-row" v-if="phase!=='empty'">
                         <div>
                           <h1 class="page-title">文稿合规审查工作台</h1>
                           <div class="page-desc">上传或粘贴政务文稿，智能识别文种并生成问题清单、整改指引和审查报告</div>
                         </div>
-                        <n-button type="primary" size="large" @click="openNewTask">
-                          <template #icon>
-                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                          </template>
-                          新建审查
-                        </n-button>
                       </div>
                       <div class="workflow">
-                        <div v-for="step in [{n:1,t:'上传文稿'},{n:2,t:'合规审查'},{n:3,t:'问题整改'},{n:4,t:'生成结果'}]"
+                        <div v-for="step in [{n:1,t:'添加文稿'},{n:2,t:'开始核查'},{n:3,t:'处理问题'},{n:4,t:'完成'}]"
                              :key="step.n" class="workflow-step"
                              :class="{current:currentStep===step.n,done:currentStep>step.n}">
                           <span class="step-dot">
@@ -1188,19 +2198,55 @@
                     </div>
 
                     <div v-if="phase==='empty'" class="empty-stage">
-                      <div class="empty-card agent-card">
-                        <div class="agent-avatar">
-                          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M9 10h.01M15 10h.01M8 15h8M12 2v3"/></svg>
-                        </div>
-                        <h2>政务文稿智能预审</h2>
-                        <p>面向通知、报告、请示、会议纪要、讲话稿和工作总结等机关公文材料，从形式规范与内容合规两个维度同步核查。</p>
-                        <n-button type="primary" size="large" @click="openNewTask">
-                          开始审查文稿
-                        </n-button>
-                        <div class="capability-grid">
-                          <div class="capability"><b>格式规范校验</b><span>核查标题、主送、正文层级、附件说明、落款和日期等核心要素。</span></div>
-                          <div class="capability"><b>行文规则审查</b><span>识别文种混用、行文对象不当、越级行文和并行文不规范。</span></div>
-                          <div class="capability"><b>内容合规比对</b><span>结合政策法规、制度规则和保密规则，提示内容偏差并给出依据。</span></div>
+                      <div class="welcome-emblem" aria-hidden="true">
+                        <svg viewBox="0 0 120 140">
+                          <path d="M31 12h42l18 18v82a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V20a8 8 0 0 1 8-8z"/>
+                          <path d="M73 12v18h18"/>
+                          <path d="M39 53h36M39 67h29M39 81h22"/>
+                          <circle cx="77" cy="94" r="17"/>
+                          <path d="m69 94 5 5 11-12"/>
+                        </svg>
+                        <span class="emblem-scan"></span>
+                        <span class="emblem-pulse"></span>
+                      </div>
+                      <h1 class="welcome-title">政务文稿智能预审</h1>
+                      <p class="welcome-desc">从文种识别到合规核验，为政务文稿提供格式规范、行文规则、内容合规三维度的审查依据。</p>
+                      <ul class="welcome-dimensions">
+                        <li>
+                          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                          <strong>格式规范校验</strong>
+                          <span>标题、主送、序号、落款</span>
+                        </li>
+                        <li>
+                          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                          <strong>行文规则审查</strong>
+                          <span>行文方向、对象规范</span>
+                        </li>
+                        <li>
+                          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                          <strong>内容合规比对</strong>
+                          <span>政策口径、涉敏涉密</span>
+                        </li>
+                      </ul>
+                      <div class="quick-start">
+                        <div class="quick-start-title">开始一次核查</div>
+                        <div class="quick-start-grid">
+                          <button class="quick-start-card" @click="openNewTask('upload')">
+                            <svg class="qs-ic" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/></svg>
+                            <b>上传 Word / PDF</b><span>支持 DOC、DOCX、PDF 文稿</span>
+                          </button>
+                          <button class="quick-start-card" @click="openNewTask('paste')">
+                            <svg class="qs-ic" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4a2 2 0 0 1 6 0"/><path d="M9 11h6M9 15h4"/></svg>
+                            <b>粘贴文字</b><span>直接粘贴文稿正文核查</span>
+                          </button>
+                          <button class="quick-start-card" @click="quickStartFromChat">
+                            <svg class="qs-ic" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>
+                            <b>从当前对话带入</b><span>核查智能体生成的文稿</span>
+                          </button>
+                          <button class="quick-start-card" @click="quickStartFromKB">
+                            <svg class="qs-ic" viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 0 2 2h13"/><path d="M9 7h6"/></svg>
+                            <b>从知识库选择</b><span>选择知识库中的文件核查</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1223,8 +2269,11 @@
 
                     <div v-else class="result-stage">
                       <div v-if="resultsStale" class="stale-banner">
-                        <span>⚠ {{staleReason}}。请重新审查后再生成审查报告。</span>
-                        <n-button size="small" type="warning" @click="recheckCurrentTask">重新审查</n-button>
+                        <span>⚠ 已修改 {{pendingChangeCount}} 处，当前结果尚未更新。<b style="margin-left:6px;color:#16704a;font-weight:600">绿色高亮为本轮已采纳文字</b>，处理完成后点击右侧“重新审查”。</span>
+                      </div>
+                      <div v-if="task.ocrReviewNeeded" class="ocr-notice" style="margin:0 20px 12px">
+                        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.6 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/></svg>
+                        <span>PDF已完成OCR解析，其中 {{task.ocrLowConfidenceCount}} 处内容置信度较低，已标记为“待人工核对”，请结合原文件确认后再采纳建议。</span>
                       </div>
                       <div class="workspace">
                         <section class="document-pane">
@@ -1232,29 +2281,26 @@
                           <div class="doc-meta">
                             <svg class="icon" style="color:#0e4c92" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
                             <span class="doc-name">{{task.name}}</span>
-                            <n-select :value="task.type" @update:value="changeTaskDocType" :options="docTypes.map(t=>({label:t,value:t}))" size="small" style="width:108px" />
-                          </div>
-                          <div style="display:flex;align-items:center;gap:9px;color:#7a8795;font-size:11px;">
-                            <span v-if="!editingDocument">点击问题卡片可定位原文</span>
-                            <span v-else>修改正文后保存，当前审查结果将失效</span>
-                            <n-button v-if="!editingDocument" size="small" @click="startEditing">编辑正文</n-button>
-                            <template v-else>
-                              <n-button size="small" @click="cancelDocumentEdit">取消</n-button>
-                              <n-button size="small" type="primary" @click="saveDocumentEdit">保存修改</n-button>
-                            </template>
-                            <n-button size="small" @click="openNewTask">更换文稿</n-button>
+                            <n-select v-if="docTypeGroup(task.type)==='正式公文'" :value="task.type" @update:value="changeTaskDocType" :options="docTypeOptions" size="small" style="width:120px" />
+                            <n-tag v-else size="small" :bordered="false">{{task.type}} · 其他政务材料</n-tag>
                           </div>
                         </div>
                         <div class="document-scroll">
-                          <article v-if="!editingDocument" class="paper" v-html="renderedDocument" @click="event => { const el=event.target.closest('[data-issue-id]'); if(el){ activeIssueId=el.dataset.issueId; } }"></article>
-                          <div v-else class="paper-editor">
-                            <div class="editor-tip">正文编辑区：可直接修改文字。保存后当前问题清单会标记为失效，需点击“重新审查”更新结果。</div>
-                            <n-input v-model:value="documentDraft" type="textarea" :autosize="false" placeholder="请输入或修改正文内容…" />
-                          </div>
+                          <article class="paper" contenteditable="true"
+                            v-html="renderedDocument"
+                            @input="onDocumentInput"
+                            @blur="onDocumentBlur($event)"
+                            @click="event => { const el=event.target.closest('[data-issue-id]'); if(el){ activeIssueId=el.dataset.issueId; } }">
+                          </article>
                         </div>
                         </section>
 
                         <aside class="issue-pane">
+                        <div class="panel-tabs">
+                          <button class="panel-tab" :class="{active:activeRightTab==='issues'}" @click="activeRightTab='issues'">问题清单<span class="panel-tab-count">{{task.issues.length}}</span></button>
+                          <button class="panel-tab" :class="{active:activeRightTab==='versions'}" @click="activeRightTab='versions'">版本记录<span class="panel-tab-count">{{reviewVersions.length}}</span></button>
+                        </div>
+                        <template v-if="activeRightTab==='issues'">
                         <div class="issue-summary">
                           <div class="summary-top">
                             <div>
@@ -1283,12 +2329,20 @@
                         <div class="issue-actions">
                           <n-button size="small" @click="acceptAll" :disabled="pendingCount===0">全部采纳</n-button>
                           <n-button size="small" @click="ignoreAll" :disabled="pendingCount===0">全部忽略</n-button>
-                          <n-button size="small" type="primary" style="margin-left:auto" :disabled="resultsStale" @click="generateResult">生成审查结果</n-button>
+                          <span class="action-spacer"></span>
+                          <n-button size="small" :type="pendingChangeCount>0?'warning':'default'" :disabled="pendingChangeCount===0" @click="recheckCurrentTask">{{pendingChangeCount>0?'重新审查 · '+pendingChangeCount+'处修改':'重新审查'}}</n-button>
+                          <n-button size="small" type="primary" :disabled="resultsStale" @click="generateResult">生成闭环审查报告</n-button>
+                        </div>
+
+                        <div v-if="recheckSummary && !resultsStale" class="recheck-inline-summary">
+                          <span><b>{{recheckSummary.fixed}}</b>已解决</span>
+                          <span><b>{{recheckSummary.remaining}}</b>仍需处理</span>
+                          <span><b>{{recheckSummary.newIssues}}</b>新增问题</span>
                         </div>
 
                         <div class="issue-scroll">
                           <article v-for="issue in visibleIssues" :key="issue.id"
-                                   class="issue-card" :class="{active:activeIssueId===issue.id,resolved:issue.status!=='pending'}"
+                                   class="issue-card" :class="{active:activeIssueId===issue.id,resolved:issue.status!=='pending',accepted:issue.status==='accepted'}"
                                    @click="focusIssue(issue)">
                             <div class="issue-card-head">
                               <i class="risk-dot" :class="issue.risk"></i>
@@ -1305,12 +2359,25 @@
                               <span class="suggestion">{{issue.suggestion}}</span>
                             </div>
                             <div class="basis-box">
-                              <b style="color:#445b70;font-weight:600">审查依据：</b>{{issue.basis}}
+                              <template v-if="issue.isPolicyBasis">
+                                <b style="color:#445b70;font-weight:600">政策依据</b>
+                                <div class="policy-basis-grid">
+                                  <span class="policy-basis-item"><b>文件名称：</b>{{issue.basisFile || '—'}}</span>
+                                  <span class="policy-basis-item"><b>发布机关：</b>{{issue.basisAgency || '—'}}</span>
+                                  <span class="policy-basis-item"><b>具体条款：</b>{{issue.basisClause || '—'}}</span>
+                                  <span class="policy-basis-item"><b>最后同步时间：</b>{{issue.basisSyncedAt || '—'}}</span>
+                                </div>
+                              </template>
+                              <template v-else>
+                                <b style="color:#445b70;font-weight:600">审查依据：</b>{{issue.basis}}
+                                <span class="basis-source">来源：{{issue.basisSource || '平台合规规则库'}} · {{issue.basisUpdatedAt || ''}} · 位置：{{issue.position}}</span>
+                              </template>
                             </div>
                             <div class="card-foot">
-                              <span v-if="issue.status==='accepted'" class="status-text accepted">✓ 已采纳修改</span>
+                              <span v-if="issue.status==='accepted'" class="status-text accepted">✓ 已采纳并修改正文</span>
                               <span v-else-if="issue.status==='ignored'" class="status-text ignored">— 已忽略</span>
                               <span v-else class="status-text" style="color:#98a2b3">待处理</span>
+                              <span v-if="issue.status==='accepted' && issue.appliedAt" class="issue-applied-meta">{{issue.appliedBy}} · {{issue.appliedAt}}</span>
                               <div @click.stop>
                                 <template v-if="issue.status==='pending'">
                                   <n-button text size="tiny" style="margin-right:12px" @click="ignoreIssue(issue)">忽略</n-button>
@@ -1322,6 +2389,40 @@
                           </article>
                           <div v-if="visibleIssues.length===0" class="empty-issues">当前筛选条件下暂无问题</div>
                         </div>
+                        </template>
+
+                        <div v-else class="version-pane">
+                          <div class="version-intro">每次完成审查或重新审查生成一个版本。修改过程先作为工作稿保存，不会因每次输入产生大量零散版本。</div>
+                          <div v-if="reviewVersions.length">
+                            <article v-for="version in reviewVersions" :key="version.key" class="version-card" :class="{active:selectedVersionKey===version.key}" @click="selectedVersionKey=version.key">
+                              <div class="version-head">
+                                <span class="version-name">{{version.version}} · {{version.action}}</span>
+                                <span class="version-time">{{version.time}}</span>
+                              </div>
+                              <div class="version-meta">{{version.operator}} · {{version.docType}}<span v-if="version.changeCount"> · 修改 {{version.changeCount}} 处</span></div>
+                              <div class="version-kpis">
+                                <span>{{version.total}}项问题</span>
+                                <span v-if="version.fixed" class="fixed">解决{{version.fixed}}项</span>
+                                <span v-if="version.remaining">遗留{{version.remaining}}项</span>
+                                <span v-if="version.newIssues" class="new">新增{{version.newIssues}}项</span>
+                              </div>
+                              <div style="display:flex;justify-content:flex-end;margin-top:7px">
+                                <n-button text type="primary" size="tiny" @click.stop="viewVersionReport(version)">查看本版本报告</n-button>
+                              </div>
+                              <div v-if="selectedVersionKey===version.key" class="version-changes">
+                                <div v-if="version.changes && version.changes.length">
+                                  <div v-for="change in version.changes" :key="change.key" class="version-change">
+                                    <div class="version-change-title">{{change.field}} · {{change.position}} · {{change.source}}</div>
+                                    <div class="version-change-before">修改前：{{change.before && change.before.length>120 ? change.before.slice(0,120)+'…' : change.before}}</div>
+                                    <div class="version-change-after">修改后：{{change.after && change.after.length>120 ? change.after.slice(0,120)+'…' : change.after}}</div>
+                                  </div>
+                                </div>
+                                <div v-else style="color:#98a2b3;font-size:10.5px">首次审查基线，无上一版本修改内容。</div>
+                              </div>
+                            </article>
+                          </div>
+                          <div v-else class="version-empty">完成首次审查后，这里会展示版本记录。</div>
+                        </div>
                         </aside>
                       </div>
                     </div>
@@ -1329,11 +2430,16 @@
 
                   <section v-else class="record-page">
                     <div class="record-head">
-                      <div>
-                        <h1 class="page-title">审查记录</h1>
-                        <div class="page-desc">查看已生成的审查报告、问题清单、审查版本和操作记录</div>
+                      <div style="display:flex;align-items:center;gap:12px">
+                        <n-button text style="font-size:13px;color:var(--ai-blue);padding:0" @click="view='review'">
+                          <svg class="icon" viewBox="0 0 24 24" style="margin-right:2px"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                          返回
+                        </n-button>
+                        <div>
+                          <h1 class="page-title">审查记录</h1>
+                          <div class="page-desc">查看已生成的审查报告、问题清单、审查版本和操作记录</div>
+                        </div>
                       </div>
-                      <n-button type="primary" @click="openNewTask">新建审查</n-button>
                     </div>
                     <div class="record-card">
                       <div class="record-filter">
@@ -1344,14 +2450,28 @@
                           </template>
                         </n-input>
                       </div>
-                      <n-data-table :columns="recordColumns" :data="filteredRecords" :pagination="{pageSize:8}" :bordered="false" />
+                      <div v-if="filteredReviewGroups.length" class="record-group-list">
+                        <article v-for="draft in filteredReviewGroups" :key="draft.id" class="record-group">
+                          <div class="record-group-main">
+                            <div class="record-group-title">{{draft.name}}</div>
+                            <div class="record-group-meta">
+                              <span>{{draft.type}}</span>
+                              <span>{{(draft.reviewVersions && draft.reviewVersions.length) || 1}}个审查版本</span>
+                              <span>最近更新：{{draft.updatedAt || draft.createdAt}}</span>
+                              <span>{{draft.status==='done'?'已完成':draft.status==='progress'?'审查中':'草稿'}}</span>
+                            </div>
+                          </div>
+                          <n-button size="small" type="primary" ghost @click="openDraftVersions(draft)">查看版本与修改</n-button>
+                        </article>
+                      </div>
+                      <div v-else class="version-empty">没有符合条件的审查记录</div>
                     </div>
                   </section>
                 </main>
               </div>
             </div>
 
-            <n-modal v-model:show="showNewTask" preset="card" title="新建合规审查" style="width:680px" :mask-closable="false">
+            <n-modal v-model:show="showNewTask" preset="card" title="新建合规审查" style="width:760px" :mask-closable="false">
               <n-tabs v-model:value="sourceMode" type="segment" animated>
                 <n-tab-pane name="upload" tab="上传文稿">
                   <h3 class="modal-section-title">选择待审文件</h3>
@@ -1367,19 +2487,34 @@
                 </n-tab-pane>
                 <n-tab-pane name="paste" tab="粘贴文本">
                   <h3 class="modal-section-title">粘贴待审正文</h3>
-                  <n-input v-model:value="pasteText" type="textarea" :autosize="{minRows:8,maxRows:12}" placeholder="请粘贴通知、报告、请示、会议纪要、讲话稿或工作总结正文…" />
+                  <n-input v-model:value="pasteText" type="textarea" :autosize="{minRows:8,maxRows:12}" placeholder="请粘贴正式公文或其他政务材料正文…" />
                 </n-tab-pane>
               </n-tabs>
 
-              <div v-if="hasInput" class="detect-box">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                  <span>智能识别文种：<b style="color:#0e4c92">{{detectedDocType}}</b>　置信度 {{detectConfidence}}%</span>
-                  <span style="color:#7a8795;font-size:11px">识别不准确时可手动修改</span>
+              <div v-if="hasInput" class="recognition-strip">
+                <div class="recognition-main">
+                  <div class="recognition-summary">
+                    <span style="color:#7c8b9b">已自动识别</span>
+                    <b>{{selectedDocType}}</b>
+                    <span class="recognition-chip">{{docTypeGroup(selectedDocType)}}</span>
+                    <span class="recognition-chip">{{reviewParams.issuer}}</span>
+                    <span class="recognition-chip">{{reviewParams.usage}}</span>
+                  </div>
+                  <n-button text type="primary" size="small" @click="showRecognitionEdit=!showRecognitionEdit">{{showRecognitionEdit?'收起':'识别有误，修改'}}</n-button>
                 </div>
-                <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
-                  <span style="white-space:nowrap">确认文种</span>
-                  <n-select v-model:value="selectedDocType" :options="docTypes.map(t=>({label:t,value:t}))" style="width:210px" />
+                <div v-if="showRecognitionEdit" class="recognition-edit">
+                  <n-grid :cols="3" :x-gap="12" :y-gap="10">
+                    <n-gi><label>正式公文文种</label><n-select v-model:value="selectedDocType" :options="docTypeOptions" size="small" /></n-gi>
+                    <n-gi><label>发文机关</label><n-input v-model:value="reviewParams.issuer" size="small" /></n-gi>
+                    <n-gi><label>使用范围</label><n-select v-model:value="reviewParams.usage" size="small" :options="[{label:'内部使用',value:'内部使用'},{label:'公开发布',value:'公开发布'}]" /></n-gi>
+                  </n-grid>
+                  <div style="margin-top:8px;color:#8a97a6;font-size:10.5px">所属组织、主送机关、行文方向、核查范围和提交信息由系统自动获取，无需填写。</div>
                 </div>
+              </div>
+
+              <div v-if="hasInput && ocrReviewNeeded" class="ocr-notice">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.6 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/></svg>
+                <span>检测到PDF文稿，系统将自动执行OCR解析；低置信度内容会标记为“待人工核对”，不影响继续审查。</span>
               </div>
 
               <template #footer>
@@ -1390,39 +2525,105 @@
               </template>
             </n-modal>
 
-            <n-modal v-model:show="showReport" preset="card" title="审查结果已生成" style="width:920px;max-height:86vh" :mask-closable="false">
+            <n-modal v-model:show="showReport" preset="card" :title="selectedRecord && selectedRecord.reportMode==='version'?'版本审查报告':'闭环审查报告已生成'" style="width:1080px;max-height:88vh" :mask-closable="false">
               <n-scrollbar style="max-height:66vh" v-if="selectedRecord">
                 <div class="report-hero">
                   <h3>{{selectedRecord.name}}</h3>
-                  <p>合规审查报告 · {{selectedRecord.version}} · {{selectedRecord.time}} · 操作人：{{selectedRecord.operator}}</p>
+                  <p>{{selectedRecord.reportTitle || '闭环审查报告'}} · {{selectedRecord.version}} · {{selectedRecord.time}} · 操作人：{{selectedRecord.operator}}</p>
                 </div>
                 <div class="report-kpis">
-                  <div class="report-kpi"><b>{{selectedRecord.total}}</b><span>问题总数</span></div>
-                  <div class="report-kpi"><b style="color:#d9534f">{{highCount}}</b><span>高风险</span></div>
-                  <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.accepted}}</b><span>已采纳</span></div>
-                  <div class="report-kpi"><b style="color:#667085">{{selectedRecord.ignored}}</b><span>已忽略</span></div>
+                  <div class="report-kpi"><b>{{selectedRecord.initialTotal || 0}}</b><span>{{selectedRecord.reportMode==='version'?'本版本问题':'初审发现'}}</span></div>
+                  <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.fixed || 0}}</b><span>{{selectedRecord.reportMode==='version'?'本轮已解决':'已整改'}}</span></div>
+                  <div class="report-kpi"><b style="color:#d9534f">{{selectedRecord.remaining || 0}}</b><span>复审遗留</span></div>
+                  <div class="report-kpi"><b style="color:#f0ad4e">{{selectedRecord.newIssues || 0}}</b><span>复审新增</span></div>
                 </div>
+                <div style="padding:11px 13px;border:1px solid #dce8e1;border-radius:9px;background:#f5fbf7;color:#486657;font-size:12px">{{selectedRecord.reportMode==='version'?'本版本结论':'最终结论'}}：<b style="color:#16704a;font-weight:600">{{selectedRecord.conclusion || '待确认'}}</b><span style="margin-left:10px;color:#809087">{{selectedRecord.reportMode==='version'?'仅反映该版本冻结时点的审查结果':'完整保留初审问题、整改内容和复审结果'}}</span></div>
+                <div v-if="selectedRecord.ocrReviewNeeded" class="ocr-notice" style="margin-top:14px">
+                  <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.6 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/></svg>
+                  <span>本次PDF解析存在 {{selectedRecord.ocrLowConfidenceCount}} 处OCR低置信度内容，请结合原文件人工核对。</span>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-head"><h4>{{selectedRecord.reportMode==='version'?'本版本问题明细':'整改闭环明细'}}</h4><span>{{selectedRecord.reportMode==='version'?'展示该版本冻结的问题清单':'逐项展示初审问题和复审结论'}}</span></div>
                 <table class="report-table">
-                  <thead><tr><th>维度</th><th>风险</th><th>问题</th><th>整改建议</th><th>状态</th></tr></thead>
+                  <thead><tr><th>问题</th><th>原文</th><th>修改建议</th><th>修改后文字</th><th>处理方式</th><th>审查结果</th></tr></thead>
                   <tbody>
-                    <tr v-for="issue in selectedRecord.issues" :key="issue.id">
-                      <td>{{dimensionLabel(issue.dimension)}}</td>
-                      <td>{{riskLabel(issue.risk)}}</td>
-                      <td>{{issue.title}}</td>
-                      <td>{{issue.suggestion}}</td>
-                      <td>{{statusLabel(issue.status)}}</td>
+                    <tr v-for="item in (selectedRecord.closureItems || [])" :key="item.key">
+                      <td>{{item.issue.title}}<div style="margin-top:3px;color:#98a2b3;font-size:10px">{{item.issue.position}}</div></td>
+                      <td>{{item.original}}</td>
+                      <td>{{item.suggestion}}</td>
+                      <td style="color:#16704a">{{item.modified}}</td>
+                      <td>{{item.handling}}</td>
+                      <td><span :style="{color:item.recheckResult==='复审通过'?'#16704a':item.recheckResult==='复审新增'?'#d9534f':'#8a5b18'}">{{item.recheckResult}}</span></td>
                     </tr>
+                    <tr v-if="(selectedRecord.closureItems || []).length===0"><td colspan="6" :style="{padding:'22px',textAlign:'center',color:(selectedRecord.initialTotal || 0)>0?'#7b8794':'#16704a'}">{{(selectedRecord.initialTotal || 0)>0?'该历史记录未保存逐项问题明细，请以原始归档报告为准':'✓ 本版本未检出问题，审查通过'}}</td></tr>
                   </tbody>
                 </table>
-                <div style="margin-top:15px;color:#7b8794;font-size:11px">说明：本报告为智能预审结果，供文稿定稿前问题整改参考。报告、问题清单、审查版本及操作记录已保存。</div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-head"><h4>审查依据</h4><span>仅展示可获取的必要来源信息</span></div>
+                  <div class="report-basis-list">
+                    <div v-for="(item,index) in (selectedRecord.closureItems || [])" :key="'basis-'+item.key" class="report-basis-row">
+                      <div style="margin-bottom:5px;color:#31506d;font-weight:600">{{index+1}}. {{item.issue.title}}</div>
+                      <div class="report-basis-meta">
+                        <span><b>文件名称：</b>{{item.issue.basisFile || item.issue.basisSource || '平台合规规则库'}}</span>
+                        <span><b>发布机关：</b>{{item.issue.basisAgency || '—'}}</span>
+                        <span><b>具体条款：</b>{{item.issue.basisClause || item.issue.basis || '—'}}</span>
+                        <span><b>最后同步时间：</b>{{item.issue.basisSyncedAt || item.issue.basisUpdatedAt || '—'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-head"><h4>遗留修订建议</h4><span>仅展示仍需处理的问题</span></div>
+                  <div class="report-suggestion-list">
+                    <div v-for="(item,index) in (selectedRecord.closureItems || []).filter(row=>row.recheckResult!=='复审通过')" :key="'suggestion-'+item.key" class="report-suggestion-row">
+                      <strong>{{index+1}}. {{item.issue.position || '位置待确认'}}</strong>{{item.suggestion}}
+                    </div>
+                    <div v-if="(selectedRecord.closureItems || []).length>0 && (selectedRecord.closureItems || []).every(row=>row.recheckResult==='复审通过')" class="report-suggestion-row" style="color:#16704a">✓ 初审问题已全部整改并通过复审，无遗留修订建议。</div>
+                    <div v-else-if="(selectedRecord.closureItems || []).length===0 && (selectedRecord.initialTotal || 0)>0" class="report-suggestion-row" style="color:#7b8794">该历史记录未保存逐项修订建议。</div>
+                    <div v-else-if="(selectedRecord.closureItems || []).length===0" class="report-suggestion-row" style="color:#16704a">✓ 本版本未检出问题，无修订建议。</div>
+                  </div>
+                </div>
+                <div style="margin-top:15px;color:#7b8794;font-size:11px">说明：{{selectedRecord.reportMode==='version'?'本报告仅反映该版本冻结时点的审查结果，可与其他版本报告分别查看。':'本报告完整记录初审问题、整改内容和复审结果，供文稿定稿及审查留痕使用。'}}</div>
               </n-scrollbar>
               <template #footer>
                 <div style="display:flex;justify-content:space-between;align-items:center">
                   <n-button text type="primary" @click="showReport=false;view='records'">查看审查记录</n-button>
                   <div style="display:flex;gap:10px">
-                    <n-button @click="downloadIssueList(selectedRecord)">下载问题清单</n-button>
-                    <n-button type="primary" @click="downloadReport(selectedRecord)">下载审查报告</n-button>
+                    <n-button @click="printReport(selectedRecord)">打印</n-button>
+                    <n-button @click="downloadDocument(selectedRecord)">导出文件</n-button>
+                    <n-button type="primary" @click="downloadAll(selectedRecord);showReport=false">{{selectedRecord.reportMode==='version'?'下载本版本报告与明细':'下载闭环报告与整改明细'}}</n-button>
                   </div>
+                </div>
+              </template>
+            </n-modal>
+
+            <n-modal v-model:show="showRecheckResult" preset="card" title="复审比对结果" style="width:680px">
+              <template v-if="recheckSummary">
+                <div class="report-hero" style="background:linear-gradient(135deg,#0e4c92,#13a8a8)">
+                  <h3>修改前后内容自动比对</h3>
+                  <p>系统已自动比对待审文本修改前后的内容差异，验证整改情况</p>
+                </div>
+                <div class="report-kpis" style="margin-top:16px">
+                  <div class="report-kpi"><b style="color:#667085">{{recheckSummary.prevTotal}}</b><span>修改前问题数</span></div>
+                  <div class="report-kpi"><b style="color:#43a047">{{recheckSummary.fixed}}</b><span>已整改</span></div>
+                  <div class="report-kpi"><b style="color:#f0ad4e">{{recheckSummary.remaining}}</b><span>遗留问题</span></div>
+                  <div class="report-kpi"><b style="color:#d9534f">{{recheckSummary.newIssues}}</b><span>新增问题</span></div>
+                  <div class="report-kpi" v-if="recheckSummary.stillIgnored > 0"><b style="color:#8895a7">{{recheckSummary.stillIgnored}}</b><span>已忽略</span></div>
+                </div>
+                <div style="margin-top:16px;padding:14px 16px;border-radius:10px;background:#f6f9fc;border:1px solid #e8edf3;font-size:13px;color:#445b70;line-height:1.8">
+                  <p style="margin:0 0 6px"><b>整改验证结论：</b></p>
+                  <p style="margin:0" v-if="recheckSummary.fixed > 0 && recheckSummary.remaining === 0 && recheckSummary.newIssues === 0">
+                    <span style="color:#43a047">✓ 全部问题已整改完毕{{recheckSummary.stillIgnored > 0 ? '，' + recheckSummary.stillIgnored + ' 项已忽略问题不再提示' : ''}}，审查通过。</span>
+                  </p>
+                  <p style="margin:0" v-else>
+                    <span style="color:#f0ad4e">仍有 {{recheckSummary.remaining}} 项遗留问题需处理{{recheckSummary.newIssues > 0 ? '，新增 ' + recheckSummary.newIssues + ' 项问题' : ''}}{{recheckSummary.stillIgnored > 0 ? '，' + recheckSummary.stillIgnored + ' 项已忽略问题不再处理' : ''}}，请继续整改后再次复审。</span>
+                  </p>
+                </div>
+              </template>
+              <template #footer>
+                <div style="display:flex;justify-content:flex-end">
+                  <n-button type="primary" @click="showRecheckResult=false">确认</n-button>
                 </div>
               </template>
             </n-modal>
@@ -1436,11 +2637,13 @@
                 <n-grid :cols="2" :x-gap="18" style="margin-top:16px">
                   <n-gi>
                     <h3 class="modal-section-title">结果概览</h3>
-                    <div class="report-kpis" style="grid-template-columns:repeat(3,1fr)">
-                      <div class="report-kpi"><b>{{selectedRecord.total}}</b><span>问题总数</span></div>
-                      <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.accepted}}</b><span>已采纳</span></div>
-                      <div class="report-kpi"><b style="color:#667085">{{selectedRecord.ignored}}</b><span>已忽略</span></div>
+                    <div class="report-kpis" style="grid-template-columns:repeat(4,1fr)">
+                      <div class="report-kpi"><b>{{selectedRecord.initialTotal || 0}}</b><span>初审发现</span></div>
+                      <div class="report-kpi"><b style="color:#43a047">{{selectedRecord.fixed || 0}}</b><span>已整改</span></div>
+                      <div class="report-kpi"><b style="color:#d9534f">{{selectedRecord.remaining || 0}}</b><span>复审遗留</span></div>
+                      <div class="report-kpi"><b style="color:#f0ad4e">{{selectedRecord.newIssues || 0}}</b><span>复审新增</span></div>
                     </div>
+                    <div style="margin-top:10px;padding:9px 11px;border-radius:8px;background:#f5fbf7;color:#486657;font-size:12px">结论：<b style="color:#16704a">{{selectedRecord.conclusion}}</b></div>
                   </n-gi>
                   <n-gi>
                     <h3 class="modal-section-title">操作记录</h3>
@@ -1449,9 +2652,16 @@
                     </ul>
                   </n-gi>
                 </n-grid>
-                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
-                  <n-button @click="downloadIssueList(selectedRecord)">下载问题清单</n-button>
-                  <n-button type="primary" @click="downloadReport(selectedRecord)">下载审查报告</n-button>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+                  <div>
+                    <n-tag v-if="selectedRecord.archived" type="success" size="small" round>已归档</n-tag>
+                    <n-tag v-else type="warning" size="small" round>待导出</n-tag>
+                  </div>
+                  <div style="display:flex;gap:10px">
+                    <n-button @click="openRecordReport(selectedRecord);showRecordDetail=false">查看报告</n-button>
+                    <n-button @click="downloadDocument(selectedRecord)">导出文件</n-button>
+                    <n-button type="primary" @click="downloadAll(selectedRecord);showRecordDetail=false">下载闭环报告与整改明细</n-button>
+                  </div>
                 </div>
               </template>
             </n-modal>
@@ -1463,6 +2673,5 @@
     app.use(naive);
     app.mount("#app");
   </script>
-<script src="../assets/proto-version.js" data-proto-version></script>
 </body>
 </html>
