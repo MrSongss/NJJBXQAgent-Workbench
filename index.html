@@ -2137,7 +2137,7 @@
   .lex-bank-list{display:grid;gap:2px;padding:4px 8px 12px;max-height:calc(100vh - 360px);overflow:auto}
   .lex-bank-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer;position:relative}.lex-bank-item:hover{background:#f3f7fa}.lex-bank-item.active{background:#eaf5fa}
   .lex-bank-badge{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:7px;font-size:12px;font-weight:700}
-  .lex-bank-name{min-width:0;flex:1;color:#33465c;font-size:12.5px;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lex-bank-name small{display:block;margin-top:2px;color:#93a1af;font-size:9.5px;font-weight:400}
+  .lex-bank-name{min-width:0;flex:1;color:#33465c;font-size:12.5px;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lex-bank-name small{display:flex;align-items:center;gap:5px;min-width:0;margin-top:3px;color:#93a1af;font-size:9.5px;font-weight:400}.lex-origin-pill{display:inline-flex;align-items:center;flex:none;padding:2px 6px;border:1px solid transparent;border-radius:999px;font-size:9px;font-weight:650;line-height:1.35;vertical-align:middle}.lex-origin-public{border-color:#c8e2ef;background:#edf8fc;color:#13749f}.lex-origin-dept{border-color:#d4e7d8;background:#f1f8f2;color:#3d8151}.lex-origin-pill.header{margin-left:8px;padding:3px 8px;font-size:9.5px;font-weight:600}
   .lex-bank-more{width:26px;height:26px;display:grid;place-items:center;flex:none;border:0;border-radius:6px;background:transparent;color:#8a98a8;cursor:pointer;opacity:0}.lex-bank-item:hover .lex-bank-more,.lex-bank-item.active .lex-bank-more{opacity:1}.lex-bank-more:hover{background:#e2ecf2;color:#176d9d}
   .lex-bank-popover{position:fixed;z-index:1200;min-width:150px;padding:5px;border:1px solid #dbe4ea;border-radius:9px;background:#fff;box-shadow:0 8px 24px rgba(35,58,78,.14)}
   .lex-bank-popover button{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border:0;border-radius:7px;background:transparent;color:#40536a;font-size:12px;text-align:left;cursor:pointer}.lex-bank-popover button:hover{background:#f2f7fa;color:#126f9f}.lex-bank-popover button.danger{color:#c44e49}.lex-bank-popover button.danger:hover{background:#fdf0f0;color:#a83a35}.lex-bank-popover .svg-icon{width:13px;height:13px}
@@ -8365,7 +8365,7 @@ let sidebarCollapsed = false;
       menus:["菜单管理","按角色配置可见菜单，菜单权限不得突破角色的数据权限范围。"],
       audit:["操作日志","记录登录登出、智能体、连接器、知识库、模板及配置管理等操作；部门管理员仅查看本部门人员记录。"],
       models:["模型配置","维护当前用户可用的内置模型和自定义模型连接配置。"],
-      lexicon:["词库管理","维护词库与词条，按委办局配置作用范围，支持批量导入与导出；查看命中记录。仅系统管理员与委办局管理员可见。"],
+      lexicon:["词库管理","系统管理员维护公共词库，委办局管理员仅维护本部门词库；公共规则作为平台底线，部门规则只能补充或加严。"],
       reviewRules:["核查规则管理","维护政务行文、政策法规、制度和保密四类核查规则；规则作用范围不得超出所属规则库授权范围。"],
       tenants:["租户管理","面向智能体工作台、招商、企业、人才等业务系统配置租户、组织范围与独立鉴权；仅超级管理员可见。"]
     };
@@ -9288,43 +9288,44 @@ let sidebarCollapsed = false;
     { value:"模型输出", label:"模型输出" },
     { value:"输入和输出", label:"输入和输出" }
   ];
-  // 词库数据：scope 字段为作用到的委办局数组；勾选哪些委办局就作用哪些，全选即作用全部委办局
+  // 词库数据：ownerType/ownerDept 仅用于权限判定，不在页面额外展示级别与所属部门。
+  // 系统管理员维护 system 词库；委办局管理员仅维护本部门 dept 词库。
   const LEXICON_BANKS = [
-    { id:"bank-negative", name:"负面情绪词", category:"负面情绪词", desc:"负面情绪类词语，输入输出时拦截或替换", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+    { id:"bank-negative", name:"负面情绪词", category:"负面情绪词", desc:"负面情绪类词语，输入输出时拦截或替换", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
       words:[
         { id:"w-n-001", word:"傻逼", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-11 09:15" },
         { id:"w-n-002", word:"废物", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-11 09:20" },
         { id:"w-n-003", word:"黑名单", scope:"模型输出", action:"自动替换", replaceSuggestion:"失信名单", enabled:false, updatedAt:"2026-08-15 09:10" }
       ]},
-    { id:"bank-sensitive-complaint", name:"投诉敏感词", category:"敏感词", desc:"涉及投诉处理场景的敏感表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+    { id:"bank-sensitive-complaint", name:"投诉敏感词", category:"敏感词", desc:"涉及投诉处理场景的敏感表述", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
       words:[
         { id:"w-c-001", word:"上访", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 10:00" },
         { id:"w-c-002", word:"闹事", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 10:05" }
       ]},
-    { id:"bank-sensitive-regulatory", name:"监管敏感词", category:"敏感词", desc:"涉及监管与保密要求的词语", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+    { id:"bank-sensitive-regulatory", name:"监管敏感词", category:"敏感词", desc:"涉及监管与保密要求的词语", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
       words:[
         { id:"w-r-001", word:"绝密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
         { id:"w-r-002", word:"机密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
         { id:"w-r-003", word:"秘密", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-10 14:30" },
         { id:"w-r-004", word:"文革", scope:"输入和输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-12 09:00" }
       ]},
-    { id:"bank-sentiment-monitor", name:"舆情监控敏感词", category:"敏感词", desc:"舆情场景下需要重点监控的表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+    { id:"bank-sentiment-monitor", name:"舆情监控敏感词", category:"敏感词", desc:"舆情场景下需要重点监控的表述", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
       words:[
         { id:"w-y-001", word:"群体性事件", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-13 11:00" },
         { id:"w-y-002", word:"腐败", scope:"模型输出", action:"自动替换", replaceSuggestion:"廉政风险", enabled:true, updatedAt:"2026-08-11 10:20" }
       ]},
-    { id:"bank-irregular-gov", name:"政务表述规范词", category:"不规范表述", desc:"政务公文中需要规范化替换的表述", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
+    { id:"bank-irregular-gov", name:"政务表述规范词", category:"不规范表述", desc:"政务公文中需要规范化替换的表述", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区经济发展局","南京江北新区建设与交通局","南京江北新区政务服务中心"], enabled:true,
       words:[
         { id:"w-g-001", word:"中国政府", scope:"输入和输出", action:"自动替换", replaceSuggestion:"中华人民共和国政府", enabled:true, updatedAt:"2026-08-12 08:45" },
         { id:"w-g-002", word:"外蒙古", scope:"输入和输出", action:"自动替换", replaceSuggestion:"蒙古国", enabled:true, updatedAt:"2026-08-12 09:30" },
         { id:"w-g-003", word:"台湾政府", scope:"输入和输出", action:"自动替换", replaceSuggestion:"中国台湾地区有关当局", enabled:true, updatedAt:"2026-08-13 10:15" },
         { id:"w-g-004", word:"钓鱼岛", scope:"模型输出", action:"禁止提交", replaceSuggestion:"", enabled:true, updatedAt:"2026-08-13 10:00" }
       ]},
-    { id:"bank-dept-petition", name:"信访业务词库", category:"敏感词", desc:"信访业务场景专用词语", scope:["南京江北新区数据局"], enabled:true,
+    { id:"bank-dept-petition", name:"信访业务词库", category:"敏感词", desc:"信访业务场景专用词语", ownerType:"dept", ownerDept:"南京江北新区数据局", scope:["南京江北新区数据局"], enabled:true,
       words:[
         { id:"w-x-001", word:"信访群体", scope:"模型输出", action:"自动替换", replaceSuggestion:"信访群众", enabled:true, updatedAt:"2026-08-14 11:20" }
       ]},
-    { id:"bank-dept-urban", name:"城建表述词库", category:"不规范表述", desc:"城建领域不规范表述规范", scope:["南京江北新区数据局","南京江北新区建设与交通局"], enabled:true,
+    { id:"bank-dept-urban", name:"城建表述词库", category:"不规范表述", desc:"城建领域不规范表述规范", ownerType:"system", ownerDept:"", scope:["南京江北新区数据局","南京江北新区建设与交通局"], enabled:true,
       words:[
         { id:"w-cj-001", word:"违章建筑", scope:"模型输出", action:"自动替换", replaceSuggestion:"违法建设", enabled:true, updatedAt:"2026-08-14 14:30" },
         { id:"w-cj-002", word:"拆迁户", scope:"模型输出", action:"自动替换", replaceSuggestion:"被征收人", enabled:true, updatedAt:"2026-08-14 15:00" }
@@ -9343,6 +9344,25 @@ let sidebarCollapsed = false;
   function lexiconActionMeta(value) { return LEXICON_ACTIONS.find(item => item.value === value) || LEXICON_ACTIONS[0]; }
   function lexiconBankById(id) { return LEXICON_BANKS.find(item => item.id === id); }
   function lexiconAllDeptNames() { return CFG_DIRECTORY_DATA.orgs.map(org => org.name); }
+  function lexiconBankOwnerType(bank) {
+    if (bank?.ownerType) return bank.ownerType;
+    const scope = bank?.scope || [], all = lexiconAllDeptNames();
+    return scope.length === 1 && !(all.length && all.every(name => scope.includes(name))) ? "dept" : "system";
+  }
+  function lexiconBankOwnerDept(bank) {
+    return bank?.ownerDept || (lexiconBankOwnerType(bank) === "dept" ? (bank?.scope || [])[0] || "" : "");
+  }
+  function lexiconIsPublicBank(bank) { return lexiconBankOwnerType(bank) === "system"; }
+  function lexiconOriginMeta(bank) {
+    if (lexiconIsPublicBank(bank)) return { short:"公共", label:"公共词库", cls:"lex-origin-public", title:"由系统管理员统一维护" };
+    const ownerDept = lexiconBankOwnerDept(bank);
+    const isOwnDept = configRole === "dept" && ownerDept === cfgRoleMeta().dept;
+    return { short:isOwnDept ? "本部门" : "部门", label:isOwnDept ? "本部门词库" : "部门词库", cls:"lex-origin-dept", title:ownerDept ? `由${ownerDept}维护` : "由所属委办局维护" };
+  }
+  function lexiconOriginPillHTML(bank,isHeader) {
+    const origin = lexiconOriginMeta(bank);
+    return `<span class="lex-origin-pill ${origin.cls}${isHeader ? " header" : ""}" title="${esc(origin.title)}">${esc(isHeader ? origin.label : origin.short)}</span>`;
+  }
   function lexiconScopeText(bank) {
     const scope = bank.scope || [], all = lexiconAllDeptNames();
     if (all.length && all.every(name => scope.includes(name))) return "全部委办局";
@@ -9350,17 +9370,47 @@ let sidebarCollapsed = false;
   }
   function lexiconVisibleBanks() {
     let list = LEXICON_BANKS.slice();
-    if (configRole === "dept") list = list.filter(item => (item.scope || []).includes(cfgRoleMeta().dept));
+    if (configRole === "dept") {
+      const dept = cfgRoleMeta().dept;
+      list = list.filter(item => (item.scope || []).includes(dept) && (lexiconIsPublicBank(item) || lexiconBankOwnerDept(item) === dept));
+    }
     if (lexiconBankSearch) list = list.filter(item => item.name.toLowerCase().includes(lexiconBankSearch.toLowerCase()));
     return list;
   }
   function lexiconCanManageBank(bank) {
-    if (configRole === "system") return true;
-    if (configRole === "dept") return (bank.scope || []).includes(cfgRoleMeta().dept);
+    if (!bank) return false;
+    if (configRole === "system") return lexiconIsPublicBank(bank);
+    if (configRole === "dept") return lexiconBankOwnerType(bank) === "dept" && lexiconBankOwnerDept(bank) === cfgRoleMeta().dept;
     return false;
+  }
+  function lexiconCanConfigureScope(bank) {
+    return configRole === "system" && lexiconCanManageBank(bank);
+  }
+  function lexiconEffectivePolicyText() {
+    return configRole === "dept"
+      ? "公共词库仅可查看；您只能维护本部门词库。规则冲突时按“禁止提交 ＞ 自动替换”执行；替换内容冲突时以公共规则为准。"
+      : "系统管理员维护公共词库并查看部门词库，部门词库由所属委办局维护。规则冲突时按“禁止提交 ＞ 自动替换”执行；替换内容冲突时以公共规则为准。";
   }
   function lexiconCloseBankMenu() { const pop = $("#lexBankPopover"); if (pop) pop.remove(); }
   function lexiconScopeMeta(value) { return LEXICON_SCOPES.find(item => item.value === value) || LEXICON_SCOPES[0]; }
+  function lexiconDetectionScopeOverlaps(left,right) {
+    return left === "输入和输出" || right === "输入和输出" || left === right;
+  }
+  function lexiconPublicRulesFor(bank,draft,ignoreWordId) {
+    const bankScope = bank?.scope || [];
+    return LEXICON_BANKS.filter(item => item.enabled && lexiconIsPublicBank(item) && (item.scope || []).some(dept => bankScope.includes(dept)))
+      .flatMap(item => (item.words || []).filter(word => word.enabled && word.id !== ignoreWordId && word.word === draft.word && lexiconDetectionScopeOverlaps(word.scope,draft.scope)).map(word => ({bank:item,word})));
+  }
+  function lexiconValidateDepartmentPolicy(bank,draft,ignoreWordId) {
+    if (lexiconBankOwnerType(bank) !== "dept") return "";
+    const publicRules = lexiconPublicRulesFor(bank,draft,ignoreWordId);
+    if (!publicRules.length) return "";
+    const publicBlock = publicRules.find(item => item.word.action === "禁止提交");
+    if (publicBlock && draft.action !== "禁止提交") return `公共词库“${publicBlock.bank.name}”已将该词配置为禁止提交，部门规则不能降低限制。`;
+    const publicReplace = publicRules.find(item => item.word.action === "自动替换");
+    if (publicReplace && draft.action === "自动替换" && publicReplace.word.replaceSuggestion !== draft.replaceSuggestion) return `公共词库“${publicReplace.bank.name}”已规定替换为“${publicReplace.word.replaceSuggestion}”，部门规则不能配置不同替换内容。`;
+    return "";
+  }
   function lexiconTabHTML() {
     const tabs = [
       { id:"banks", name:"词库管理", count: lexiconVisibleBanks().length },
@@ -9374,7 +9424,7 @@ let sidebarCollapsed = false;
       const cat = lexiconCatMeta(bank.category);
       return `<div class="lex-bank-item ${bank.id === lexiconActiveBankId ? "active" : ""}" data-act="lexiconBankSelect" data-id="${bank.id}">
         <span class="lex-bank-badge ${cat.cls}">${esc(bank.name.slice(0,1))}</span>
-        <span class="lex-bank-name">${esc(bank.name)}<small>${bank.words.length} 个词条</small></span>
+        <span class="lex-bank-name">${esc(bank.name)}<small>${lexiconOriginPillHTML(bank,false)}<span>${bank.words.length} 个词条</span></small></span>
         <button class="lex-bank-more" data-act="lexiconBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button>
       </div>`;
     }).join("");
@@ -9413,9 +9463,10 @@ let sidebarCollapsed = false;
       </tr>`;
     }).join("") : `<tr><td colspan="8"><div class="cfg-empty"><b>暂无词条</b><p>${lexiconWordSearch ? "换个关键词试试" : (canManage ? "点击右上角添加词条" : "该词库暂无词条")}</p></div></td></tr>`;
     const scopeText = lexiconScopeText(bank);
+    const ownerDeptText = !lexiconIsPublicBank(bank) && lexiconBankOwnerDept(bank) ? ` · 维护部门：${lexiconBankOwnerDept(bank)}` : "";
     return `<section class="cfg-section-card lex-word-panel">
       <div class="cfg-section-head">
-        <div class="cfg-section-head-copy"><h2><span class="lex-category-pill ${cat.cls}" style="margin-right:8px">${esc(cat.label)}</span>${esc(bank.name)}</h2><p>${esc(bank.desc || "暂无描述")} · 作用范围：${esc(scopeText)}</p></div>
+        <div class="cfg-section-head-copy"><h2><span class="lex-category-pill ${cat.cls}" style="margin-right:8px">${esc(cat.label)}</span>${esc(bank.name)}${lexiconOriginPillHTML(bank,true)}</h2><p>${esc(bank.desc || "暂无描述")} · 作用范围：${esc(scopeText)}${esc(ownerDeptText)}</p></div>
         <div class="cfg-section-head-actions"><button class="btn" data-act="lexiconExport" data-bank="${bank.id}">${svgi("i-download",13)}导出</button>${canManage ? `<button class="btn" data-act="lexiconImport" data-bank="${bank.id}">${svgi("i-upload",13)}导入</button><button class="btn primary" data-act="lexiconWordAdd" data-bank="${bank.id}">${svgi("i-plus",13)}添加词条</button>` : ""}</div>
       </div>
       <div class="cfg-section-body">
@@ -9430,11 +9481,12 @@ let sidebarCollapsed = false;
     </section>`;
   }
   function lexiconBanksPageHTML() {
-    return `<div class="lex-layout">${lexiconBankListHTML()}<div class="lex-main">${lexiconWordTableHTML()}</div></div>`;
+    return `<div class="cfg-readonly" style="margin-bottom:12px">${esc(lexiconEffectivePolicyText())}</div><div class="lex-layout">${lexiconBankListHTML()}<div class="lex-main">${lexiconWordTableHTML()}</div></div>`;
   }
   function lexiconHitListHTML() {
     const f = lexiconHitFilters;
     let rows = LEXICON_HIT_RECORDS.slice();
+    if (configRole === "dept") rows = rows.filter(item => item.department === cfgRoleMeta().dept);
     if (f.keyword) rows = rows.filter(item => item.word.toLowerCase().includes(f.keyword.toLowerCase()) || item.content.toLowerCase().includes(f.keyword.toLowerCase()));
     if (f.category !== "all") rows = rows.filter(item => item.category === f.category);
     if (f.scope !== "all") rows = rows.filter(item => item.scope === f.scope);
@@ -9477,6 +9529,8 @@ let sidebarCollapsed = false;
       return `<section class="cfg-section-card"><div class="cfg-section-body"><div class="cfg-empty"><b>无权访问</b><p>词库管理仅对系统管理员和委办局管理员开放。</p></div></div></section>`;
     }
     if (!["banks","hits"].includes(lexiconActiveTab)) lexiconActiveTab = "banks";
+    const visibleBanks = lexiconVisibleBanks();
+    if (visibleBanks.length && !visibleBanks.some(item => item.id === lexiconActiveBankId)) lexiconActiveBankId = visibleBanks[0].id;
     let body = "";
     if (lexiconActiveTab === "banks") body = lexiconBanksPageHTML();
     else if (lexiconActiveTab === "hits") body = lexiconHitListHTML();
@@ -9488,8 +9542,11 @@ let sidebarCollapsed = false;
   }
   function lexiconOpenBankEditor(id) {
     const bank = id ? lexiconBankById(id) : null;
+    if (bank && !lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权修改"); return; }
+    if (!bank && !["system","dept"].includes(configRole)) { showToast("当前身份无权新建词库"); return; }
     const title = bank ? `编辑词库 · ${bank.name}` : "新建词库";
-    const body = `<div class="cfg-form-grid">
+    const fixedScope = configRole === "dept" ? cfgRoleMeta().dept : "全部委办局";
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">作用范围：${esc(fixedScope)}。${configRole === "dept" ? "部门词库创建后仅作用于本部门，且不可扩大到其他委办局。" : "系统管理员新建的词库默认为公共词库。"}</div><div class="cfg-form-grid">
       <div class="cfg-form-field"><label>词库名称 <i>*</i></label><input id="lexBankName" maxlength="30" value="${esc(bank?.name || "")}" placeholder="请输入词库名称"></div>
       <div class="cfg-form-field"><label>词库类型 <i>*</i></label><select id="lexBankCategory">${LEXICON_CATEGORIES.map(c => `<option value="${esc(c.value)}" ${bank?.category === c.value ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></div>
       <div class="cfg-form-field full"><label>词库描述</label><textarea id="lexBankDesc" placeholder="说明该词库的使用场景与维护要求">${esc(bank?.desc || "")}</textarea></div>
@@ -9503,7 +9560,8 @@ let sidebarCollapsed = false;
       const enabled = $("#lexBankEnabled").value === "true";
       if (!bank) {
         if (LEXICON_BANKS.some(item => item.name === name)) { showToast("词库名称已存在"); return; }
-        const newBank = { id:`bank-${Date.now()}`, name, category, desc, scope: configRole === "dept" ? [cfgRoleMeta().dept] : lexiconAllDeptNames(), enabled, words:[] };
+        const isDeptBank = configRole === "dept";
+        const newBank = { id:`bank-${Date.now()}`, name, category, desc, ownerType:isDeptBank ? "dept" : "system", ownerDept:isDeptBank ? cfgRoleMeta().dept : "", scope:isDeptBank ? [cfgRoleMeta().dept] : lexiconAllDeptNames(), enabled, words:[] };
         LEXICON_BANKS.push(newBank);
         lexiconActiveBankId = newBank.id;
         cfgRecordAudit("新建词库", "词库", name, `新建词库"${name}"（作用范围：${lexiconScopeText(newBank)}）`);
@@ -9517,8 +9575,11 @@ let sidebarCollapsed = false;
   function lexiconOpenBankDetail(id) {
     const bank = lexiconBankById(id); if (!bank) return;
     const cat = lexiconCatMeta(bank.category);
+    const ownerDept = lexiconBankOwnerDept(bank);
     openModal(`词库详情 · ${bank.name}`, `<table class="cfg-data-table"><tbody>
       <tr><th style="width:120px">词库名称</th><td><b>${esc(bank.name)}</b></td></tr>
+      <tr><th>词库来源</th><td>${lexiconOriginPillHTML(bank,true)}</td></tr>
+      ${!lexiconIsPublicBank(bank) ? `<tr><th>维护部门</th><td>${esc(ownerDept || "所属委办局")}</td></tr>` : ""}
       <tr><th>词库类型</th><td><span class="lex-category-pill ${cat.cls}">${esc(cat.label)}</span></td></tr>
       <tr><th>词库描述</th><td>${esc(bank.desc || "暂无描述")}</td></tr>
       <tr><th>作用范围</th><td>${esc(lexiconScopeText(bank))}</td></tr>
@@ -9528,6 +9589,7 @@ let sidebarCollapsed = false;
   }
   function lexiconOpenBankScope(id) {
     const bank = lexiconBankById(id); if (!bank) return;
+    if (!lexiconCanConfigureScope(bank)) { showToast("部门词库的作用范围固定为所属部门"); return; }
     const selected = new Set(bank.scope || []);
     const allOrgs = lexiconAllDeptNames();
     const allChecked = allOrgs.length && allOrgs.every(name => selected.has(name));
@@ -9548,6 +9610,7 @@ let sidebarCollapsed = false;
   }
   function lexiconDeleteBank(id) {
     const bank = lexiconBankById(id); if (!bank) return;
+    if (!lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权删除"); return; }
     openModal("删除词库", `确认删除词库"${esc(bank.name)}"？词库下 ${bank.words.length} 个词条将一并删除，且不可恢复。`, () => {
       const idx = LEXICON_BANKS.findIndex(item => item.id === id);
       if (idx >= 0) LEXICON_BANKS.splice(idx, 1);
@@ -9609,6 +9672,7 @@ let sidebarCollapsed = false;
   }
   function lexiconOpenImport(bankId) {
     const bank = lexiconBankById(bankId); if (!bank) return;
+    if (!lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权导入词条"); return; }
     lexiconImportFile = null;
     const body = `
       <div class="lex-import-step"><p>1、下载模板，按模板要求进行填写</p><button class="lex-template-link" data-act="lexiconTemplateDownload">${svgi("i-download",14)}模板下载</button></div>
@@ -9629,15 +9693,16 @@ let sidebarCollapsed = false;
         const { words, errors } = lexiconParseImportText(String(reader.result || ""));
         if (!words.length) { showToast("未解析到有效词条，请检查文件内容"); return; }
         if (words.length > 10000) { showToast("单次最多导入10000条"); return; }
-        let added = 0, skipped = 0;
+        let added = 0, skipped = 0, skippedPolicy = 0;
         words.forEach(item => {
           if (bank.words.some(w => w.word === item.word)) { skipped++; return; }
+          if (lexiconValidateDepartmentPolicy(bank,item,null)) { skippedPolicy++; return; }
           bank.words.unshift({ id:`w-${Date.now()}-${added}`, ...item, updatedAt:formatDateTime(Date.now()) });
           added++;
         });
-        cfgRecordAudit("导入词条", "词库", bank.name, `批量导入词库"${bank.name}"：成功 ${added} 条，重复跳过 ${skipped} 条${errors.length ? `，异常 ${errors.length} 条` : ""}`);
+        cfgRecordAudit("导入词条", "词库", bank.name, `批量导入词库"${bank.name}"：成功 ${added} 条，重复跳过 ${skipped} 条${skippedPolicy ? `，与公共规则冲突 ${skippedPolicy} 条` : ""}${errors.length ? `，异常 ${errors.length} 条` : ""}`);
         closeModal(); renderConfig();
-        showToast(`导入完成：成功 ${added} 条${skipped ? `，跳过重复 ${skipped} 条` : ""}${errors.length ? `，${errors.length} 条格式异常` : ""}`);
+        showToast(`导入完成：成功 ${added} 条${skipped ? `，跳过重复 ${skipped} 条` : ""}${skippedPolicy ? `，${skippedPolicy} 条与公共规则冲突` : ""}${errors.length ? `，${errors.length} 条格式异常` : ""}`);
         if (errors.length) console.warn("词库导入异常行：", errors);
       };
       reader.readAsText(lexiconImportFile, "utf-8");
@@ -9664,6 +9729,7 @@ let sidebarCollapsed = false;
   }
   function lexiconOpenWordEditor(bankId, wordId, isView) {
     const bank = lexiconBankById(bankId); if (!bank) return;
+    if (!isView && !lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权修改词条"); return; }
     const item = wordId ? lexiconFindWordInBank(bankId, wordId) : null;
     const title = isView ? `查看词条 · ${item ? item.word : ""}` : (item ? `编辑词条 · ${item.word}` : `添加词条 · ${bank.name}`);
     const v = key => esc(item?.[key] || "");
@@ -9685,6 +9751,8 @@ let sidebarCollapsed = false;
       const replaceSuggestion = ($("#lexWordReplace")?.value || "").trim();
       const enabled = $("#lexWordEnabled").value === "true";
       if (action === "自动替换" && !replaceSuggestion) { showToast("处理方式为自动替换时，建议替换内容不能为空"); return; }
+      const policyError = lexiconValidateDepartmentPolicy(bank,{word,scope,action,replaceSuggestion,enabled},item?.id || null);
+      if (policyError) { showToast(policyError); return; }
       if (!item) {
         if (bank.words.some(w => w.word === word)) { showToast("该词语在当前词库中已存在"); return; }
         bank.words.unshift({ id:`w-${Date.now()}`, word, scope, action, replaceSuggestion, enabled, updatedAt:formatDateTime(Date.now()) });
@@ -12107,7 +12175,7 @@ function cfgRoleManagementHTML() {
             const cat = lexiconCatMeta(bank.category);
             return `<div class="lex-bank-item ${bank.id === lexiconActiveBankId ? "active" : ""}" data-act="lexiconBankSelect" data-id="${bank.id}">
               <span class="lex-bank-badge ${cat.cls}">${esc(bank.name.slice(0,1))}</span>
-              <span class="lex-bank-name">${esc(bank.name)}<small>${bank.words.length} 个词条</small></span>
+              <span class="lex-bank-name">${esc(bank.name)}<small>${lexiconOriginPillHTML(bank,false)}<span>${bank.words.length} 个词条</span></small></span>
               <button class="lex-bank-more" data-act="lexiconBankMenuToggle" data-id="${bank.id}" title="更多操作">${svgi("i-more",14)}</button>
             </div>`;
           }).join("") || `<div class="cfg-empty" style="padding:30px 10px"><b>暂无词库</b><p>换个关键词试试</p></div>`;
@@ -12342,7 +12410,7 @@ function cfgRoleManagementHTML() {
         pop.className = "lex-bank-popover";
         pop.id = "lexBankPopover";
         pop.dataset.bankId = bank.id;
-        pop.innerHTML = `${canManage ? `<button data-pop-act="scope">${svgi("i-globe",13)}作用范围</button>` : ""}${canManage ? `<button data-pop-act="edit">${svgi("i-edit",13)}编辑</button>` : ""}<button data-pop-act="detail">${svgi("i-clipboard",13)}详情</button>${canManage ? `<button class="danger" data-pop-act="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
+        pop.innerHTML = `${lexiconCanConfigureScope(bank) ? `<button data-pop-act="scope">${svgi("i-globe",13)}作用范围</button>` : ""}${canManage ? `<button data-pop-act="edit">${svgi("i-edit",13)}编辑</button>` : ""}<button data-pop-act="detail">${svgi("i-clipboard",13)}详情</button>${canManage ? `<button class="danger" data-pop-act="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
         document.body.appendChild(pop);
         const rect = el.getBoundingClientRect();
         pop.style.left = Math.min(rect.right - 150, window.innerWidth - 170) + "px";
@@ -12370,6 +12438,7 @@ function cfgRoleManagementHTML() {
       case "lexiconWordView": lexiconOpenWordEditor(el.dataset.bank, el.dataset.id, true); break;
       case "lexiconWordToggle": {
         const bank = lexiconBankById(el.dataset.bank); if (!bank) break;
+        if (!lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权修改词条状态"); break; }
         const item = lexiconFindWordInBank(el.dataset.bank, el.dataset.id); if (!item) break;
         item.enabled = !item.enabled;
         item.updatedAt = formatDateTime(Date.now());
@@ -12379,6 +12448,7 @@ function cfgRoleManagementHTML() {
       }
       case "lexiconWordDelete": {
         const bank = lexiconBankById(el.dataset.bank); if (!bank) break;
+        if (!lexiconCanManageBank(bank)) { showToast("您只能查看该词库，无权删除词条"); break; }
         const item = lexiconFindWordInBank(el.dataset.bank, el.dataset.id); if (!item) break;
         openModal("删除词条", `确认从词库"${esc(bank.name)}"中删除词条"${esc(item.word)}"？删除后该词语将不再参与检测。`, () => {
           bank.words = bank.words.filter(w => w.id !== item.id);
