@@ -1804,15 +1804,15 @@
   .side-foot .icon-pill:hover { background: var(--jb-hover); color: var(--jb-navy); border: 0; }
 
   /* ===== 主页视图 ===== */
-  .home-main { position: relative; background: var(--jb-bg); }
+  .home-main { position: relative; min-height: 100%; background: var(--jb-bg); }
 
   /* 低多边形切面装饰 */
   .facets { position: absolute; pointer-events: none; z-index: 0; }
   .facets-tr { top: -30px; right: -50px; width: clamp(320px, 26vw, 480px); }
   .facets-bl { bottom: -60px; left: -50px; width: clamp(300px, 22vw, 420px); }
 
-  /* φ 构图：视觉焦点落于视口 38.2% 光学中心 */
-  .home-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; padding: clamp(55px, 9vh, 140px) 21px 55px; transform: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+  /* 首页主体：标题、对话框与快捷入口作为一个整体在可视区域内居中 */
+  .home-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; min-height: 100%; margin: 0 auto; padding: clamp(32px, 5vh, 64px) 21px clamp(72px, 9vh, 96px); transform: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 
   /* 主视觉锚点：放大的江北图形标 */
   .greet-logo { height: 96px; width: auto; display: block; margin-bottom: 21px; filter: drop-shadow(0 10px 24px rgba(18,26,99,.16)); }
@@ -2034,7 +2034,7 @@
   :is(#view-home, #view-newchat) .qa-btn:nth-child(6):hover { border-color: var(--jb-ink-4); }
 
   /* 页脚 */
-  :is(#view-home, #view-newchat) .page-footer { margin-top: auto; padding-top: 55px; font-size: 12px; color: var(--jb-ink-4); letter-spacing: .06em; display: flex; align-items: center; gap: 13px; }
+  :is(#view-home, #view-newchat) .page-footer { position: absolute; left: 50%; bottom: clamp(14px, 2.5vh, 28px); transform: translateX(-50%); margin-top: 0; padding-top: 0; font-size: 12px; color: var(--jb-ink-4); letter-spacing: .06em; display: flex; align-items: center; gap: 13px; white-space: nowrap; }
   :is(#view-home, #view-newchat) .page-footer::before { content: ""; width: 34px; height: 2px; background: var(--jb-spectrum); border-radius: 1px; }
 
   /* 入场动效：指数缓动 + stagger */
@@ -2050,8 +2050,8 @@
 
   /* ===== 新对话视图：与主页同一设计语言 ===== */
   #view-newchat { overflow: hidden; }
-  #view-newchat .new-chat-page { position: relative; display: block; background: var(--jb-bg); padding: 0; }
-  #view-newchat .new-chat-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; min-height: 100%; padding: clamp(55px, 9vh, 140px) 21px 55px; transform: none; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  #view-newchat .new-chat-page { position: relative; display: block; min-height: 100%; background: var(--jb-bg); padding: 0; }
+  #view-newchat .new-chat-inner { position: relative; z-index: 1; width: min(880px, 92%); max-width: none; margin: 0 auto; min-height: 100%; padding: clamp(32px, 5vh, 64px) 21px clamp(72px, 9vh, 96px); transform: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
   #view-newchat .home-composer { width: 100%; }
   #view-newchat .new-chat-inner > * { animation: jbRise .7s var(--jb-ease) both; }
   #view-newchat .new-chat-inner > *:nth-child(1) { animation-delay: .05s; }
@@ -2061,6 +2061,10 @@
   #view-newchat .new-chat-inner > *:nth-child(5) { animation-delay: .36s; }
   #view-newchat .new-chat-inner > *:nth-child(6) { animation-delay: .40s; }
   @media (prefers-reduced-motion: reduce) { #view-newchat .new-chat-inner > * { animation: none; } }
+  @media (max-height: 620px) {
+    .home-inner, #view-newchat .new-chat-inner { justify-content: flex-start; padding-top: 32px; }
+    :is(#view-home, #view-newchat) .page-footer { position: static; transform: none; margin-top: auto; padding-top: 32px; }
+  }
   /* ===== 简洁个性化与智能体配置 ===== */
   .pref-layout,.simple-config-layout{display:grid;grid-template-columns:238px minmax(0,1fr);gap:16px;align-items:start}
   .pref-nav,.simple-config-nav{position:sticky;top:16px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:9px;box-shadow:var(--shadow-sm)}
@@ -2377,7 +2381,6 @@
           </svg>
           <div class="home-inner">
             <div class="home-hero">
-              <div class="home-eyebrow"><span></span>江北新区政务智能工作台</div>
               <h1>你好，我是<span class="hl">政务AI助手</span></h1>
               <p>面向政务办公场景，快速调用智能体、业务连接器与知识资源</p>
             </div>
@@ -11465,13 +11468,13 @@ function cfgRoleManagementHTML() {
     const agent = byId(agentId); if (!agent) return;
     if (agent.entryMode !== "chat") { window.open(workbenchPath(agent.id), "_blank"); return; }
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
-    if (list.length > 1 && !saved) { openMarketplaceTemplatePicker(agent.id,true); return; }
+    if (list.length > 1) { openMarketplaceTemplatePicker(agent.id,true); return; }
     enterAgentWithTemplate(agent,saved || list[0] || null);
   }
   function applyTemplateForSelectedAgent(agent,target) {
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
     const apply = template => { activeTemplateId = template?.id || null; fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),target || currentComposerInput()); renderAgentPill(); };
-    if (list.length <= 1 || saved) { apply(saved || list[0] || null); return; }
+    if (list.length <= 1) { apply(saved || list[0] || null); return; }
     const initial = saved || list[0];
     openModal(`选择${agent.name}模板`,`<div class="field"><label>当前智能体有多个可用模板</label><select id="composerTemplateChoice">${list.map(template => `<option value="${template.id}" ${template.id === initial.id ? "selected" : ""}>${esc(template.name)} · ${CFG_SCOPE_LABEL[template.scope] || "公共"}</option>`).join("")}</select></div><pre id="marketTemplatePreview" class="market-template-preview">${esc(cfgTemplateMarkdownText(initial))}</pre><div class="market-template-actions"><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agent.id}">管理模板</button></div>`,() => { const template = list.find(item => item.id === $("#composerTemplateChoice")?.value) || list[0]; saveDefaultTemplate(agent.id,template.id); closeModal(); apply(template); showToast(`已选择模板“${template.name}”`); },{okText:"确认选择",width:"620px"});
     const choice = $("#composerTemplateChoice"), preview = $("#marketTemplatePreview");
@@ -12000,8 +12003,8 @@ function cfgRoleManagementHTML() {
         const c = cur(); if (c && !c.msgs.length) c.agent = agent.id;
         const target = currentComposerInput();
         const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
-        if (list.length <= 1 || saved) { closeComposerActionMenu(); applyTemplateForSelectedAgent(agent,target); showToast(`已选择「${agent.name}」，已带入${(saved || list[0])?.name || "默认模板"}`); }
-        else { renderComposerResourceList("template", ""); showToast(`已选择「${agent.name}」，请选择一个模板`); }
+        closeComposerActionMenu(); applyTemplateForSelectedAgent(agent,target);
+        if (list.length <= 1) showToast(`已选择「${agent.name}」，已带入${(saved || list[0])?.name || "默认模板"}`);
         return;
       }
       const templateRow = e.target.closest("[data-composer-template]");
