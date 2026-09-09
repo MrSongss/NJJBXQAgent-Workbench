@@ -533,15 +533,11 @@
         <section class="toolbar">
           <div class="toolbar-left">
             <div class="steps" id="flowSteps">
-              <div class="s active"><span class="dot">1</span><span class="t">新建任务</span></div>
+              <div class="s active"><span class="dot">1</span><span class="t">载入文稿</span></div>
               <div class="bar"></div>
-              <div class="s"><span class="dot">2</span><span class="t">载入文稿</span></div>
+              <div class="s"><span class="dot">2</span><span class="t">智能润色</span></div>
               <div class="bar"></div>
-              <div class="s"><span class="dot">3</span><span class="t">智能润色</span></div>
-              <div class="bar"></div>
-              <div class="s"><span class="dot">4</span><span class="t">采纳优化</span></div>
-              <div class="bar"></div>
-              <div class="s"><span class="dot">5</span><span class="t">导出成果</span></div>
+              <div class="s"><span class="dot">3</span><span class="t">确认并导出</span></div>
             </div>
           </div>
           <div class="toolbar-right">
@@ -562,8 +558,16 @@
             <article class="doc-page" id="docPage">
               <div class="doc-empty" id="docEmpty">
                 <div class="eic">📄</div>
-                <div class="et">尚未创建润色任务</div>
-                <div class="es">请点击左侧边栏「＋ 新建润色任务」开始</div>
+                <div class="et">上传文稿，立即开始智能润色</div>
+                <div class="es">系统自动识别文种并保护数字、日期、机构、人名和政策名称，无需提前配置参数。</div>
+                <div class="upload-actions">
+                  <button class="primary-btn" data-action="uploadFile">上传文稿</button>
+                  <button class="btn" data-action="showPaste">粘贴正文</button>
+                </div>
+                <div class="paste-area" id="pasteArea">
+                  <textarea id="pasteText" placeholder="请粘贴通知、请示、报告、会议纪要等政务文稿正文…"></textarea>
+                  <div class="btn-row"><button class="btn" data-action="hidePaste">取消</button><button class="primary-btn" data-action="confirmPaste">确认并润色</button></div>
+                </div>
               </div>
             </article>
           </div>
@@ -1373,7 +1377,12 @@
     }
 
     /* ---------------- polish actions ---------------- */
-    function doAccept(id) {
+    function locateNextPending() {
+      const next = activeIssues().find(x => !x.resolved);
+      if (next) setTimeout(() => locateIssue(next.id), 80);
+      else setStatus("全部优化项已处理，可查看修订对比并导出成果");
+    }
+    function doAccept(id, skipNext) {
       const it = issues.find(x => x.id === id);
       if (!it || it.resolved) return;
       const mark = $(`.mark[data-issue-id="${id}"]`);
@@ -1386,6 +1395,7 @@
       it.resolved = true; it.ignored = false;
       renderIssues();
       setStatus(`建议「${it.cat}」已采纳`);
+      if (!skipNext) locateNextPending();
     }
     function acceptIssue(id) {
       const it = issues.find(x => x.id === id);
@@ -1405,7 +1415,7 @@
       }
       doAccept(id);
     }
-    function ignoreIssue(id) {
+    function ignoreIssue(id, skipNext) {
       const it = issues.find(x => x.id === id);
       if (!it || it.resolved) return;
       it.resolved = true; it.ignored = true;
@@ -1413,6 +1423,7 @@
       if (mark) { mark.classList.remove("resolved"); mark.classList.add("ignored"); }
       renderIssues();
       setStatus(`建议「${it.cat}」已忽略`);
+      if (!skipNext) locateNextPending();
     }
     function undoIssue(id) {
       const it = issues.find(x => x.id === id);
@@ -1576,11 +1587,12 @@
       }, 460);
     }
     function setFlow(n) {
+      const visualStep = n >= 5 ? 3 : (n >= 2 ? 2 : 1);
       const steps = $$("#flowSteps .s");
       steps.forEach(function (s, i) {
         s.classList.remove("active", "done");
-        if (i + 1 < n) s.classList.add("done");
-        else if (i + 1 === n) s.classList.add("active");
+        if (i + 1 < visualStep) s.classList.add("done");
+        else if (i + 1 === visualStep) s.classList.add("active");
       });
     }
 
@@ -1593,6 +1605,15 @@
     }
 
     /* ---------------- new task flow（上传/粘贴 → 自动识别文种 → 统一润色） ---------------- */
+    function taskEmptyContent() {
+      return `<div class="doc-empty" id="docEmpty">
+        <div class="eic">📄</div>
+        <div class="et">上传文稿，立即开始智能润色</div>
+        <div class="es">系统自动识别文种并保护数字、日期、机构、人名和政策名称，无需提前配置参数。</div>
+        <div class="upload-actions"><button class="primary-btn" data-action="uploadFile">上传文稿</button><button class="btn" data-action="showPaste">粘贴正文</button></div>
+        <div class="paste-area" id="pasteArea"><textarea id="pasteText" placeholder="请粘贴通知、请示、报告、会议纪要等政务文稿正文…"></textarea><div class="btn-row"><button class="btn" data-action="hidePaste">取消</button><button class="primary-btn" data-action="confirmPaste">确认并润色</button></div></div>
+      </div>`;
+    }
     function newTaskFlow() {
       // 不再弹窗：直接切换到编辑视图，展示 doc-empty 中的上传/粘贴控件
       $$(".view").forEach(v => v.classList.remove("active"));
@@ -1604,9 +1625,8 @@
       state.currentDraftIdx = -1;
       $$(".draft-item").forEach(el => el.classList.remove("active"));
       const docPage = $("#docPage");
-      if (docPage) { docPage.innerHTML = ""; docPage.classList.remove("raw"); }
-      const de = $("#docEmpty");
-      if (de) de.style.display = "";
+      if (docPage) { docPage.innerHTML = taskEmptyContent(); docPage.classList.remove("raw"); docPage.removeAttribute("contenteditable"); }
+      setFlow(1);
       updateEditorState();
       setStatus("请上传文件或粘贴正文，系统将自动识别文种并开始统一润色");
     }
@@ -2035,22 +2055,32 @@
         return;
       }
       switch (a) {
-        case "newTask": openNewTaskModal(); break;
+        case "newTask": newTaskFlow(); break;
+        case "uploadFile": triggerUpload(); break;
+        case "showPaste": showPasteUI(); break;
+        case "hidePaste": hidePasteUI(); break;
+        case "confirmPaste": confirmPaste(); break;
         case "selectDraft": selectDraft(+t.dataset.draftIdx); break;
         case "saveDraft": autoSaveDraft(); showToast("草稿已保存"); break;
         case "paste": pasteFlow(); break;
         case "polish": runPolish(); break;
         case "applyAll": {
           const pending = activeIssues().filter(it => !it.resolved);
-          pending.forEach(it => doAccept(it.id));
-          setStatus(`已采纳全部可优化项，共 ${pending.length} 项`);
-          showToast(pending.length ? "已全部采纳" : "当前没有待处理的优化项");
-          setFlow(5);
+          const apply = () => {
+            pending.forEach(it => doAccept(it.id, true));
+            setStatus(`已采纳全部可优化项，共 ${pending.length} 项`);
+            showToast(pending.length ? "已全部采纳" : "当前没有待处理的优化项");
+            setFlow(5);
+          };
+          const high = pending.filter(it => it.risk);
+          if (high.length) {
+            openModal("批量采纳确认", `<div style="padding:10px 12px;border-radius:10px;background:var(--orange-soft);color:#8a5e00;line-height:1.8;">本次包含 <b>${high.length}</b> 项涉及事实或责任主体的高风险建议。请确认已核对数字、日期、机构、人名和政策名称后再批量采纳。</div>`, () => { closeModal(); apply(); }, { okText: "已核对，确认采纳" });
+          } else apply();
           break;
         }
         case "ignoreAll":
           const pending = activeIssues().filter(it => !it.resolved);
-          pending.forEach(it => ignoreIssue(it.id));
+          pending.forEach(it => ignoreIssue(it.id, true));
           setStatus(`已忽略全部剩余可优化项，共 ${pending.length} 项`);
           showToast(pending.length ? "已全部忽略" : "当前没有待处理的优化项");
           break;

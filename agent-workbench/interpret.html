@@ -195,6 +195,8 @@
     .result-card p { margin: 0; color: #43506b; line-height: 1.65; font-size: 13.5px; }
     .source-link { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 7px; border-radius: 6px; color: var(--primary); background: var(--primary-soft); font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; }
     .source-link:hover { color: #fff; background: var(--primary); }
+    .source-location { display:inline-flex; margin-right:7px; color:var(--primary); font-size:11px; font-weight:800; }
+    .ungrounded-note { display:inline-flex; align-items:center; height:22px; padding:0 7px; border-radius:6px; color:var(--orange); background:var(--orange-soft); font-size:12px; font-weight:800; }
     .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
     .tag.green { color: var(--green); background: var(--green-soft); }
     .tag.orange { color: var(--orange); background: var(--orange-soft); }
@@ -448,7 +450,13 @@
       const $ = (s, root = document) => root.querySelector(s);
       const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
       const state = { loaded: false, parsed: false, sourceType: "upload", sourceName: "", sourceText: "", activeTab: "summary", timer: null };
-      const sampleText = "为促进江北新区产业高质量发展，对在新区依法登记、实际经营且信用良好的企业，按照项目投入、创新能力、就业带动等情况给予支持。申报单位应提交营业执照、项目说明、财务凭证和信用承诺书，经主管部门审核、公示无异议后予以兑现。已享受同类财政扶持政策的项目，不得重复申报。";
+      const sampleText = `第一章 总则
+第一条 为促进江北新区产业高质量发展，提升企业服务和政策兑现效率，制定本政策。
+第二条 本政策适用于在新区依法登记、实际经营且信用良好的企业或项目主体。
+第二章 申报与审核
+第三条 申报单位应提交营业执照、项目说明、财务凭证和信用承诺书。
+第四条 主管部门受理后进行审核，审核结果应当公示；公示无异议后予以兑现。
+第五条 已享受同类财政扶持政策的项目，不得重复申报。`;
       const historyRows = [
         ["产业高质量发展若干政策", "政务知识库", "07-10 14:20", "100%", "已完成"],
         ["人才安居服务指南", "粘贴文本", "07-10 10:36", "96%", "已完成"],
@@ -535,12 +543,52 @@
         runParse();
       }
 
+      function parsePolicyUnits(sourceText) {
+        const normalized = sourceText
+          .replace(/\r/g, "")
+          .replace(/(?<!^)\s*(?=第[一二三四五六七八九十百千万0-9]+[章节条])/g, "\n")
+          .replace(/\s*(?=[（(][一二三四五六七八九十0-9]+[）)])/g, "\n");
+        const lines = normalized.split(/\n+/).map(x => x.trim()).filter(Boolean);
+        let currentArticle = "";
+        let paragraphIndex = 0;
+        let clauseIndex = 0;
+        return lines.map((text, index) => {
+          const chapter = text.match(/^第([一二三四五六七八九十百千万0-9]+)章/);
+          const article = text.match(/^第([一二三四五六七八九十百千万0-9]+)条/);
+          const item = text.match(/^[（(]([一二三四五六七八九十0-9]+)[）)]/);
+          let label;
+          let type = "paragraph";
+          if (chapter) {
+            label = `第${chapter[1]}章`;
+            type = "chapter";
+            currentArticle = "";
+            clauseIndex = 0;
+          } else if (article) {
+            label = `第${article[1]}条`;
+            type = "article";
+            currentArticle = label;
+            clauseIndex = 0;
+          } else if (item && currentArticle) {
+            label = `${currentArticle}第${item[1]}项`;
+            type = "item";
+          } else if (currentArticle) {
+            clauseIndex += 1;
+            label = `${currentArticle}第${clauseIndex}款`;
+            type = "clause";
+          } else {
+            paragraphIndex += 1;
+            label = `第${Math.floor(index / 4) + 1}页·第${paragraphIndex}段`;
+          }
+          return { text, id: `src-${index + 1}`, label, type, page: Math.floor(index / 4) + 1, grounded: true };
+        });
+      }
+
       function loadDocument() {
         state.loaded = true;
         state.parsed = false;
         const sourceText = state.sourceText || sampleText;
-        const segments = sourceText.split(/(?<=[。！？；])|\n+/).map(x => x.trim()).filter(Boolean);
-        state.sourceSegments = segments.length ? segments : [sourceText];
+        const segments = parsePolicyUnits(sourceText);
+        state.sourceSegments = segments.length ? segments : parsePolicyUnits(sampleText);
         buildResultData(state.sourceSegments);
         const name = state.sourceType === "paste" ? "粘贴文本片段" : (state.sourceName || "政策文件");
         $("#docHint").textContent = name;
@@ -551,7 +599,7 @@
         $("#wordCount").textContent = `${sourceText.replace(/\s/g, "").length} 字`;
         $("#statusText").textContent = "已载入内容，正在准备解读";
         $("#docPage").innerHTML = `<h1>${safe(name.replace(/\.(docx|pdf|txt|ofd)$/i, ""))}</h1>` +
-          state.sourceSegments.map((text, index) => `<p class="${index === 0 ? "no-indent" : ""}"><span class="source-mark" id="src-${index + 1}">${safe(text)}</span></p>`).join("");
+          state.sourceSegments.map((unit, index) => `<p class="${index === 0 ? "no-indent" : ""}"><span class="source-location">${safe(unit.label)}</span><span class="source-mark" id="${unit.id}">${safe(unit.text)}</span></p>`).join("");
         $("#resultEmpty").classList.add("hide");
         $("#resultPanel").classList.add("show");
       }
@@ -612,15 +660,16 @@
       };
 
       function buildResultData(segments) {
-        const rows = segments.map((text, index) => ({ text, id: `src-${index + 1}`, label: `第${index + 1}段` }));
-        const first = rows[0];
-        const find = (re, fallback = first) => rows.find(row => re.test(row.text)) || fallback;
-        const audience = find(/适用|对象|企业|单位|人员/);
+        const rows = segments.filter(row => row.type !== "chapter");
+        const first = rows[0] || segments[0];
+        const find = (re) => rows.find(row => re.test(row.text)) || null;
+        const audience = find(/适用于|适用对象|适用范围|对象/) || find(/企业|单位|人员/);
         const material = find(/提交|材料|证明|申请|申报/);
         const process = find(/审核|办理|公示|兑现|归档|流程/);
-        const limit = find(/不得|禁止|限制|除外|不予|应当|必须/);
+        const limit = find(/不得|禁止|不予|除外/) || find(/限制|应当|必须/);
         const term = find(/实际经营|财政|信用|期限|主管部门|职责/);
-        const toRow = (title, row) => [title, row.text, row.id, row.label];
+        const ungrounded = (title) => [title, "原文未明确，系统不作推断；建议联系文件发布机关或主管部门确认。", "", "原文未明确", false];
+        const toRow = (title, row) => row ? [title, row.text, row.id, row.label, true] : ungrounded(title);
         resultData = {
           summary: [
             toRow("核心内容", first),
@@ -628,18 +677,20 @@
             toRow("限制条件与注意事项", limit)
           ],
           path: [
-            toRow("准备输入材料", material),
-            toRow("提交或办理", find(/提交|申请|申报|受理/, material)),
+            toRow("准备申报材料", material),
+            toRow("提交或办理", find(/提交|申请|申报|受理/)),
             toRow("审核与结果", process)
           ],
           terms: [
             toRow("重点术语（以原文为准）", term),
-            toRow("主管部门或责任主体", find(/主管部门|责任单位|承办|负责/, audience))
+            toRow("主管部门或责任主体", find(/主管部门|责任单位|承办|负责/)),
+            toRow("办理时限", find(/日内|工作日|截止|期限|自.*日起/))
           ],
           qa: [
-            ["本文件主要适用于谁？", audience.text, audience.id, audience.label],
-            ["办理时需要关注什么？", limit.text, limit.id, limit.label],
-            ["需要准备或提交哪些内容？", material.text, material.id, material.label]
+            toRow("本文件主要适用于谁？", audience),
+            toRow("办理时需要关注什么？", limit),
+            toRow("需要准备或提交哪些内容？", material),
+            toRow("由哪个部门办理、多久办结？", find(/主管部门|责任单位|承办|负责|日内|工作日|截止|期限/))
           ]
         };
       }
@@ -649,7 +700,7 @@
         $$(".result-tab").forEach(btn => btn.classList.toggle("on", btn.dataset.tab === tab));
         $("#resultList").innerHTML = resultData[tab].map((row, i) => `
           <div class="result-card">
-            <h3>${i + 1}. ${row[0]} <span class="source-link" data-source="${row[2]}">来源${row[3]}</span></h3>
+            <h3>${i + 1}. ${row[0]} ${row[4] === false ? `<span class="ungrounded-note">原文未明确</span>` : `<span class="source-link" data-source="${row[2]}">来源 · ${row[3]}</span>`}</h3>
             <p>${row[1]}</p>
           </div>`).join("");
       }

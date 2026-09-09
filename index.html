@@ -43,7 +43,6 @@
   .app { height: 100vh; display: grid; grid-template-rows: minmax(0, 1fr); }
   body.in-wb .topbar { display: none; }
   body.in-wb .app { grid-template-rows: 1fr; }
-  body.in-wb .wb-bar { position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(24,36,95,.08); }
   .topbar { display: none; }
   .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; white-space: nowrap; flex: none; border: 0; padding: 0; background: transparent; text-align: left; cursor: pointer; }
   .brand:focus-visible { outline: 3px solid rgba(21,152,189,.22); outline-offset: 4px; border-radius: 9px; }
@@ -104,9 +103,6 @@
   .side-home .brand-mark { width: 27px; height: 27px; border-radius: 7px; flex: none; box-shadow: none; }
   .side-home .brand-mark .svg-icon { width: 16px; height: 16px; }
   .side-home .side-home-title { font-size: 13px; }
-  .side-drawer-toggle { position: absolute; z-index: 5; top: 57px; right: -12px; display: grid; width: 24px; height: 24px; margin: 0; padding: 0; border: 1px solid #c9dcec; border-radius: 50%; background: #fff; color: var(--gov-700); place-items: center; line-height: 1; box-shadow: 0 3px 9px rgba(31,68,108,.13); }
-  .side-drawer-toggle:hover { border-color: var(--gov-500); background: var(--gov-50); }
-  .side-drawer-toggle .svg-icon { width: 13px; height: 13px; }
   .new-btn { margin: 11px 11px 8px; height: 40px; border: 0; border-radius: 9px; background: linear-gradient(135deg,var(--gov-700),var(--gov-600)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 7px; box-shadow: 0 8px 18px rgba(36,104,182,.25); }
   .new-btn:hover { background: linear-gradient(135deg,var(--gov-800),var(--gov-700)); transform: translateY(-1px); box-shadow: 0 10px 22px rgba(36,104,182,.30); }
   .new-btn .svg-icon { width: 17px; height: 17px; }
@@ -215,8 +211,6 @@
   .role-menu small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 500; }
   .side-foot .icon-pill { flex: none; }
   .body.sidebar-collapsed .side-home, .body.sidebar-collapsed .new-btn, .body.sidebar-collapsed .side-nav, .body.sidebar-collapsed .side-scroll, .body.sidebar-collapsed .side-foot { display: none; }
-  .body.sidebar-collapsed .side-drawer-toggle { top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; border: none; background: transparent; box-shadow: none; border-radius: 14px; }
-  .body.sidebar-collapsed .side-drawer-toggle .svg-icon { width: 20px; height: 20px; }
   .progress { height: 6px; background: #e3e9f1; border-radius: 999px; overflow: hidden; }
   .progress i { display: block; height: 100%; width: 37%; background: var(--gov-700); }
 
@@ -1312,24 +1306,12 @@
   .flow-card .fc-foot { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-top: 1px solid var(--line-soft); background: #fbfdff; font-size: 12px; color: var(--muted); }
 
   /* ===== 内嵌工作台（iframe 加载完整 demo）===== */
-  #view-workbench.active { display: flex; flex-direction: column; height: 100%; min-height: 0; }
-  .wb-bar { display: flex; align-items: center; gap: 12px; padding: 9px 18px; background: #fff; border-bottom: 1px solid var(--line); flex: none; }
+  #view-workbench.active { position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0; }
   .wb-back { height: 34px; padding: 0 13px; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: #46536e; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
   .wb-back:hover { border-color: var(--gov-500); color: var(--gov-700); background: var(--gov-50); }
   .wb-back .svg-icon { width: 15px; height: 15px; }
-  .wb-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .wb-ic { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14px; flex: none; }
-  .wb-name { font-size: 15px; font-weight: 800; color: var(--gov-900); white-space: nowrap; }
-  .wb-name small { display: block; font-size: 11.5px; font-weight: 500; color: var(--muted); margin-top: 1px; }
-  .wb-tag { height: 22px; padding: 0 9px; border-radius: 999px; background: var(--gov-50); color: var(--gov-700); font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
-  .wb-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-  .wb-switch { height: 34px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #3c4658; padding: 0 10px; outline: none; font-size: 13px; max-width: 200px; }
-  .wb-switch:focus { border-color: var(--gov-500); }
-  .wb-btn { height: 34px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--gov-700); background: var(--gov-700); color: #fff; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
-  .wb-btn:hover { background: var(--gov-800); }
-  .wb-btn.ghost { background: #fff; color: var(--gov-700); }
-  .wb-btn.ghost:hover { background: var(--gov-50); }
-  .wb-btn .svg-icon { width: 15px; height: 15px; }
+  .wb-back-floating { position: absolute; top: 10px; left: 12px; z-index: 30; height: 36px; border-color: rgba(18,111,174,.24); border-radius: 10px; background: rgba(255,255,255,.96); color: var(--gov-700); box-shadow: 0 7px 20px rgba(24,54,74,.15); backdrop-filter: blur(8px); }
+  .wb-back-floating:hover { transform: translateY(-1px); box-shadow: 0 9px 24px rgba(24,54,74,.2); }
   .wb-frame-wrap { flex: 1; min-height: 0; position: relative; background: #eef2f7; }
   .wb-split { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr; }
   body.has-handoff .wb-split { grid-template-columns: minmax(300px, 40%) 1fr; }
@@ -1373,7 +1355,7 @@
   .notice-title, .fc-name, .skill-card-name, .a-card .ac-name { color: var(--gov-900); }
   .page-sub, .home-hero p, .welcome p, .suggest .s-d, .chat-sub, .wf-hint,
   .scheduled-prompt, .skill-card-desc, .market-result, .task-run-note,
-  .wb-name small, .field .hint { color: var(--muted); }
+  .field .hint { color: var(--muted); }
   .side-cap { color: var(--gov-600); }
   .side-cap .cnt, .conv-time, .foot-hint, .muted, .wf-lock-note { color: var(--muted-2); }
   .row-act a, .notice-open, .a-card .ac-foot .go, .skill-card-use,
@@ -1863,15 +1845,45 @@
   .model-ic .model-ic-fb{grid-area:1/1;display:none;width:100%;height:100%;border-radius:5px;background:var(--mic,#0E4C92);color:#fff;font-size:9px;font-style:normal;font-weight:700;place-items:center;line-height:1}
   .model-ic.ic-failed>.model-svg-icon{display:none}
   .model-ic.ic-failed .model-ic-fb{display:grid}
-  .voice-recording-host{display:flex;align-items:center;min-width:180px}
-  .voice-recording-bar{display:flex;align-items:center;gap:12px;padding:5px 8px;border:1px solid #d7e6e8;border-radius:10px;background:#f4f8f8;color:#205766;min-height:34px}
-  .voice-recording-bar b{font-variant-numeric:tabular-nums;min-width:45px}
-  .voice-recording-bar button{margin-left:auto;width:30px;height:30px;border:1px solid #aebbc5;border-radius:50%;display:grid;place-items:center;background:#fff;color:#596b78;font-size:19px;line-height:1;cursor:pointer}
-  .voice-recording-bar button:hover{border-color:#1aa39f;background:#eaf8f7;color:#087b7c}
-  .voice-recording-bar button + button{margin-left:0;border-color:#1aa39f;background:#1aa39f;color:#fff;font-size:14px}
-  .voice-transcribing{justify-content:center;color:#087b7c}
-  .voice-spinner{width:16px;height:16px;border:2px solid #b6dedd;border-top-color:#0b9c95;border-radius:50%;animation:voice-spin .8s linear infinite}
+  .voice-recording-host{display:block;overflow:hidden}
+  .voice-recording-stage{position:relative;min-height:242px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 24px 18px;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 50% 44%,rgba(103,238,225,.16),transparent 24%),radial-gradient(circle at 50% 42%,rgba(42,98,211,.11),transparent 48%),linear-gradient(135deg,#fbfeff 0%,#f3f8fc 52%,#f8fffc 100%);color:#142d4c}
+  .voice-recording-stage::before{content:"";position:absolute;inset:0;z-index:-2;background-image:linear-gradient(rgba(17,94,155,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(17,94,155,.045) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(circle at center,#000 5%,transparent 72%)}
+  .voice-recording-stage::after{content:"";position:absolute;left:50%;top:50%;z-index:-1;width:360px;height:160px;border-radius:50%;background:radial-gradient(ellipse,rgba(12,91,168,.12),transparent 66%);filter:blur(22px);transform:translate(-50%,-42%);pointer-events:none}
+  .voice-status-kicker{position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:7px;color:#4e667f;font-size:11px;font-weight:700;letter-spacing:.08em}
+  .voice-live-dot{width:7px;height:7px;border-radius:50%;background:#12a77d;box-shadow:0 0 0 0 rgba(18,167,125,.32);animation:voice-live 1.7s ease-out infinite}
+  .voice-orb-shell{position:relative;width:98px;height:98px;display:grid;place-items:center;margin-top:4px}
+  .voice-orb-shell::before,.voice-orb-shell::after{content:"";position:absolute;border:1px solid rgba(14,113,170,.22);border-radius:50%;inset:5px;animation:voice-ring 2.8s ease-out infinite}
+  .voice-orb-shell::after{inset:-7px;border-color:rgba(15,146,124,.14);animation-delay:1.4s}
+  .voice-orb{position:relative;width:78px;height:78px;overflow:hidden;border-radius:46% 54% 58% 42%/52% 44% 56% 48%;background:radial-gradient(circle at 30% 23%,rgba(255,255,255,.96) 0 4%,rgba(255,255,255,.35) 12%,transparent 25%),radial-gradient(circle at 68% 70%,#14b894 0%,rgba(20,184,148,.3) 27%,transparent 52%),linear-gradient(145deg,#15277c 2%,#0d69ba 44%,#17a98d 76%,#82edd3 100%);box-shadow:inset 9px 8px 18px rgba(255,255,255,.22),inset -13px -12px 22px rgba(4,18,75,.38),0 10px 32px rgba(15,92,164,.30),0 0 34px rgba(24,184,155,.22);animation:voice-orb-float 3.2s ease-in-out infinite,voice-orb-morph 5.5s ease-in-out infinite alternate}
+  .voice-orb::before{content:"";position:absolute;inset:-32%;border-radius:38%;background:conic-gradient(from 90deg,transparent 0 12%,rgba(122,249,222,.75) 22%,transparent 37%,rgba(91,121,255,.85) 51%,transparent 67%,rgba(255,255,255,.55) 83%,transparent);mix-blend-mode:screen;filter:blur(5px);animation:voice-orb-spin 4.8s linear infinite}
+  .voice-orb::after{content:"";position:absolute;inset:10px;border-radius:50%;border:1px solid rgba(255,255,255,.26);box-shadow:inset 0 0 18px rgba(255,255,255,.12);animation:voice-orb-breathe 1.8s ease-in-out infinite}
+  .voice-recording-stage.is-transcribing .voice-orb{animation:voice-orb-float 2s ease-in-out infinite,voice-orb-morph 2.4s ease-in-out infinite alternate;filter:saturate(.86)}
+  .voice-recording-stage.is-transcribing .voice-orb::before{animation-duration:1.5s}
+  .voice-listen-copy{display:grid;justify-items:center;gap:2px;margin-top:7px}
+  .voice-listen-copy strong{font-size:15px;letter-spacing:.04em;color:#123c65}
+  .voice-listen-copy span{color:#74889c;font-size:11px}
+  .voice-wave{height:22px;display:flex;align-items:center;justify-content:center;gap:3px;margin-top:7px}
+  .voice-wave i{display:block;width:3px;height:var(--wave-height,8px);border-radius:999px;background:linear-gradient(180deg,#36c9aa,#1665ae);transform-origin:center;animation:voice-wave 1.05s ease-in-out infinite;animation-delay:var(--wave-delay,0s)}
+  .voice-recording-stage.is-transcribing .voice-wave i{animation-duration:.62s;opacity:.72}
+  .voice-time{position:absolute;right:20px;top:14px;min-width:46px;color:#2d526f;font:700 12px/24px ui-monospace,SFMono-Regular,Consolas,monospace;text-align:right;font-variant-numeric:tabular-nums}
+  .voice-stage-actions{display:flex;align-items:center;gap:10px;margin-top:9px}
+  .voice-stage-actions button{height:31px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 13px;border:1px solid #cad8e4;border-radius:999px;background:rgba(255,255,255,.86);color:#566d82;font-size:12px;font-weight:650;cursor:pointer;box-shadow:0 3px 10px rgba(22,70,110,.07);transition:transform .18s,border-color .18s,background .18s,color .18s,box-shadow .18s}
+  .voice-stage-actions button:hover{transform:translateY(-1px);border-color:#8fb2c9;background:#fff;color:#174d75;box-shadow:0 5px 14px rgba(22,70,110,.12)}
+  .voice-stage-actions .voice-finish{border-color:transparent;background:linear-gradient(135deg,#0755a0,#05867a);color:#fff;box-shadow:0 6px 16px -5px rgba(5,104,126,.55)}
+  .voice-stage-actions .voice-finish:hover{border-color:transparent;background:linear-gradient(135deg,#064b8e,#04786e);color:#fff}
+  .voice-stage-actions .svg-icon{width:13px;height:13px}
+  .voice-transcribing-label{display:flex;align-items:center;gap:8px;margin-top:11px;color:#315a78;font-size:12px;font-weight:650}
+  .voice-spinner{width:14px;height:14px;border:2px solid rgba(10,108,151,.18);border-top-color:#0b8f82;border-radius:50%;animation:voice-spin .8s linear infinite}
   @keyframes voice-spin{to{transform:rotate(360deg)}}
+  @keyframes voice-live{70%,100%{box-shadow:0 0 0 8px rgba(18,167,125,0)}}
+  @keyframes voice-ring{0%{opacity:.65;transform:scale(.76)}70%,100%{opacity:0;transform:scale(1.28)}}
+  @keyframes voice-orb-spin{to{transform:rotate(360deg)}}
+  @keyframes voice-orb-float{0%,100%{transform:translateY(1px) scale(.98)}50%{transform:translateY(-3px) scale(1.035)}}
+  @keyframes voice-orb-morph{0%{border-radius:46% 54% 58% 42%/52% 44% 56% 48%}50%{border-radius:58% 42% 44% 56%/45% 58% 42% 55%}100%{border-radius:43% 57% 52% 48%/59% 42% 58% 41%}}
+  @keyframes voice-orb-breathe{0%,100%{opacity:.48;transform:scale(.9)}50%{opacity:.9;transform:scale(1.08)}}
+  @keyframes voice-wave{0%,100%{transform:scaleY(.45);opacity:.48}50%{transform:scaleY(1.45);opacity:1}}
+  @media(max-width:760px){.voice-recording-stage{min-height:220px;padding-inline:14px}.voice-status-kicker{left:14px}.voice-time{right:14px}.voice-orb-shell{transform:scale(.92)}}
+  @media(prefers-reduced-motion:reduce){.voice-live-dot,.voice-orb-shell::before,.voice-orb-shell::after,.voice-orb,.voice-orb::before,.voice-orb::after,.voice-wave i,.voice-spinner{animation:none!important}}
   .speaker-sample-actions{margin-left:auto;display:inline-flex;align-items:center;gap:6px}
   .speaker-sample-actions .btn{height:26px;padding:0 8px;font-size:12px}
   .speaker-learned-editor{width:100%;min-height:180px;border:1px solid #d8e2ec;border-radius:8px;padding:11px 12px;resize:vertical;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#24344e;background:#fbfdff}
@@ -2008,8 +2020,10 @@
   .model-capability-tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#eef6f8;color:#176b72;font-size:10.5px;font-weight:700;white-space:nowrap}.model-capability-tag.cap-chat{background:#edf2ff;color:#3e5fb5}.model-capability-tag.cap-speech{background:#edf8f1;color:#26734a}.model-capability-tag.cap-document{background:#fff6e8;color:#a26212}.model-capability-tag.cap-retrieval{background:#f4efff;color:#6e4bb0}.model-service-sub{display:block;margin-top:3px;color:#8a98a8;font-size:10px;line-height:1.4}.model-dynamic-config{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;padding:14px;border:1px solid #e1e8ee;border-radius:10px;background:#f8fafc}.model-dynamic-config .cfg-form-field.full{grid-column:1/-1}.model-test-result{padding:14px;border:1px solid #d9e8df;border-radius:10px;background:#f1faf4;color:#316b45;line-height:1.75}.model-test-sample{display:grid;gap:5px;padding:12px;border:1px dashed #c8d7e0;border-radius:9px;background:#fafcfd;color:#63758a;font-size:12px}.model-test-sample b{color:#324b62}
   .model-service-modal{width:min(860px,calc(100vw - 40px))}.model-service-modal .cfg-form-grid{align-items:start}.model-service-modal .cfg-form-field input,.model-service-modal .cfg-form-field select{min-height:42px}.model-service-modal .modal-body{background:#f8fafc}
   @media(max-width:760px){.model-dynamic-config{grid-template-columns:1fr}.model-dynamic-config .cfg-form-field.full{grid-column:auto}}
-  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .model-select-btn,:is(#view-home,#view-newchat) .home-composer.is-voice-recording .voice-input-btn{display:none}
-  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .composer-foot-right{gap:8px}
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording{border-color:rgba(15,121,151,.42);box-shadow:0 16px 44px -24px rgba(11,71,129,.42),0 0 0 4px rgba(17,151,137,.07)}
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .agent-bar,
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .prompt-editor,
+  :is(#view-home,#view-newchat) .home-composer.is-voice-recording .composer-foot{display:none}
   @media (max-width:980px){.composer-expand{right:5px;bottom:-31px}}
   .template-selected .sel-ic{background:#7b61a8!important}
   .composer-template-banner{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 0 5px;border-radius:8px;background:#f4f1fa;color:#64517f;font-size:11.5px}
@@ -2229,8 +2243,14 @@
 <link rel="stylesheet" href="assets/design-system/tokens.css">
 <link rel="stylesheet" href="assets/design-system/components.css">
 <link rel="stylesheet" href="assets/design-system/pilot-index.css">
+<link rel="stylesheet" href="assets/plan-task-workbench.css">
+<link rel="stylesheet" href="assets/pilot-task-refinement.css">
+<link rel="stylesheet" href="assets/integrated-polish.css">
+<link rel="stylesheet" href="assets/integrated-review.css">
+<link rel="stylesheet" href="assets/document-focus.css">
+<link rel="stylesheet" href="assets/workbench-task-bridge.css">
 </head>
-<body class="jb-ds-pilot">
+<body class="jb-ds-pilot jb-ds-page">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-bot" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></symbol>
@@ -2266,6 +2286,8 @@
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><path d="m3 8 5-5M21 8l-5-5M3 16l5 5M21 16l-5 5"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></symbol>
@@ -2295,11 +2317,10 @@
   <symbol id="i-presentation" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v5M8 21h8M7 12l3-3 2 2 4-4"/></symbol>
 </svg>
 
-<div class="app">
+<div class="app" data-proto-app data-proto-platform="web">
   <div class="body" id="body">
     <!-- ============ 持久侧栏 ============ -->
     <aside class="sidebar">
-      <button class="side-drawer-toggle" id="sideDrawerToggle" title="收起左侧菜单" aria-label="收起左侧菜单"><svg class="svg-icon"><use href="#i-chevron-left"></use></svg></button>
       <button class="side-home" id="sideHome" title="返回主页" aria-label="返回主页">
         <img class="side-brand-logo" src="assets/jiangbei-mark.png" alt="南京江北新区标识">
         <span class="side-brand-text"><span class="side-brand-name">政务AI办公助手</span><span class="side-brand-sub">NANJING JIANGBEI NEW AREA</span></span>
@@ -2363,7 +2384,7 @@
 
     <div class="stage">
       <!-- ============ 视图：主页 ============ -->
-      <div class="view active" id="view-home">
+      <div class="view active" id="view-home" data-proto-scope="page:home" data-proto-layer="0">
         <div class="home-main">
           <!-- 低多边形切面装饰：呼应江北 Logo 几何语言（右上蓝系 / 左下绿系） -->
           <svg class="facets facets-tr" viewBox="0 0 400 400" aria-hidden="true">
@@ -2419,7 +2440,7 @@
       </div>
 
       <!-- ============ 视图：新对话 ============ -->
-      <div class="view" id="view-newchat">
+      <div class="view" id="view-newchat" data-proto-scope="page:newchat" data-proto-layer="0">
         <div class="new-chat-page">
           <!-- 低多边形切面装饰：呼应江北 Logo 几何语言（右上蓝系 / 左下绿系） -->
           <svg class="facets facets-tr" viewBox="0 0 400 400" aria-hidden="true">
@@ -2467,7 +2488,7 @@
       </div>
 
       <!-- ============ 视图：对话 ============ -->
-      <div class="view" id="view-chat">
+      <div class="view" id="view-chat" data-proto-scope="page:chat" data-proto-layer="0">
         <div class="chat-workspace" id="chatWorkspace">
           <main class="chat">
             <button class="editor-sidebar-toggle" id="editorSidebarToggle" type="button" title="显示左侧菜单" aria-label="显示左侧菜单" aria-pressed="false"><svg class="svg-icon"><use href="#i-menu"></use></svg></button>
@@ -2497,7 +2518,7 @@
               </div>
             </div>
             </div>
-            <div class="structured-confirm-sheet" id="structuredConfirmSheet" aria-live="polite">
+            <div class="structured-confirm-sheet" id="structuredConfirmSheet" aria-live="polite" data-proto-scope="page:chat:structured-confirm" data-proto-layer="20">
               <div class="structured-sheet-head"><div class="ssh-copy"><b id="structuredConfirmTitle">补充生成要素</b><small id="structuredConfirmSubtitle">系统已完成意图识别，请逐项确认选择字段</small></div><div class="structured-sheet-nav"><button class="structured-sheet-prev" id="structuredConfirmPrev" aria-label="上一项">‹</button><span class="structured-sheet-step" id="structuredConfirmStep">1/1</span><button class="structured-sheet-close" id="structuredConfirmClose" aria-label="关闭">×</button></div></div>
               <div class="structured-sheet-body" id="structuredConfirmBody"></div>
               <div class="structured-sheet-foot"><span>可选择常用选项，也可手动填写</span><button class="structured-confirm-btn" id="structuredConfirmOk">下一步</button></div>
@@ -2507,7 +2528,7 @@
             <div class="editor-top-bar">
             <div class="editor-panel-head">
               <div class="editor-panel-title"><b id="editorPanelTitle">在线编辑文稿</b><button class="editor-modified-btn" id="editorModifiedBtn" type="button" data-editor-action="history" title="查看文档修改历史"><svg class="svg-icon" style="width:12px;height:12px"><use href="#i-clock"></use></svg><span id="editorModifiedLabel">修改于—</span></button></div>
-              <div class="editor-head-actions"><button data-editor-action="share"><svg class="svg-icon"><use href="#i-share"></use></svg>分享</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
+              <div class="editor-head-actions"><button class="editor-review-trigger" type="button" data-review-action="start"><svg class="svg-icon"><use href="#i-shield"></use></svg>合规审查</button><button class="editor-polish-trigger" type="button" data-polish-action="start"><svg class="svg-icon"><use href="#i-wand"></use></svg>全文智能润色</button><button data-editor-action="share"><svg class="svg-icon"><use href="#i-share"></use></svg>分享</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
             </div>
             <div class="oo-toolbar" id="ooToolbar">
               <div class="oo-tabs">
@@ -2736,18 +2757,13 @@
 
       <!-- ============ 视图：智能体完整工作台（iframe 内嵌）============ -->
       <div class="view" id="view-workbench">
-        <div class="wb-bar">
-          <button class="wb-back" id="wbBack"><svg class="svg-icon"><use href="#i-arrow"></use></svg>返回</button>
-          <div class="wb-title">
-            <div class="wb-ic" id="wbIc">审</div>
-            <div class="wb-name" id="wbName">智能体<small id="wbSub">完整工作台</small></div>
-            <span class="wb-tag"><svg class="svg-icon" style="width:13px;height:13px"><use href="#i-shield"></use></svg>完整工作台</span>
+        <button class="wb-back wb-back-floating" id="wbBack"><svg class="svg-icon"><use href="#i-arrow"></use></svg>返回</button>
+        <div class="wb-task-context" id="wbTaskContext" hidden>
+          <div class="wb-task-context-main">
+            <span><svg class="svg-icon"><use href="#i-clipboard"></use></svg></span>
+            <div class="wb-task-context-copy"><b id="wbTaskContextTitle">当前任务</b><small id="wbTaskContextMeta">来自当前对话</small></div>
           </div>
-          <div class="wb-actions">
-            <select class="wb-switch" id="wbSwitch" title="切换智能体"></select>
-            <button class="wb-btn ghost" id="wbToChat"><svg class="svg-icon"><use href="#i-chat"></use></svg>在对话中使用</button>
-            <button class="wb-btn" id="wbNewTab"><svg class="svg-icon"><use href="#i-share"></use></svg>新窗口打开</button>
-          </div>
+          <div class="wb-task-sync" id="wbTaskSync">已同步至当前对话</div>
         </div>
         <div class="wb-frame-wrap">
           <div class="wb-loading" id="wbLoading"><div class="spin"></div><div>正在加载完整工作台…</div></div>
@@ -2994,8 +3010,8 @@
     { id: "interpret", name: "政务文件解读", cat: "服务类", glyph: "解", flow: "interpret", desc: "政策解析、要点与实施路径、术语解释、问答口径，来源可追溯。", legacy: "17个智能体调研准备材料/3政务文件解读/南京江北新区政务AI智能体_政务文件解读Demo.html", kb: ["政策法规库", "术语口径库"] },
     { id: "ppt", name: "PPT智能生成", cat: "展示类", glyph: "演", flow: "ppt", desc: "材料生成结构严谨、版式统一的汇报 PPT，多轮优化导出。", legacy: "南京江北新区政务AI智能体_PPT智能生成Demo.html", kb: ["优秀案例库"] }
   ];
-  // 工作计划编排与审查、润色、会议纪要、合同、PPT等复杂任务统一进入独立工作台。
-  const CHAT_AGENT_IDS = new Set(["decision", "notice", "speech", "report", "summary", "news", "letter", "communique", "reply", "motion", "interpret"]);
+  // 复杂编排类任务进入独立工作台；政务解读、文本润色与合规审查保留为对话内工具。
+  const CHAT_AGENT_IDS = new Set(["decision", "notice", "speech", "report", "summary", "news", "letter", "communique", "reply", "motion", "interpret", "polish", "review"]);
   AGENTS.forEach(agent => { agent.entryMode = CHAT_AGENT_IDS.has(agent.id) ? "chat" : "workbench"; });
   const CHAT_AGENT_SCHEMAS = {
     decision: {
@@ -3302,6 +3318,7 @@ let sidebarCollapsed = false;
     $("#modalMask").classList.add("show");
   }
   function closeModal() {
+    if (structuredConfirmDraft?.pilotResolve) closeStructuredConfirmSheet();
     $("#modalMask").classList.remove("show");
     document.body.classList.remove("agent-confirming");
     structuredConfirmDraft = null;
@@ -3315,6 +3332,7 @@ let sidebarCollapsed = false;
     if (HIDDEN_VIEWS.has(v)) v = "home";
     currentView = v;
     if (v !== "chat") {
+      if (structuredConfirmDraft?.pilotResolve) closeStructuredConfirmSheet();
       document.body.classList.remove("editor-mode", "editor-sidebar-shown", "agent-confirming");
       const chatView = $("#view-chat"); if (chatView) chatView.classList.remove("editor-open");
       editorMessageIndex = null;
@@ -3347,10 +3365,6 @@ let sidebarCollapsed = false;
   function setSidebarCollapsed(collapsed) {
     sidebarCollapsed = collapsed;
     $("#body").classList.toggle("sidebar-collapsed", collapsed);
-    const toggle = $("#sideDrawerToggle");
-    toggle.setAttribute("title", collapsed ? "展开左侧菜单" : "收起左侧菜单");
-    toggle.setAttribute("aria-label", collapsed ? "展开左侧菜单" : "收起左侧菜单");
-    toggle.innerHTML = collapsed ? svgi("i-menu", 13) : svgi("i-chevron-left", 13);
   }
 
   function topicOf(text) {
@@ -3372,6 +3386,7 @@ let sidebarCollapsed = false;
   // ===== 会话管理 =====
   function cur() { return convs.find(c => c.id === curId); }
   function newConversation(agentId, seedTitle) {
+    if (structuredConfirmDraft?.pilotResolve) closeStructuredConfirmSheet();
     conversationalDraft = null;
     const a = agentId ? byId(agentId) : null;
     const now = Date.now();
@@ -3381,6 +3396,7 @@ let sidebarCollapsed = false;
     renderSidebar(); renderChat();
   }
   function selectConv(id) {
+    if (structuredConfirmDraft?.pilotResolve) closeStructuredConfirmSheet();
     conversationalDraft = null;
     curId = id;
     const c = cur();
@@ -3601,12 +3617,61 @@ let sidebarCollapsed = false;
   function renderMsg(m, i) {
     if (!m.createdAt) m.createdAt = Date.now();
     if (m.role === "user") return userBubble(m, i);
+    if (m.workbenchTask) return agentBubble(m.agent, renderWorkbenchTaskCard(m.workbenchTask), m, i);
     if (m.card) return agentBubble(m.agent, renderCard(m, i), m, i);
     return agentBubble(m.agent, m.html, m, i);
   }
+
+  function workbenchTaskById(taskId) {
+    for (const conversation of convs) {
+      const message = (conversation.msgs || []).find(item => item.workbenchTask && item.workbenchTask.id === taskId);
+      if (message) return { conversation, message, task:message.workbenchTask };
+    }
+    return null;
+  }
+  function workbenchTaskLabel(state) {
+    return ({ recognizing:"识别意图中", parsing:"解析材料中", ready:"待进入工作台", working:"工作台处理中", complete:"已完成", failed:"处理失败" })[state] || "处理中";
+  }
+  function workbenchTaskDefinition(task) {
+    const definitions = {
+      meeting:{ icon:"i-mic",desc:"已识别为会议纪要任务，将在独立工作台完成议题、结论和待办整理。",primary:"完整会议纪要",primaryDesc:"正式公文格式，可继续编辑、报审和导出",items:[["i-list","核心速览","会议决定与后续行动的一页式摘要","同步生成"],["i-check","待办事项","按责任主体和时限跟踪","结构化清单"],["i-mic","原始转写","保留时间戳和发言人，用于定位会议依据","依据材料"]]},
+      plan:{ icon:"i-clipboard",desc:"已识别为工作计划编排任务，将在独立工作台完成任务归类、目标凝练和责任排期。",primary:"正式工作计划",primaryDesc:"可直接呈报或印发的规范文稿",items:[["i-list","结构化任务清单","工作部署、任务分类与来源依据","同步生成"],["i-check","责任分工表","责任单位、完成时限和实施步骤","结构化清单"],["i-file-check","格式校验结果","检查层级、序号和政务行文格式","校验附件"]]},
+      contract:{ icon:"i-shield",desc:"已识别为合同生成及预审任务，将在独立工作台完成要素填充、条款匹配和风险核查。",primary:"合同草案",primaryDesc:"按当前模板生成的可编辑合同正文",items:[["i-shield","预审报告","汇总条款问题、建议与处理状态","同步生成"],["i-list","风险清单","按合同条款定位风险及依据","结构化清单"],["i-book","引用条款","保留模板与法规依据的来源记录","依据材料"]]},
+      ppt:{ icon:"i-slides",desc:"已识别为PPT生成任务，将在独立工作台完成大纲确认、模板匹配和逐页生成。",primary:"汇报PPT",primaryDesc:"可在线预览、继续修改和导出的演示文件",items:[["i-list","内容大纲","章节与逐页核心要点","同步生成"],["i-file","素材引用","关联图片、数据和知识来源","来源清单"],["i-check","生成检查","字体、溢出、引用和版式一致性","校验附件"]]}
+    };
+    return definitions[task.agentId] || definitions.meeting;
+  }
+  function workbenchTaskMilestones(task) {
+    const current = task.state === "recognizing" || task.state === "parsing" ? 0 : task.state === "ready" || task.state === "working" ? 1 : task.state === "complete" ? 3 : 1;
+    return ["材料接入","工作台处理","成果回流"].map((label,index) => {
+      const done = index < current || task.state === "complete", active = !done && index === current;
+      return `<span class="workbench-task-milestone ${done ? "done" : active ? "current" : ""}"><i>${done ? svgi("i-check",9) : index + 1}</i>${label}</span>`;
+    }).join("");
+  }
+  function renderWorkbenchResult(task) {
+    const title = task.resultTitle || task.title || "任务成果", definition = workbenchTaskDefinition(task);
+    const artifactRows = definition.items.map(item => `<div class="workbench-artifact-row"><span class="workbench-artifact-icon">${svgi(item[0],15)}</span><span class="workbench-artifact-copy"><b>${item[1]}</b><small>${item[2]}</small></span><span class="workbench-artifact-tag">${item[3]}</span></div>`).join("");
+    const stats = task.agentId === "meeting" ? `<div class="workbench-result-stats"><span><b>${task.topicCount || 3}</b>项议题</span><span><b>${task.conclusionCount || 9}</b>项结论</span><span><b>${task.todoCount || 6}</b>项待办</span><span><b>${task.missingCount || 2}</b>项待补充</span></div>` : "";
+    return `<div class="workbench-result-overview"><strong>${svgi("i-check",15)} ${esc(title)}</strong><p>主成果和辅助结果已归入同一成果包，可统一查看、下载和继续修改。</p>${stats}</div>
+      <div class="workbench-artifact-list">
+        <div class="workbench-artifact-row primary"><span class="workbench-artifact-icon">${svgi("i-file",15)}</span><span class="workbench-artifact-copy"><b>${definition.primary}</b><small>${definition.primaryDesc}</small></span><span class="workbench-artifact-tag">主成果</span></div>${artifactRows}
+      </div>`;
+  }
+  function renderWorkbenchTaskCard(task) {
+    const definition = workbenchTaskDefinition(task);
+    const sources = (task.sources || []).length ? task.sources : ["本次对话输入内容"];
+    const sourceHTML = sources.map(name => `<span class="workbench-source-chip">${svgi("i-file",13)}<span>${esc(name)}</span></span>`).join("");
+    const complete = task.state === "complete";
+    const actionLabel = complete ? "查看成果" : task.state === "working" ? "返回工作台" : "进入工作台";
+    return `<section class="workbench-task-card" data-state="${esc(task.state)}" data-workbench-task-card="${esc(task.id)}">
+      <header class="workbench-task-head"><span class="workbench-task-mark">${svgi(definition.icon,20)}</span><div class="workbench-task-copy"><h3>${esc(task.title || "智能体任务")}</h3><p>${complete ? `成果已回流当前对话 · V${task.version || 1}` : task.state === "recognizing" ? "主智能体正在判断任务类型、材料来源和适合的处理方式。" : definition.desc}</p></div><span class="workbench-task-state">${esc(workbenchTaskLabel(task.state))}</span></header>
+      ${complete ? `<div class="workbench-task-complete-track"><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div>${renderWorkbenchResult(task)}` : `<div class="workbench-task-source"><div class="workbench-task-source-label">${svgi("i-paperclip",13)}本次处理材料 · ${sources.length}份</div><div class="workbench-task-source-list">${sourceHTML}</div></div><div class="workbench-task-progress"><div class="workbench-task-progress-top"><b>${esc(task.stage || "正在创建任务")}</b><span>${Math.max(0,Math.min(100,Number(task.progress || 0)))}%</span></div><div class="workbench-task-track" style="--task-progress:${Math.max(0,Math.min(100,Number(task.progress || 0)))}%"><i></i></div><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div>`}
+      <footer class="workbench-task-actions">${complete ? `<button class="workbench-task-btn" type="button" data-wb-task-action="download" data-task-id="${esc(task.id)}">${svgi("i-download",14)}下载</button><button class="workbench-task-btn" type="button" data-wb-task-action="continue" data-task-id="${esc(task.id)}">${svgi("i-edit",14)}继续修改</button>` : ""}<button class="workbench-task-btn primary" type="button" data-wb-task-action="open" data-task-id="${esc(task.id)}">${svgi(complete ? "i-file" : "i-arrow",14)}${actionLabel}</button></footer>
+    </section>`;
+  }
   function userBubble(m, index) {
     const att = m.attach ? `<div class="att-chip"><svg class="svg-icon"><use href="#i-file"></use></svg>${esc(m.attach)}</div>` : "";
-    const quote = m.replyContext ? `<div class="user-reply-cite"><b>追问：</b>${esc(m.replyContext.preview || "已引用上一条回答")}</div>` : "";
+    const quote = m.replyContext ? `<div class="user-reply-cite"><b>${m.replyContext.kind === "document-selection" ? "引用文稿" : "追问"}：</b>${esc(m.replyContext.preview || "已引用上下文")}</div>` : "";
     const timeStr = esc(formatDateTime(m.createdAt || Date.now()));
     const footer = `<div class="msg-footer msg-footer-user"><button class="agent-response-action" type="button" data-act="copyUserReply" data-msg-index="${index}" title="复制提问">${svgi("i-copy",14)}<span>复制</span></button><span class="msg-footer-time">${timeStr}</span></div>`;
     return `<div class="msg user"><div class="av">张</div><div class="bubble">${quote}${m.html}${att}${footer}</div></div>`;
@@ -3723,7 +3788,7 @@ let sidebarCollapsed = false;
       let mount = $("#ooMount");
       if (!mount) { mount = document.createElement("div"); mount.id = "ooMount"; mount.className = "oo-mount"; stage.appendChild(mount); }
       mount.innerHTML = "";
-      const blob = new Blob([`<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:FangSong,仿宋,Microsoft YaHei,sans-serif;font-size:17px;line-height:2;padding:48px 60px;color:#1e2632}h2{text-align:center;font-family:SimHei,Microsoft YaHei,sans-serif}</style></head><body>${htmlContent}</body></html>`], { type: "text/html" });
+      const blob = new Blob([`<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:FangSong,仿宋,Microsoft YaHei,sans-serif;font-size:17px;line-height:2;padding:48px 60px;color:#1e2632}h2{text-align:center;font-family:SimHei,Microsoft YaHei,sans-serif}</style></head><body class="jb-ds-page">${htmlContent}</body></html>`], { type: "text/html" });
       const docUrl = URL.createObjectURL(blob);
       const key = "njkb-" + Date.now().toString(36);
       try {
@@ -3851,6 +3916,194 @@ let sidebarCollapsed = false;
     closeEditorHistoryDrawer();
     showToast(`已还原至 ${version.time} 的版本，并同步到“我的成果”`);
   }
+  function openPlanPilotShell(meta) {
+    switchView("chat");
+    editorMessageIndex = null;
+    editorDirty = false;
+    editorDraftHTML = "";
+    clearTimeout(autoSaveTimer);
+    setOnlyOfficeEngineState(false);
+    const mount = $("#ooMount");
+    if (mount) mount.style.display = "none";
+    $("#editorPanelTitle").textContent = (meta && meta.title) || "工作计划编排 · 任务成果";
+    $("#view-chat").classList.add("editor-open", "plan-pilot-open");
+    document.body.classList.add("editor-mode");
+    document.body.classList.remove("editor-sidebar-shown");
+    editorSidebarVisible = false;
+    const sidebarToggle = $("#editorSidebarToggle");
+    if (sidebarToggle) { sidebarToggle.setAttribute("aria-pressed", "false"); sidebarToggle.setAttribute("title", "显示左侧菜单"); }
+  }
+  function addPlanPilotAgentMessage(conversationId, html, extra) {
+    const conversation = convs.find(item => item.id === conversationId);
+    if (!conversation) return -1;
+    const timestamp = Date.now();
+    conversation.msgs.push({ role:"agent", agent:"plan", html, time:nowTime(), createdAt:timestamp, noTrust:true, ...(extra || {}) });
+    conversation.updatedAt = timestamp;
+    if (curId === conversationId) { renderChat(); scrollBottom(); }
+    renderSidebar();
+    return conversation.msgs.length - 1;
+  }
+  function createPlanPilotArtifact(conversationId, payload) {
+    const conversation = convs.find(item => item.id === conversationId);
+    if (!conversation) return -1;
+    const timestamp = Date.now();
+    const agentId = payload.agentId || "plan", sourceName = payload.sourceName || (agentId === "interpret" ? "政务文件解读" : "工作计划编排智能生成");
+    const message = {
+      role:"agent", agent:agentId,
+      html:agentId === "interpret" ? `<p>解读报告已按当前政策文件快照生成。您可以在右侧编辑，也可以切回“任务”核对原文依据。</p>` : `<p>工作计划已按当前任务数据版本生成。您可以在右侧继续编辑，也可以切回“任务”调整结构化内容。</p>`,
+      materialTitle:`${payload.title || (agentId === "interpret" ? "政务文件解读报告" : "工作计划")}.docx`, materialHTML:payload.html || "",
+      generatedMaterial:true, directGenerated:true, structuredValues:{ ...(payload.structuredValues || {}) },
+      materialSource:sourceName, taskPilotId:payload.taskId, planTaskId:agentId === "plan" ? payload.taskId : "", planArtifactVersion:payload.version || 1,
+      time:nowTime(), startedAt:timestamp - 1200, completedAt:timestamp, createdAt:timestamp, generationTime:formatDateTime(timestamp)
+    };
+    conversation.msgs.push(message);
+    conversation.updatedAt = timestamp;
+    ensureDocHistory(message);
+    archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName });
+    const index = conversation.msgs.length - 1;
+    if (curId === conversationId) { renderChat(); scrollBottom(); }
+    renderSidebar(); renderRail();
+    return index;
+  }
+  function updatePlanPilotArtifact(conversationId, messageIndex, payload) {
+    const conversation = convs.find(item => item.id === conversationId), message = conversation && conversation.msgs[Number(messageIndex)];
+    if (!message || !(message.taskPilotId || message.planTaskId)) return false;
+    const timestamp = Date.now();
+    message.materialTitle = `${payload.title || "工作计划"}.docx`;
+    message.materialHTML = payload.html || message.materialHTML;
+    message.planArtifactVersion = payload.version || message.planArtifactVersion || 1;
+    message.updatedAt = timestamp;
+    ensureDocHistory(message);
+    message.history.push({ ts:timestamp, time:formatDateTime(timestamp), type:"修改文档", html:message.materialHTML });
+    message.lastModified = formatDateTime(timestamp);
+    archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:payload.sourceName || message.materialSource || "政务AI助手" });
+    if (curId === conversationId) { renderChat(); renderSidebar(); }
+    return true;
+  }
+  function openPlanPilotArtifact(conversationId, messageIndex, taskId) {
+    const conversation = convs.find(item => item.id === conversationId);
+    if (!conversation) return;
+    if (curId !== conversationId) { curId = conversationId; renderChat(); renderSidebar(); }
+    openDocumentEditor(Number(messageIndex));
+    const message = conversation.msgs[Number(messageIndex)];
+    setTimeout(() => (message?.agent === "interpret" ? window.JBAIInterpretPilot : window.JBAIPlanPilot)?.attachArtifact({ taskId, messageIndex:Number(messageIndex) }), 0);
+  }
+  function polishSourceHTML(source) {
+    const lines = String(source?.text || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    if (!lines.length) return "<p>（暂无可润色正文）</p>";
+    const titleIndex = lines.length > 1 && lines[0].length <= 48 ? 0 : -1;
+    return lines.map((line, index) => index === titleIndex ? `<h2>${esc(line)}</h2>` : `<p>${esc(line)}</p>`).join("");
+  }
+  function preparePolishDocument(conversationId, source) {
+    const conversation = convs.find(item => item.id === conversationId);
+    if (!conversation) return null;
+    let index = -1;
+    if (source?.type === "当前生成文稿") index = conversation.msgs.findLastIndex(message => message.role === "agent" && message.directGenerated && message.materialHTML);
+    if (index < 0) {
+      const timestamp = Date.now(), rawName = source?.name && !/^本次/.test(source.name) ? source.name : "待润色文稿";
+      const message = {
+        role:"agent", agent:"polish", html:"<p>已载入待润色内容，正在进行全文智能润色。</p>",
+        materialTitle:/\.[a-z0-9]+$/i.test(rawName) ? rawName : `${rawName}.docx`, materialHTML:polishSourceHTML(source),
+        generatedMaterial:true, directGenerated:true, materialSource:"文本智能润色", time:nowTime(), createdAt:timestamp, startedAt:timestamp
+      };
+      conversation.msgs.push(message); conversation.updatedAt = timestamp; index = conversation.msgs.length - 1;
+      ensureDocHistory(message); archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:"文本智能润色" });
+    }
+    if (curId !== conversationId) curId = conversationId;
+    openDocumentEditor(index);
+    return { conversationId, messageIndex:index };
+  }
+  function prepareReviewDocument(conversationId, source) {
+    const conversation = convs.find(item => item.id === conversationId);
+    if (!conversation) return null;
+    let index = -1;
+    if (source?.type === "当前生成文稿") index = conversation.msgs.findLastIndex(message => message.role === "agent" && message.directGenerated && message.materialHTML);
+    if (index < 0) {
+      const timestamp = Date.now(), rawName = source?.name && !/^本次/.test(source.name) ? source.name : "待审查文稿";
+      const message = {
+        role:"agent", agent:"review", html:"<p>已载入待审查内容，正在执行辅助文本合规审查。</p>",
+        materialTitle:/\.[a-z0-9]+$/i.test(rawName) ? rawName : `${rawName}.docx`, materialHTML:polishSourceHTML(source),
+        generatedMaterial:true, directGenerated:true, materialSource:"辅助文本合规审查", time:nowTime(), createdAt:timestamp, startedAt:timestamp
+      };
+      conversation.msgs.push(message); conversation.updatedAt = timestamp; index = conversation.msgs.length - 1;
+      ensureDocHistory(message); archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:"辅助文本合规审查" });
+    }
+    if (curId !== conversationId) curId = conversationId;
+    openDocumentEditor(index);
+    return { conversationId, messageIndex:index };
+  }
+  function activePolishDocument() {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)];
+    if (!conversation || !message || editorMessageIndex == null || !message.materialHTML) return null;
+    return {
+      conversationId:conversation.id,
+      messageIndex:Number(editorMessageIndex),
+      title:String(message.materialTitle || "当前文稿").replace(/\.[^.]+$/, ""),
+      html:message.materialHTML,
+      agentId:message.agent || "",
+      createdAt:message.createdAt || null
+    };
+  }
+  function commitPolishedDocument(payload) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
+    if (!conversation || !message || !paper || !payload?.html) return false;
+    const timestamp = Date.now();
+    message.materialHTML = payload.html;
+    message.polishVersion = Number(message.polishVersion || 0) + 1;
+    message.html = `<p>已完成全文智能润色并生成新版本，共采纳 ${Number(payload.acceptedCount || 0)} 处修改。润色前版本及修改说明已保留在历史记录中。</p>`;
+    message.updatedAt = timestamp; conversation.updatedAt = timestamp;
+    ensureDocHistory(message);
+    message.history.push({ ts:timestamp, time:formatDateTime(timestamp), type:"全文智能润色", html:message.materialHTML, note:payload.summary || "润色稿、修改痕迹及修改说明" });
+    message.lastModified = formatDateTime(timestamp);
+    paper.innerHTML = message.materialHTML; paper.style.display = "";
+    editorDraftHTML = message.materialHTML; editorDirty = false;
+    updateEditorModifiedLabel(message); setEditorStatus("页 1 / 1 · 全文润色已应用", "#16a36a");
+    archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:message.materialSource || "文本智能润色" });
+    holdScroll(); renderChat(); renderSidebar(); renderRail();
+    return true;
+  }
+  function commitReviewedDocument(payload) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
+    if (!conversation || !message || !paper || !payload?.html) return false;
+    const timestamp = Date.now();
+    message.materialHTML = payload.html;
+    message.reviewVersion = Number(message.reviewVersion || 0) + 1;
+    message.reviewReports = [...(message.reviewReports || []), { ts:timestamp, reportHTML:payload.reportHTML || "", summary:payload.summary || "" }];
+    message.html = `<p>已完成辅助文本合规审查并生成闭环报告。初审发现 <b>${Number(payload.initialCount || 0)}</b> 项，复审遗留 <b>${Number(payload.remainingCount || 0)}</b> 项，审查记录和原始问题快照已保留。</p>`;
+    message.updatedAt = timestamp; conversation.updatedAt = timestamp;
+    ensureDocHistory(message);
+    message.history.push({ ts:timestamp, time:formatDateTime(timestamp), type:"合规审查", html:message.materialHTML, note:payload.summary || "问题整改、复审和闭环报告" });
+    message.lastModified = formatDateTime(timestamp);
+    paper.innerHTML = message.materialHTML; paper.style.display = "";
+    editorDraftHTML = message.materialHTML; editorDirty = false;
+    updateEditorModifiedLabel(message); setEditorStatus("页 1 / 1 · 合规审查已完成", "#168447");
+    archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:message.materialSource || "辅助文本合规审查" });
+    holdScroll(); renderChat(); renderSidebar(); renderRail();
+    return true;
+  }
+  function commitInlinePolish(payload) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
+    if (!conversation || !message || !paper || !payload?.html) return false;
+    const timestamp = Date.now(), style = String(payload.style || "局部润色");
+    message.materialHTML = payload.html;
+    message.inlinePolishVersion = Number(message.inlinePolishVersion || 0) + 1;
+    message.updatedAt = timestamp; conversation.updatedAt = timestamp;
+    ensureDocHistory(message);
+    message.history.push({
+      ts:timestamp,
+      time:formatDateTime(timestamp),
+      type:style === "撤销局部润色" ? "撤销局部润色" : "局部润色",
+      html:message.materialHTML,
+      note:`${style}：${String(payload.original || "").slice(0,36)} → ${String(payload.replacement || "").slice(0,36)}`
+    });
+    message.lastModified = formatDateTime(timestamp);
+    editorDraftHTML = message.materialHTML; editorDirty = false;
+    updateEditorModifiedLabel(message);
+    setEditorStatus(style === "撤销局部润色" ? "页 1 / 1 · 已撤销局部润色" : "页 1 / 1 · 局部润色已应用", "#168447");
+    archiveGeneratedMaterial(message, conversation, { sourceType:"agent", sourceName:message.materialSource || "文本智能润色" });
+    holdScroll(); renderChat(); renderSidebar(); renderRail();
+    return true;
+  }
   function openDocumentEditor(messageIndex) {
     const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)];
     if (!message || !message.directGenerated) { showToast("未找到可编辑的生成内容"); return; }
@@ -3869,6 +4122,12 @@ let sidebarCollapsed = false;
     wireOnlyOfficeToolbar();
     setOnlyOfficeEngineState(false);
     $("#view-chat").classList.add("editor-open");
+    const pilotTaskId = message.taskPilotId || message.planTaskId;
+    if (pilotTaskId) $("#view-chat").classList.add("plan-pilot-open");
+    else {
+      $("#view-chat").classList.remove("plan-pilot-open", "plan-pilot-fullscreen", "plan-show-chat");
+      window.JBAIPlanPilot?.close();
+    }
     document.body.classList.add("editor-mode");
     document.body.classList.remove("editor-sidebar-shown");
     editorSidebarVisible = false;
@@ -3878,6 +4137,8 @@ let sidebarCollapsed = false;
     mountOnlyOfficeEditor(String(message.materialTitle || "政务文稿").replace(/\.[^.]+$/, ""), editorDraftHTML).then(live => {
       if (!live) { setTimeout(() => { if (paper) paper.focus(); }, 0); }
     });
+    if (pilotTaskId) setTimeout(() => (message.agent === "interpret" ? window.JBAIInterpretPilot : window.JBAIPlanPilot)?.attachArtifact({ taskId:pilotTaskId, messageIndex:Number(messageIndex) }), 0);
+    setTimeout(() => { window.JBAIPolishPilot?.onEditorOpen(); window.JBAIReviewPilot?.onEditorOpen(); }, 0);
   }
   // 自动保存：输入停顿后自动写入会话与历史，无需手动点击
   let autoSaveTimer = null;
@@ -3935,6 +4196,9 @@ let sidebarCollapsed = false;
     const mount = $("#ooMount");
     if (mount && mount.firstChild && window.DocsAPI) { try { mount.firstChild.destroy && mount.firstChild.destroy(); } catch (e) {} }
     if (mount) mount.remove();
+    window.JBAIPolishPilot?.close({ silent:true });
+    window.JBAIReviewPilot?.close({ silent:true });
+    window.JBAIPlanPilot?.close();
     const paper = $("#editorPaper"); if (paper) paper.style.display = "";
     document.body.classList.remove("editor-mode", "editor-sidebar-shown");
     $("#view-chat").classList.remove("editor-open");
@@ -4104,10 +4368,11 @@ let sidebarCollapsed = false;
     else { const area = document.createElement("textarea"); area.value = value; document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove(); done(); }
   }
   function renderReplyContext() {
-    const box = $("#replyContext"), copy = $("#replyContextCopy"); if (!box || !copy) return;
+    const box = $("#replyContext"), copy = $("#replyContextCopy"), label = box?.querySelector(".reply-context-label"); if (!box || !copy) return;
     box.hidden = !replyContext;
     copy.textContent = replyContext ? replyContext.preview : "";
     box.title = replyContext ? replyContext.text : "";
+    if (label) label.textContent = replyContext?.kind === "document-selection" ? "引用文稿" : "追问";
   }
   function clearReplyContext() { replyContext = null; renderReplyContext(); }
   function followUpAgentReply(messageIndex) {
@@ -4118,6 +4383,22 @@ let sidebarCollapsed = false;
     renderReplyContext();
     const input = $("#composerInput"); if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
     showToast("已引用这条回答，可继续输入追问");
+  }
+  function quoteDocumentSelection(payload) {
+    const text = String(payload?.text || "").trim();
+    if (!text) { showToast("请先选择需要追问的文稿内容"); return false; }
+    window.JBAIDocumentFocus?.pauseForQuestion?.();
+    const title = String(payload?.documentTitle || "当前文稿").replace(/\.[^.]+$/, ""), clean = text.replace(/\s+/g, " ");
+    replyContext = {
+      kind:"document-selection", messageIndex:null, agentId:null, text,
+      documentTitle:title, version:payload?.version || null,
+      preview:`《${title}》：${clean.slice(0, 76)}${clean.length > 76 ? "…" : ""}`
+    };
+    renderReplyContext();
+    const input = $("#composerInput");
+    if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+    showToast("已引用选中文字，请输入问题后发送");
+    return true;
   }
   // 重试：回到该 AI 回复对应的用户提问，截断之后的消息并重新路由生成（用于断线/中断重发）
   function retryAgentReply(messageIndex) {
@@ -4141,7 +4422,7 @@ let sidebarCollapsed = false;
     send();
   }
   function agentResponseActions(message, index) {
-    if (!message || message.kind === "task-progress") return "";
+    if (!message || message.kind === "task-progress" || message.kind === "workbench-task") return "";
     return `<div class="agent-response-actions"><button class="agent-response-action" type="button" data-act="copyAgentReply" data-msg-index="${index}" title="复制回答">${svgi("i-copy",14)}<span>复制</span></button><button class="agent-response-action" type="button" data-act="followUpAgentReply" data-msg-index="${index}" title="追问这条回答">${svgi("i-arrow",14)}<span>追问</span></button></div>`;
   }
   function agentBubble(agentId, html, m, index) {
@@ -4151,7 +4432,7 @@ let sidebarCollapsed = false;
     const tag = a ? `<span class="tag blue">${a.cat}</span>` : "";
     const isDirect = !!(m && m.directGenerated);
     const generatedClock = esc(responseStatusText(m, index));
-    const showActions = !m || m.kind !== "task-progress";
+    const showActions = !m || (m.kind !== "task-progress" && m.kind !== "workbench-task");
     const actionBtns = m && m.kind === "model-error"
       ? m.retryStartedAt
         ? `<button class="agent-response-action" type="button" disabled title="已发起继续执行">${svgi("i-check",14)}<span>已重试</span></button>`
@@ -4161,7 +4442,7 @@ let sidebarCollapsed = false;
     const materialAction = messageMaterialAction(m, index);
     const footer = `${materialAction}<div class="msg-footer">${actionBtns}${disclaimerCell}</div>`;
     const generatedMeta = generatedClock ? `<div class="agent-generated-at">${generatedClock}</div>` : "";
-    return `<div class="msg agent${m && m._wide ? " has-wide" : ""}"><div class="av"><img src="assets/jiangbei-logo.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
+    return `<div class="msg agent${m && m._wide ? " has-wide" : ""}${m && m.workbenchTask ? " workbench-task-message" : ""}"><div class="av"><img src="assets/jiangbei-logo.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
       <div class="bubble">${generatedMeta}<div class="who"><b>${esc(name)}</b>${tag}</div>${html}${footer}</div></div>`;
   }
   function formatResponseDuration(ms) {
@@ -4171,7 +4452,7 @@ let sidebarCollapsed = false;
     return `${seconds}秒`;
   }
   function responseStatusText(message) {
-    if (!message || message.kind === "task-progress" || message.kind === "model-error") return "";
+    if (!message || message.kind === "task-progress" || message.kind === "workbench-task" || message.kind === "model-error") return "";
     const started = Number(message.startedAt || message.createdAt || Date.now());
     const completed = Number(message.completedAt || message.createdAt || Date.now());
     return `已完成 ${formatResponseDuration(Math.max(0, completed - started))}`;
@@ -4265,6 +4546,14 @@ let sidebarCollapsed = false;
     ];
   }
   function focusedSuggestions(a) {
+    if (a && a.id === "review") return [
+      { t: "帮我审查一下当前文稿", d: "自动识别文种并检查格式、行文、政策和保密规则", agent: a.id, cat: a.cat },
+      { t: "使用安全生产通知示例进行合规审查", d: "包含政策名称、日期、附件与落款等典型问题", agent: a.id, cat: a.cat }
+    ];
+    if (a && a.id === "polish") return [
+      { t: "帮我优化一下当前文稿", d: "未指定具体段落时，自动执行全文智能润色", agent: a.id, cat: a.cat },
+      { t: "使用政务通知示例进行全文润色", d: "真实办公场景，包含冗余和不规范表达", agent: a.id, cat: a.cat }
+    ];
     const map = {
       generate: [{ t: `帮我生成一份${a.docType}`, d: "追问要素→标准化→生成→校验→交付", agent: a.id }, { t: `拟一份关于推进重点工作的${a.docType}`, d: "在对话里逐步完善", agent: a.id }],
       check: [{ t: "帮我审查这份文稿的合规性", d: "上传后逐条给出问题与建议", agent: a.id }, { t: "检查这份材料的格式与行文规则", d: "标题/主送/落款/层级", agent: a.id }],
@@ -4281,7 +4570,7 @@ let sidebarCollapsed = false;
     return conv && [...(conv.msgs || [])].reverse().find(message => message.role === "agent" && message.directGenerated && message.materialHTML);
   }
   function isRevisionRequest(text) {
-    return /(修改|改一下|调整|优化|精简|压缩|扩写|补充|重写|换成|改为|删除第|增加一段|语气|更正式|更简洁|第二段|第[一二三四五六七八九十\d]+段|上一版|刚才生成|函件类型|发函单位|收函单位|函件主题|核心事项|落款|盖章|附件|主送单位|发文单位|发布日期|决策主体|事项名称|新闻主题|讲话主题|报送单位)/.test(String(text || ""));
+    return /(修改|改一下|调整|优化|润色|精简|压缩|扩写|补充|重写|换成|改为|删除第|增加一段|语气|更正式|更简洁|第二段|第[一二三四五六七八九十\d]+段|上一版|刚才生成|函件类型|发函单位|收函单位|函件主题|核心事项|落款|盖章|附件|主送单位|发文单位|发布日期|决策主体|事项名称|新闻主题|讲话主题|报送单位)/.test(String(text || ""));
   }
   function applyLabeledPlaceholderValues(previousHTML, instruction) {
     const box = document.createElement("div"); box.innerHTML = previousHTML || "";
@@ -5417,6 +5706,8 @@ let sidebarCollapsed = false;
     const text = ta.value.trim();
     if (!text && !pendingAttach) return;
     // v3.0: 如果正在进行v3迭代，将用户输入作为补充信息
+    const requestedPilot = activeAgent || inferAgentFromRequest(text);
+    if (requestedPilot === "plan" || requestedPilot === "interpret" || requestedPilot === "polish") agentV3Session = null;
     if (agentV3Session) {
       const curConv = cur();
       if (!curConv || agentV3Session.convId !== curConv.id) {
@@ -5431,15 +5722,33 @@ let sidebarCollapsed = false;
     const c = cur(); if (!c) return;
     const pendingConversationalDraft = conversationalDraft && conversationalDraft.convId === c.id ? conversationalDraft : null;
     const pendingReplyContext = replyContext ? { ...replyContext } : null;
-    const modelText = pendingReplyContext ? `${text}\n\n引用上一条回答作为上下文：\n${pendingReplyContext.text}` : text;
+    const modelText = pendingReplyContext ? `${text}\n\n${pendingReplyContext.kind === "document-selection" ? "引用当前文稿选中内容作为上下文" : "引用上一条回答作为上下文"}：\n${pendingReplyContext.text}` : text;
     const enrichedText = withHomeContext(modelText);
     const connector = activeConnector ? connectorById(activeConnector) : null;
     const connectorOperationId = activeConnectorOperationId;
     const previousGenerated = latestGeneratedMessage(c);
-    const revisionRequest = !!(!activeAgent && !connector && previousGenerated && isRevisionRequest(text));
-    const replyAgent = activeAgent ? byId(activeAgent) : revisionRequest ? byId(previousGenerated.agent) : null;
+    const reviewRequest = !!window.JBAIReviewPilot?.shouldStart({
+      text,
+      hasDocument: !!previousGenerated,
+      explicitAgent: activeAgent === "review"
+    });
+    const polishFullRequest = !!window.JBAIPolishPilot?.shouldStartFull({
+      text,
+      hasDocument: !!previousGenerated,
+      explicitAgent: activeAgent === "polish"
+    });
+    const revisionRequest = !!(!reviewRequest && !polishFullRequest && !activeAgent && !connector && previousGenerated && isRevisionRequest(text));
+    const activePlanPilot = !activeAgent && window.JBAIPlanPilot?.hasTask(c.id);
+    const activeInterpretPilot = !activeAgent && window.JBAIInterpretPilot?.hasTask(c.id);
+    const contextualFollowup = (!activeAgent || activeAgent === "interpret") && !pendingAttachList.length && !homeKnowledgeBases.length && window.JBAIInterpretPilot?.isFollowup(c.id, text);
+    const inferredAgentId = contextualFollowup ? "interpret" : reviewRequest ? "review" : polishFullRequest ? "polish" : !revisionRequest && !activeAgent ? inferAgentFromRequest(text) : null;
+    const replyAgent = reviewRequest ? byId("review") : polishFullRequest ? byId("polish") : revisionRequest ? byId(previousGenerated.agent) : activeAgent ? byId(activeAgent) : inferredAgentId ? byId(inferredAgentId) : activeInterpretPilot ? byId("interpret") : activePlanPilot ? byId("plan") : null;
     let structuredValues = null, structuredNeedsConfirm = null;
-    if (replyAgent && replyAgent.entryMode === "chat" && !revisionRequest) {
+    if (replyAgent && (replyAgent.id === "polish" || replyAgent.id === "review") && !revisionRequest) {
+      structuredValues = {};
+    } else if (replyAgent && (replyAgent.id === "plan" || replyAgent.id === "interpret") && !revisionRequest) {
+      structuredValues = parseAgentPrompt(replyAgent, text).values;
+    } else if (replyAgent && replyAgent.entryMode === "chat" && !revisionRequest) {
       if (validatedStructuredValues && validatedStructuredValues.agentId === replyAgent.id) {
         structuredValues = validatedStructuredValues.values;
         validatedStructuredValues = null;
@@ -5451,18 +5760,45 @@ let sidebarCollapsed = false;
       }
     }
     const attach = pendingAttach;
+    const workbenchSourceNames = pendingAttachList.slice();
+    const pilotSources = window.JBAIPilotIntake?.capture(pendingAttachList.slice(), homeKnowledgeBases.map(file => {
+      const saved = typeof PERSONAL_KB_CONTENT !== "undefined" ? PERSONAL_KB_CONTENT[`${file.folder}:${file.name}`] : null;
+      return { ...file, contentHTML:file.contentHTML || saved?.contentHTML || "" };
+    }), previousGenerated ? { id:previousGenerated.taskPilotId || previousGenerated.createdAt, title:previousGenerated.materialTitle || "当前生成文稿", html:previousGenerated.materialHTML || "" } : null, text, { skipPasted:contextualFollowup, agentId:replyAgent?.id || "" }) || [];
     c.agent = replyAgent ? replyAgent.id : null;
     c.templateId = activeTemplateId || null;
     c.connector = connector ? connector.id : null;
     c.skills = [];
     c.knowledgeBases = homeKnowledgeBases.map(k => k.id);
     c.customInstructionsSnapshot = activePersonalCustomPrompt();
-    c.msgs.push({ role: "user", html: esc(text).replace(/\n/g, "<br>") || "（已上传附件）", attach: attach, replyContext:pendingReplyContext ? { messageIndex:pendingReplyContext.messageIndex, preview:pendingReplyContext.preview } : null });
+    c.msgs.push({ role: "user", html: esc(text).replace(/\n/g, "<br>") || "（已上传附件）", attach: attach, replyContext:pendingReplyContext ? { kind:pendingReplyContext.kind || "message", messageIndex:pendingReplyContext.messageIndex, preview:pendingReplyContext.preview } : null });
     if (c.title === "新对话") c.title = (text || attach || "新对话").slice(0, 22);
     c.updatedAt = Date.now();
     ta.value = ""; syncPromptHighlight(ta); clearAttach(); clearReplyContext(); autoSize(); toggleSend();
     resetComposerSelections();
     renderChat(); renderSidebar();
+    if (replyAgent && replyAgent.id === "plan" && replyAgent.entryMode === "chat" && window.JBAIPlanPilot) {
+      const args = { agentId:"plan", conversationId:c.id, prompt:text, text, attachment:attach || "", values:structuredValues || {}, sources:pilotSources };
+      if (activePlanPilot && !pilotSources.length) window.JBAIPlanPilot.handleInstruction(args);
+      else window.JBAIPilotIntake.run(args);
+      return;
+    }
+    if (replyAgent && replyAgent.id === "interpret" && window.JBAIInterpretPilot) {
+      const args = { agentId:"interpret", conversationId:c.id, prompt:text, text, attachment:attach || "", values:structuredValues || {}, sources:pilotSources };
+      if ((activeInterpretPilot || contextualFollowup) && !pilotSources.length) window.JBAIInterpretPilot.handleInstruction(args);
+      else window.JBAIPilotIntake.run(args);
+      return;
+    }
+    if (replyAgent && replyAgent.id === "polish" && window.JBAIPolishPilot) {
+      const args = { agentId:"polish", conversationId:c.id, prompt:text, text, attachment:attach || "", sources:pilotSources };
+      window.JBAIPilotIntake.run(args);
+      return;
+    }
+    if (replyAgent && replyAgent.id === "review" && window.JBAIReviewPilot) {
+      const args = { agentId:"review", conversationId:c.id, prompt:text, text, attachment:attach || "", sources:pilotSources };
+      window.JBAIPilotIntake.run(args);
+      return;
+    }
     if (pendingConversationalDraft) {
       handleConversationalReply(c, pendingConversationalDraft, text, attach);
       return;
@@ -5472,8 +5808,24 @@ let sidebarCollapsed = false;
       return;
     }
     if (replyAgent && replyAgent.entryMode !== "chat") {
-      openWorkbench(replyAgent.id, { sourceAgentId:replyAgent.id, title:topicOf(text), text, html:`<p>${esc(text)}</p>`, structuredValues:{}, customInstructions:c.customInstructionsSnapshot || activePersonalCustomPrompt(), reference:{ knowledgeBases:c.knowledgeBases.slice(), attachment:attach || "" }, conversationId:c.id });
-      showToast(`已识别为「${replyAgent.name}」，正在进入独立工作台`);
+      const context = { sourceAgentId:replyAgent.id, title:topicOf(text), text, html:`<p>${esc(text)}</p>`, structuredValues:{}, customInstructions:c.customInstructionsSnapshot || activePersonalCustomPrompt(), reference:{ knowledgeBases:c.knowledgeBases.slice(), attachment:attach || "" }, conversationId:c.id, sources:workbenchSourceNames };
+      const task = createWorkbenchConversationTask(c, replyAgent, context);
+      showToast("正在识别任务意图和材料来源");
+      setTimeout(() => {
+        const found = workbenchTaskById(task.id); if (!found || found.task.state !== "recognizing") return;
+        Object.assign(found.task,{ state:"parsing",progress:38,stage:`已识别为${replyAgent.name}，正在接入材料` });
+        if (curId === found.conversation.id) { renderChat(); scrollBottom(); }
+      }, 420);
+      setTimeout(() => {
+        const found = workbenchTaskById(task.id); if (!found || !["recognizing","parsing"].includes(found.task.state)) return;
+        Object.assign(found.task,{ state:"ready",progress:100,stage:"材料已接入，可进入工作台确认" });
+        if (curId === found.conversation.id) { renderChat(); scrollBottom(); }
+        renderSidebar();
+      }, 920);
+      setTimeout(() => {
+        const found = workbenchTaskById(task.id); if (!found || !["recognizing","parsing","ready"].includes(found.task.state)) return;
+        openWorkbenchTask(found.task);
+      }, 1450);
       return;
     }
     // 需求2：当前会话有未完成工作流且仍是同一智能体 → 作为补充指令并入当前流程，不新开卡
@@ -5639,13 +5991,13 @@ let sidebarCollapsed = false;
     if (!agent || !field) return;
     const value = structuredSelectValue(field), preset = (field.options || []).includes(value);
     const options = (field.options || []).map((option, index) => `<button type="button" class="select-wizard-option ${value === option ? "selected" : ""}" data-structured-choice="${esc(option)}"><span class="select-wizard-index">${index + 1}</span><span>${esc(option)}</span><span class="select-wizard-arrow">${value === option ? "✓" : "→"}</span></button>`).join("");
-    $("#structuredConfirmTitle").textContent = structuredSelectQuestion(agent, field);
-    $("#structuredConfirmSubtitle").textContent = `${agent.name} · 仅确认表格中定义的选择字段`;
+    $("#structuredConfirmTitle").textContent = field.question || structuredSelectQuestion(agent, field);
+    $("#structuredConfirmSubtitle").textContent = draft.pilotResolve ? `${agent.name} · 逐项确认后开始处理` : `${agent.name} · 仅确认表格中定义的选择字段`;
     $("#structuredConfirmStep").textContent = `${draft.pageIndex + 1}/${draft.fields.length}`;
     $("#structuredConfirmPrev").disabled = draft.pageIndex === 0;
     $("#structuredConfirmBody").innerHTML = `<div class="select-wizard-options">${options}<label class="select-wizard-manual"><span class="select-wizard-index">✎</span><input data-structured-manual="${field.key}" value="${esc(preset ? "" : value)}" placeholder="其他补充：可手动填写${esc(field.label)}"></label></div>${draft.attach ? `<div class="agent-confirm-intro" style="margin:12px 0 0"><b>已上传附件：</b>${esc(draft.attach)}</div>` : ""}`;
     const action = $("#structuredConfirmOk");
-    action.textContent = draft.pageIndex === draft.fields.length - 1 ? "发送" : "下一步";
+    action.textContent = draft.pageIndex === draft.fields.length - 1 ? (draft.pilotResolve ? "确认并开始" : "发送") : "下一步";
     action.disabled = !value;
     document.body.classList.add("agent-confirming");
     renderSidebar();
@@ -5663,9 +6015,11 @@ let sidebarCollapsed = false;
     renderStructuredConfirmSheet();
   }
   function closeStructuredConfirmSheet() {
+    const pilotResolve = structuredConfirmDraft && structuredConfirmDraft.pilotResolve;
     const conversationId = structuredConfirmDraft && structuredConfirmDraft.conversationId;
     document.body.classList.remove("agent-confirming");
     structuredConfirmDraft = null;
+    if (pilotResolve) pilotResolve(null);
     if (conversationId) renderSidebar();
     if (currentView === "chat") setTimeout(() => $("#composerInput").focus(), 0);
   }
@@ -5679,6 +6033,13 @@ let sidebarCollapsed = false;
     if (draft.pageIndex < draft.fields.length - 1) {
       draft.pageIndex += 1;
       renderStructuredConfirmSheet();
+      return;
+    }
+    if (draft.pilotResolve) {
+      const resolve = draft.pilotResolve, values = { ...draft.values };
+      draft.pilotResolve = null;
+      closeStructuredConfirmSheet();
+      resolve(values);
       return;
     }
     const agent = byId(draft.agentId), schema = agent && CHAT_AGENT_SCHEMAS[agent.id], values = { ...draft.values }, processMessage = draft.processMessage || null;
@@ -5765,7 +6126,7 @@ let sidebarCollapsed = false;
       if (!list.length) return;
       html += `<div class="picker-cap">${cat}</div>` + list.map(a => `<div class="pk-item ${activeAgent === a.id ? "sel" : ""}" data-pick="${a.id}"><div class="pk-ic" style="${ic(a.cat)}">${agentIcon(a, 16)}</div><div><div class="pk-name">${esc(a.name)}</div><div class="pk-desc">${esc(a.desc)}</div></div>${activeAgent === a.id ? '<span class="pk-check">✓</span>' : ""}</div>`).join("");
     });
-    $("#pickerBody").innerHTML = html + `<div class="picker-note">这里展示 12 个可在会话中直接发起的智能体；审查、润色、会议纪要、合同和 PPT 共 5 个复杂智能体从“智能体广场”进入独立工作台。</div>`;
+    $("#pickerBody").innerHTML = html + `<div class="picker-note">这里展示可在会话中直接发起的智能体；文本润色已接入右侧文稿编辑区，审查、会议纪要、合同和 PPT 仍从“智能体广场”进入独立工作台。</div>`;
   }
 
   // ===== 输入框自适应 =====
@@ -6122,6 +6483,7 @@ let sidebarCollapsed = false;
     state.timer = setTimeout(() => advanceDirectGeneration(state), 720);
   }
   function startDirectGeneration(conv, agent, text, attach, values, reference, existingMessage) {
+    if (structuredConfirmDraft?.pilotResolve) closeStructuredConfirmSheet();
     const preparedSpeaker = prepareSpeechGeneration(conv, agent, text, attach, values || {}, reference || {}, existingMessage);
     if (!preparedSpeaker.proceed) return;
     values = preparedSpeaker.values || values || {};
@@ -7284,7 +7646,7 @@ let sidebarCollapsed = false;
     return `<div class="task-file-preview"><div class="task-file-head"><span class="scheduled-icon" style="background:var(--gov-50);color:var(--gov-700)">${svgi("i-file",17)}</span><div><b>${esc(item.name)}</b><small>${esc(item.date)} · ${esc(item.size)} · ${esc(item.sourceName)}</small></div></div><div class="achievement-detail-grid"><div class="achievement-detail-item"><small>生成来源</small><b>${esc(item.sourceName)}</b></div><div class="achievement-detail-item"><small>关联会话</small><b title="${esc(item.conversationTitle || "未关联会话")}">${esc(item.conversationTitle || "未关联会话")}</b></div></div><div class="gov-doc task-file-doc">${item.contentHTML || "<p>暂无在线预览内容。</p>"}</div><div class="task-file-foot"><span>${achievementSourceHTML(item)}</span><button class="btn" data-act="achievementDownload" data-id="${item.id}">${svgi("i-download",14)}下载文件</button></div></div>`;
   }
   function downloadAchievement(item) {
-    const documentHTML = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(item.name)}</title></head><body>${item.contentHTML || `<h2>${esc(item.name)}</h2>`}</body></html>`;
+    const documentHTML = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(item.name)}</title></head><body class="jb-ds-page">${item.contentHTML || `<h2>${esc(item.name)}</h2>`}</body></html>`;
     const blob = new Blob([documentHTML], { type:"application/octet-stream" }), url = URL.createObjectURL(blob), link = document.createElement("a");
     link.href = url; link.download = item.name; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 500);
     showToast(`《${item.name}》已开始下载`);
@@ -7920,10 +8282,19 @@ let sidebarCollapsed = false;
   }
   function renderVoiceRecording() {
     if (!voiceRecordingState) return;
-    const text = voiceRecordingState === "recording" ? `<div class="voice-recording-bar">${svgi("i-mic",16)}<b>${String(Math.floor(voiceRecordingElapsed / 60)).padStart(2,"0")}:${String(voiceRecordingElapsed % 60).padStart(2,"0")}</b><button type="button" data-voice-action="cancel" aria-label="取消">×</button><button type="button" data-voice-action="finish" aria-label="完成">${svgi("i-check",16)}</button></div>` : `<div class="voice-recording-bar voice-transcribing"><span class="voice-spinner"></span><span>正在转写</span></div>`;
-    const input = voiceInputTarget; const shell = input && input.closest(".home-composer"), foot = shell && $(".composer-foot-right", shell); if (!foot) return; let host = $(".voice-recording-host", foot); if (!host) { host = document.createElement("div"); host.className = "voice-recording-host"; foot.insertBefore(host, foot.firstChild); } host.innerHTML = text; shell.classList.add("is-voice-recording");
+    const input = voiceInputTarget, shell = input && input.closest(".home-composer"), composer = shell && $(".composer", shell); if (!composer) return;
+    let host = $(".voice-recording-host", composer);
+    if (!host) { host = document.createElement("div"); host.className = "voice-recording-host"; composer.insertBefore(host, composer.firstChild); }
+    const clock = `${String(Math.floor(voiceRecordingElapsed / 60)).padStart(2,"0")}:${String(voiceRecordingElapsed % 60).padStart(2,"0")}`;
+    if (host.dataset.state === voiceRecordingState) { const timer = $("[data-voice-time]", host); if (timer) timer.textContent = clock; return; }
+    const wave = [7,12,18,10,15,21,13,8,17,22,14,9,19,12,7].map((height,index) => `<i style="--wave-height:${height}px;--wave-delay:${(-index * .065).toFixed(3)}s"></i>`).join("");
+    host.dataset.state = voiceRecordingState;
+    host.innerHTML = voiceRecordingState === "recording"
+      ? `<div class="voice-recording-stage is-recording" role="status" aria-live="polite"><div class="voice-status-kicker"><span class="voice-live-dot"></span>实时语音识别</div><b class="voice-time" data-voice-time>${clock}</b><div class="voice-orb-shell" aria-hidden="true"><span class="voice-orb"></span></div><div class="voice-listen-copy"><strong>正在聆听…</strong><span>请自然说话，系统会实时识别您的内容</span></div><div class="voice-wave" aria-hidden="true">${wave}</div><div class="voice-stage-actions"><button type="button" data-voice-action="cancel"><span aria-hidden="true">×</span>取消</button><button class="voice-finish" type="button" data-voice-action="finish">${svgi("i-check",13)}完成录入</button></div></div>`
+      : `<div class="voice-recording-stage is-transcribing" role="status" aria-live="polite"><div class="voice-status-kicker"><span class="voice-live-dot"></span>智能语音转写</div><b class="voice-time" data-voice-time>${clock}</b><div class="voice-orb-shell" aria-hidden="true"><span class="voice-orb"></span></div><div class="voice-listen-copy"><strong>正在整理语音内容…</strong><span>识别完成后将自动填入输入框</span></div><div class="voice-transcribing-label"><span class="voice-spinner"></span>正在转写</div></div>`;
+    shell.classList.add("is-voice-recording");
   }
-  function startVoiceInput(context) { voiceInputTarget = context === "new" ? $("#newInput") : $("#homeInput"); voiceRecordingState = "recording"; voiceRecordingElapsed = 0; renderVoiceRecording(); clearInterval(voiceRecordingTimer); voiceRecordingTimer = setInterval(() => { voiceRecordingElapsed += 1; renderVoiceRecording(); }, 1000); }
+  function startVoiceInput(context) { if (voiceRecordingState) cancelVoiceInput(); voiceInputTarget = context === "new" ? $("#newInput") : $("#homeInput"); voiceRecordingState = "recording"; voiceRecordingElapsed = 0; renderVoiceRecording(); clearInterval(voiceRecordingTimer); voiceRecordingTimer = setInterval(() => { voiceRecordingElapsed += 1; renderVoiceRecording(); }, 1000); }
   function cancelVoiceInput() { clearInterval(voiceRecordingTimer); voiceRecordingTimer = null; voiceRecordingState = null; const shell = voiceInputTarget && voiceInputTarget.closest(".home-composer"), host = shell && $(".voice-recording-host", shell); if (host) host.remove(); if (shell) shell.classList.remove("is-voice-recording"); }
   function finishVoiceInput() { if (voiceRecordingState !== "recording") return; clearInterval(voiceRecordingTimer); voiceRecordingTimer = null; voiceRecordingState = "transcribing"; renderVoiceRecording(); setTimeout(() => { insertVoiceText("请帮我起草一份关于重点项目服务保障工作的通知"); cancelVoiceInput(); showToast("语音已转换为文字"); }, 900); }
   const CFG_SCOPE_LABEL = { personal:"个人", department:"部门", public:"公共" };
@@ -10756,7 +11127,7 @@ function cfgRoleManagementHTML() {
     const template = templates.length ? (defaultTemplateForAgent(a.id) || templates[0]) : null;
     if (homeMode) return `<div class="a-card" data-home-agent="${a.id}"><div class="ac-top"><div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a,20)}</div><div style="min-width:0"><div class="ac-name">${esc(a.name)}</div><div class="ac-cat">${esc(a.cat)} · ${a.entryMode === "chat" ? "对话型" : "独立工作台"}</div></div></div><div class="ac-desc">${esc(a.desc)}</div></div>`;
     const usage = a.entryMode === "chat" ? "对话型" : "独立工作台";
-    const templateName = a.entryMode === "chat" ? (template?.name || "暂未配置") : "无需模板";
+    const templateName = a.id === "polish" ? "全文润色规则（内置）" : a.entryMode === "chat" ? (template?.name || "暂未配置") : "无需模板";
     return `<article class="a-card agent-market-card" data-agent-card="${a.id}" title="查看${esc(a.name)}详情">
       <div class="ac-top">
         <div class="ac-ic" style="${ic(a.cat)}">${agentIcon(a, 20)}</div>
@@ -11050,6 +11421,7 @@ function cfgRoleManagementHTML() {
     else { updateLandingComposerControls("home"); }
   }
   function agentDefaultPrompt(agent) {
+    if (agent && agent.id === "polish") return "请上传或粘贴需要润色的文稿；如果当前会话已经生成文稿，也可以直接输入“帮我优化一下”。";
     if (agent && agent.entryMode === "chat") return agentPromptTemplate(agent);
     const first = agent ? focusedSuggestions(agent)[0] : null;
     return first ? first.t : `请使用「${agent.name}」协助我完成这项工作。`;
@@ -11098,7 +11470,7 @@ function cfgRoleManagementHTML() {
     if (agent.entryMode !== "chat") { openWorkbench(agent.id); showToast(`「${agent.name}」需要在独立工作台中完成`); return; }
     if (activeConnector || homeSkills.length) { showToast("请先移除已选连接器或技能后再选择智能体"); return; }
     const targetView = currentView === "newchat" ? "newchat" : "home";
-    const frequentTemplate = CFG_TEMPLATES.filter(template => template.agentId === agentId && cfgTemplateCanSee(template)).sort((a,b) => Number(b.calls || 0) - Number(a.calls || 0))[0] || null;
+    const frequentTemplate = agentId === "polish" ? null : CFG_TEMPLATES.filter(template => template.agentId === agentId && cfgTemplateCanSee(template)).sort((a,b) => Number(b.calls || 0) - Number(a.calls || 0))[0] || null;
     activeAgent = agentId; activeTemplateId = frequentTemplate ? frequentTemplate.id : null;
     switchView(targetView);
     renderAgentPill(); syncExclusion(); renderSidebar();
@@ -11373,6 +11745,7 @@ function cfgRoleManagementHTML() {
   function enterAgentWithTemplate(agent,template) {
     if (!agent || config.agentsOff.has(agent.id)) { showToast("该智能体当前未向本部门开放"); return; }
     if (agent.entryMode !== "chat") { openWorkbench(agent.id); return; }
+    if (agent.id === "polish") template = null;
     activeAgent = agent.id; activeConnector = null; homeSkills = []; activeTemplateId = template?.id || null;
     switchView("home"); renderAgentPill(); renderConnectorSelection(); renderHomeSkill(); syncExclusion(); renderSidebar();
     fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),$("#homeInput"));
@@ -11381,7 +11754,7 @@ function cfgRoleManagementHTML() {
   function openMarketplaceAgentDetail(agentId) {
     const agent = byId(agentId); if (!agent) return;
     const stats = AGENT_STATS[agent.id] || { calls:0, published:"暂无" };
-    const list = agent.entryMode === "chat" ? templatesForAgent(agentId) : [];
+    const list = agent.entryMode === "chat" && agent.id !== "polish" ? templatesForAgent(agentId) : [];
     const current = list.length ? defaultTemplateForAgent(agentId) : null;
     const initial = current || list[0] || null;
     const usage = agent.entryMode === "chat" ? "对话型" : "独立工作台";
@@ -11390,7 +11763,7 @@ function cfgRoleManagementHTML() {
       : list.length === 1
         ? ""
         : `<div class="agent-template-empty">暂未配置可用模板，可先进入模板管理进行配置。</div>`;
-    const templateSection = agent.entryMode === "chat" ? `<section class="agent-detail-content">
+    const templateSection = agent.id === "polish" ? `<section class="agent-detail-content"><div class="agent-detail-section-head">${svgi("i-wand",15)}<b>使用方式</b></div><div class="agent-template-empty">可上传或粘贴外部文稿；当前会话已有生成文稿时，也可直接在右侧编辑器点击“全文智能润色”，无需进入独立工作台。</div></section>` : agent.id === "review" ? `<section class="agent-detail-content"><div class="agent-detail-section-head">${svgi("i-shield",15)}<b>使用方式</b></div><div class="agent-template-empty">可上传、粘贴或直接审查当前文稿；系统自动匹配文种和规则，并在右侧完成问题整改、复审与报告留痕。</div></section>` : agent.entryMode === "chat" ? `<section class="agent-detail-content">
       <div class="agent-detail-section-head">${svgi("i-file",15)}<b>智能体模板</b><button class="btn" type="button" data-act="marketTemplateManage" data-agent-id="${agentId}">${svgi("i-edit",13)}管理模板</button></div>
       ${initial ? `<div class="agent-current-template"><span class="agent-current-template-icon">${svgi("i-check",15)}</span><span class="agent-current-template-copy"><small>当前使用模板</small><b id="marketCurrentTemplateName">${esc(initial.name)}</b></span><span id="marketCurrentTemplateScope" class="agent-current-template-scope">${CFG_SCOPE_LABEL[initial.scope] || "公共"}模板</span></div>` : ""}
       ${templateControl}
@@ -11403,7 +11776,7 @@ function cfgRoleManagementHTML() {
       else openAgentFromMarketplace(agent.id);
       if (selected) showToast(`已使用模板“${selected.name}”`);
     };
-    openModal(agent.entryMode === "chat" ? `选择${agent.name}模板` : `${agent.name} · 智能体详情`, `<section class="agent-detail-summary">
+    openModal(agent.entryMode === "chat" && agent.id !== "polish" ? `选择${agent.name}模板` : `${agent.name} · 智能体详情`, `<section class="agent-detail-summary">
       <div class="agent-detail-identity">
         <span class="agent-detail-icon" style="${ic(agent.cat)}">${agentIcon(agent,28)}</span>
         <span class="agent-detail-name"><b>${esc(agent.name)}</b><small>政务智能体服务</small></span>
@@ -11411,7 +11784,7 @@ function cfgRoleManagementHTML() {
       </div>
       <div class="agent-detail-meta"><span class="agent-detail-meta-item"><small>智能体类型</small><b>${esc(agentTypeLabel(agent))}</b></span><span class="agent-detail-meta-item"><small>使用方式</small><b>${usage}</b></span><span class="agent-detail-meta-item"><small>调用次数</small><b>${svgi("i-chart",13)}${Number(stats.calls || 0).toLocaleString("zh-CN")} 次</b></span><span class="agent-detail-meta-item"><small>发布时间</small><b>${svgi("i-clock",13)}${esc(stats.published || "暂无")}</b></span></div>
       <p class="agent-detail-desc">${esc(agent.desc)}</p>
-    </section>${templateSection}`, useSelected, { okText:agent.entryMode === "chat" ? (list.length ? "使用该模板" : "立即使用") : "进入工作台", width:"min(860px, calc(100vw - 40px))", className:"agent-detail-modal" });
+    </section>${templateSection}`, useSelected, { okText:agent.id === "polish" ? "立即使用" : agent.entryMode === "chat" ? (list.length ? "使用该模板" : "立即使用") : "进入工作台", width:"min(860px, calc(100vw - 40px))", className:"agent-detail-modal" });
     const choice = $("#marketTemplateChoice"), preview = $("#marketTemplatePreview");
     const defaultBtn = list.length ? document.createElement("button") : null;
     const syncDefaultButton = () => {
@@ -11467,11 +11840,13 @@ function cfgRoleManagementHTML() {
   function openAgentFromMarketplace(agentId) {
     const agent = byId(agentId); if (!agent) return;
     if (agent.entryMode !== "chat") { window.open(workbenchPath(agent.id), "_blank"); return; }
+    if (agent.id === "polish") { enterAgentWithTemplate(agent, null); return; }
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
     if (list.length > 1) { openMarketplaceTemplatePicker(agent.id,true); return; }
     enterAgentWithTemplate(agent,saved || list[0] || null);
   }
   function applyTemplateForSelectedAgent(agent,target) {
+    if (agent.id === "polish") { activeTemplateId = null; fillComposerPrompt(agentDefaultPrompt(agent),target || currentComposerInput()); renderAgentPill(); return; }
     const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
     const apply = template => { activeTemplateId = template?.id || null; fillComposerPrompt(template ? cfgTemplateMarkdownText(template) : agentDefaultPrompt(agent),target || currentComposerInput()); renderAgentPill(); };
     if (list.length <= 1) { apply(saved || list[0] || null); return; }
@@ -11784,7 +12159,7 @@ function cfgRoleManagementHTML() {
     if (/(生成|起草|拟|编写|制作|做).*(合同|协议)|(合同|协议).*(生成|起草|拟|编写)/.test(value)) return "contract";
     if (/(生成|制作|做|编写).*(PPT|ppt|演示文稿|汇报课件)|(PPT|ppt|演示文稿).*(生成|制作|优化)/.test(value)) return "ppt";
     if (/(解读|政策解析|文件解析|申报条件|办理路径|政策.*怎么|政策.*如何)/.test(value)) return "interpret";
-    if (/(生成|起草|拟|编写|制定|做).*(工作计划|年度计划|季度计划|专项计划)|(工作计划|年度计划|季度计划).*(生成|编制|制定)/.test(value)) return "plan";
+    if (/(工作计划|计划编排|年度计划|季度计划|月度计划|专项计划)/.test(value)) return "plan";
     if (!/(生成|起草|拟|编写|写一份|写一篇|撰写|制作|形成)/.test(value)) return null;
     if (/(决定|决议|任免|表彰)/.test(value)) return "decision";
     if (/(报告|请示|申请事项)/.test(value)) return "report";
@@ -11810,6 +12185,7 @@ function cfgRoleManagementHTML() {
     $("#composerInput").value = text;
     ta.value = "";
     syncPromptHighlight($("#composerInput")); syncPromptHighlight(ta); autoSize(); toggleSend(); updateLandingComposerControls("home");
+    switchView("chat");
     send();
   }
   function withHomeContext(text) {
@@ -11834,6 +12210,7 @@ function cfgRoleManagementHTML() {
     $("#composerInput").value = text;
     ta.value = "";
     syncPromptHighlight($("#composerInput")); syncPromptHighlight(ta); autoSize(); toggleSend(); updateLandingComposerControls("new");
+    switchView("chat");
     send();
   }
   function startAgentChat(agentId) {
@@ -11848,7 +12225,105 @@ function cfgRoleManagementHTML() {
 
   // ============ 内嵌完整工作台（iframe 加载 agent-workbench/{id}.html）============
  let wbAgent = null, wbPrevView = "home", pendingWorkbenchContext = null;
+ const WORKBENCH_CONTEXT_PREFIX = "JBAI_WORKBENCH_CONTEXT_V1:";
+ const WORKBENCH_EVENT_KEY = "JBAI_WORKBENCH_EVENT_V1";
  function workbenchPath(id) { const agent = byId(id); return agent && agent.customRegistered && agent.url ? agent.url : "agent-workbench/" + id + ".html"; }
+  function workbenchContextKey(taskId) { return WORKBENCH_CONTEXT_PREFIX + String(taskId || ""); }
+  function persistWorkbenchContext(agentId, context) {
+    if (!context || !context.taskId) return null;
+    const payload = { ...context,targetAgentId:agentId,savedAt:Date.now() };
+    try { localStorage.setItem(workbenchContextKey(context.taskId),JSON.stringify(payload)); } catch (error) {}
+    return payload;
+  }
+  function workbenchTaskUrl(agentId, context) {
+    const path = workbenchPath(agentId), params = new URLSearchParams({ t:String(Date.now()) });
+    if (context?.taskId) params.set("taskId",context.taskId);
+    if (context?.conversationId) params.set("conversationId",context.conversationId);
+    return path + (path.includes("?") ? "&" : "?") + params.toString();
+  }
+  function postWorkbenchContext(targetWindow, agentId, context) {
+    if (!targetWindow || !context) return;
+    try { targetWindow.postMessage({ type:"JBAI_WORKBENCH_CONTEXT",payload:{ ...context,targetAgentId:agentId } },"*"); } catch (error) {}
+  }
+  function createWorkbenchConversationTask(conversation, agent, context) {
+    const taskId = `WB-${Date.now()}-${Math.random().toString(36).slice(2,6)}`;
+    const sourceNames = (context.sources || []).length ? context.sources.slice() : [context.text ? "本次对话输入内容" : "待补充会议材料"];
+    const task = {
+      id:taskId,agentId:agent.id,conversationId:conversation.id,title:agent.name,state:"recognizing",progress:8,
+      stage:"正在识别任务类型和材料来源",sources:sourceNames,version:1,createdAt:Date.now(),
+      context:{ ...context,taskId,conversationId:conversation.id,sources:sourceNames }
+    };
+    conversation.msgs.push({ role:"agent",agent:agent.id,kind:"workbench-task",noTrust:true,workbenchTask:task,createdAt:Date.now() });
+    conversation.updatedAt = Date.now();
+    TASK_INSTANCES.unshift({ id:taskId,name:agent.name,agent:agent.id,state:"运行中",node:"材料接入",idx:1,total:3,meta:"张敏 · 当前对话",eta:"正在接入任务材料",conversationId:conversation.id });
+    renderChat();renderSidebar();renderRail();scrollBottom();
+    return task;
+  }
+  function syncWorkbenchTaskInstance(task) {
+    const item = TASK_INSTANCES.find(entry => entry.id === task.id); if (!item) return;
+    item.state = task.state === "complete" ? "已完成" : task.state === "failed" ? "异常" : "运行中";
+    item.node = task.state === "complete" ? "成果已回流" : task.state === "working" ? "工作台处理" : "材料接入";
+    item.idx = task.state === "complete" ? 3 : task.state === "working" ? 2 : 1;
+    item.eta = task.stage || "处理中";
+  }
+  function updateWorkbenchTask(taskId, patch) {
+    const found = workbenchTaskById(taskId); if (!found) return null;
+    Object.assign(found.task,patch || {});found.conversation.updatedAt=Date.now();syncWorkbenchTaskInstance(found.task);
+    if (curId === found.conversation.id) { renderChat();scrollBottom(); }
+    renderSidebar();renderRail();if(currentView === "tasks") renderTasksView();
+    return found.task;
+  }
+  function openWorkbenchTask(task, options) {
+    if (!task) return;
+    const found = workbenchTaskById(task.id), current = found ? found.task : task;
+    if (current.state !== "complete") updateWorkbenchTask(current.id,{ state:"working",progress:100,stage:"正在工作台中整理会议内容" });
+    openWorkbench(current.agentId,{ ...(current.context || {}),title:current.resultTitle || current.title,taskId:current.id,conversationId:current.conversationId,sources:(current.sources || []).slice(),resumeToResult:current.state === "complete" || !!options?.resumeToResult,resultTitle:current.resultTitle || "",version:current.version || 1 });
+  }
+  function showWorkbenchTaskDownload(task) {
+    openModal("下载会议成果", `<div class="workbench-download-list"><label><input type="checkbox" checked> 完整会议纪要</label><label><input type="checkbox" checked> 核心速览</label><label><input type="checkbox"> 待办事项清单</label><label><input type="checkbox"> 原始转写</label></div><div class="panel-note" style="margin-top:12px">以上内容属于同一任务的 V${task.version || 1} 成果包，下载不会拆分为新的任务版本。</div>`, () => { closeModal();showToast("已开始下载所选会议成果"); }, { okText:"开始下载" });
+  }
+  function handleWorkbenchTaskAction(button) {
+    const found = workbenchTaskById(button.dataset.taskId);if(!found){showToast("未找到对应任务");return;}
+    const action = button.dataset.wbTaskAction;
+    if(action === "download") { showWorkbenchTaskDownload(found.task);return; }
+    if(action === "open" || action === "continue") openWorkbenchTask(found.task,{ resumeToResult:action === "open" && found.task.state === "complete" });
+  }
+  function syncWorkbenchCompletionFromFrame() {
+    if (!pendingWorkbenchContext?.taskId || wbAgent !== "meeting") return;
+    const found = workbenchTaskById(pendingWorkbenchContext.taskId);
+    if (!found || found.task.state === "complete") return;
+    try {
+      const doc = $("#wbFrame")?.contentDocument;
+      if (!doc?.body?.classList.contains("bridge-result-ready")) return;
+      const title = doc.getElementById("meetingName")?.value?.trim() || "会议纪要";
+      updateWorkbenchTask(found.task.id,{ state:"complete",stage:"会议成果已生成并回流当前对话",progress:100,version:1,resultTitle:title,topicCount:3,conclusionCount:9,todoCount:6,missingCount:2,completedAt:Date.now() });
+    } catch (error) {}
+  }
+  function returnFromWorkbench() {
+    syncWorkbenchCompletionFromFrame();
+    if (pendingWorkbenchContext?.taskId) {
+      const found = workbenchTaskById(pendingWorkbenchContext.taskId);
+      if (found) { curId=found.conversation.id;activeAgent=null; }
+    }
+    switchView("chat");renderChat();renderSidebar();setSidebarCollapsed(false);scrollBottom();
+  }
+  function receiveWorkbenchTaskEvent(event) {
+    const data = event && event.data;
+    if (!data) return;
+    if (data.type === "JBAI_WORKBENCH_READY" && data.targetAgentId) {
+      const found = data.taskId ? workbenchTaskById(data.taskId) : null;
+      const context = found ? { ...(found.task.context || {}),title:found.task.resultTitle || found.task.title,taskId:found.task.id,conversationId:found.task.conversationId,sources:(found.task.sources || []).slice(),resumeToResult:found.task.state === "complete",resultTitle:found.task.resultTitle || "",version:found.task.version || 1 } : pendingWorkbenchContext;
+      if (context && event.source) postWorkbenchContext(event.source,data.targetAgentId,context);
+      return;
+    }
+    if(data.type !== "JBAI_WORKBENCH_TASK_EVENT" || !data.taskId) return;
+    if(data.event === "progress") updateWorkbenchTask(data.taskId,{ state:"working",stage:data.stage || "工作台处理中",progress:Number(data.progress || 100) });
+    if(data.event === "complete") {
+      updateWorkbenchTask(data.taskId,{ state:"complete",stage:"会议成果已生成并回流当前对话",progress:100,version:Number(data.version || 1),resultTitle:data.title || "会议纪要",topicCount:Number(data.topicCount || 3),conclusionCount:Number(data.conclusionCount || 9),todoCount:Number(data.todoCount || 6),missingCount:Number(data.missingCount || 2),completedAt:Date.now() });
+      const sync=$("#wbTaskSync");if(sync) sync.textContent="成果已同步至当前对话";
+    }
+    if(data.event === "return") returnFromWorkbench();
+  }
   function reviewConfigSnapshot() {
     return { platformVersion: "REVIEW-BASE-v2.4", departmentVersion: "D-REVIEW-v2.3", department: "数据局", forcedCount: Object.values(config.compliance).filter(Boolean).length, departmentRuleCount: 31, strictness: config.department.strictness, audit: config.model.audit };
   }
@@ -11878,11 +12353,18 @@ function cfgRoleManagementHTML() {
     const a = byId(agentId); if (!a) return;
     if (currentView !== "workbench") wbPrevView = currentView;
     wbAgent = agentId; pendingWorkbenchContext = context || null;
-    $("#wbIc").textContent = a.glyph; $("#wbIc").setAttribute("style", ic(a.cat));
-    $("#wbName").innerHTML = esc(a.name) + `<small>${a.cat} · 完整工作台</small>`;
-    $("#wbToChat").style.display = a.entryMode === "chat" ? "inline-flex" : "none";
-    // 切换下拉
-    $("#wbSwitch").innerHTML = AGENTS.filter(x => !config.agentsOff.has(x.id)).map(x => `<option value="${x.id}" ${x.id === agentId ? "selected" : ""}>切换：${esc(x.name)}</option>`).join("");
+    persistWorkbenchContext(agentId,pendingWorkbenchContext);
+    const taskContext=$("#wbTaskContext");
+    if(context && context.taskId){
+      taskContext.hidden=false;
+      $("#wbBack").innerHTML=`${svgi("i-arrow",15)}返回对话`;
+      $("#wbTaskContextTitle").textContent=context.title || a.name;
+      $("#wbTaskContextMeta").textContent=`来自当前对话 · ${(context.sources || []).length || 1} 份材料 · 自动保存`;
+      $("#wbTaskSync").textContent="已同步至当前对话";
+    }else{
+      taskContext.hidden=true;
+      $("#wbBack").innerHTML=`${svgi("i-arrow",15)}返回`;
+    }
     // 加载 iframe（带时间戳避免缓存，解决文件替换后iframe不刷新的问题）
     const frame = $("#wbFrame"), loading = $("#wbLoading");
     loading.classList.remove("hide");
@@ -11899,7 +12381,7 @@ function cfgRoleManagementHTML() {
     };
     // 先清空再加载，确保即使路径相同也会重新请求
     frame.src = "about:blank";
-    setTimeout(() => { frame.src = workbenchPath(agentId) + "?t=" + Date.now(); }, 30);
+    setTimeout(() => { frame.src = workbenchTaskUrl(agentId,pendingWorkbenchContext); }, 30);
     switchView("workbench");
     setSidebarCollapsed(true);
   }
@@ -11996,12 +12478,17 @@ function cfgRoleManagementHTML() {
       const agentRow = e.target.closest("[data-composer-agent]");
       if (agentRow) {
         const agent = byId(agentRow.dataset.composerAgent); if (!agent) return;
-        if (agent.entryMode !== "chat") { closeComposerActionMenu(); activeTemplateId = null; openWorkbench(agent.id); showToast(`「${agent.name}」需要在独立工作台中完成`); return; }
         activeAgent = agent.id; activeConnector = null; homeSkills = [];
         activeTemplateId = null; composerTemplateAgentId = agent.id;
         renderAgentPill(); renderConnectorSelection(); renderHomeSkill(); syncExclusion(); renderSidebar();
         const c = cur(); if (c && !c.msgs.length) c.agent = agent.id;
         const target = currentComposerInput();
+        if (agent.entryMode !== "chat") {
+          closeComposerActionMenu();
+          target.focus();
+          showToast(`已选择「${agent.name}」，请描述需求并上传材料后发送`);
+          return;
+        }
         const list = templatesForAgent(agent.id), saved = list.find(template => template.id === agentDefaultTemplates[agent.id]);
         closeComposerActionMenu(); applyTemplateForSelectedAgent(agent,target);
         if (list.length <= 1) showToast(`已选择「${agent.name}」，已带入${(saved || list[0])?.name || "默认模板"}`);
@@ -12120,7 +12607,6 @@ function cfgRoleManagementHTML() {
     $("#newTryRefresh").addEventListener("click", () => { tryOffset = (tryOffset + 4) % TRY_POOL.length; renderTryChips(); });
     $("#sideHome").addEventListener("click", () => switchView("home"));
     $("#topBellBtn").addEventListener("click", (e) => { e.stopPropagation(); switchView("notices"); });
-    $("#sideDrawerToggle").addEventListener("click", () => setSidebarCollapsed(!sidebarCollapsed));
     $("#editorSidebarToggle").addEventListener("click", toggleEditorSidebar);
     $("#convSearch").addEventListener("input", (e) => { convSearch = e.target.value; renderSidebar(); });
     $("#historyConvSearch").addEventListener("input", (e) => { historyConvSearch = e.target.value; renderHistoryConversations(); });
@@ -12222,10 +12708,12 @@ function cfgRoleManagementHTML() {
     });
 
     // 内嵌工作台
-    $("#wbBack").addEventListener("click", () => switchView(wbPrevView || "home"));
-    $("#wbSwitch").addEventListener("change", (e) => openWorkbench(e.target.value, pendingWorkbenchContext));
-    $("#wbToChat").addEventListener("click", () => { if (wbAgent) startAgentChat(wbAgent); });
-    $("#wbNewTab").addEventListener("click", () => { if (wbAgent) window.open(workbenchPath(wbAgent), "_blank"); });
+    $("#wbBack").addEventListener("click", () => pendingWorkbenchContext?.taskId ? returnFromWorkbench() : switchView(wbPrevView || "home"));
+    window.addEventListener("message", receiveWorkbenchTaskEvent);
+    window.addEventListener("storage", event => {
+      if (event.key !== WORKBENCH_EVENT_KEY || !event.newValue) return;
+      try { receiveWorkbenchTaskEvent({ data:JSON.parse(event.newValue),source:null }); } catch (error) {}
+    });
 
     // 后台各视图控件
     $("#recAgent").addEventListener("change", renderRecords);
@@ -12396,6 +12884,8 @@ function cfgRoleManagementHTML() {
       // 任务卡直接进入对应智能体
       const tj = e.target.closest("[data-taskjump]");
       if (tj) { const task = TASK_INSTANCES.find(item => item.id === tj.dataset.taskjump); const agent = task && byId(task.agent); if (agent) openWorkbench(agent.id); return; }
+      const wbTaskAction = e.target.closest("[data-wb-task-action]");
+      if (wbTaskAction) { handleWorkbenchTaskAction(wbTaskAction); return; }
       // 知识库来源跳转
       const kj = e.target.closest("[data-kbjump]");
       if (kj) { const target = kj.dataset.kbjump || "policy"; kbScope = "organization"; kbOrgKb = orgKbForFolder(target); const jm = knowledgeScopeMeta(kbOrgKb); kbCat = jm.order.some(([k]) => k === target) ? target : jm.order[0][0]; switchView("kb"); showToast("已跳转到知识库来源"); return; }
@@ -12403,7 +12893,7 @@ function cfgRoleManagementHTML() {
       const pk = e.target.closest("[data-pick]");
       if (pk) {
         const pickedAgent = byId(pk.dataset.pick);
-        if (!pickedAgent || pickedAgent.entryMode !== "chat") { if (pickedAgent) { $("#pickerMask").classList.remove("show"); openWorkbench(pickedAgent.id); } return; }
+        if (!pickedAgent) return;
         if (homeSkills.length) { showToast("已选择技能，请先移除后再选智能体"); return; }
         if (activeConnector) { showToast("已选择连接器，请先移除后再选智能体"); return; }
         activeAgent = pk.dataset.pick || null;
@@ -12412,7 +12902,11 @@ function cfgRoleManagementHTML() {
         renderAgentPill(); syncExclusion(); $("#pickerMask").classList.remove("show");
         const c = cur(); if (c && !c.msgs.length) { c.agent = activeAgent; renderChat(); renderSidebar(); }
         const agent = activeAgent ? byId(activeAgent) : null;
-        if (agent) applyTemplateForSelectedAgent(agent,currentComposerInput());
+        if (agent && agent.entryMode !== "chat") {
+          currentComposerInput().focus();
+          showToast(`已选择「${agent.name}」，请描述需求并上传材料后发送`);
+        }
+        else if (agent) applyTemplateForSelectedAgent(agent,currentComposerInput());
         else currentComposerInput().focus();
         return;
       }
@@ -12879,8 +13373,8 @@ function cfgRoleManagementHTML() {
       case "v3OpenEditor": { if (agentV3Session) { const c = cur(); const a = c ? byId(c.agent) : null; if (a) v3OpenDocEditor(c, a); } break; }
       case "v3Download": { if (agentV3Session) v3DownloadDocument(); break; }
       case "generatedOpenWorkbench": openGeneratedResultWorkbench(el.dataset.msgIndex); break;
-      case "generatedOpenReview": openGeneratedResultWorkbench(el.dataset.msgIndex, "review"); break;
-      case "generatedOpenPolish": openGeneratedResultWorkbench(el.dataset.msgIndex, "polish"); break;
+      case "generatedOpenReview": openDocumentEditor(el.dataset.msgIndex); setTimeout(() => window.JBAIReviewPilot?.startFromEditor({ trigger:"result-card" }), 0); break;
+      case "generatedOpenPolish": openDocumentEditor(el.dataset.msgIndex); setTimeout(() => window.JBAIPolishPilot?.startFromEditor({ trigger:"result-card" }), 0); break;
       case "generatedOpenAchievements": openGeneratedAchievements(); break;
       case "achievementView": { const item = MY_ACHIEVEMENTS.find(x => x.id === el.dataset.id); if (item) openModal("查看成果文件", achievementPreviewHTML(item), null, { hideFooter:true, width:"min(900px, calc(100vw - 40px))" }); break; }
       case "achievementDownload": { const item = MY_ACHIEVEMENTS.find(x => x.id === el.dataset.id); if (item) downloadAchievement(item); break; }
@@ -13159,10 +13653,52 @@ function cfgRoleManagementHTML() {
     });
   }
 
+  window.JBAIPlanPilotHost = {
+    toast: showToast,
+    confirmFields({ agentId, fields, values, conversationId }) {
+      return new Promise(resolve => {
+        if (structuredConfirmDraft) closeStructuredConfirmSheet();
+        structuredConfirmDraft = { agentId, fields, values:{ ...values }, pageIndex:0, conversationId:conversationId || curId, pilotResolve:resolve };
+        renderStructuredConfirmSheet();
+      });
+    },
+    isCurrent: conversationId => curId === conversationId,
+    progress(conversationId, text, done, index) {
+      const conv = convs.find(item => item.id === conversationId);
+      if (!conv) return null;
+      const html = `<div class="pilot-intent-status" role="status">${svgi(done ? "i-check" : "i-scan", 15)}<span>${esc(text)}</span></div>`;
+      if (index == null) { index = conv.msgs.length; conv.msgs.push({ role:"agent", agent:null, kind:"intent-analysis", html, noTrust:true, createdAt:Date.now(), time:nowTime() }); }
+      else if (conv.msgs[index]) conv.msgs[index].html = html;
+      if (curId === conversationId) { renderChat(); scrollBottom(); }
+      renderSidebar();
+      return index;
+    },
+    openShell: openPlanPilotShell,
+    addAgentMessage: addPlanPilotAgentMessage,
+    createArtifact: createPlanPilotArtifact,
+    updateArtifact: updatePlanPilotArtifact,
+    openArtifact: openPlanPilotArtifact,
+    preparePolishDocument,
+    prepareReviewDocument,
+    getActiveDocument: activePolishDocument,
+    commitPolishedDocument,
+    commitReviewedDocument,
+    commitInlinePolish,
+    quoteDocumentSelection
+  };
+  window.JBAITaskPilotHost = window.JBAIPlanPilotHost;
+
   // ===== 启动 =====
   init();
 })();
 </script>
+<!-- 双智能体试点脚本在主页面初始化后按固定顺序加载，确保入口与宿主能力均已就绪。 -->
+<script src="assets/pilot-content.js"></script>
+<script src="assets/pilot-intake.js"></script>
+<script src="assets/plan-task-workbench.js"></script>
+<script src="assets/editor-selection-tools.js"></script>
+<script src="assets/integrated-polish.js"></script>
+<script src="assets/integrated-review.js"></script>
 <script src="assets/proto-version.js" data-proto-version></script>
 <script>
 /* 首页/新对话快捷功能按钮：点击将示例需求带入对应输入框（不自动发送） */

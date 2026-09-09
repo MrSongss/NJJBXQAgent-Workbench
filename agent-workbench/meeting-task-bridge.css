@@ -1,0 +1,85 @@
+/* 会话任务模式：保留业务能力，强化工作台的层级、状态和成果感。 */
+body.conversation-task {
+  --primary:#126fae;
+  --primary-hover:#203b86;
+  --primary-light:#eaf8f8;
+  --primary-lighter:#f6fafb;
+  --border:#cedfe2;
+  --border-light:#e7eff1;
+  --text-main:#203650;
+  --text-sub:#526d7f;
+  --text-tip:#748998;
+  --success:#168447;
+  background:#eef4f5;
+}
+body.conversation-task ::selection { background:#cdeff0;color:#18324b; }
+body.conversation-task ::-webkit-scrollbar { width:9px;height:9px; }
+body.conversation-task ::-webkit-scrollbar-thumb { border:2px solid transparent;border-radius:999px;background:#b8ced3;background-clip:padding-box; }
+body.conversation-task .sidebar { border-color:#d8e6e8;box-shadow:8px 0 24px rgba(24,54,74,.035); }
+body.conversation-task .sidebar-logo-icon,
+body.conversation-task .new-meeting-btn { background:#126fae; }
+body.conversation-task .new-meeting-btn { border-radius:9px;box-shadow:0 6px 16px rgba(18,111,174,.15); }
+body.conversation-task .main-header { border-color:#d9e7e9;background:rgba(255,255,255,.96); }
+body.conversation-task .main-content { background:#eef4f5; }
+body.conversation-task .welcome-container { max-width:1040px;padding-top:22px;padding-bottom:30px; }
+body.conversation-task .welcome-header { margin-bottom:18px;text-align:left; }
+body.conversation-task .welcome-title { color:#1c3550;font-size:23px;font-weight:750;letter-spacing:-.02em; }
+body.conversation-task .welcome-desc { margin-top:6px;color:#60798a;font-size:13px; }
+body.conversation-task .card { border:1px solid #d6e4e7;border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(24,54,74,.055); }
+body.conversation-task .card + .card { margin-top:16px; }
+body.conversation-task .card-header { padding-bottom:13px;border-color:#e8eff1; }
+body.conversation-task .card-title { color:#29455c;font-size:15px; }
+body.conversation-task .step-number { background:#e7f5f6;color:#126fae;border:1px solid #c8e8ea; }
+body.conversation-task .upload-tabs { gap:6px;padding:0 20px;border-bottom:0; }
+body.conversation-task .upload-tab { min-width:108px;padding:9px 13px;border:1px solid transparent;border-radius:9px;color:#5b7181;text-align:center; }
+body.conversation-task .upload-tab.active { border-color:#b9dfe3;background:#edf9f9;color:#126fae; }
+body.conversation-task .upload-tab.active::after { display:none; }
+body.conversation-task .upload-area { margin:12px 20px 18px;border-color:#bcd5da;border-radius:12px;background:#f8fbfb; }
+body.conversation-task .upload-area:hover { border-color:#55aeba;background:#f2fbfb; }
+body.conversation-task .file-item { border-color:#dbe8ea;border-radius:9px;background:#f8fbfb; }
+body.conversation-task .file-item-tag.primary { background:#e7f3fa;color:#126fae; }
+body.conversation-task .attach-material { border-color:#dce8ea;background:#fbfdfd; }
+body.conversation-task .form-input,
+body.conversation-task .form-select { min-height:38px;border-color:#cbdcdf;border-radius:8px;color:#29455c; }
+body.conversation-task .form-input:focus,
+body.conversation-task .form-select:focus { border-color:#55aeba;box-shadow:0 0 0 3px rgba(21,152,189,.11);outline:0; }
+body.conversation-task .btn { border-radius:8px;font-weight:650; }
+body.conversation-task .btn-primary { border-color:#126fae;background:#126fae;box-shadow:0 5px 14px rgba(18,111,174,.15); }
+body.conversation-task .btn-primary:hover { border-color:#203b86;background:#203b86; }
+body.conversation-task .progress-container { max-width:760px;margin:0 auto; }
+body.conversation-task .steps { border-radius:12px;background:#f6fafb; }
+body.conversation-task .result-header { padding:19px 24px;border-color:#dce8ea;background:#fff; }
+body.conversation-task .result-title { color:#1d354c;font-size:18px;font-weight:750; }
+body.conversation-task .result-tabs { position:sticky;top:0;z-index:6;gap:5px;padding:9px 0;border-bottom:1px solid #e5edef;background:#fff; }
+body.conversation-task .result-tab { min-height:36px;padding:0 12px;border:1px solid transparent;border-radius:8px;color:#5d7484; }
+body.conversation-task .result-tab.active { border-color:#b8dee3;background:#edf9f9;color:#126fae; }
+body.conversation-task .result-tab.active::after { display:none; }
+body.conversation-task .action-bar { border-color:#dce8ea;border-radius:9px;background:#f7fafb; }
+body.conversation-task .doc-container { border-color:#d5e2e4;box-shadow:0 10px 26px rgba(24,54,74,.065); }
+body.conversation-task .bridge-return-btn { display:none; }
+body.conversation-task.bridge-result-ready .bridge-return-btn { display:inline-flex; }
+body.conversation-task .modal { border-radius:14px;box-shadow:0 20px 58px rgba(24,36,95,.2); }
+body.conversation-task .modal-header { border-color:#e2ecee;color:#253f57;font-size:16px; }
+body.conversation-task .conversation-source-note { display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:10px 12px;border:1px solid #cfe2e5;border-radius:10px;background:#f5fafb;color:#496777;font-size:12px; }
+body.conversation-task .conversation-source-note b { color:#23465e; }
+body.conversation-task.bridge-audio-source #upload-audio .upload-area,
+body.conversation-task.bridge-text-source #upload-text .upload-area,
+body.conversation-task.bridge-paste-source #upload-paste .paste-area { display:none; }
+body.conversation-task.bridge-has-source #upload-audio .file-list,
+body.conversation-task.bridge-has-source #upload-text .file-list,
+body.conversation-task.bridge-has-source #upload-paste .file-list { margin:12px 20px 18px; }
+body.conversation-task.bridge-has-source #upload-audio .file-item,
+body.conversation-task.bridge-has-source #upload-text .file-item,
+body.conversation-task.bridge-has-source #upload-paste .file-item { padding:13px 14px;border-color:#bcdedf;background:#f3fbfb;box-shadow:inset 3px 0 0 #1598bd; }
+body.conversation-task.bridge-has-source #upload-audio .file-item::before,
+body.conversation-task.bridge-has-source #upload-text .file-item::before,
+body.conversation-task.bridge-has-source #upload-paste .file-item::before { content:"对话已接入";margin-right:2px;padding:2px 7px;border-radius:999px;background:#dff3f4;color:#166479;font-size:11px;font-weight:700;white-space:nowrap; }
+body.conversation-task.bridge-has-source .card-title-sub { color:#557484; }
+
+@media (max-width:900px) {
+  body.conversation-task .sidebar { display:none; }
+  body.conversation-task .welcome-container { padding:14px; }
+  body.conversation-task .result-header { align-items:flex-start;gap:12px; }
+  body.conversation-task .result-tabs { overflow-x:auto; }
+  body.conversation-task .result-tab { flex:none; }
+}
