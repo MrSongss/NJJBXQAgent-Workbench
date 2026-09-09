@@ -464,6 +464,7 @@
     .view.active { display: block; }
     .recognizing-tip { text-align: center; padding: 20px; color: var(--primary); font-size: 13px; }
 </style>
+<link rel="stylesheet" href="meeting-task-bridge.css">
 </head>
 <body data-page-node-id="YU2VztvdxwDZqmBU2EjBcG">
 
@@ -554,7 +555,7 @@
 
                     <div class="card" data-page-node-id="AUDHo9Ugwf0cldYDgu5jSb">
                         <div class="card-header" data-page-node-id="VT6Z4UO6wzQ4qpGtxs0PS5">
-                            <div class="card-title" data-page-node-id="j8nmKgiCcauzJq8ZGwfA5N"><span class="step-number" data-page-node-id="LCEN5B500DSTrF5s9jHXYC">1</span>上传会议资料<span class="card-title-sub" data-page-node-id="coLjiV1oxrVMRrlbjuQ7uH">（录音 / 转写文本 / 粘贴文本为主，可附加方案材料辅助识别）</span></div>
+                            <div class="card-title" data-page-node-id="j8nmKgiCcauzJq8ZGwfA5N"><span class="step-number" data-page-node-id="LCEN5B500DSTrF5s9jHXYC">1</span><span id="sourceStepTitle">上传会议资料</span><span class="card-title-sub" data-page-node-id="coLjiV1oxrVMRrlbjuQ7uH">（录音 / 转写文本 / 粘贴文本为主，可附加方案材料辅助识别）</span></div>
                         </div>
                         <div class="upload-tabs" data-page-node-id="qOhi2z2g4hwNwsL8aEoXLM">
                             <div class="upload-tab active" data-tab="audio" data-page-node-id="rWPV98snZXCcBgLSYM7PGF">会议录音</div>
@@ -1356,6 +1357,11 @@ function removeFile(type, idx) {
     renderFileList(type);
     if (!uploadFiles.audio && !uploadFiles.text && !uploadFiles.paste) {
         uploadMode = null;
+        document.body.classList.remove('bridge-has-source', 'bridge-audio-source', 'bridge-text-source', 'bridge-paste-source');
+        const sourceStepTitle = document.getElementById('sourceStepTitle');
+        if (sourceStepTitle) sourceStepTitle.textContent = '上传会议资料';
+        const sourceNote = document.getElementById('conversationSourceNote');
+        if (sourceNote) sourceNote.remove();
     }
     updateMainActionBtn();
     showToast('文件已删除');
@@ -1571,6 +1577,7 @@ function startGenerate() {
     if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
     if (!validateMeetingType()) return;
     currentSecretLevel = document.getElementById('secret').value;
+    notifyConversationTask('progress', { stage:'正在识别会议议题与结论', progress:55 });
     switchView('viewProgress');
     runProgress();
 }
@@ -1611,10 +1618,20 @@ function runProgress() {
                 renderTodos();
                 renderTranscript();
                 switchResultTab('detailed');
+                document.body.classList.add('bridge-result-ready');
+                notifyConversationTask('complete', {
+                    title: document.getElementById('meetingName').value.trim() || '会议纪要',
+                    version: 1,
+                    topicCount: topicsData.length || 3,
+                    conclusionCount: topicsData.reduce((sum, item) => sum + (item.conclusions || []).length, 0) || 9,
+                    todoCount: todosData.length || 6,
+                    missingCount: todosData.filter(item => !item.owner || !item.deadline).length
+                });
             }, 800);
             return;
         }
         const step = steps[stepIdx];
+        notifyConversationTask('progress', { stage:step.text, progress:55 + Math.round((stepIdx / steps.length) * 40) });
         document.getElementById('progressStepText').textContent = step.text;
         if (logIdx < step.logs.length) { appendLog(step.logs[logIdx], 'info'); logIdx++; }
         else {
@@ -2353,6 +2370,163 @@ function escapeHtml(str) {
     if (str == null) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
+</script>
+<script>
+/* 对话任务桥：同一任务在对话和会议纪要工作台之间共享来源、状态与成果。 */
+let conversationTaskContext = null;
+const WORKBENCH_CONTEXT_PREFIX = 'JBAI_WORKBENCH_CONTEXT_V1:';
+const WORKBENCH_EVENT_KEY = 'JBAI_WORKBENCH_EVENT_V1';
+
+function bridgeTaskIdFromUrl() {
+    try { return new URLSearchParams(window.location.search).get('taskId') || ''; } catch (error) { return ''; }
+}
+
+function bridgeHostWindows() {
+    const targets = [];
+    if (window.parent && window.parent !== window) targets.push(window.parent);
+    if (window.opener && window.opener !== window && !window.opener.closed && !targets.includes(window.opener)) targets.push(window.opener);
+    return targets;
+}
+
+function bridgePersistEvent(data) {
+    try { localStorage.setItem(WORKBENCH_EVENT_KEY, JSON.stringify({ ...data,nonce:Date.now() + '-' + Math.random().toString(36).slice(2,7) })); } catch (error) {}
+}
+
+function notifyConversationTask(eventName, payload) {
+    if (!conversationTaskContext) return;
+    const data = { type:'JBAI_WORKBENCH_TASK_EVENT',event:eventName,taskId:conversationTaskContext.taskId,...(payload || {}) };
+    bridgeHostWindows().forEach(target => { try { target.postMessage(data, '*'); } catch (error) {} });
+    bridgePersistEvent(data);
+}
+
+function bridgeReturnToConversation() {
+    notifyConversationTask('return', {});
+    if (window.opener && window.opener !== window && !window.opener.closed) {
+        try { window.opener.focus(); } catch (error) {}
+        setTimeout(() => { try { window.close(); } catch (error) {} }, 80);
+    }
+}
+
+function bridgeAnnounceReady() {
+    const data = { type:'JBAI_WORKBENCH_READY',targetAgentId:'meeting',taskId:bridgeTaskIdFromUrl() };
+    bridgeHostWindows().forEach(target => { try { target.postMessage(data, '*'); } catch (error) {} });
+}
+
+function bridgeRestoreStoredContext() {
+    const taskId = bridgeTaskIdFromUrl();
+    if (!taskId) return false;
+    try {
+        const saved = JSON.parse(localStorage.getItem(WORKBENCH_CONTEXT_PREFIX + taskId) || 'null');
+        if (saved && saved.targetAgentId === 'meeting') { bridgeHydrateMeeting(saved); return true; }
+    } catch (error) {}
+    return false;
+}
+
+function bridgeMeetingTitle(context) {
+    const sources = (context.sources || []).filter(name => name && !/本次对话输入内容|待补充/.test(name));
+    let base = sources[0] || '';
+    base = base.replace(/\.[^.]+$/, '').replace(/(?:会议)?(?:录音|转写稿|转写文本|议程|材料)$/g, '').replace(/[\-_]+$/g, '').trim();
+    if (!base || base.length < 4) base = '江北新区数字政府建设项目推进会';
+    return /纪要$/.test(base) ? base : `${base}会议纪要`;
+}
+
+function bridgeAddSourceNote(context) {
+    const header = document.querySelector('#viewCreate .welcome-header');
+    if (!header || document.getElementById('conversationSourceNote')) return;
+    const names = (context.sources || []).length ? context.sources : ['本次对话输入内容'];
+    const note = document.createElement('div');
+    note.id = 'conversationSourceNote';
+    note.className = 'conversation-source-note';
+    note.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg><span><b>已从当前对话接入 ${names.length} 份材料</b>，无需重复上传；如需更换，可删除当前主材料后重新选择。</span>`;
+    header.insertAdjacentElement('afterend', note);
+}
+
+function bridgeInstallReturnActions() {
+    const actions = document.querySelector('#viewResult .result-actions');
+    if (actions && !actions.querySelector('.bridge-return-btn')) {
+        const button = document.createElement('button');
+        button.className = 'btn btn-default bridge-return-btn';
+        button.type = 'button';
+        button.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>返回对话';
+        button.onclick = bridgeReturnToConversation;
+        actions.prepend(button);
+    }
+    const footer = document.querySelector('#modalSuccess .modal-footer');
+    if (footer) footer.innerHTML = '<button class="btn btn-default" onclick="bridgeReturnToConversation()">返回对话</button><button class="btn btn-primary" onclick="hideModal(\'modalSuccess\')">查看成果</button>';
+}
+
+function bridgeHydrateMeeting(context) {
+    if (!context || context.targetAgentId !== 'meeting') return;
+    if (conversationTaskContext && conversationTaskContext.taskId === context.taskId && document.body.classList.contains('bridge-context-ready')) return;
+    conversationTaskContext = context;
+    document.body.classList.add('conversation-task', 'bridge-context-ready', 'bridge-has-source');
+    const sourceStepTitle = document.getElementById('sourceStepTitle');
+    if (sourceStepTitle) sourceStepTitle.textContent = '确认会议材料';
+    bridgeAddSourceNote(context);
+    bridgeInstallReturnActions();
+
+    const names = (context.sources || []).filter(Boolean);
+    const audioIndex = names.findIndex(name => /\.(mp3|wav|m4a|aac|flac|ogg|wma|amr)$/i.test(name));
+    const textIndex = names.findIndex(name => /\.(doc|docx|txt|pdf)$/i.test(name));
+    let usedIndex = -1;
+    if (audioIndex >= 0) {
+        usedIndex = audioIndex;
+        uploadFiles.audio = { name:names[audioIndex],meta:'已从当前对话接入 · 等待转写' };
+        uploadMode = 'audio';
+        renderFileList('audio');
+        document.body.classList.add('bridge-audio-source');
+        document.querySelector('.upload-tab[data-tab="audio"]')?.click();
+    } else if (textIndex >= 0) {
+        usedIndex = textIndex;
+        uploadFiles.text = { name:names[textIndex],meta:'已从当前对话接入 · 内容可解析' };
+        uploadMode = 'text';
+        renderFileList('text');
+        document.body.classList.add('bridge-text-source');
+        document.querySelector('.upload-tab[data-tab="text"]')?.click();
+    } else {
+        usedIndex = names.length ? 0 : -1;
+        const sourceName = names[0] || '本次对话输入内容';
+        uploadFiles.paste = { name:sourceName,meta:'已从当前对话接入 · 内容可解析',chars:String(context.text || '').length };
+        uploadMode = 'paste';
+        renderFileList('paste');
+        document.body.classList.add('bridge-paste-source');
+        document.querySelector('.upload-tab[data-tab="paste"]')?.click();
+    }
+    uploadFiles.material = names.filter((_, index) => index !== usedIndex).map(name => ({ name,meta:'已从当前对话接入' }));
+    renderFileList('material');
+    if (uploadFiles.material.length) document.querySelector('.attach-material')?.classList.add('expanded');
+
+    document.getElementById('meetingName').value = context.resultTitle || bridgeMeetingTitle(context);
+    document.getElementById('meetingType').value = '3';
+    if (typeof onMeetingTypeChange === 'function') onMeetingTypeChange();
+    document.getElementById('template').value = '3';
+    document.getElementById('secret').value = '0';
+    updateMainActionBtn();
+    notifyConversationTask('progress', { stage:'材料已载入，等待确认会议信息',progress:100 });
+
+    if (context.resumeToResult) {
+        currentSecretLevel = '0';
+        switchView('viewResult');
+        updateResultHeader();
+        applySecretLevel();
+        renderTodos();
+        renderTranscript();
+        switchResultTab('detailed');
+        document.body.classList.add('bridge-result-ready');
+    }
+}
+
+window.addEventListener('message', function (event) {
+    const data = event.data;
+    if (!data || data.type !== 'JBAI_WORKBENCH_CONTEXT' || !data.payload || data.payload.targetAgentId !== 'meeting') return;
+    bridgeHydrateMeeting(data.payload);
+});
+
+window.addEventListener('DOMContentLoaded', function () {
+    bridgeRestoreStoredContext();
+    bridgeAnnounceReady();
+    setTimeout(bridgeAnnounceReady, 500);
+});
 </script>
 </body>
 </html>

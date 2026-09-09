@@ -1,0 +1,109 @@
+/* 江北新区政务 AI 办公助手 · Figma 设计 Token
+   来源：Figma「政务AI办公助手_设计规范」节点 97:1828
+   通用原型规范版本：2026-08-27 */
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --jb-ds-navy: #121961;
+  --jb-ds-green-100: #a7c031;
+  --jb-ds-green-200: #dae000;
+  --jb-ds-green-500: #8bc31b;
+  --jb-ds-green-600: #22a53f;
+  --jb-ds-green-700: #009746;
+  --jb-ds-green-900: #005633;
+  --jb-ds-green-800: #00653c;
+  --jb-ds-lime: #8bc31b;
+  --jb-ds-blue-800: #024f9d;
+  --jb-ds-blue-700: #0b72b7;
+  --jb-ds-blue-500: #2ea6de;
+  --jb-ds-blue-300: #84cef5;
+  --jb-ds-cyan: #03a397;
+  --jb-ds-brand-gradient: linear-gradient(90deg, #0b72b7 0%, #00c45b 58%, #8bc31b 100%);
+
+  /* Text */
+  --jb-ds-text-1: #1d2129;
+  --jb-ds-text-2: #4e5969;
+  --jb-ds-text-3: #86909c;
+  --jb-ds-text-disabled: #c9cdd4;
+  --jb-ds-link: #0870b7;
+  --jb-ds-white: #fff;
+
+  /* Surfaces and lines */
+  --jb-ds-canvas: #f1f2f4;
+  --jb-ds-surface: #fff;
+  --jb-ds-surface-subtle: #f7f8fa;
+  --jb-ds-surface-muted: #f2f3f5;
+  --jb-ds-hover: #edf1f6;
+  --jb-ds-line-strong: #c9cdd4;
+  --jb-ds-line: #e5e6eb;
+  --jb-ds-divider: #e9ebf2;
+
+  /* Semantic */
+  --jb-ds-success: #22a53f;
+  --jb-ds-success-hover: #33b750;
+  --jb-ds-success-active: #009a29;
+  --jb-ds-success-disabled: #7be188;
+  --jb-ds-success-soft: #aff0b5;
+  --jb-ds-success-bg: #e8ffea;
+  --jb-ds-warning: #ff7d00;
+  --jb-ds-warning-hover: #ff9a2e;
+  --jb-ds-warning-active: #d25f00;
+  --jb-ds-warning-disabled: #ffcf8b;
+  --jb-ds-warning-soft: #ffe4ba;
+  --jb-ds-warning-bg: #fff7e8;
+  --jb-ds-danger: #f53f3f;
+  --jb-ds-danger-hover: #f76560;
+  --jb-ds-danger-active: #cb2634;
+  --jb-ds-danger-disabled: #fbaca3;
+  --jb-ds-danger-soft: #fdcdc5;
+  --jb-ds-danger-bg: #ffece8;
+  --jb-ds-info: #0b72b7;
+  --jb-ds-info-bg: #ecf6fc;
+
+  /* Typography */
+  --jb-ds-font: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --jb-ds-font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --jb-ds-text-xs: 12px;
+  --jb-ds-text-sm: 13px;
+  --jb-ds-text-md: 14px;
+  --jb-ds-text-lg: 16px;
+  --jb-ds-text-xl: 20px;
+  --jb-ds-weight-regular: 400;
+  --jb-ds-weight-medium: 500;
+  --jb-ds-weight-bold: 600;
+  --jb-ds-line-height: 1.5715;
+
+  /* Geometry */
+  --jb-ds-control-h: 36px;
+  --jb-ds-control-h-sm: 30px;
+  --jb-ds-control-h-lg: 40px;
+  --jb-ds-radius-control: 4px;
+  --jb-ds-radius-card: 6px;
+  --jb-ds-radius-round: 999px;
+  --jb-ds-space-1: 4px;
+  --jb-ds-space-2: 8px;
+  --jb-ds-space-3: 12px;
+  --jb-ds-space-4: 16px;
+  --jb-ds-space-5: 20px;
+  --jb-ds-space-6: 24px;
+  --jb-ds-space-8: 32px;
+
+  /* Elevation and focus */
+  --jb-ds-shadow-default: 0 1px 2px rgba(75, 81, 111, .10);
+  --jb-ds-shadow-card: 0 0 10px rgba(0, 0, 0, .10);
+  --jb-ds-shadow-dialog: 0 0 20px rgba(78, 89, 105, .15);
+  --jb-ds-shadow-hover: 0 4px 8px rgba(0, 0, 0, .06);
+  --jb-ds-shadow-card-hover: 0 1px 20px rgba(75, 81, 111, .20);
+  --jb-ds-focus: 0 0 0 2px rgba(0, 101, 60, .15);
+  --jb-ds-motion-fast: 150ms;
+  --jb-ds-motion-normal: 200ms;
+
+  /* Layout guidance for reusable prototypes */
+  --jb-ds-page-max: 1440px;
+  --jb-ds-content-max: 1200px;
+  --jb-ds-sidebar-w: 220px;
+  --jb-ds-header-h: 64px;
+  --jb-ds-dialog-w: 590px;
+  --jb-ds-mask: rgba(0, 0, 0, .60);
+}

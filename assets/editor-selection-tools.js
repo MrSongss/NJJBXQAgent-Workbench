@@ -9,6 +9,12 @@
   let lastInlineChange = null;
   let toolbar, menu, actionCard, focusBar, resumeBar, resumeFloat;
 
+  function focusMeta(kind) {
+    if (kind === "review") return { name:"合规审查", panel:"#integratedReviewPanel", current:"当前修订稿" };
+    if (kind === "interpret") return { name:"政务文件解读", panel:"#planPilotPanel", current:"政策原文" };
+    return { name:"全文润色", panel:"#integratedPolishPanel", current:"当前润色稿" };
+  }
+
   function icon(name) { return `<svg class="svg-icon" aria-hidden="true"><use href="#${name}"></use></svg>`; }
 
   function ensureFocusUI() {
@@ -99,9 +105,10 @@
     panel?.classList.remove("focus-task-paused");
     if (focusBar) {
       focusBar.hidden = false;
+      focusBar.classList.toggle("interpret-focus", focusState.kind === "interpret");
       const title=$("#focusDocumentTitle"), current=focusBar.querySelector('[data-focus-document-view="current"]');
       if(title) title.textContent=focusState.title;
-      if(current) current.textContent=focusState.kind === "review" ? "当前修订稿" : "当前润色稿";
+      if(current) current.textContent=focusMeta(focusState.kind).current;
     }
     if (resumeBar) resumeBar.hidden = true;
     if (resumeFloat) resumeFloat.hidden = true;
@@ -131,9 +138,10 @@
     $("#view-chat")?.classList.add("focus-question-mode");
     $("#documentEditorPanel")?.classList.add("focus-task-paused");
     if (focusBar) focusBar.hidden=true;
-    if (resumeBar) { resumeBar.hidden=false; const text=$("#focusResumeText"); if(text) text.textContent=`${focusState.kind === "review" ? "合规审查" : "全文润色"}已暂停，可在对话中追问后返回继续处理。`; }
-    if (resumeFloat) { resumeFloat.hidden=false; resumeFloat.innerHTML=`${icon("i-chevron-right")}返回${focusState.kind === "review" ? "合规审查" : "全文润色"}`; }
-    const panel=$(focusState.kind === "review" ? "#integratedReviewPanel" : "#integratedPolishPanel");
+    const meta=focusMeta(focusState.kind);
+    if (resumeBar) { resumeBar.hidden=false; const text=$("#focusResumeText"); if(text) text.textContent=`${meta.name}已暂停，可在对话中追问后返回继续处理。`; }
+    if (resumeFloat) { resumeFloat.hidden=false; resumeFloat.innerHTML=`${icon("i-chevron-right")}返回${meta.name}`; }
+    const panel=$(meta.panel);
     if(panel) panel.hidden=true;
     return true;
   }
@@ -141,15 +149,28 @@
   function resumeFocus() {
     if (!focusState?.paused) return false;
     focusState.paused=false;
-    const panel=$(focusState.kind === "review" ? "#integratedReviewPanel" : "#integratedPolishPanel");
+    const meta=focusMeta(focusState.kind),panel=$(meta.panel);
     if(panel) panel.hidden=false;
     enterFocus({ ...focusState, view:focusState.view });
-    host()?.toast?.(`已返回${focusState.kind === "review" ? "合规审查" : "全文润色"}任务。`);
+    host()?.toast?.(`已返回${meta.name}任务。`);
+    return true;
+  }
+
+  function showPane(value) {
+    if (!focusState) return false;
+    const view=$("#view-chat"),documentPane=value!=="results";
+    view?.classList.toggle("focus-pane-document",documentPane);
+    view?.classList.toggle("focus-pane-results",!documentPane);
+    focusBar?.querySelectorAll("[data-focus-pane]").forEach(button=>{
+      const selected=button.dataset.focusPane===(documentPane?"document":"results");
+      button.classList.toggle("active",selected);button.setAttribute("aria-selected",String(selected));
+    });
     return true;
   }
 
   function locateText(text) {
     if (!focusState || !text) return false;
+    showPane("document");
     focusState.view="original"; renderFocusDocument();
     const paper=$("#editorPaper"), walker=document.createTreeWalker(paper,NodeFilter.SHOW_TEXT);
     let node;
@@ -266,7 +287,7 @@
   document.addEventListener("click",event=>{
     ensureFocusUI();ensureSelectionUI();
     const pane=event.target.closest("[data-focus-pane]");
-    if(pane){const value=pane.dataset.focusPane,view=$("#view-chat");view?.classList.toggle("focus-pane-document",value==="document");view?.classList.toggle("focus-pane-results",value==="results");focusBar.querySelectorAll("[data-focus-pane]").forEach(button=>{const selected=button===pane;button.classList.toggle("active",selected);button.setAttribute("aria-selected",String(selected));});return;}
+    if(pane){showPane(pane.dataset.focusPane);return;}
     const docView=event.target.closest("[data-focus-document-view]");
     if(docView&&focusState){focusState.view=docView.dataset.focusDocumentView;renderFocusDocument();return;}
     if(event.target.closest("[data-focus-resume]")){resumeFocus();return;}
@@ -285,5 +306,5 @@
   });
 
   ensureFocusUI();ensureSelectionUI();
-  window.JBAIDocumentFocus={enter:enterFocus,refresh:refreshFocus,exit:exitFocus,pauseForQuestion,resume:resumeFocus,locateText,isActive:()=>!!focusState&&!focusState.paused,getState:()=>focusState?{kind:focusState.kind,view:focusState.view,paused:focusState.paused}:null,hideSelectionUI};
+  window.JBAIDocumentFocus={enter:enterFocus,refresh:refreshFocus,exit:exitFocus,pauseForQuestion,resume:resumeFocus,locateText,showPane,isActive:()=>!!focusState&&!focusState.paused,getState:()=>focusState?{kind:focusState.kind,view:focusState.view,paused:focusState.paused}:null,hideSelectionUI};
 })();

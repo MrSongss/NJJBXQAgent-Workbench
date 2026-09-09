@@ -60,6 +60,7 @@
   height:30px;padding:0 10px;border:0;border-radius:5px;background:transparent;color:#657984;font-size:11px;font-weight:750;cursor:pointer;
 }
 .focus-document-switch button.active,.focus-mobile-tabs button.active { background:#fff;color:#08755d;box-shadow:0 1px 5px rgba(30,60,70,.1); }
+.focus-document-bar.interpret-focus .focus-document-switch { display:none; }
 .focus-mobile-tabs { display:none; }
 .focus-resume-bar {
   grid-column:1;
@@ -157,11 +158,13 @@
   #view-chat.document-focus-mode .focus-document-bar { grid-column:1;grid-row:1;padding-inline:12px; }
   #view-chat.document-focus-mode .editor-stage { grid-column:1;grid-row:2;padding:12px; }
   #view-chat.document-focus-mode .integrated-polish-panel,
-  #view-chat.document-focus-mode .integrated-review-panel { grid-column:1;grid-row:2; }
+  #view-chat.document-focus-mode .integrated-review-panel,
+  #view-chat.document-focus-mode .interpret-focus-panel { grid-column:1;grid-row:2; }
   .focus-mobile-tabs { display:flex; }
   .focus-document-heading { display:none; }
   #view-chat.document-focus-mode.focus-pane-document .integrated-polish-panel,
-  #view-chat.document-focus-mode.focus-pane-document .integrated-review-panel { display:none !important; }
+  #view-chat.document-focus-mode.focus-pane-document .integrated-review-panel,
+  #view-chat.document-focus-mode.focus-pane-document .interpret-focus-panel { display:none !important; }
   #view-chat.document-focus-mode.focus-pane-results .editor-stage,
   #view-chat.document-focus-mode.focus-pane-results .focus-document-switch { display:none !important; }
   #view-chat.document-focus-mode .editor-paper { min-height:calc(100vh - 158px);padding:36px 30px 54px; }
