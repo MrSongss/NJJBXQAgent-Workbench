@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="VSDEAo78XCxfq550bpnCEt">
+<head data-page-node-id="9RDe22KEYxqz3hBaIsD67Q">
+  <meta charset="UTF-8" data-page-node-id="b9RddywXYFWcJgwTEWV2bb">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="DT8iH67QV5OOs6pFqGNIdb">
   <title>合同智能生成及预审 · 智能拟制系统 - 江北新区政务AI智能体</title>
   <style>
     /* ==========================================================================
@@ -47,11 +47,10 @@
     button { border: 0; background: none; color: inherit; cursor: pointer; }
     a { color: inherit; text-decoration: none; }
 
-    .app { display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
-    .topbar { grid-column: 1 / -1; grid-row: 1; }
+    .app { display: grid; grid-template-columns: 300px 1fr; height: 100vh; }
 
     /* ============ Sidebar 草稿列表（移植自 notice/communique） ============ */
-    .sidebar { grid-column: 1; grid-row: 2; min-height: 0; display: flex; flex-direction: column; background: #fafbfc; border-right: 1px solid var(--line); }
+    .sidebar { grid-column: 1; min-height: 0; display: flex; flex-direction: column; background: #fafbfc; border-right: 1px solid var(--line); }
     .sidebar-header { padding: 18px 16px 14px; background: linear-gradient(90deg,#0A3573,#0E4C92 60%,#13A8A8); box-shadow: 0 4px 20px rgba(10,53,115,.18); }
     .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
     .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.1)); border: 1px solid rgba(255,255,255,.3); box-shadow: var(--ai-glow); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 15px; flex-shrink: 0; }
@@ -83,7 +82,7 @@
     .history-item:hover { background: #eef2f7; transform: translateX(2px); }
     .history-item.active { background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: 0 8px 20px rgba(14,76,146,.25), var(--ai-glow); }
     .history-item.active .history-title { color: #fff; }
-    .history-item.active .history-tag, .history-item.active .history-step, .history-item.active .history-time { color: rgba(255,255,255,.85); }
+    .history-item.active .history-tag, .history-item.active .history-step { color: rgba(255,255,255,.92); background: rgba(255,255,255,.22); }
     .history-title { font-size: 13px; color: #1b2436; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
     .history-meta { font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .history-tag { display: inline-block; padding: 1px 6px; background: #f0f2f5; border-radius: 3px; font-size: 11px; color: #46536e; }
@@ -99,15 +98,6 @@
     .user-info { flex: 1; overflow: hidden; }
     .user-info .user-name { font-size: 13px; font-weight: 700; color: #1b2436; }
     .user-info .user-dept { font-size: 11px; color: var(--muted); }
-
-    /* ============ 顶栏 ============ */
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px 0 20px; background: linear-gradient(90deg, #0A3573, #0E4C92 60%, #13A8A8); border-bottom: none; box-shadow: 0 4px 20px rgba(10,53,115,.18); z-index: 5; }
-    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: #fff; white-space: nowrap; }
-    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #fff; flex: none; background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); box-shadow: var(--ai-glow), 0 8px 18px rgba(14,76,146,.28); }
-    .brand-mark .ic-svg { width: 58%; height: 58%; stroke: #fff; fill: none; stroke-width: 2; }
-    .brand small { display: block; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.7); margin-top: 1px; }
-    .top-actions { display: flex; align-items: center; gap: 8px; }
-    .safe-mode { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 11px; border-radius: 9px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; }
 
     /* ============ 通用控件 ============ */
     .btn, .icon-btn, .primary-btn, .danger-btn, .ghost-btn {
@@ -129,7 +119,7 @@
     .select:focus { border-color: rgba(36, 85, 230, 0.5); }
 
     /* ============ 视图容器 ============ */
-    .view { display: none; min-height: 0; height: 100%; grid-column: 2; grid-row: 2; }
+    .view { display: none; min-height: 0; height: 100%; grid-column: 2; }
     .view.active { display: block; }
     #view-editor.active { display: grid; grid-template-columns: 1fr 400px; }
     .page-scroll { height: 100%; overflow: auto; padding: 22px 26px 40px; }
@@ -145,7 +135,6 @@
     /* 流程步骤条（来源于业务流程图泳道） */
     .flowbar { display: flex; align-items: center; gap: 0; padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
     .flow-step { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .role-scope { display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px;border:1px solid #cfe0f4;border-radius:8px;background:#f3f8fe;color:#34527a;font-size:12px;font-weight:700; }
     .review-disclaimer { padding:9px 12px;border-bottom:1px solid #f0d8a7;background:#fffaf0;color:#765315;font-size:12px;line-height:1.6; }
     .issue-source { display:inline-flex;align-items:center;margin-left:6px;padding:2px 7px;border-radius:999px;background:#eef4ff;color:#315f9c;font-size:10px;font-weight:700; }
     .flow-node { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 12px; font-weight: 700; cursor: pointer; transition: .16s; border: 1px solid transparent; }
@@ -404,222 +393,208 @@
     ::-webkit-scrollbar-thumb:hover { background: #b7c2d8; }
   </style>
 </head>
-<body>
-  <div class="app">
-    <!-- ===================== 顶栏 ===================== -->
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark agent-avatar"><svg class="ic-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="4"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></span>
-        <span>合同智能生成及预审<small>江北新区政务AI智能体 · 智能拟制系统</small></span>
-      </div>
-      <div class="top-actions">
-        <span class="safe-mode">🔒 安全模式 · 数据不出域</span>
-        <button class="icon-btn" data-action="message" title="消息">🔔</button>
-        <button class="icon-btn" data-action="profile" title="账号">政</button>
-      </div>
-    </header>
-
+<body data-page-node-id="4sHcw7wyM1byA6AALvADgf">
+  <div class="app" data-page-node-id="MNzhpOJWnEQsqiOhiPu433">
     <!-- ===================== 左侧菜单（全局） ===================== -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="logo"><div class="logo-icon">合</div><span class="logo-text">合同智能生成</span></div>
-        <button class="btn-new" data-action="newTask"><span>+</span><span class="btn-text">新建合同</span></button>
+    <aside class="sidebar" data-page-node-id="VlefGJnsYFrEOtImiOCaSj">
+      <div class="sidebar-header" data-page-node-id="fppqFdlt2eNPK3YdijY1Be">
+        <div class="logo" data-page-node-id="colijHA1qWswAE9uXCNy94"><div class="logo-icon" data-page-node-id="xAU6H95dAHt9RJJ89s4qwF">合</div><span class="logo-text" data-page-node-id="u2uKnWr2B7j9d1NmSVbxmq">合同智能生成</span></div>
+        <button class="btn-new" data-action="newTask" data-page-node-id="y70rzg36CkouWWFZHJ3SMD"><span data-page-node-id="YoNpzprHmFoFY93PdGLYnL">+</span><span class="btn-text" data-page-node-id="vE3pSsE0Bg7OWv6gKEDAqy">新建合同</span></button>
       </div>
-      <div class="filter-box">
-        <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索草稿..." /><span class="search-clear" id="searchClear" style="display:none;">✕</span></div>
-        <div class="time-filter-row" id="timeFilterRow">
-          <span class="time-chip active" data-range="all">全部</span>
-          <span class="time-chip" data-range="7d">近7天</span>
-          <span class="time-chip" data-range="30d">近30天</span>
-          <span class="time-chip" data-range="custom">自定义</span>
+      <div class="filter-box" data-page-node-id="9zOAVNJTjamxXAj1ooIj7Q">
+        <div class="search-wrap" data-page-node-id="JA8t6kMLJG8ESqr3f1PHoH"><span class="search-icon" data-page-node-id="2SfbhelHlGeO48hGZj5doZ">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索草稿..." data-page-node-id="lfq9YKIXC98zenqhpmxm1A" /><span class="search-clear" id="searchClear" style="display:none;" data-page-node-id="ZFscM38rqsuB7kk915drgC">✕</span></div>
+        <div class="time-filter-row" id="timeFilterRow" data-page-node-id="yZd8hUU9Qs7heomIBTZfGp">
+          <span class="time-chip active" data-range="all" data-page-node-id="Apf47sv0SSFPyJNRc3iggF">全部</span>
+          <span class="time-chip" data-range="7d" data-page-node-id="PrGFWfF6BT6M1pYXrE7oTr">近7天</span>
+          <span class="time-chip" data-range="30d" data-page-node-id="HHiG2IgKCPDJycZvpolBS5">近30天</span>
+          <span class="time-chip" data-range="custom" data-page-node-id="QYsWJD3jvLCk3Q0KCQnC1R">自定义</span>
         </div>
-        <div class="custom-range" id="customRange">
-          <span class="custom-range-label">选择起止日期</span>
-          <div class="custom-range-inputs">
-            <input type="date" id="dateStart" />
-            <span class="custom-range-sep">~</span>
-            <input type="date" id="dateEnd" />
+        <div class="custom-range" id="customRange" data-page-node-id="RHj21mTH8ohDLZubnUtuou">
+          <span class="custom-range-label" data-page-node-id="pSrFcAhuW9dR9jUaEjfpMJ">选择起止日期</span>
+          <div class="custom-range-inputs" data-page-node-id="fR3XnuukpEk4ooQ8Pkwf67">
+            <input type="date" id="dateStart" data-page-node-id="E84Nt70a1tzs3EwHjWsiok" />
+            <span class="custom-range-sep" data-page-node-id="oUguwiYkzhRtwm8SxSHujJ">~</span>
+            <input type="date" id="dateEnd" data-page-node-id="waId0jZehvQuu0dJNpgkjU" />
           </div>
         </div>
       </div>
-      <div class="sidebar-section-title"><span>合同历史记录</span><span class="record-count" id="recordCount">0 条</span></div>
-      <div class="history-list" id="historyList"></div>
-      <div class="sidebar-footer"><div class="user-avatar">政</div><div class="user-info"><div class="user-name">政务用户</div><div class="user-dept">南京江北新区管委会</div></div></div>
+      <div class="sidebar-section-title" data-page-node-id="UL7BDdrVzqpgcYt6S5HkB2"><span data-page-node-id="AFqi0ISif7uP1beV4MTqsN">合同历史记录</span><span class="record-count" id="recordCount" data-page-node-id="zyPaPC0zYySAZ1wAwZlCGL">0 条</span></div>
+      <div class="history-list" id="historyList" data-page-node-id="Iwo4NkKkpTcMvPs1b1szBP"></div>
+      <div class="sidebar-footer" data-page-node-id="aHpElKPDIFeaT9CoRlBsQk"><div class="user-avatar" data-page-node-id="tGxiFkJYg4bcLHqLRpTRmO">政</div><div class="user-info" data-page-node-id="IANUr68wBmYR9AWA3xdbaM"><div class="user-name" data-page-node-id="7XstFx8oyrVC1aehDMplFT">政务用户</div><div class="user-dept" data-page-node-id="ixX7iWBcKdIu8CgGDFfFe4">南京江北新区管委会</div></div></div>
     </aside>
 
     <!-- ===================== 视图：合同智能生成 ===================== -->
-    <div class="view active" id="view-editor">
-      <main class="tool-main">
-        <section class="toolbar">
-          <div class="toolbar-left">
-            <button class="btn" data-action="save">💾 保存版本</button>
-            <button class="btn" data-action="versions">🕒 合同版本记录</button>
-            <span class="role-scope">当前角色：经办人 · 模板、条款和规则由法务治理中心维护</span>
+    <div class="view active" id="view-editor" data-page-node-id="fWK1CaBltRdjhuzEg1Ck9m">
+      <main class="tool-main" data-page-node-id="BmIjLtHkcFQwYFruZn3BrW">
+        <section class="toolbar" data-page-node-id="DlUFyhJwd0gHSGEPOKRG2o">
+          <div class="toolbar-left" data-page-node-id="GDmOgTO3I9jWwyOXrhh0mD">
+            <button class="btn" data-action="save" data-page-node-id="jZyz3epqBN2U1YGdMtoJ7E">💾 保存版本</button>
+            <button class="btn" data-action="versions" data-page-node-id="PMNvoTLYGq58TXQBmdGekc">🕒 合同版本记录</button>
           </div>
-          <div class="toolbar-right">
-            <span class="hint" id="taskMeta" style="color:#8b95a7;font-size:13px;">未创建拟制任务</span>
+          <div class="toolbar-right" data-page-node-id="Ya3DibyQ54UmCeAXshlBVB">
+            <span class="hint" id="taskMeta" style="color:#8b95a7;font-size:13px;" data-page-node-id="DBZKbKPowFgMJRGAjYW0RV">未创建拟制任务</span>
           </div>
         </section>
 
         <!-- 经办人四阶段主流程；智能匹配在生成阶段后台自动完成 -->
-        <section class="flowbar" id="flowbar">
-          <div class="flow-step"><button class="flow-node current" data-flow="1" title="录入合作要素：背景、主体、期限、经费、权责、风控"><span class="n">1</span>填写信息</button></div>
-          <div class="flow-arrow"></div>
-          <div class="flow-step"><button class="flow-node" data-flow="2" title="后台自动匹配已生效模板和标准条款，生成协议初稿"><span class="n">2</span>生成草案</button></div>
-          <div class="flow-arrow"></div>
-          <div class="flow-step"><button class="flow-node" data-flow="3" title="智能预审、人工确认、在线修订和版本留痕"><span class="n">3</span>预审修订</button></div>
-          <div class="flow-arrow"></div>
-          <div class="flow-step"><button class="flow-node" data-flow="4" title="导出草案和预审报告，提交法务复核或归档"><span class="n">4</span>导出提交</button></div>
+        <section class="flowbar" id="flowbar" data-page-node-id="8vBbMO8GeEusQZcLIox3Kh">
+          <div class="flow-step" data-page-node-id="EZ5vMwrWrIipE23T3hT5rd"><button class="flow-node current" data-flow="1" title="录入合作要素：背景、主体、期限、经费、权责、风控" data-page-node-id="44KERTURqnlZn4BxG7z3rr"><span class="n" data-page-node-id="8Ukf8x9PsNSsi0HXS2GabO">1</span>填写信息</button></div>
+          <div class="flow-arrow" data-page-node-id="5Gm1kuf51yqmzhXGlJ4yND"></div>
+          <div class="flow-step" data-page-node-id="n34pez70YBOVLkTSiLKJCF"><button class="flow-node" data-flow="2" title="后台自动匹配已生效模板和标准条款，生成协议初稿" data-page-node-id="o0cFykT2AYBgbMrXvE3yiA"><span class="n" data-page-node-id="VqE9X87OPsGGMlaBd88Y4O">2</span>生成草案</button></div>
+          <div class="flow-arrow" data-page-node-id="5zr2hwcx16sLzUWuwD08Yq"></div>
+          <div class="flow-step" data-page-node-id="MenU4R0vScrTA6Ii5Gw3gY"><button class="flow-node" data-flow="3" title="智能预审、人工确认、在线修订和版本留痕" data-page-node-id="RQGFUysY4k7UEZFmHCz4oO"><span class="n" data-page-node-id="HQ8LTqYsKAM3C377ovjPPP">3</span>预审修订</button></div>
+          <div class="flow-arrow" data-page-node-id="g8TDEPAbVfpBNpSRQJGPHN"></div>
+          <div class="flow-step" data-page-node-id="1cZQ5Dbhm2wTvqcjCqjEu9"><button class="flow-node" data-flow="4" title="导出草案和预审报告，提交法务复核或归档" data-page-node-id="iQXaXR9FZwbLCKC35siM0W"><span class="n" data-page-node-id="CjR0zqbTfdaYqyhXcLfIbm">4</span>导出提交</button></div>
         </section>
 
-        <section class="workspace">
-          <div class="doc-wrap">
-            <div class="page-tools">
-              <span class="hint" id="docHint">请新建合同拟制任务，录入合作要素后生成协议初稿</span>
-              <div style="display:flex;gap:8px;">
-                <button class="mini-btn" data-action="zoomOut">A-</button>
-                <button class="mini-btn" data-action="zoomIn">A+</button>
-                <button class="mini-btn" data-action="locateFirst">定位首个问题</button>
+        <section class="workspace" data-page-node-id="kfFXE0YVQyaKwLXOAJ8q22">
+          <div class="doc-wrap" data-page-node-id="1ZtDYGxC4L5QxcQOQdSsAu">
+            <div class="page-tools" data-page-node-id="QBEqdLlLE1olRWqKV5WAT5">
+              <span class="hint" id="docHint" data-page-node-id="0S3a7mGzhSwNjWX6LaDs4y">请新建合同拟制任务，录入合作要素后生成协议初稿</span>
+              <div style="display:flex;gap:8px;" data-page-node-id="heaBoOPdyi5Q6T1DZ08M8s">
+                <button class="mini-btn" data-action="zoomOut" data-page-node-id="wnxPh5Vozz66ZdavLSXR32">A-</button>
+                <button class="mini-btn" data-action="zoomIn" data-page-node-id="YUwK49uKmgAVk8RtvOIHCE">A+</button>
+                <button class="mini-btn" data-action="locateFirst" data-page-node-id="RHieMTyLINubLgctwwaVjG">定位首个问题</button>
               </div>
             </div>
-            <article class="doc-page" id="docPage">
-              <div class="doc-empty">
-                <div class="eic">📄</div>
-                <div class="et">暂无协议草案</div>
-                <div class="es">点击「新建合同拟制」，选择协议类型并录入合作背景、合作单位、权责划分、合规及风控要求，系统将智能匹配模板与条款并生成协议初稿。</div>
-                <button class="primary-btn" data-action="newTask">＋ 新建合同拟制</button>
+            <article class="doc-page" id="docPage" data-page-node-id="4VuG6LFJyeOGKfQbDbAP5c">
+              <div class="doc-empty" data-page-node-id="eCVPDBvzQ6k52aNeZRAbzy">
+                <div class="eic" data-page-node-id="qhfDJq9lSCbCxrFqOKZZi8">📄</div>
+                <div class="et" data-page-node-id="GJwZTwF7IHJqnBbGeO1SDX">暂无协议草案</div>
+                <div class="es" data-page-node-id="MJQC5WvU4xaLNfZXeUu39F">点击「新建合同拟制」，选择协议类型并录入合作背景、合作单位、权责划分、合规及风控要求，系统将智能匹配模板与条款并生成协议初稿。</div>
+                <button class="primary-btn" data-action="newTask" data-page-node-id="DZ4R7WfuCLRVPUFDptMqxn">＋ 新建合同拟制</button>
               </div>
             </article>
           </div>
         </section>
 
-        <footer class="statusbar">
-          <span id="statusText">请新建合同拟制任务并录入合作要素</span>
-          <span id="statusMeta">尚未生成草案</span>
+        <footer class="statusbar" data-page-node-id="WIqgMJpiQsEpSaVwQutFHr">
+          <span id="statusText" data-page-node-id="aVJIcyeRv9Nt7nR6lvDGLZ">请新建合同拟制任务并录入合作要素</span>
+          <span id="statusMeta" data-page-node-id="xtccvGYDtiTfP5DWe2cd3w">尚未生成草案</span>
         </footer>
       </main>
 
       <!-- 右侧：多维预审结果面板 -->
-      <aside class="rightbar">
-        <div class="pf-empty" id="pfEmpty">
-          <div class="eic" id="pfEmptyIc">🗂</div>
-          <div class="et" id="pfEmptyTitle">暂无预审结果</div>
-          <div class="es" id="pfEmptySub">请先新建合同拟制任务并生成协议初稿，随后可在此发起多维合规预审。</div>
-          <button class="primary-btn" data-action="precheck" id="startPrecheckBtn" style="display:none;">开始预审校验</button>
+      <aside class="rightbar" data-page-node-id="bhB7vLYBLk0znRMrRt22Fh">
+        <div class="pf-empty" id="pfEmpty" data-page-node-id="VxztbFkILNJ5Y60yAognb7">
+          <div class="eic" id="pfEmptyIc" data-page-node-id="0dCzCVuUKju6HWvBht3NWQ">🗂</div>
+          <div class="et" id="pfEmptyTitle" data-page-node-id="JqSgghFHpj61NuaLl04Ear">暂无预审结果</div>
+          <div class="es" id="pfEmptySub" data-page-node-id="i2492BEwqGKyuVaMtgEiMZ">请先新建合同拟制任务并生成协议初稿，随后可在此发起多维合规预审。</div>
+          <button class="primary-btn" data-action="precheck" id="startPrecheckBtn" style="display:none;" data-page-node-id="dVdyEZtxQjHNK07cEc1DVu">开始预审校验</button>
         </div>
-        <div class="pf-results" id="pfResults">
-          <div class="review-disclaimer"><b>智能预审提示：</b>结果用于辅助发现条款风险，不替代法务审核。高风险建议必须逐条确认，忽略时需填写原因并留痕。</div>
-          <div class="pf-head">
-            <div class="pf-head-top">
-              <div class="pf-count">共检出 <b id="pfTotal">0</b> 项问题</div>
-              <div class="pf-score"><b id="pfScore">—</b><span>已处理</span></div>
+        <div class="pf-results" id="pfResults" data-page-node-id="Yk0d1Chod0rJMe7ckzlgMI">
+          <div class="review-disclaimer" data-page-node-id="oXn5veW14Z0kAVjw9pLzTn"><b data-page-node-id="PpNg6j06PeHsaEe9JTuCey">智能预审提示：</b>结果用于辅助发现条款风险，不替代法务审核。高风险建议必须逐条确认，忽略时需填写原因并留痕。</div>
+          <div class="pf-head" data-page-node-id="Kfj6Rqdizu8B7uHN1qHawO">
+            <div class="pf-head-top" data-page-node-id="kUPK7xyZuAFOlPX74RdBWV">
+              <div class="pf-count" data-page-node-id="m8EvLZHwGeX54ooOf55V2q">共检出 <b id="pfTotal" data-page-node-id="VuCVhXSwrnPBj8Y6UZkOwA">0</b> 项问题</div>
+              <div class="pf-score" data-page-node-id="QB5KtJTnHKGMOsggd9Qfkm"><b id="pfScore" data-page-node-id="boAqYFStg5FptAOghIy4AZ">—</b><span data-page-node-id="FcfizZdpnrDZOkBJvytLhc">已处理</span></div>
             </div>
-            <div class="pf-links">
+            <div class="pf-links" data-page-node-id="6xGpiyYKl6P2wogCUjtYnn">
             </div>
-            <div class="pf-cats" id="pfCats">
-              <label class="pf-cat on" data-bucket="完整"><span class="cbx">✓</span>条款完整性<span class="cnt" id="cnt-完整">0</span></label>
-              <label class="pf-cat on" data-bucket="逻辑"><span class="cbx">✓</span>逻辑一致性<span class="cnt" id="cnt-逻辑">0</span></label>
-              <label class="pf-cat on" data-bucket="权责"><span class="cbx">✓</span>权责对等性<span class="cnt" id="cnt-权责">0</span></label>
-              <label class="pf-cat on" data-bucket="合规"><span class="cbx">✓</span>法律合规性<span class="cnt" id="cnt-合规">0</span></label>
+            <div class="pf-cats" id="pfCats" data-page-node-id="VuLdzKDpZLdb1Ehl9BWTYU">
+              <label class="pf-cat on" data-bucket="完整" data-page-node-id="Vqz3JcZWjWGmYFGAogl0VZ"><span class="cbx" data-page-node-id="WGaUvWzsOMDzth0WBDQ30u">✓</span>条款完整性<span class="cnt" id="cnt-完整" data-page-node-id="BuUJaWimtkWImU4ZQF8NkD">0</span></label>
+              <label class="pf-cat on" data-bucket="逻辑" data-page-node-id="Cp0Bw0GKyXmr6MI6BxnqjW"><span class="cbx" data-page-node-id="4B5VSyxclX6YobSAAHkSFs">✓</span>逻辑一致性<span class="cnt" id="cnt-逻辑" data-page-node-id="BnWPNXE2jI1NLNYliNfU4e">0</span></label>
+              <label class="pf-cat on" data-bucket="权责" data-page-node-id="Pet2XCzK1BQVMmmWk68qrI"><span class="cbx" data-page-node-id="KWlFgCKUBJwz4P2215HfHY">✓</span>权责对等性<span class="cnt" id="cnt-权责" data-page-node-id="J0Zxcn2cE8AtO1eNQW4wzn">0</span></label>
+              <label class="pf-cat on" data-bucket="合规" data-page-node-id="EAP7OIqoHr3mLuYEyDviY6"><span class="cbx" data-page-node-id="5E1EQze2QgbGppgBBcxZwC">✓</span>法律合规性<span class="cnt" id="cnt-合规" data-page-node-id="OVipEEKQj0zCM1M1cx6FXY">0</span></label>
             </div>
           </div>
-          <div class="pf-actions">
-            <button class="primary-btn" data-action="precheck" id="recheckBtn">重新预审</button>
-            <button class="btn" data-action="applyAll">全部采纳</button>
-            <button class="btn" data-action="ignoreAll">全部忽略</button>
-            <button class="btn" data-action="compare">修订对比</button>
-            <button class="btn" data-action="export">导出</button>
+          <div class="pf-actions" data-page-node-id="Z81ui1YEHLDqRDVXDdaXyL">
+            <button class="primary-btn" data-action="precheck" id="recheckBtn" data-page-node-id="94C8GatvbXxSadU9Fi4ovy">重新预审</button>
+            <button class="btn" data-action="applyAll" data-page-node-id="plDifSud6gCpQ1cqR5nlEk">全部采纳</button>
+            <button class="btn" data-action="ignoreAll" data-page-node-id="sUQDJ3PdFOGZGsyy1RyLub">全部忽略</button>
+            <button class="btn" data-action="compare" data-page-node-id="ggY00dl8Jo2KSpfOi2jth8">修订对比</button>
+            <button class="btn" data-action="export" data-page-node-id="S5SN73IGyXGJ3uRcgXEBFZ">导出</button>
           </div>
-          <div class="pf-progress" id="pfProgress">
-            <div class="lbl"><span id="pfProgLbl">正在进行多维预审…</span><span id="pfProgPct">0%</span></div>
-            <div class="pf-bar"><i id="pfProgBar"></i></div>
+          <div class="pf-progress" id="pfProgress" data-page-node-id="4GY8sj7qApQ3fQS1jtE5bi">
+            <div class="lbl" data-page-node-id="YkR0H8zuFgEaikCwTIB2kn"><span id="pfProgLbl" data-page-node-id="sXCJLbIJBz5GvrhyShC4C7">正在进行多维预审…</span><span id="pfProgPct" data-page-node-id="BcE2pkVAMEzejlwPvEgWHU">0%</span></div>
+            <div class="pf-bar" data-page-node-id="sKMS8LFIaNhIgBYfeOZTd5"><i id="pfProgBar" data-page-node-id="FgNc6gtfnhvBmehKUQsOj1"></i></div>
           </div>
-          <div class="pf-list" id="pfList"></div>
+          <div class="pf-list" id="pfList" data-page-node-id="65PqaWPFAnvvW9qE8Fz0kQ"></div>
         </div>
       </aside>
     </div>
 
     <!-- ===================== 视图：历史与版本 ===================== -->
-    <div class="view" id="view-history">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">历史与版本管理</div>
-            <div class="page-sub">全部合同拟制任务台账。每个合同都保存了多版草稿与修订稿，点击「版本」即可查看该合同的所有版本、对比差异并回溯还原（编辑中的合同也可在拟制页「版本记录」查看当前版本）</div>
+    <div class="view" id="view-history" data-page-node-id="qyumyF0XDO4mHLIpp1bSee">
+      <div class="page-scroll" data-page-node-id="u7GZleCYGFBwa9LUdxYFc4">
+        <div class="page-head" data-page-node-id="djIxHwzWrz68YBf8NIYd6I">
+          <div data-page-node-id="qoSXcsLNE5PSNfB3x9IUNq">
+            <div class="page-title" data-page-node-id="grrPF37S0x94Dmi8wC31jb">历史与版本管理</div>
+            <div class="page-sub" data-page-node-id="QVEARv2v3ZbUOcD2FZwg5k">全部合同拟制任务台账。每个合同都保存了多版草稿与修订稿，点击「版本」即可查看该合同的所有版本、对比差异并回溯还原（编辑中的合同也可在拟制页「版本记录」查看当前版本）</div>
           </div>
-          <div class="toolbar-inline">
-            <button class="btn" data-action="exportHistory">⬇ 导出台账</button>
+          <div class="toolbar-inline" data-page-node-id="U1BtHBNtFFqssL28IfBvxc">
+            <button class="btn" data-action="exportHistory" data-page-node-id="yA1fCc1ck0QCKVPG2fAXrq">⬇ 导出台账</button>
           </div>
         </div>
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-body" style="padding:14px 16px;">
-            <div class="toolbar-inline">
-              <select class="select" id="hFilterType"><option>全部类型</option><option>政企合作</option><option>战略合作</option><option>项目共建</option><option>服务委托</option><option>联合运营</option></select>
-              <select class="select" id="hFilterStatus"><option>全部状态</option><option>通过</option><option>待复核</option><option>预审中</option></select>
-              <select class="select" id="hFilterRange"><option>近7天</option><option>近30天</option><option>近90天</option><option>全部</option></select>
-              <div class="search"><input class="select" id="hSearch" type="text" placeholder="🔍 搜索合同名称 / 经办人" style="width:240px;"></div>
-              <button class="btn" data-action="historyFilter">筛选</button>
+        <div class="card" style="margin-bottom:16px;" data-page-node-id="cKdL1EX58BFwrYZH5OR0UE">
+          <div class="card-body" style="padding:14px 16px;" data-page-node-id="R45jsNpCFq5b7EXClm6m2l">
+            <div class="toolbar-inline" data-page-node-id="TiUfYAqLyx1VmGpsn7KnZg">
+              <select class="select" id="hFilterType" data-page-node-id="oL5Fgu2NtA9PfkHElk0RS6"><option data-page-node-id="JmSldzsodqK3E0JyQzM60A">全部类型</option><option data-page-node-id="yQM2PqzbWr7ftDEKFcSRPi">政企合作</option><option data-page-node-id="ze9gsSEizMrGLGEZjd3UNm">战略合作</option><option data-page-node-id="qYkRX3ndnOyBdiKVY0mVzd">项目共建</option><option data-page-node-id="cBgBwg68JAcz9dgHrZBn8H">服务委托</option><option data-page-node-id="WOhI7LidpXSEwnd0CsBcU3">联合运营</option><option data-page-node-id="e9F5c2Gujs2hyxhi2lUeqP">工程监理</option><option data-page-node-id="lRnwxM3UzLph6adlZBME4n">第三方测试</option></select>
+              <select class="select" id="hFilterStatus" data-page-node-id="X4shgAHMdhdU5r4PJT4emj"><option data-page-node-id="x1oy7LM6LgDdU9GB3zO0dZ">全部状态</option><option data-page-node-id="8CL4lxfUnPG1Tq3bhrD4Iv">通过</option><option data-page-node-id="qUHQkm8ze2V7n0DNg0lvWO">待复核</option><option data-page-node-id="ikqeLs3NCXlDDsrOqot2Lc">预审中</option></select>
+              <select class="select" id="hFilterRange" data-page-node-id="7Yo5fpmUUWQ7OAq6i6mMqi"><option data-page-node-id="JiRK6slyRiFE2ZxXrsfttc">近7天</option><option data-page-node-id="uRpO9I5u5l8Am52VsMlQfH">近30天</option><option data-page-node-id="bx4NE6ZYTGE6z1j5mOtiYc">近90天</option><option data-page-node-id="UUPv9gpXgBhEUgS76QbK3O">全部</option></select>
+              <div class="search" data-page-node-id="jjNPSclF7NZzy51ClgY6FL"><input class="select" id="hSearch" type="text" placeholder="🔍 搜索合同名称 / 经办人" style="width:240px;" data-page-node-id="JWfBACO9pXWuTEgQprbRNJ"></div>
+              <button class="btn" data-action="historyFilter" data-page-node-id="VituhHEXajCyVCQdkfBmzP">筛选</button>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-head"><div class="card-title">拟制任务台账 <span style="color:var(--muted);font-weight:600;font-size:13px;">（共 <span id="hCount">8</span> 条）</span></div></div>
-          <div class="tbl-wrap"><table class="tbl" id="historyTable"></table></div>
+        <div class="card" data-page-node-id="RfIFJzFvcNqWBh2IrXpjBC">
+          <div class="card-head" data-page-node-id="rtcSQUGqDRbKzw8b7aUcmp"><div class="card-title" data-page-node-id="Fg9dgiBOpA8voC2hb09fka">拟制任务台账 <span style="color:var(--muted);font-weight:600;font-size:13px;" data-page-node-id="3aOQIDcADMBCAwZaDbUKqv">（共 <span id="hCount" data-page-node-id="1UjBsmbnFCsKJpoUo0u3FF">10</span> 条）</span></div></div>
+          <div class="tbl-wrap" data-page-node-id="UtQJx9Vhfsd7WtDA8nzYVP"><table class="tbl" id="historyTable" data-page-node-id="aUaUzQQzu4tBZg21lG1GiT"></table></div>
         </div>
       </div>
     </div>
 
     <!-- ===================== 视图：统计报表 ===================== -->
-    <div class="view" id="view-stats">
-      <div class="page-scroll">
-        <div class="page-head">
-          <div>
-            <div class="page-title">统计报表</div>
-            <div class="page-sub">合同智能生成及预审运行概况 · 统计周期：2026-04-01 至 2026-07-13</div>
+    <div class="view" id="view-stats" data-page-node-id="QeuFOjp0hzus5BxLnbL9Wa">
+      <div class="page-scroll" data-page-node-id="2zZAmJHoBL38vEAkZiB6sm">
+        <div class="page-head" data-page-node-id="b1dfcBZcs7EDoHOtdFEJVU">
+          <div data-page-node-id="QDWvzojDqb7c9LYdBe49rp">
+            <div class="page-title" data-page-node-id="bTAuo2eEpi1mqMerpNeeA1">统计报表</div>
+            <div class="page-sub" data-page-node-id="R9NiQ7NBgb8m1IRt4s8OBp">合同智能生成及预审运行概况 · 统计周期：2026-04-01 至 2026-07-13</div>
           </div>
-          <div class="toolbar-inline">
-            <select class="select" id="statRange"><option>本季度</option><option>本月</option><option>本年</option></select>
-            <button class="btn" data-action="exportStat">⬇ 导出报表</button>
+          <div class="toolbar-inline" data-page-node-id="oarV0GbI5S0tflai8gWvPR">
+            <select class="select" id="statRange" data-page-node-id="TforD6y37FAOFRd9qlU10k"><option data-page-node-id="PlAg34QTQM2ijmwWqL9mzc">本季度</option><option data-page-node-id="CH5tKBv4Ia4qBalA2Rkcm7">本月</option><option data-page-node-id="D0oIIVGowIpoNT7EKUdzFO">本年</option></select>
+            <button class="btn" data-action="exportStat" data-page-node-id="Q6HO5IuHSjEWPs8thDZdCA">⬇ 导出报表</button>
           </div>
         </div>
 
-        <div class="grid-4" style="margin-bottom:16px;">
-          <div class="kpi"><div class="k-ico" style="background:var(--primary-soft);color:var(--primary);">📄</div><div class="k-label">累计拟制合同</div><div class="k-value">386</div><div class="k-delta up">▲ 18.2% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--red-soft);color:var(--red);">⚠</div><div class="k-label">累计预审问题</div><div class="k-value">2,148</div><div class="k-delta up">▲ 9.5% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--green-soft);color:var(--green);">✓</div><div class="k-label">建议采纳率</div><div class="k-value">88.2%</div><div class="k-delta up">▲ 4.3% 环比</div></div>
-          <div class="kpi"><div class="k-ico" style="background:var(--orange-soft);color:var(--orange);">⏱</div><div class="k-label">平均拟制时长</div><div class="k-value">6.4<span style="font-size:15px;">分/份</span></div><div class="k-delta down">▼ 62% 更快</div></div>
+        <div class="grid-4" style="margin-bottom:16px;" data-page-node-id="FtQi8HO4Y1gYJVTbkS2EPr">
+          <div class="kpi" data-page-node-id="i5F4JDVtN7HkBJS8CZWBPm"><div class="k-ico" style="background:var(--primary-soft);color:var(--primary);" data-page-node-id="ZlLV5BKB1Gxx2OlNH3f3BS">📄</div><div class="k-label" data-page-node-id="NTvTSNe07wmhanJpktImjM">累计拟制合同</div><div class="k-value" data-page-node-id="Dn0QnLFkTQApjRrcHaD2Kv">386</div><div class="k-delta up" data-page-node-id="1m3jFlNeBetvhBE25gRr1X">▲ 18.2% 环比</div></div>
+          <div class="kpi" data-page-node-id="Xc3RGASvqgPZB8ZUVBjI3p"><div class="k-ico" style="background:var(--red-soft);color:var(--red);" data-page-node-id="i3xeqJ5n7Zn1TzHv13LFpg">⚠</div><div class="k-label" data-page-node-id="tcjVn4B7tM1MK6HXXVruzj">累计预审问题</div><div class="k-value" data-page-node-id="8FJgo21RG4R7BNznoxFhjf">2,148</div><div class="k-delta up" data-page-node-id="03IsLvtlARKcVQzeiSSevo">▲ 9.5% 环比</div></div>
+          <div class="kpi" data-page-node-id="BzRI8WG8W2W7DNBdedk2ZC"><div class="k-ico" style="background:var(--green-soft);color:var(--green);" data-page-node-id="thxzhs74aIuyPcncXJb4G0">✓</div><div class="k-label" data-page-node-id="wDfa9Aift0AlGkhCxtr4N4">建议采纳率</div><div class="k-value" data-page-node-id="zDRLxzSKnG9MiiSuQrfSf8">88.2%</div><div class="k-delta up" data-page-node-id="IXhfJrmZ5Fh8WVRI3jm424">▲ 4.3% 环比</div></div>
+          <div class="kpi" data-page-node-id="eDMZdeithWZDogBdI3PeIL"><div class="k-ico" style="background:var(--orange-soft);color:var(--orange);" data-page-node-id="PaFmoT7Sp8Alvy1keqDeiv">⏱</div><div class="k-label" data-page-node-id="oT90EtQvIdyIifM8a7Mvjl">平均拟制时长</div><div class="k-value" data-page-node-id="HVFTtHbx5PkjWAqZtvT5te">6.4<span style="font-size:15px;" data-page-node-id="CMDPPFoFsdPyXUoCGkE2iG">分/份</span></div><div class="k-delta down" data-page-node-id="DUhAkhW2OLDf78RsZvFaOY">▼ 62% 更快</div></div>
         </div>
 
-        <div class="grid-2" style="margin-bottom:16px;align-items:start;">
-          <div class="card">
-            <div class="card-head"><div class="card-title">预审问题维度分布</div><span style="color:var(--muted);font-size:12px;">近90天</span></div>
-            <div class="card-body"><div class="bars" id="statBars"></div></div>
+        <div class="grid-2" style="margin-bottom:16px;align-items:start;" data-page-node-id="4Vvm9KHRJGiMrMjdWSFGkl">
+          <div class="card" data-page-node-id="eD0t4o47qgb1HQCJtpyfCL">
+            <div class="card-head" data-page-node-id="NFHIc7DDtmELdL70Y3SHnk"><div class="card-title" data-page-node-id="DlDWbZelj70h1TmxAx3OnA">预审问题维度分布</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="lFmXYceDIREIJV59wP45nr">近90天</span></div>
+            <div class="card-body" data-page-node-id="2DIYBNzMhFryKtaNj2VRpQ"><div class="bars" id="statBars" data-page-node-id="WMYy9b3OBwuTz4ODNICxKJ"></div></div>
           </div>
-          <div class="card">
-            <div class="card-head"><div class="card-title">风险等级占比</div><span style="color:var(--muted);font-size:12px;">按问题数</span></div>
-            <div class="card-body">
-              <div class="donut-wrap">
-                <div class="donut" id="statDonut">
-                  <div class="c"><div><b>2,148</b><br><span>问题总数</span></div></div>
+          <div class="card" data-page-node-id="vRtMhPAwZKB4jMB7WLqRqG">
+            <div class="card-head" data-page-node-id="D8xBq78MTtnCh1za29TWlC"><div class="card-title" data-page-node-id="tGo4qhtKFFRl8uJTlJlEcN">风险等级占比</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="j75Zqy3h7lYJKZDtDYCfSl">按问题数</span></div>
+            <div class="card-body" data-page-node-id="y4MqIqPcPJ5ISq8hwiID2O">
+              <div class="donut-wrap" data-page-node-id="WL9Mw0ynFcl24dmBnW9KOb">
+                <div class="donut" id="statDonut" data-page-node-id="Pz3X37HlaTQfuwS3k8uITT">
+                  <div class="c" data-page-node-id="9M987avU9vquvloeOnb71S"><div data-page-node-id="tqyvbdgzvf8hl5CIXda93M"><b data-page-node-id="Quz3hRXswe7DCqB9oj9xTa">2,148</b><br data-page-node-id="CTiYXmHRt917XaonBoH9cF"><span data-page-node-id="1zrbTU6VOnirb5klwF9KSH">问题总数</span></div></div>
                 </div>
-                <div class="legend" style="flex-direction:column;gap:10px;">
-                  <div><i style="background:var(--red);"></i>高风险　515 项（24%）</div>
-                  <div><i style="background:var(--orange);"></i>中风险　924 项（43%）</div>
-                  <div><i style="background:var(--primary);"></i>一般问题　709 项（33%）</div>
+                <div class="legend" style="flex-direction:column;gap:10px;" data-page-node-id="f1Cn1x0sDxjJcsjzAg5T4H">
+                  <div data-page-node-id="n7abJC3D218pRJO7BDVEmX"><i style="background:var(--red);" data-page-node-id="nXX4ELAl38ruuKIgCaTXva"></i>高风险　515 项（24%）</div>
+                  <div data-page-node-id="L6ZZwNlcEh6ErQAkSxcYZO"><i style="background:var(--orange);" data-page-node-id="LuRxLRmER6JWD00TQXatU1"></i>中风险　924 项（43%）</div>
+                  <div data-page-node-id="bDHo0V0KfBWmX6moVzalMt"><i style="background:var(--primary);" data-page-node-id="9BceJAyvqAXOLpGNwqlJxX"></i>一般问题　709 项（33%）</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="grid-2" style="align-items:start;">
-          <div class="card">
-            <div class="card-head"><div class="card-title">月度拟制量趋势</div><span style="color:var(--muted);font-size:12px;">份 / 月</span></div>
-            <div class="card-body"><div id="statTrend"></div></div>
+        <div class="grid-2" style="align-items:start;" data-page-node-id="shHU2Q103Np3IjGwv8JFFS">
+          <div class="card" data-page-node-id="jKOtDaVvLYuFIywg2R2Yct">
+            <div class="card-head" data-page-node-id="ECFIbB3BX61K9Pgp1avtHe"><div class="card-title" data-page-node-id="B7QwibsnG1AAEbamE6sHIw">月度拟制量趋势</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="X5s0A3vSx0jK8DuK0YtETL">份 / 月</span></div>
+            <div class="card-body" data-page-node-id="jh4D4RcGdRt7pPz0x5Sv3G"><div id="statTrend" data-page-node-id="6LZMVxriyvyfViuF4B3DyC"></div></div>
           </div>
-          <div class="card">
-            <div class="card-head"><div class="card-title">高频预审问题 Top 6</div><span style="color:var(--muted);font-size:12px;">出现次数</span></div>
-            <div class="card-body"><div class="bars" id="statTop"></div></div>
+          <div class="card" data-page-node-id="YnIwCrolq9TZmxsyIv7IXc">
+            <div class="card-head" data-page-node-id="8NIDabQFsXkFHfh0MMUy4S"><div class="card-title" data-page-node-id="TVBX4LvVQqlrftXyqVzCKY">高频预审问题 Top 8</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="uaEd4Zacj6XP23lMR6r1V8">出现次数</span></div>
+            <div class="card-body" data-page-node-id="3jpf2EJZdAmXfyuX7hlCER"><div class="bars" id="statTop" data-page-node-id="d2GvHxgOf5GHKA4I0kG8Gy"></div></div>
           </div>
         </div>
       </div>
@@ -627,15 +602,15 @@
   </div>
 
   <!-- ===================== 共享 UI ===================== -->
-  <input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf,.txt,.wps,.ofd">
-  <div class="toast" id="toast"></div>
-  <div class="modal-mask" id="modalMask">
-    <div class="modal" id="modalBox">
-      <div class="modal-head"><span id="modalTitle">提示</span><button class="icon-btn" id="modalClose">×</button></div>
-      <div class="modal-body" id="modalBody"></div>
-      <div class="modal-foot" id="modalFoot">
-        <button class="btn" id="modalCancel">取消</button>
-        <button class="primary-btn" id="modalOk">确认</button>
+  <input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf,.txt,.wps,.ofd" data-page-node-id="nYKGPoUSSoU4kueRGJGWUW">
+  <div class="toast" id="toast" data-page-node-id="FmqoTXOiFELwblm7pRTvr3"></div>
+  <div class="modal-mask" id="modalMask" data-page-node-id="zdAHYhDKBKWeP9zqGcTUVH">
+    <div class="modal" id="modalBox" data-page-node-id="xq8dgYiH53NPyM7mtYDGRP">
+      <div class="modal-head" data-page-node-id="u4lbnguARW4vwAXLmTODDt"><span id="modalTitle" data-page-node-id="Yh2HCPB7zzNAvbQsfUjWlZ">提示</span><button class="icon-btn" id="modalClose" data-page-node-id="SUCtdtXLfhcTzRgg6RkKfh">×</button></div>
+      <div class="modal-body" id="modalBody" data-page-node-id="3SmRpp25fhOgxMUa4Z9Gg3"></div>
+      <div class="modal-foot" id="modalFoot" data-page-node-id="jc3qTxjAouc0iLILjLtTJ7">
+        <button class="btn" id="modalCancel" data-page-node-id="1VGcE5BqcXhhm9mPsyUxQB">取消</button>
+        <button class="primary-btn" id="modalOk" data-page-node-id="cP29Z6bOtBjbWiBrTDbCRv">确认</button>
       </div>
     </div>
   </div>
@@ -682,13 +657,15 @@
        数据层
        ========================================================================= */
 
-    // 协议类型 / 业务场景（新建拟制时可选）
+    // 协议类型 / 业务场景（新建拟制时可选；工程监理/第三方测试对齐中心 2023 版合同模板）
     const scenes = [
       { key: "政企合作", icon: "🏢", d: "政府与企业围绕产业落地、平台共建等开展合作", tpl: "政企合作协议模板 v2.3" },
       { key: "战略合作", icon: "🤝", d: "双方就长期发展方向签订框架性战略合作协议", tpl: "战略合作框架协议模板 v3.1" },
       { key: "项目共建", icon: "🏗", d: "围绕具体项目共同投入、共建共管共享成果", tpl: "项目共建合作协议模板 v1.5" },
       { key: "服务委托", icon: "📦", d: "委托方委托受托方提供特定服务并支付费用", tpl: "服务委托协议模板 v2.0" },
-      { key: "联合运营", icon: "⚙", d: "双方共同运营某一业务并约定收益分配机制", tpl: "联合运营协议模板 v1.2" }
+      { key: "联合运营", icon: "⚙", d: "双方共同运营某一业务并约定收益分配机制", tpl: "联合运营协议模板 v1.2" },
+      { key: "工程监理", icon: "🛰", d: "信息系统工程监理服务（对齐中心项目监理服务合同模板）", tpl: "信息系统工程监理合同模板 v2023.9" },
+      { key: "第三方测试", icon: "🧪", d: "信息化项目第三方测试技术服务（对齐中心第三方测试技术服务合同模板）", tpl: "第三方测试技术服务合同模板 v2023.9" }
     ];
 
     // 预审问题清单（buckets：完整/逻辑/权责/合规；level：high/mid/low；带正文定位 del/ins）
@@ -712,7 +689,7 @@
         del: "由双方友好协商解决", ins: "协商不成的，任何一方均可向甲方所在地人民法院提起诉讼",
         note: "争议解决仅约定「友好协商」，未明确协商不成时的救济途径与管辖，条款可执行性不足。建议补充诉讼或仲裁及管辖地约定。" },
       { id: "9", bucket: "合规", dim: "法律合规性", level: "low", cat: "落款机关名称不规范", llm: true,
-        del: "江北新区综合办公室", ins: "南京江北新区管理委员会办公室",
+        del: "江北新区综合办公室", ins: "南京江北新区城市数字治理中心",
         note: "落款签约主体应使用规范全称，系统在机构知识库中未匹配到「综合办公室」这一规范称谓，建议核实并使用规范全称。" }
     ];
     // 结构性问题（缺失必备条款，无正文定位，由补全建议给出）
@@ -720,17 +697,32 @@
       { id: "s1", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：知识产权归属", llm: true,
         tip: "本协议涉及平台建设与模型成果，但全文未约定知识产权及成果归属。", ins: "建议补充「知识产权与成果归属」条款，明确开发成果、数据成果的权属与使用许可。" },
       { id: "s2", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：数据安全与个人信息保护", llm: true,
-        tip: "涉及政务数据合作，缺少数据安全与个人信息保护约定。", ins: "建议补充「数据安全与个人信息保护」条款，明确数据分级、使用边界、留存与销毁要求。" }
+        tip: "涉及政务数据合作，缺少数据安全与个人信息保护约定。", ins: "建议补充「数据安全与个人信息保护」条款，明确数据分级、使用边界、留存与销毁要求。" },
+      { id: "s3", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：考核等级与支付比例挂钩", llm: false,
+        tip: "参照中心 2023 版监理/测试合同模板，服务类合同须约定「考核等级→支付比例」条款（优秀100% / 良好95% / 合格90% / 不合格不予支付剩余款项）。", ins: "建议补充「考核评价与费用支付」条款：考核得分85分及以上为优秀，支付合同总额100%；70-85分为良好，支付95%；60-70分为合格，支付90%；60分以下为不合格，依据验收意见整改后复评，复评仍不合格的不予支付剩余款项。" },
+      { id: "s4", bucket: "完整", dim: "条款完整性", level: "mid", cat: "缺失必备条款：付款节点与发票要求", llm: false,
+        tip: "参照客户合同模板，须明确分期付款节点（如签订后30日内预付50%、终验后支付尾款）及等额发票要求。", ins: "建议补充「付款节点」约定：合同签订生效后30个工作日内支付合同总金额的50%作为预付款；项目终验完成并确定考核等级后支付剩余款项；每笔付款前乙方应开具符合国家规定的等额发票。" },
+      { id: "s5", bucket: "合规", dim: "法律合规性", level: "mid", cat: "缺失必备条款：争议解决途径（仲裁/诉讼）", llm: true,
+        tip: "参照客户合同模板，争议解决应明确协商不成时的仲裁机构（南京市/南京仲裁委员会）或管辖法院。", ins: "建议补充：协商不成的，双方同意由南京仲裁委员会按其仲裁规则申请仲裁（或向甲方所在地人民法院提起诉讼）。" }
     ];
 
     // 协议初稿正文模板（__PARTYB__ 为乙方占位符，生成时按录入替换）
+    // 结构对齐客户 2023 版合同模板：合同编号 → 标题 → 封面要素（项目编号/名称/甲乙方/签订日期）→ 正文条款 → 规范落款
     function contractHtml(partyB) {
       partyB = partyB || "江苏智数科技有限公司";
+      const el = state.elements || {};
+      const no = el.contractNo || "宁新区合〔2026〕拟-0713";
+      const pn = el.projNo || "（待定）";
+      const projName = el.projName || "数字政务能力平台建设项目";
+      const signDate = el.signDate || "2026-07-13";
       return `
       <h1>南京江北新区数字政务能力平台建设战略合作框架协议</h1>
-      <div class="sub-head">协议编号：宁新区合〔2026〕拟-0713　　密级：内部</div>
-      <p class="no-indent">甲方（合作主体）：南京江北新区管理委员会办公室</p>
-      <p class="no-indent">乙方（合作主体）：${partyB}</p>
+      <div class="sub-head">合同编号：${no}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn}</p>
+      <p class="no-indent">项目名称：${projName}</p>
+      <p class="no-indent">采购人（甲方）：南京江北新区城市数字治理中心</p>
+      <p class="no-indent">供应商（乙方）：${partyB}</p>
+      <p class="no-indent">签订日期：${signDate}</p>
       <p>根据《中华人民共和国民法典》及国家、省市有关规定，甲乙双方本着平等自愿、优势互补、合作共赢的原则，就共建数字政务能力平台相关事宜，经友好协商，达成如下协议：</p>
       <p class="clause-h">第一条　合作背景与目标</p>
       <p>为推进新区政务数字化转型，双方拟围绕政务大模型、智能体应用及数据治理等领域开展战略合作，<span class="mark mark-mid" data-issue-id="6">确保项目零风险、零失误</span>，共同打造区域数字政务标杆。</p>
@@ -747,10 +739,94 @@
       <p class="clause-h">第七条　争议解决</p>
       <p>本协议在履行过程中发生争议的，<span class="mark mark-mid" data-issue-id="8">由双方友好协商解决</span>。</p>
       <p class="clause-h">第八条　其他</p>
-      <p>本协议一式肆份，甲乙双方各执贰份，自双方签字盖章之日起生效。</p>
+      <p>本协议一式肆份，甲乙双方各执贰份，自双方法定代表人或委托代理人签字并盖章之日起生效。</p>
       <p class="right" style="margin-top:28px;">甲方（盖章）：<span class="mark mark-low" data-issue-id="9">江北新区综合办公室</span></p>
       <p class="right">乙方（盖章）：${partyB}</p>
-      <p class="right">2026年7月13日</p>`;
+      <p class="right">法定代表人/委托代理人（签字）：</p>
+      <p class="right">${signDate}</p>`;
+    }
+
+    // 工程监理合同正文（对齐《项目监理服务合同》模板：三部分结构 + 附件 1-4 + 评价考核与支付比例挂钩）
+    function supervisionHtml(partyB) {
+      partyB = partyB || "江苏信安工程监理有限公司";
+      const el = state.elements || {};
+      const no = el.contractNo || "JBXQ-JL-2026-001";
+      const pn = el.projNo || "JBXQ-XM-2026-018";
+      const projName = el.projName || "政务AI智能体平台建设项目";
+      const signDate = el.signDate || "2026-09-10";
+      return `
+      <h1>南京江北新区城市数字治理中心项目监理服务合同</h1>
+      <div class="sub-head">合同编号：${no}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn}</p>
+      <p class="no-indent">项目名称：${projName} 项目监理服务</p>
+      <p class="no-indent">采购人（委托方）：南京江北新区城市数字治理中心</p>
+      <p class="no-indent">供应商（监理方）：${partyB}</p>
+      <p class="no-indent">签订日期：${signDate}</p>
+      <p class="clause-h">第一部分　信息系统工程监理合同协议书</p>
+      <p>委托人南京江北新区城市数字治理中心（以下简称委托方）与受托人（以下简称监理方）经双方协商一致，签订本信息系统咨询监理合同。</p>
+      <p>一、本工程概况：项目名称 ${projName}；实施地点：南京江北新区；监理服务时间：<span class="mark mark-high" data-issue-id="3">本合同签订生效之日起至2026年8月31日止</span>（模板要求：至本监理服务通过验收时止，请核实表述）。</p>
+      <p>二、下列文件均为本合同的组成部分：监理服务采购文件、招标响应文件；合同附件1-4；实施过程中双方共同签署的补充与修正文件。</p>
+      <p class="clause-h">第二部分　标准条件（摘要）</p>
+      <p>第一条　词语定义：工程/委托方/监理方/监理机构/总监理工程师/承建方等，按国家信息系统工程监理规范界定。</p>
+      <p>第四条　监理方的义务：派出监理机构及人员，报送总监理工程师名单与监理规划；监理信息收集、整理和归档，保证现场记录、检验、检查资料完整真实。</p>
+      <p>第九条　委托方的义务：在监理方开展监理业务之前支付预付款；免费提供工程有关的系统工程资料及办公场所、网络环境等设施。</p>
+      <p>第十八条　监理方的权利：对工程实施组织设计、技术方案、进度计划、质量与安全的检验权；工程款支付的审核和签认权。</p>
+      <p>第三十三条　本合同经双方法定代表人或其授权代理人签字并加盖公章或合同专用章后生效。</p>
+      <p class="clause-h">第三部分　专用条件</p>
+      <p>1、本合同适用的法律及监理依据：GB/T19668-2005《信息化工程监理规范》、GB 50319-2000《建设工程监理规范》及承建方的相关图纸和技术要求。</p>
+      <p>7、监理方失职赔偿：累计赔偿额不超过监理费用总数（扣税），<span class="mark mark-high" data-issue-id="5">赔偿额＝直接损失额×3%</span>，请核实赔偿计算口径与违约金上限的合规性。</p>
+      <p>10、监理费用：本工程监理费费率按专用条件约定，具体付款方式、时间、金额见合同附件2。</p>
+      <p class="clause-h">合同附件2　监理费用的支付</p>
+      <p>第一次付款：合同签订生效之日起30个工作日内，委托方支付合同总金额的50%作为预付款。</p>
+      <p>第二次付款：依据框架协议和考核结果等级，支付剩余费用。</p>
+      <p class="clause-h">合同附件3　监理工作的评价考核</p>
+      <p>考核等级与支付比例：得分85-100为「优秀」，支付合同总额100%；70-85为「良好」，支付95%；60-70为「合格」，支付90%；60以下为「不合格」，依据验收意见整改后复评。</p>
+      <p class="clause-h">合同附件4　项目监理评价考核表</p>
+      <p>考核维度：进度控制（20分）、质量控制（10分）、变更控制（10分）、成本控制（5分）、文档管理（40分）、安全管理（5分）、合同管理（5分）、沟通协调（5分）。</p>
+      <p class="right" style="margin-top:28px;">委托方（盖章）：南京江北新区城市数字治理中心</p>
+      <p class="right">地址：南京市天浦路1号3号楼　授权代表：</p>
+      <p class="right">监理方（盖章）：${partyB}</p>
+      <p class="right">法人/授权代表：</p>
+      <p class="right">${signDate}</p>`;
+    }
+
+    // 第三方测试合同正文（对齐《第三方测试技术服务合同》模板：通用条款 + 专用条款 + 考核等级支付表）
+    function testingHtml(partyB) {
+      partyB = partyB || "江苏赛信测评技术有限公司";
+      const el = state.elements || {};
+      const no = el.contractNo || "JBXQ-CS-2026-001";
+      const pn = el.projNo || "JBXQ-XM-2026-018";
+      const projName = el.projName || "政务AI智能体平台建设项目";
+      const signDate = el.signDate || "2026-09-10";
+      return `
+      <h1>南京江北新区城市数字治理中心第三方测试技术服务合同</h1>
+      <div class="sub-head">合同编号：${no}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn}</p>
+      <p class="no-indent">项目名称：${projName} 第三方测试服务</p>
+      <p class="no-indent">采购人（甲方）：南京江北新区城市数字治理中心</p>
+      <p class="no-indent">供应商（乙方）：${partyB}</p>
+      <p class="no-indent">签订日期：${signDate}</p>
+      <p>本合同由甲方与乙方在平等自愿的基础上，依据《中华人民共和国民法典》等，遵循平等、自愿、公平和诚实信用的原则，经友好协商后订立。</p>
+      <p class="clause-h">一、合同通用条款</p>
+      <p>定义：通用条款、专用条款、合同、测试服务合同、技术成果、合同价格等用语按行业惯例与本条约定界定。</p>
+      <p>合同的变更与解除：合同一经生效，双方均不得擅自对合同内容（包括附件）作任何单方面修改。</p>
+      <p>不可抗力：不能预见、不能避免并不能克服的客观情况；受影响一方应尽快通知另一方并提供证明。</p>
+      <p>合同争议的解决：适用中华人民共和国法律；<span class="mark mark-mid" data-issue-id="8">协商调解不成的，按专用条件约定处理</span>（模板要求明确南京仲裁委员会仲裁，请补充）。</p>
+      <p class="clause-h">二、合同专用条款</p>
+      <p>技术服务的目标、内容：${projName} 第三方测试服务；履约地点：南京江北新区；履约期限：本合同签订生效之日起至本测试服务通过验收时止。</p>
+      <p>双方的权利和义务：甲方负责督促、检查及测试工作的验收，提供办公场所与上网条件，按时支付测试服务费用；乙方具备履行合同所需的技能及相应资质，按职业准则完成全部职责。</p>
+      <p>保密：根据国家认可实验室要求，乙方对甲方的软件、代码、技术资料、技术数据和测试结果均负有保密责任。</p>
+      <p>交付和验收：在项目初验、终验等阶段提供测试服务；每轮测试完成提交测试报告，待承建单位修复问题后进行回归测试；<span class="mark mark-mid" data-issue-id="6">测试全程确保系统零缺陷、零风险上线</span>（绝对化承诺表述，建议改为过程性表述）；工作成果包括测试方案、测试计划、测试风险分析、测试报告等。</p>
+      <p>合同金额及结算方式：本合同计收总费用（大写）按专用条件约定；付款方式为电汇，支付货币为人民币。<span class="mark mark-high" data-issue-id="5">甲方逾期付款的，按合同总金额的50%支付违约金</span>（违约金比例过高，建议调整）。</p>
+      <p>付款节点：（1）签订合同后三十天内，甲方支付合同金额的50%；（2）项目终验完成、确定验收考核等级后，甲方一次性支付合同剩余款项。</p>
+      <p class="clause-h">附件　第三方测评机构服务效能考核评价表</p>
+      <p>考核维度：基本要求（10分）、功能测试（30分）、性能测试（30分）、安全测试（20分）、服务响应（10分）、保密（单项否决）。</p>
+      <p>考核等级与支付比例：85分≤得分为「优秀」，支付100%；70≤得分&lt;85为「良好」，支付95%；60≤得分&lt;70为「合格」，支付90%；得分&lt;60为「不合格」，不予支付剩余款项。</p>
+      <p class="right" style="margin-top:28px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
+      <p class="right">地址：南京市浦口区天浦路1号　代表人（签章）：</p>
+      <p class="right">乙方（盖章）：${partyB}</p>
+      <p class="right">法人/单位负责人：　项目负责人：　联系电话：</p>
+      <p class="right">${signDate}</p>`;
     }
 
     /* ------- 资料库（模板库 / 条款库 / 规则库）统一数据结构 ------- */
@@ -768,7 +844,9 @@
           { key: "服务委托", name: "服务委托", icon: "📦", note: "ℹ 服务委托类模板须明确服务范围、验收标准与付款节点。",
             rows: [["服务委托协议模板", "中", "v2.0", "生效", "2026-05-22"], ["政务云资源服务采购协议模板", "中", "v1.4", "生效", "2026-04-28"]] },
           { key: "联合运营", name: "联合运营", icon: "⚙", note: "ℹ 联合运营类模板须约定收益分配、退出机制与责任边界。",
-            rows: [["联合运营协议模板", "高", "v1.2", "草稿", "2026-07-05"]] }
+            rows: [["联合运营协议模板", "高", "v1.2", "草稿", "2026-07-05"]] },
+          { key: "配套服务合同", name: "配套服务合同", icon: "🛰", note: "ℹ 对齐中心 2023 版合同模板：信息系统工程监理、第三方测试技术服务等信息化项目配套服务合同，含考核评价与支付比例挂钩条款。",
+            rows: [["项目监理服务合同模板", "中", "v2023.9", "生效", "2023-09-25"], ["第三方测试技术服务合同模板", "中", "v2023.9", "生效", "2023-09-25"]] }
         ]
       },
       clause: {
@@ -784,7 +862,9 @@
           { key: "保密条款", name: "保密条款", icon: "🔒", note: "ℹ 保密条款用于约定保密范围、期限与责任，涉密合作须启用。",
             rows: [["保密义务与范围", "通用", "必备", "v2.2", "生效"], ["保密期限与解除", "战略合作/项目共建", "可选", "v1.1", "生效"]] },
           { key: "通用条款", name: "通用条款", icon: "📄", note: "ℹ 通用条款用于协议主体、期限、经费、生效与份数等基础约定。",
-            rows: [["合作主体与联系方式", "通用", "必备", "v1.6", "生效"], ["合作期限", "通用", "必备", "v1.3", "生效"], ["经费与支付", "通用", "必备", "v1.4", "生效"], ["协议生效与份数", "通用", "必备", "v1.2", "生效"]] }
+            rows: [["合作主体与联系方式", "通用", "必备", "v1.6", "生效"], ["合作期限", "通用", "必备", "v1.3", "生效"], ["经费与支付", "通用", "必备", "v1.4", "生效"], ["协议生效与份数", "通用", "必备", "v1.2", "生效"]] },
+          { key: "配套服务条款", name: "配套服务条款", icon: "🛰", note: "ℹ 对齐中心 2023 版监理/测试合同模板的核心条款：考核评价与支付比例挂钩、分期付款与发票要求、保密与单项否决。",
+            rows: [["考核评价与费用支付（等级挂钩）", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["付款节点与等额发票", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["监理义务与成果验收", "工程监理", "必备", "v2023.9", "生效"], ["测试交付与回归测试", "第三方测试", "必备", "v2023.9", "生效"], ["保密责任（单项否决）", "第三方测试", "必备", "v2023.9", "生效"]] }
         ]
       },
       rule: {
@@ -792,7 +872,7 @@
         cols: ["规则名称", "风险级别", "说明", "状态"],
         cats: [
           { key: "条款完整性", name: "条款完整性", icon: "🧩", note: "ℹ 完整性规则用于检查必备条款是否齐备，命中后归类为「条款完整性」。",
-            rows: [["必备条款齐备性（依协议类型）", "高", "校验知识产权、保密、争议解决等必备条款", "启用"], ["签约主体与落款完整性", "中", "校验甲乙双方名称、盖章与日期", "启用"], ["经费与支付要素完整性", "中", "校验金额、支付节点与账户信息", "启用"]] },
+            rows: [["必备条款齐备性（依协议类型）", "高", "校验知识产权、保密、争议解决等必备条款", "启用"], ["签约主体与落款完整性", "中", "校验甲乙双方名称、盖章与日期", "启用"], ["经费与支付要素完整性", "中", "校验金额、支付节点与账户信息", "启用"], ["考核支付条款齐备性（配套服务类）", "高", "校验监理/测试类合同的考核等级与支付比例挂钩条款", "启用"], ["封面要素完整性", "中", "校验合同编号、项目编号、项目名称、签订日期等封面字段", "启用"]] },
           { key: "逻辑一致性", name: "逻辑一致性", icon: "🔄", note: "ℹ 逻辑规则用于识别前后矛盾、日期冲突与金额不一致，归类为「逻辑一致性」。",
             rows: [["合作期限起止逻辑校验", "高", "终止日期须晚于起始日期", "启用"], ["金额大小写一致性", "中", "小写金额须与大写金额一致", "启用"], ["条款前后引用一致性", "中", "校验条款编号与交叉引用", "启用"]] },
           { key: "权责对等性", name: "权责对等性", icon: "⚖", note: "ℹ 权责规则用于识别权利义务失衡与风险分担不当，归类为「权责对等性」。",
@@ -808,6 +888,8 @@
     // 历史台账
     const history = [
       ["数字政务能力平台建设战略合作框架协议", "战略合作", "内部", "2026-07-13 10:20", 9, 4, "待复核", "wait"],
+      ["政务AI智能体平台建设项目监理服务合同", "工程监理", "内部", "2026-09-10 09:15", 8, 5, "待复核", "wait"],
+      ["政务AI智能体平台第三方测试技术服务合同", "第三方测试", "非涉密", "2026-09-08 14:30", 7, 7, "通过", "done"],
       ["智慧园区综合运营服务委托协议", "服务委托", "非涉密", "2026-07-11 15:30", 5, 5, "通过", "done"],
       ["政务大数据联合实验室共建协议", "项目共建", "内部", "2026-07-10 09:12", 7, 7, "通过", "done"],
       ["新区产业投资基金战略合作协议", "战略合作", "秘密", "2026-07-08 14:05", 11, 6, "待复核", "wait"],
@@ -946,7 +1028,7 @@
 
       $("#statDonut").style.background = "conic-gradient(var(--red) 0 24%, var(--orange) 24% 67%, var(--primary) 67% 100%)";
 
-      const top = [["违约金比例过高", 168], ["必备条款缺失", 152], ["权责义务失衡", 131], ["期限逻辑冲突", 96], ["金额大小写不一致", 84], ["落款主体不规范", 73]];
+      const top = [["违约金比例过高", 168], ["必备条款缺失", 152], ["权责义务失衡", 131], ["考核支付条款缺失", 118], ["付款节点不明确", 96], ["期限逻辑冲突", 84], ["金额大小写不一致", 73], ["落款主体不规范", 66]];
       const tmax = top[0][1];
       $("#statTop").innerHTML = top.map(t =>
         `<div class="bar-row"><span>${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${(t[1] / tmax * 100).toFixed(0)}%;background:linear-gradient(90deg,#2455e6,#0b8fa8);"></div></div><span style="text-align:right;font-weight:700;">${t[1]}</span></div>`).join("");
@@ -979,13 +1061,15 @@
     }
     /* ================= sidebar 草稿列表（移植自 communique） ================= */
     const DRAFTS = [
-      {id:'d1', title:'数字政务能力平台建设战略合作框架协议', type:'战略合作', typeAbbr:'战', timeDisplay:'今天 10:20', dateIso:'2026-07-18', status:'draft', flow:3, snap:{taskName:'数字政务能力平台建设战略合作框架协议', scene:'战略合作', partyB:'江苏智数科技有限公司', docLoaded:true, prechecked:false}},
-      {id:'d2', title:'政务服务云平台采购合同', type:'采购合同', typeAbbr:'采', timeDisplay:'07-16 15:40', dateIso:'2026-07-16', status:'exported', flow:6, snap:{taskName:'政务服务云平台采购合同', scene:'采购', partyB:'华为技术有限公司', docLoaded:true, prechecked:true}},
-      {id:'d3', title:'政务数据治理服务外包合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-14 14:20', dateIso:'2026-07-14', status:'review', flow:4, snap:{taskName:'政务数据治理服务外包合同', scene:'服务外包', partyB:'中软国际有限公司', docLoaded:true, prechecked:true}},
-      {id:'d4', title:'政务APP技术开发合同', type:'技术开发', typeAbbr:'技', timeDisplay:'07-12 09:30', dateIso:'2026-07-12', status:'submitted', flow:5, snap:{taskName:'政务APP技术开发合同', scene:'技术开发', partyB:'东软集团股份有限公司', docLoaded:true, prechecked:true}},
-      {id:'d5', title:'政务大厅场地租赁合同', type:'租赁合同', typeAbbr:'租', timeDisplay:'07-10 11:18', dateIso:'2026-07-10', status:'draft', flow:2, snap:{taskName:'政务大厅场地租赁合同', scene:'租赁', partyB:'南京江北新区城建集团', docLoaded:false, prechecked:false}},
-      {id:'d6', title:'政务服务咨询合同', type:'咨询服务', typeAbbr:'咨', timeDisplay:'07-08 16:33', dateIso:'2026-07-08', status:'draft', flow:1, snap:{taskName:'政务服务咨询合同', scene:'咨询', partyB:'', docLoaded:false, prechecked:false}},
-      {id:'d7', title:'政务云资源服务合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-05 10:05', dateIso:'2026-07-05', status:'exported', flow:6, snap:{taskName:'政务云资源服务合同', scene:'服务外包', partyB:'阿里云计算有限公司', docLoaded:true, prechecked:true}}
+      {id:'d1', title:'政务AI智能体平台建设项目监理服务合同', type:'工程监理', typeAbbr:'监', timeDisplay:'09-10 10:20', dateIso:'2026-09-10', status:'draft', flow:3, snap:{taskName:'政务AI智能体平台建设项目监理服务合同', scene:'工程监理', partyB:'江苏信安工程监理有限公司', docLoaded:true, prechecked:false}},
+      {id:'d2', title:'政务AI智能体平台第三方测试技术服务合同', type:'第三方测试', typeAbbr:'测', timeDisplay:'09-08 14:30', dateIso:'2026-09-08', status:'exported', flow:6, snap:{taskName:'政务AI智能体平台第三方测试技术服务合同', scene:'第三方测试', partyB:'江苏赛信测评技术有限公司', docLoaded:true, prechecked:true}},
+      {id:'d3', title:'数字政务能力平台建设战略合作框架协议', type:'战略合作', typeAbbr:'战', timeDisplay:'今天 10:20', dateIso:'2026-07-18', status:'draft', flow:3, snap:{taskName:'数字政务能力平台建设战略合作框架协议', scene:'战略合作', partyB:'江苏智数科技有限公司', docLoaded:true, prechecked:false}},
+      {id:'d4', title:'政务服务云平台采购合同', type:'采购合同', typeAbbr:'采', timeDisplay:'07-16 15:40', dateIso:'2026-07-16', status:'exported', flow:6, snap:{taskName:'政务服务云平台采购合同', scene:'采购', partyB:'华为技术有限公司', docLoaded:true, prechecked:true}},
+      {id:'d5', title:'政务数据治理服务外包合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-14 14:20', dateIso:'2026-07-14', status:'review', flow:4, snap:{taskName:'政务数据治理服务外包合同', scene:'服务外包', partyB:'中软国际有限公司', docLoaded:true, prechecked:true}},
+      {id:'d6', title:'政务APP技术开发合同', type:'技术开发', typeAbbr:'技', timeDisplay:'07-12 09:30', dateIso:'2026-07-12', status:'submitted', flow:5, snap:{taskName:'政务APP技术开发合同', scene:'技术开发', partyB:'东软集团股份有限公司', docLoaded:true, prechecked:true}},
+      {id:'d7', title:'政务大厅场地租赁合同', type:'租赁合同', typeAbbr:'租', timeDisplay:'07-10 11:18', dateIso:'2026-07-10', status:'draft', flow:2, snap:{taskName:'政务大厅场地租赁合同', scene:'租赁', partyB:'南京江北新区城建集团', docLoaded:false, prechecked:false}},
+      {id:'d8', title:'政务服务咨询合同', type:'咨询服务', typeAbbr:'咨', timeDisplay:'07-08 16:33', dateIso:'2026-07-08', status:'draft', flow:1, snap:{taskName:'政务服务咨询合同', scene:'咨询', partyB:'', docLoaded:false, prechecked:false}},
+      {id:'d9', title:'政务云资源服务合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-05 10:05', dateIso:'2026-07-05', status:'exported', flow:6, snap:{taskName:'政务云资源服务合同', scene:'服务外包', partyB:'阿里云计算有限公司', docLoaded:true, prechecked:true}}
     ];
     const DRAFT_STATUS = {draft:{text:'草稿',cls:'s-draft'},submitted:{text:'已提交',cls:'s-submitted'},review:{text:'待审核',cls:'s-review'},exported:{text:'已归档',cls:'s-exported'}};
     const FLOW_LABELS = {1:'录入要素',2:'智能匹配',3:'生成初稿',4:'多维预审',5:'编辑修订',6:'导出归档'};
@@ -1142,13 +1226,13 @@
         违约: "违约责任：按实际损失赔偿，违约金不超过合同总金额的30%。", 争议: "争议解决：协商不成的，向甲方所在地人民法院提起诉讼。"
       };
       const html = o => `<h1 style="text-align:center;font-family:'SimHei','黑体',sans-serif;font-size:20px;margin:0 0 16px;">${row[0]}</h1>
-        <p class="no-indent">甲方（合作主体）：南京江北新区管理委员会办公室</p>
+        <p class="no-indent">甲方（合作主体）：南京江北新区城市数字治理中心</p>
         <p class="no-indent">乙方（合作主体）：合作单位</p>
         <p class="clause-h">第一条　合作期限</p><p>${o.期限}</p>
         <p class="clause-h">第二条　合作经费</p><p>${o.金额}</p>
         <p class="clause-h">第三条　违约责任</p><p>${o.违约}</p>
         <p class="clause-h">第四条　争议解决</p><p>${o.争议}</p>
-        <p class="right" style="margin-top:20px;">甲方（盖章）：南京江北新区管理委员会办公室</p>
+        <p class="right" style="margin-top:20px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
         <p class="right">2026年　月　日</p>`;
       const v1 = { ver: "V1", type: "初稿", user: "合同归口管理岗", time: datePart + " 09:10", note: "智能匹配模板并生成协议初稿", html: html(bad) };
       if (row[7] === "预审中") return [v1];
@@ -1244,7 +1328,10 @@
     }
     function loadContract(meta) {
       const dp = $("#docPage");
-      dp.innerHTML = contractHtml(state.partyB);
+      // 按场景路由正文模板：工程监理/第三方测试对齐客户 2023 版合同模板结构
+      dp.innerHTML = state.scene === "工程监理" ? supervisionHtml(state.partyB)
+        : state.scene === "第三方测试" ? testingHtml(state.partyB)
+        : contractHtml(state.partyB);
       dp.setAttribute("contenteditable", "true");
       state.docLoaded = true;
       state.prechecked = false;
@@ -1322,8 +1409,14 @@
           card.classList.add("on"); state.scene = card.dataset.scene;
         });
         $("#srcSample") && ($("#srcSample").onclick = () => {
-          state.partyB = "江苏智数科技有限公司"; state.taskName = $("#taskName").value.trim();
-          closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("已载入示例任务，协议初稿已生成");
+          const SAMPLES = {
+            "工程监理": { partyB: "江苏信安工程监理有限公司", name: "政务AI智能体平台建设项目监理服务合同" },
+            "第三方测试": { partyB: "江苏赛信测评技术有限公司", name: "政务AI智能体平台第三方测试技术服务合同" }
+          };
+          const smp = SAMPLES[state.scene] || { partyB: "江苏智数科技有限公司", name: "数字政务能力平台建设战略合作框架协议" };
+          state.partyB = smp.partyB; state.taskName = ($("#taskName").value.trim() || smp.name);
+          state.elements = state.elements || {};
+          closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("已载入「" + state.scene + "」示例任务，协议初稿已生成");
         });
         $("#srcImport") && ($("#srcImport").onclick = () => $("#fileInput").click());
       }, 0);
@@ -1339,12 +1432,21 @@
           <div class="s"><span class="dot">3</span><span class="t">匹配生成</span></div>
         </div>
         <div class="form-grid">
-          <div class="field"><label>甲方（我方）</label><input type="text" id="ef-a" value="南京江北新区管理委员会办公室" readonly style="background:#f7f9fd;color:#75809a;"></div>
+          <div class="field"><label>甲方（我方）</label><input type="text" id="ef-a" value="南京江北新区城市数字治理中心" readonly style="background:#f7f9fd;color:#75809a;"></div>
           <div class="field"><label class="req">乙方（合作单位）</label><input type="text" id="ef-b" placeholder="请输入合作单位全称"><div class="err">请输入合作单位全称</div></div>
+          <div class="field"><label>合同编号</label><input type="text" id="ef-no" placeholder="如：JBXQ-JL-2026-001"></div>
+          <div class="field"><label>项目编号</label><input type="text" id="ef-projno" placeholder="如：JBXQ-XM-2026-018"></div>
+          <div class="field"><label class="req">项目名称</label><input type="text" id="ef-projname" placeholder="如：政务AI智能体平台建设项目" value="政务AI智能体平台建设项目"><div class="err">请输入项目名称</div></div>
+          <div class="field"><label class="req">签订日期</label><input type="date" id="ef-sign" value="2026-09-10"><div class="err">请选择签订日期</div></div>
           <div class="field"><label class="req">乙方联系电话</label><input type="text" id="ef-phone" placeholder="手机号或座机，如 13800138000 / 025-58150000"><div class="err">请输入正确的手机号或座机号码</div></div>
+          <div class="field"><label>乙方项目负责人</label><input type="text" id="ef-pm" placeholder="乙方项目负责人姓名"></div>
           <div class="field"><label class="req">经费总额（万元）</label><input type="number" id="ef-money" placeholder="请输入数字，如 800" min="0"><div class="err">请输入有效的经费金额</div></div>
-          <div class="field"><label class="req">合作起始日期</label><input type="date" id="ef-start" value="2026-08-01"><div class="err">请选择起始日期</div></div>
-          <div class="field"><label class="req">合作终止日期</label><input type="date" id="ef-end" value="2028-07-31"><div class="err">终止日期须晚于起始日期</div></div>
+          <div class="field"><label>费用计算方式</label><select id="ef-feetype"><option>固定总金额</option><option>投资总值 × 监理费费率（工程监理）</option><option>按测试工作量计费（第三方测试）</option></select></div>
+          <div class="field"><label>监理/服务费费率（%）</label><input type="number" id="ef-rate" placeholder="如 3.5，仅费率计费时填写" min="0" max="100" step="0.1"></div>
+          <div class="field"><label>乙方开户银行</label><input type="text" id="ef-bank" placeholder="如：中国银行南京江北新区支行"></div>
+          <div class="field"><label>乙方银行账号</label><input type="text" id="ef-acct" placeholder="如：5012 3456 7890"></div>
+          <div class="field"><label class="req">服务起始日期</label><input type="date" id="ef-start" value="2026-09-15"><div class="err">请选择起始日期</div></div>
+          <div class="field"><label class="req">服务终止日期</label><input type="date" id="ef-end" value="2028-09-14"><div class="err">终止日期须晚于起始日期</div></div>
           <div class="field full"><label>合作背景与目标</label><textarea id="ef-bg" placeholder="简要描述合作背景、合作目标与主要内容">围绕政务大模型、智能体应用及数据治理开展战略合作，共建数字政务能力平台。</textarea></div>
           <div class="field full"><label>权责划分要点</label><textarea id="ef-duty" placeholder="简述甲乙双方主要权利义务与分工">甲方负责统筹协调与场景、数据支持；乙方负责平台建设、模型训练与运维保障。</textarea></div>
           <div class="field full"><label class="req">合规及风控要求（至少选择一项）</label>
@@ -1368,18 +1470,36 @@
       let ok = true;
       const setErr = (id, bad) => { const f = $("#" + id).closest(".field"); if (f) f.classList.toggle("invalid", bad); if (bad) ok = false; };
       const b = $("#ef-b").value.trim(), phone = $("#ef-phone").value.trim(), money = $("#ef-money").value.trim();
+      const projname = $("#ef-projname").value.trim(), sign = $("#ef-sign").value;
       const start = $("#ef-start").value, end = $("#ef-end").value;
       const phoneOk = /^1[3-9]\d{9}$/.test(phone) || /^0\d{2,3}-?\d{7,8}$/.test(phone);
       setErr("ef-b", !b);
       setErr("ef-phone", !phoneOk);
       setErr("ef-money", !(money !== "" && +money > 0));
+      setErr("ef-projname", !projname);
+      setErr("ef-sign", !sign);
       setErr("ef-start", !start);
       setErr("ef-end", !(end && start && end > start));
       const riskChecked = $$("#ef-risk .opt.on").length > 0;
       $("#ef-risk-err").closest(".field").classList.toggle("invalid", !riskChecked);
       if (!riskChecked) ok = false;
       if (!ok) { showToast("请完善必填项后再继续"); return; }
+      // 结构化要素入库（对齐客户合同模板封面字段）
       state.partyB = b;
+      state.elements = {
+        contractNo: $("#ef-no").value.trim() || "（编号待编）",
+        projNo: $("#ef-projno").value.trim() || "（待定）",
+        projName: projname,
+        signDate: sign,
+        partyAPm: "中心项目负责人（待定）",
+        partyBPm: $("#ef-pm").value.trim() || "（待定）",
+        feeType: $("#ef-feetype").value,
+        rate: $("#ef-rate").value.trim(),
+        bank: $("#ef-bank").value.trim(),
+        acct: $("#ef-acct").value.trim(),
+        money: money, start: start, end: end,
+        bg: $("#ef-bg").value.trim(), duty: $("#ef-duty").value.trim()
+      };
       matchAndGenerate();
     }
     // 步骤3：智能匹配模板与条款 → 生成初稿
@@ -1393,11 +1513,13 @@
         <div id="matchLines"></div>`, () => { closeModal(); loadContract({ name: state.taskName }); showToast("协议初稿已生成，可发起多维预审"); }, { okText: "生成协议初稿" });
       setFlow(2);
       const tpl = (scenes.find(s => s.key === state.scene) || {}).tpl || "战略合作框架协议模板 v3.1";
+      const isGovSvc = state.scene === "工程监理" || state.scene === "第三方测试";
       const lines = [
         ["按业务场景「" + state.scene + "」匹配合同模板", "ok", "命中：" + tpl],
         ["调用生效版本与适用规则", "ok", "生效"],
-        ["智能填充合作要素（主体、期限、经费、权责）", "ok", "6 项"],
+        ["智能填充合作要素（编号、主体、期限、经费、权责）", "ok", "12 项"],
         ["引用标准条款并补齐必备条款", "ok", "引用 12 项"],
+        ...(isGovSvc ? [["载入考核评价与支付比例挂钩条款（附件）", "ok", "已载入"]] : []),
         ["剔除与本场景无关的冗余条款", "ok", "剔除 3 项"],
         ["检出缺失必备条款（将在预审提示）", "warn", "缺 2 项"]
       ];
@@ -1720,14 +1842,6 @@
         case "recheckHistory": switchView("editor"); showToast("已发起复审：" + t.dataset.doc); break;
         case "exportHistory": showToast("拟制任务台账已导出为 Excel"); break;
         case "exportStat": showToast("统计报表已导出（PDF）"); break;
-
-        // —— 顶栏 ——
-        case "message": openModal("消息通知", `<div style="display:grid;gap:10px;">
-          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">📌 「新区产业投资基金战略合作协议」待您复核（6/11 已处理）</div>
-          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">📑 条款库新增「数据安全与个人信息保护」必备条款</div>
-          <div style="padding:10px;border:1px solid var(--line);border-radius:10px;">✓ 「智慧园区综合运营服务委托协议」预审已通过</div>
-        </div>`, null, { hideFooter: true }); break;
-        case "profile": openModal("账号信息", `当前账号：<b>合同归口管理岗 · 经办人</b><br>所属机构：南京江北新区管理委员会办公室<br>角色权限：合同拟制、要素录入、预审处理、复核提交、报告导出、模板/条款/规则库维护<br><br><button class="btn" onclick="document.getElementById('modalMask').classList.remove('show')">退出登录</button>`, null, { hideFooter: true }); break;
       }
     });
 

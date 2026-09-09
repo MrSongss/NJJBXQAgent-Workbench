@@ -449,7 +449,7 @@
     (function () {
       const $ = (s, root = document) => root.querySelector(s);
       const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
-      const state = { loaded: false, parsed: false, sourceType: "upload", sourceName: "", sourceText: "", activeTab: "summary", timer: null };
+      const state = { loaded: false, parsed: false, sourceType: "upload", sourceName: "", sourceText: "", activeTab: "summary", timer: null, workbenchTask: null, workbenchVersion: 1 };
       const sampleText = `第一章 总则
 第一条 为促进江北新区产业高质量发展，提升企业服务和政策兑现效率，制定本政策。
 第二条 本政策适用于在新区依法登记、实际经营且信用良好的企业或项目主体。
@@ -473,6 +473,55 @@
         $("#toast").textContent = msg;
         $("#toast").classList.add("show");
         toastTimer = setTimeout(() => $("#toast").classList.remove("show"), 2200);
+      }
+
+      function postWorkbenchEvent(event, detail) {
+        if (!state.workbenchTask) return;
+        const payload = Object.assign({
+          type: "JBAI_WORKBENCH_TASK_EVENT",
+          event,
+          taskId: state.workbenchTask.taskId,
+          agentId: "interpret"
+        }, detail || {});
+        try { window.parent.postMessage(payload, "*"); } catch (error) {}
+      }
+
+      function workbenchSource(payload) {
+        const sources = Array.isArray(payload.sourcePayloads) ? payload.sourcePayloads : [];
+        const withText = sources.find(item => String(item.text || "").trim().length >= 20);
+        const first = withText || sources[0] || null;
+        const names = Array.isArray(payload.sources) ? payload.sources.filter(Boolean) : [];
+        return {
+          name: first?.name || names[0] || payload.reference?.attachment || payload.title || "待解读政策文件",
+          text: String(withText?.text || "").trim(),
+          type: first?.type || (payload.reference?.attachment ? "本次上传内容" : "本次对话内容")
+        };
+      }
+
+      function loadWorkbenchPayload(payload) {
+        if (!payload || payload.targetAgentId !== "interpret") return;
+        if (state.workbenchTask?.taskId && state.workbenchTask.taskId === payload.taskId && state.loaded) return;
+        const source = workbenchSource(payload);
+        state.workbenchTask = payload;
+        state.workbenchVersion = Number(payload.version || 1);
+        state.sourceName = source.name;
+        state.sourceText = source.text || sampleText;
+        state.sourceType = /知识/.test(source.type) ? "kb" : /粘贴|对话/.test(source.type) ? "paste" : "upload";
+        switchView("editor");
+        closeModal();
+        loadDocument();
+        postWorkbenchEvent("progress", { stage:"政策文件已接入，正在解析条款结构", progress:42 });
+        if (payload.resumeToResult) {
+          state.parsed = true;
+          $("#sideRate").textContent = "100%";
+          $("#statusText").textContent = "已恢复解读成果，可继续核对原文依据";
+          $("#resultTotal").textContent = Object.values(resultData).reduce((sum, rows) => sum + rows.length, 0);
+          renderResults("summary");
+          showToast("已恢复当前对话中的政策解读成果");
+          return;
+        }
+        showToast(`已自动带入“${source.name}”，无需重复上传`);
+        setTimeout(runParse, 180);
       }
 
       function switchView(v) {
@@ -632,6 +681,14 @@
             $("#statusText").textContent = "解读完成，可点击右侧来源条款定位原文";
             renderResults("summary");
             showToast("解读完成");
+            postWorkbenchEvent("complete", {
+              title: `${(state.sourceName || "政策文件").replace(/\.(docx|doc|pdf|txt|ofd)$/i, "")}解读报告`,
+              version: state.workbenchVersion,
+              summaryCount: resultData.summary.length,
+              pathCount: resultData.path.length,
+              termCount: resultData.terms.length,
+              qaCount: resultData.qa.length
+            });
           }
         }, 140);
       }
@@ -771,6 +828,12 @@
       $("#modalCancel").addEventListener("click", closeModal);
       $("#modalClose").addEventListener("click", closeModal);
       $("#modalMask").addEventListener("click", (e) => { if (e.target.id === "modalMask") closeModal(); });
+      window.JBAIInterpretWorkbenchLoad = loadWorkbenchPayload;
+      try {
+        const taskId = new URLSearchParams(location.search).get("taskId");
+        const saved = taskId && localStorage.getItem(`JBAI_WORKBENCH_CONTEXT_V1:${taskId}`);
+        if (saved) setTimeout(() => loadWorkbenchPayload(JSON.parse(saved)), 0);
+      } catch (error) {}
       renderHistory();
     })();
   </script>

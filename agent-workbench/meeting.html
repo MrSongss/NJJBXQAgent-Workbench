@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="dyQ5PAUEmxuOOOD3tCyAYc">
-<head data-page-node-id="MnoIb9APFdNoQYfKN1jwVe">
+<html lang="zh-CN" data-page-node-id="dyQ5PAUEmxuOOOD3tCyAYc" data-dm-ref="1"><head data-page-node-id="MnoIb9APFdNoQYfKN1jwVe">
 <meta charset="UTF-8" data-page-node-id="cCLIFXMwAnmPjChWjuDczF">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="46icOVTr9va6QD2SDltj2j">
 <title>会议纪要智能生成智能体 v5</title>
@@ -113,43 +112,16 @@
     .upload-hint b { color: var(--text-sub); }
     .upload-progress { position: absolute; left: 20px; right: 20px; bottom: 16px; height: 4px; background: #e0e6ee; border-radius: 2px; overflow: hidden; display: none; }
 
-    /* 粘贴文本 */
-    .paste-area { border: 2px dashed var(--border); border-radius: 8px; background: var(--primary-lighter); transition: all 0.2s; }
-    .paste-area-inner { padding: 20px; text-align: center; cursor: pointer; }
-    .paste-area-inner:hover { background: rgba(30, 90, 168, 0.04); border-radius: 6px; }
-    .paste-area.dragover { border-color: var(--primary); background: var(--primary-light); }
-    .paste-area.has-content { border-style: solid; border-color: #cddfff; background: #fff; }
-    .paste-area-inner svg.paste-icon { color: var(--primary); }
-    .paste-title { font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
-    .paste-title b { color: var(--primary); }
-    .paste-hint { font-size: 12px; color: var(--text-tip); line-height: 1.7; }
-    .paste-textarea { display: none; width: 100%; min-height: 260px; padding: 14px 16px; border: none; outline: none; resize: vertical; font-size: 13px; line-height: 1.9; color: var(--text-main); font-family: inherit; background: transparent; }
-    .paste-area.has-content .paste-textarea { display: block; }
-    .paste-area.has-content .paste-area-inner { display: none; }
+    /* 粘贴文本（直接输入框，无引导层） */
+    .paste-area { border: 2px dashed var(--border); border-radius: 8px; background: #fff; transition: all 0.2s; }
+    .paste-area:focus-within { border-color: var(--primary); }
+    .paste-area.dragover { border-color: var(--primary); background: var(--primary-lighter); }
+    .paste-textarea { display: block; width: 100%; min-height: 220px; padding: 14px 16px; border: none; outline: none; resize: vertical; font-size: 13px; line-height: 1.9; color: var(--text-main); font-family: inherit; background: transparent; }
     .paste-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-top: 1px solid var(--border-light); background: #fafbfc; border-radius: 0 0 6px 6px; flex-wrap: wrap; gap: 8px; }
     .paste-status-left { font-size: 12px; color: var(--text-sub); display: flex; align-items: center; gap: 6px; }
     .paste-status-left b { color: var(--primary); }
     .paste-status-right { display: flex; gap: 8px; }
 
-    /* 附加材料折叠区 */
-    .attach-material { margin-top: 14px; border: 1px solid var(--border-light); border-radius: 6px; overflow: hidden; background: #fcfdfe; }
-    .attach-material-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; transition: background 0.15s; }
-    .attach-material-bar:hover { background: var(--primary-lighter); }
-    .attach-bar-left { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-main); font-weight: 500; }
-    .attach-bar-left svg { color: var(--primary); }
-    .attach-count { display: inline-block; min-width: 18px; height: 18px; line-height: 18px; text-align: center; background: var(--primary); color: #fff; border-radius: 9px; font-size: 11px; padding: 0 5px; margin-left: 2px; }
-    .attach-count:empty { display: none; }
-    .attach-bar-right { display: flex; align-items: center; gap: 8px; }
-    .attach-tip { font-size: 11px; color: var(--text-tip); font-weight: normal; }
-    .attach-arrow { color: var(--text-tip); transition: transform 0.2s; }
-    .attach-material.expanded .attach-arrow { transform: rotate(180deg); }
-    .attach-material-body { display: none; padding: 12px 14px; border-top: 1px solid var(--border-light); }
-    .attach-material.expanded .attach-material-body { display: block; }
-    .attach-upload-area { border: 1.5px dashed var(--border); border-radius: 6px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .attach-upload-area:hover, .attach-upload-area.dragover { border-color: var(--primary); background: var(--primary-lighter); }
-    .attach-upload-area svg { color: var(--primary); }
-    .attach-upload-area span { font-size: 12px; color: var(--text-main); }
-    .attach-upload-hint { font-size: 11px !important; color: var(--text-tip) !important; }
     .upload-progress.show { display: block; }
     .upload-progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.15s linear; }
     .upload-progress-text { font-size: 11px; color: var(--primary); margin-top: 6px; text-align: center; }
@@ -161,7 +133,6 @@
     .file-item-meta { color: var(--text-tip); margin-right: 12px; font-size: 12px; }
     .file-item-tag { padding: 1px 6px; border-radius: 3px; font-size: 10px; margin-right: 8px; }
     .file-item-tag.primary { background: var(--primary-light); color: var(--primary); }
-    .file-item-tag.aux { background: #fff7e6; color: var(--warning); }
     .file-item-remove { color: var(--danger); cursor: pointer; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
     .file-item-remove:hover { background: #ffe6e6; }
 
@@ -464,9 +435,8 @@
     .view.active { display: block; }
     .recognizing-tip { text-align: center; padding: 20px; color: var(--primary); font-size: 13px; }
 </style>
-<link rel="stylesheet" href="meeting-task-bridge.css">
-</head>
-<body data-page-node-id="YU2VztvdxwDZqmBU2EjBcG">
+<style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
+<body data-page-node-id="YU2VztvdxwDZqmBU2EjBcG" style="">
 
 <div class="layout" data-page-node-id="iaJmwXUpvMrT8w44xSYMXS">
     <!-- ============ 侧边栏 ============ -->
@@ -501,8 +471,8 @@
         </div>
 
         <div class="history-section" data-page-node-id="y0dDssqY8YfLgpoORO6a2D">
-            <div class="history-title" data-page-node-id="JEzhORBpmWEDZksH4aqVBy"><span data-page-node-id="Py7lHKAb4dvzlGBEdlECPn">历史生成记录</span><span id="historyCount" style="color:var(--primary);" data-page-node-id="hMGJs67uy2QCTqFyVgw2Gc"></span></div>
-            <div class="history-list" id="historyList" data-page-node-id="ZE2r2Wil6C7alFozPt10R5"></div>
+            <div class="history-title" data-page-node-id="JEzhORBpmWEDZksH4aqVBy"><span data-page-node-id="Py7lHKAb4dvzlGBEdlECPn">历史生成记录</span><span id="historyCount" style="color:var(--primary);" data-page-node-id="hMGJs67uy2QCTqFyVgw2Gc">(6)</span></div>
+            <div class="history-list" id="historyList" data-page-node-id="ZE2r2Wil6C7alFozPt10R5"><div class="history-item " data-id="h1" onclick="viewHistory('h1')"><div class="history-item-title">办公室工作例会（第7次）</div><div class="history-item-meta"><span>今天 09:30</span><span class="history-status done">已完成</span></div></div><div class="history-item " data-id="h2" onclick="viewHistory('h2')"><div class="history-item-title">政务信息化项目推进会</div><div class="history-item-meta"><span>昨天 14:00</span><span class="history-status generating">生成中</span></div></div><div class="history-item " data-id="h3" onclick="viewHistory('h3')"><div class="history-item-title">干部培训工作专题协调会</div><div class="history-item-meta"><span>07-10 15:20</span><span class="history-status done">已完成</span></div></div><div class="history-item " data-id="h4" onclick="viewHistory('h4')"><div class="history-item-title">综合处会商会议</div><div class="history-item-meta"><span>07-08 10:00</span><span class="history-status draft">草稿</span></div></div><div class="history-item " data-id="h5" onclick="viewHistory('h5')"><div class="history-item-title">机关效能提升调度会</div><div class="history-item-meta"><span>07-05 09:00</span><span class="history-status done">已完成</span></div></div><div class="history-item " data-id="h6" onclick="viewHistory('h6')"><div class="history-item-title">数字政府建设推进会</div><div class="history-item-meta"><span>06-28 14:30</span><span class="history-status done">已完成</span></div></div></div>
         </div>
 
         <div class="sidebar-footer" data-page-node-id="UCI9q8UjNn1G6OqjfJki2u">
@@ -550,17 +520,17 @@
                 <div class="welcome-container" data-page-node-id="guueRR0FmmI4lcg2LMG3TK">
                     <div class="welcome-header" data-page-node-id="7rLnOTdeYLIxM2qyE4HUeY">
                         <div class="welcome-title" data-page-node-id="tic36IyNsRcfeQhLvBR4F9">会议纪要智能生成</div>
-                        <div class="welcome-desc" data-page-node-id="2PyFAcLHheBpShgmPE5Yyr">上传会议录音、已转写文本或直接粘贴文本，可附加会议方案材料，智能体自动识别并生成纪要</div>
+                        <div class="welcome-desc" data-page-node-id="2PyFAcLHheBpShgmPE5Yyr">上传会议录音、会议文件或直接粘贴文本，智能体自动识别并生成纪要</div>
                     </div>
 
                     <div class="card" data-page-node-id="AUDHo9Ugwf0cldYDgu5jSb">
                         <div class="card-header" data-page-node-id="VT6Z4UO6wzQ4qpGtxs0PS5">
-                            <div class="card-title" data-page-node-id="j8nmKgiCcauzJq8ZGwfA5N"><span class="step-number" data-page-node-id="LCEN5B500DSTrF5s9jHXYC">1</span><span id="sourceStepTitle">上传会议资料</span><span class="card-title-sub" data-page-node-id="coLjiV1oxrVMRrlbjuQ7uH">（录音 / 转写文本 / 粘贴文本为主，可附加方案材料辅助识别）</span></div>
+                            <div class="card-title" data-page-node-id="j8nmKgiCcauzJq8ZGwfA5N"><span class="step-number" data-page-node-id="LCEN5B500DSTrF5s9jHXYC">1</span>上传会议资料<span class="card-title-sub" data-page-node-id="coLjiV1oxrVMRrlbjuQ7uH">（录音 / 上传文件 / 粘贴文本任选其一）</span></div>
                         </div>
                         <div class="upload-tabs" data-page-node-id="qOhi2z2g4hwNwsL8aEoXLM">
                             <div class="upload-tab active" data-tab="audio" data-page-node-id="rWPV98snZXCcBgLSYM7PGF">会议录音</div>
-                            <div class="upload-tab" data-tab="text" data-page-node-id="LfRjPNnvhLviKJg0D8NnJ0">已转写文本</div>
                             <div class="upload-tab" data-tab="paste" data-page-node-id="vKqxKIQBcuALDa9Ge0rc4l">粘贴文本</div>
+                            <div class="upload-tab" data-tab="file" data-page-node-id="5kUK6FcMSREoCsTCD3F8A1">上传文件</div>
                         </div>
 
                         <div class="upload-panel" id="upload-audio" data-page-node-id="LiT6qMa06nnx2FwukfEXvL">
@@ -573,24 +543,13 @@
                             <div class="file-list" id="fileList-audio" data-page-node-id="CQrtfYHltQQOLMIW5fg5km"></div>
                         </div>
 
-                        <div class="upload-panel hidden" id="upload-text" data-page-node-id="0mYj9OGnJPG2hbg9VlDsCg">
-                            <div class="upload-area" onclick="simulateUpload('text')" data-page-node-id="gv7k3QHKB57II9ud2WfBAG">
-                                <div class="upload-icon" data-page-node-id="RCIsXaphYWD5Ctt9UcAvn0"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="cJ4gRcXaP36y33ej8UmV33"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" data-page-node-id="Q0TGJCJKundVD0rSI6r8pP"></path><polyline points="14 2 14 8 20 8" data-page-node-id="uWHsyMVm3ySzdDMdAm8HFo"></polyline><line x1="16" y1="13" x2="8" y2="13" data-page-node-id="bRJ4xbyRF54ZV9KZlKU24R"></line><line x1="16" y1="17" x2="8" y2="17" data-page-node-id="qEgxCgYt5Apb01nWiyjJqU"></line></svg></div>
-                                <div class="upload-text" data-page-node-id="TtrECXei6E0OMcjPfwdso0">点击上传或<b data-page-node-id="nCAqzIn7cvXUyZ9jSJfGNt">拖拽文件</b>到此处</div>
-                                <div class="upload-hint" data-page-node-id="mmAPUmxcFcVQ2qHIksvRw9">支持 <b data-page-node-id="5X11q8cnWPPdp4YKzD8OAP">DOCX、DOC、TXT、PDF</b><br data-page-node-id="TUwCjmk6gqBqS5kMiyre1V">单次上传 1 个转写文本文件</div>
-                            </div>
-                            <div class="file-list" id="fileList-text" data-page-node-id="ShQ0s4booCGr4ZF2c4NZpm"></div>
-                        </div>
-
                         <div class="upload-panel hidden" id="upload-paste" data-page-node-id="agJaTbtlk7n02ZbVUHHsDE">
                             <div class="paste-area" id="pasteArea" data-page-node-id="SiCqzrWiCatRFwdAvDuK36">
-                                <div class="paste-area-inner" id="pasteInner" onclick="focusPasteTextarea()" data-page-node-id="yPvcr4sJe1HqeLaZuzoUr2">
-                                    <svg class="paste-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px;" data-page-node-id="JUtzNsf5dZnH5ELvqj5kuD"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" data-page-node-id="AJ8PjIY66CYbLibbQG8hr7"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1" data-page-node-id="j7fUTLDcJuYHiiWt37ddpv"></rect></svg>
-                                    <div class="paste-title" data-page-node-id="dzdne2gWGTBiDyKBbzrFuh">点击此处<b data-page-node-id="3rW5xDNQabOa9XGCTEVZnw">粘贴</b>或直接输入会议文本</div>
-                                    <div class="paste-hint" data-page-node-id="48GraeFb59PbdmbNUOD1nf">适用于已有速记/文字实录的场景，粘贴后点击「确认文本」<br data-page-node-id="3m8NE4XwKj5ZPirdruuyz9">文本内容将作为转写文本参与纪要生成，支持说话人格式如「张主任：……」</div>
-                                </div>
-                                <textarea class="paste-textarea" id="pasteTextarea" placeholder="在此粘贴会议文本内容，例如：&#10;李主任：现在开始今天的例会，主要研究三项工作……&#10;王副主任：上半年工作情况我先做个简要汇报……" oninput="onPasteInput()" onblur="onPasteBlur()"></textarea>
-                                <div class="paste-status-bar" id="pasteStatusBar" style="display:none;" data-page-node-id="YL5u9hJslZWg70EJqlOArn">
+                                <textarea class="paste-textarea" id="pasteTextarea" placeholder="在此粘贴或输入会议文本内容，支持说话人格式如「张主任：……」
+例如：
+李主任：现在开始今天的例会，主要研究三项工作……
+王副主任：上半年工作情况我先做个简要汇报……" oninput="onPasteInput()"></textarea>
+                                <div class="paste-status-bar" id="pasteStatusBar" data-page-node-id="YL5u9hJslZWg70EJqlOArn">
                                     <div class="paste-status-left" data-page-node-id="0jJv8qvhKYfXoGwsxA2aO8"><span id="pasteCount" data-page-node-id="WWWpFswsnzy0iazh2KMqpl">已输入 0 字</span></div>
                                     <div class="paste-status-right" data-page-node-id="87TdgFpFdZJYA910dXcGGc">
                                         <button class="btn btn-default btn-sm" onclick="clearPasteText()" data-page-node-id="fWe8CgMMLzKNgF3p7eoVvj">清空重贴</button>
@@ -601,28 +560,16 @@
                             <div class="file-list" id="fileList-paste" data-page-node-id="t8QylOFhjPrC2tpDwI0bNW"></div>
                         </div>
 
-                        <!-- 附加会议材料（折叠式，与主材料共用同一卡片） -->
-                        <div class="attach-material" data-page-node-id="ChK4Sa6JIg88hbBAHAOC2G">
-                            <div class="attach-material-bar" id="attachBar" onclick="toggleAttachMaterial()" data-page-node-id="K1WMwlztOrhJfec5wqp3Al">
-                                <div class="attach-bar-left" data-page-node-id="8pb3wd8SUtVTCIGaMDktfb">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="xHyS7R1CMHEBpTPwHpZD1C"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" data-page-node-id="ay8CLAZyBQdMCufMHneW1E"></path></svg>
-                                    <span data-page-node-id="Z2DcGYqENNYN7s9upP8rkK">附加会议方案/材料（可选）</span>
-                                    <span class="attach-count" id="attachCount" data-page-node-id="69OOE76NewY3iWmB3EObtF"></span>
-                                </div>
-                                <div class="attach-bar-right" data-page-node-id="9gAmdO3RRU8sIVB8r2TPBw">
-                                    <span class="attach-tip" data-page-node-id="Wh6EDqUiW4x8NoX5doqzEf">辅助识别会议重点，优化纪要/议题/待办生成</span>
-                                    <svg class="attach-arrow" id="attachArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="w9eAfqfM0EiEtsrjnlSf1E"><polyline points="6 9 12 15 18 9" data-page-node-id="FH0pMTpGh7Sjbf3v1LHHNA"></polyline></svg>
-                                </div>
+                        <div class="upload-panel hidden" id="upload-file" data-page-node-id="zfiEWmhEKAumqHrHEiwCZc">
+                            <div class="upload-area" id="fileUploadArea" onclick="simulateUpload('file')" data-page-node-id="p05Yud3U63QbBeXS28un8u">
+                                <div class="upload-icon" data-page-node-id="0ihAVAWy5jsLp2FCGfqBx4"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="V46tEhfn67AWVxd1uRF3Yq"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" data-page-node-id="wOyReoYTrNRbpIgbEiOfir"></path><polyline points="17 8 12 3 7 8" data-page-node-id="qC56rP6syBw2BSMVEj87VJ"></polyline><line x1="12" y1="3" x2="12" y2="15" data-page-node-id="A48bWDxSsFSTwVp1UOWIYP"></line></svg></div>
+                                <div class="upload-text" data-page-node-id="d3th0PWjmmW7BZmYdiLf2z">点击上传或<b data-page-node-id="0JB8MsaqCvytKPeTzIGghR">拖拽文件</b>到此处</div>
+                                <div class="upload-hint" data-page-node-id="Wy4LfWGa6t474nK4AaTGjl">支持 <b data-page-node-id="nl6ij3KyJvxiqj0qGXIvAP">DOCX、DOC、TXT、PDF</b> 等会议文稿/速记/文字实录格式<br data-page-node-id="yMIWHJU7mFeEG0dJL7Gd7L">系统将自动提取文档中的文本内容作为转写文本，<b data-page-node-id="YeIzxJzPGyGQC7YKiXOdjL">单次上传 1 个文件</b></div>
+                                <div class="upload-progress" id="fileProgress" data-page-node-id="yVYL2xk6PX3n5FrXA5vkDZ"><div class="upload-progress-bar" id="fileProgressBar" data-page-node-id="A9QCATY3boufLc49ZMBOXX"></div></div>
                             </div>
-                            <div class="attach-material-body" id="attachBody" data-page-node-id="JuK6i1GY81teDgtDvbECqH">
-                                <div class="attach-upload-area" onclick="simulateUpload('material')" id="attachUploadArea" data-page-node-id="RdWfTkKOpZJq6MILrgDPEb">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="CdtHlRHimAiGztwC7Jh216"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" data-page-node-id="vdpJcU3Ga3pqE8EV59VWHu"></path><polyline points="17 8 12 3 7 8" data-page-node-id="dQJpN4hn7qRJ8buAed1P3C"></polyline><line x1="12" y1="3" x2="12" y2="15" data-page-node-id="XHZ5VEZ3dHBvdgpEvDH9KX"></line></svg>
-                                    <span data-page-node-id="9R8e07FfSGY4DOFcHIRs48">点击或拖拽会议方案/材料到此处</span>
-                                    <span class="attach-upload-hint" data-page-node-id="vghFxNWCy75y64lFFE8GAH">支持 PDF、DOCX、DOC、TXT、PPTX、XLSX，可上传多个</span>
-                                </div>
-                                <div class="file-list" id="fileList-material" data-page-node-id="hxLI1se1d0u3bAtKW9voc7"></div>
-                            </div>
+                            <div class="file-list" id="fileList-file" data-page-node-id="zvLHttLZ9dBt7mHJXtHZJX"></div>
                         </div>
+
                     </div>
 
                     <!-- 会议信息填写卡（用户自填，不再AI推荐） -->
@@ -632,7 +579,7 @@
                             <div class="form-item" data-page-node-id="l0yIIUdmAr7LAqeuMu8XhH"><label class="form-label required" data-page-node-id="wpoEH0D24t0waJQpBBC4Vq">会议名称</label><input type="text" class="form-input" id="meetingName" placeholder="如：办公室工作例会（2026年第7次）" data-page-node-id="IPXlgVUngcUNr8Gh00UqUk"></div>
                             <div class="form-item" id="meetingTypeItem" data-page-node-id="eFmaCNK6FzIl8VKV2hZwgK"><label class="form-label required" data-page-node-id="hov6raKr1aCAfBQOstdAo2">会议类型</label>
                                 <select class="form-select" id="meetingType" onchange="onMeetingTypeChange()" data-page-node-id="8YeEysDGsf7hAdRAYsVjpZ">
-                                    <option value="" selected data-page-node-id="mdDRhRKPG2HVMVX1jTn5k6">请选择会议类型</option><option value="1" data-page-node-id="jOHnvzHvVM3rBWTmWaevJc">工作例会</option><option value="2" data-page-node-id="ZKlDjHe2tJ1ZKbfZ89BTJ4">专题协调会议</option><option value="3" data-page-node-id="h2xqYu3Bs9JyUfM5C2DKbY">项目推进会议</option><option value="4" data-page-node-id="8GYKJrIR3NZG6qUj89Ybm8">工作调度会议</option><option value="5" data-page-node-id="vaIsFQPmdgBbfP05wa2bSD">部门会商会议</option><option value="custom" data-page-node-id="9uEFaT3hmfKBKRC9wUD6oT">自定义类型…</option>
+                                    <option value="" selected="" data-page-node-id="mdDRhRKPG2HVMVX1jTn5k6">请选择会议类型</option><option value="1" data-page-node-id="jOHnvzHvVM3rBWTmWaevJc">工作例会</option><option value="2" data-page-node-id="ZKlDjHe2tJ1ZKbfZ89BTJ4">专题协调会议</option><option value="3" data-page-node-id="h2xqYu3Bs9JyUfM5C2DKbY">项目推进会议</option><option value="4" data-page-node-id="8GYKJrIR3NZG6qUj89Ybm8">工作调度会议</option><option value="5" data-page-node-id="vaIsFQPmdgBbfP05wa2bSD">部门会商会议</option><option value="custom" data-page-node-id="9uEFaT3hmfKBKRC9wUD6oT">自定义类型…</option>
                                 </select>
                                 <div class="custom-type-row hidden" id="customTypeRow" style="margin-top:6px;" data-page-node-id="LtAhlHRRNqGCVn9rAMpoOB">
                                     <input type="text" class="form-input" id="customMeetingType" maxlength="20" placeholder="输入自定义会议类型名称，如：安全生产专题会" data-page-node-id="jjCXe9AvKzh5dGJ93uw1bX">
@@ -642,19 +589,17 @@
                             </div>
                             <div class="form-item" data-page-node-id="NEFfyXlNHjthDtdF1r6FlN"><label class="form-label required" data-page-node-id="OWX79zyDrq6EzOjlZBsjG0">纪要模板</label>
                                 <div style="display:flex;gap:6px;align-items:center;" data-page-node-id="By0hbJ8C85nLXRP0iIO0HO">
-                                    <select class="form-select" id="template" data-page-node-id="B5L7RhdecHuxVY2Whp7lxj"><option value="auto" selected data-page-node-id="tpZe4X3i8KKAThpX1bKFPE">智能匹配（推荐）</option><option value="1" data-page-node-id="6XSTmVe2CfeuS4NdYFVmfB">工作例会标准模板</option><option value="2" data-page-node-id="LGJ6EHMPP0rF22jlN5eamY">专题协调会议模板</option><option value="3" data-page-node-id="M39oje8iSyYi9OCiuHXFOS">项目推进会议模板</option><option value="4" data-page-node-id="9BGfQwc5KsCV3dyk5oQXpD">部门会商模板</option></select>
+                                    <select class="form-select" id="template" data-page-node-id="B5L7RhdecHuxVY2Whp7lxj"><option value="auto" selected="" data-page-node-id="tpZe4X3i8KKAThpX1bKFPE">智能匹配（推荐）</option><option value="1" data-page-node-id="6XSTmVe2CfeuS4NdYFVmfB">工作例会标准模板</option><option value="2" data-page-node-id="LGJ6EHMPP0rF22jlN5eamY">专题协调会议模板</option><option value="3" data-page-node-id="M39oje8iSyYi9OCiuHXFOS">项目推进会议模板</option><option value="4" data-page-node-id="9BGfQwc5KsCV3dyk5oQXpD">部门会商模板</option></select>
                                     <button class="btn btn-default btn-sm" onclick="openTemplatePreview()" style="white-space:nowrap;" data-page-node-id="SUBfyE5b7nAkiVlNXI2rWR"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="C0ZIK3lOlZQ4ycVanmPvd2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" data-page-node-id="HJbH6VmRiYc4fPnfKqfDzp"></path><circle cx="12" cy="12" r="3" data-page-node-id="Fa2ysEpluWTqBptMy3PgVB"></circle></svg>查看模板</button>
                                 </div>
                             </div>
-                            <div class="form-item" data-page-node-id="QnsofZtRLxsdvV6UOGSG7j"><label class="form-label required" data-page-node-id="hHcdu9q8ja4qEH5Boo5qic">保密级别</label>
-                                <select class="form-select" id="secret" onchange="updateSecretHint()" data-page-node-id="Z2dGvajwDZHO7FWZbxaXLl"><option value="0" data-page-node-id="cLCAOWKSOwSeMk8ExnNWOQ">普通</option><option value="1" data-page-node-id="g8705RB3frWC60UGp2DKsI">内部</option><option value="2" data-page-node-id="S4PP50J2KDD5g5zFAhnoii">秘密</option></select>
-                            </div>
+                            
                         </div>
                         <div class="secret-hint" id="secretHint" data-page-node-id="meaVX4CLpMEHhHbW9pBiIJ"><div id="secretHintText" data-page-node-id="tx8R7BQEqq7zNTxD0ED1Gk"></div></div>
                         <div style="margin-top:10px;font-size:12px;color:var(--text-tip);" data-page-node-id="nZsHlT9oOkjOxcaDEujFYX"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;" data-page-node-id="IRNWDUiUa4Kz0jQtho9xdp"><circle cx="12" cy="12" r="10" data-page-node-id="EyTyw1uRGDlMQcE9ur6V7T"></circle><line x1="12" y1="16" x2="12" y2="12" data-page-node-id="tdJ0E4ubN1IFQoYKyXf1Yn"></line><line x1="12" y1="8" x2="12.01" y2="8" data-page-node-id="xNptx9eWK9SE4v7cbFHtyQ"></line></svg>会议时间、地点、出席人员等要素可在生成后直接在详细版纪要中在线编辑完善。</div>
                         <div class="form-footer" data-page-node-id="Y0Rl9hQJfdqMcovNt4hw9A">
                             <button class="btn btn-default btn-large" onclick="resetForm()" data-page-node-id="ruwpzZkfXTrJclywOernMT">重置</button>
-                            <button class="btn btn-primary btn-large" id="mainActionBtn" onclick="mainAction()" disabled data-page-node-id="fKpOUivSSmnBVwgSZAekel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="EKdXh7WrZNsfRRB6U4t1aI"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" data-page-node-id="pX8ElwIt1zk9H7aYi6Lz0m"></polygon></svg><span id="mainActionText" data-page-node-id="rBDuqlNBPzZcYG7Eap3Fyr">请先上传会议资料</span></button>
+                            <button class="btn btn-primary btn-large" id="mainActionBtn" onclick="mainAction()" disabled="" data-page-node-id="fKpOUivSSmnBVwgSZAekel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="EKdXh7WrZNsfRRB6U4t1aI"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" data-page-node-id="pX8ElwIt1zk9H7aYi6Lz0m"></polygon></svg><span id="mainActionText" data-page-node-id="rBDuqlNBPzZcYG7Eap3Fyr">请先上传会议资料</span></button>
                         </div>
                     </div>
                 </div>
@@ -743,7 +688,7 @@
                                 <button class="edit-tool-btn" onclick="formatDoc('underline')" data-page-node-id="zcZ4VP6S0SYOasdoB7BI1Y"><u data-page-node-id="fsitBQIqi5fQqKTwasndsw">U</u> 下划线</button>
                                 <span class="edit-tool-divider" data-page-node-id="DTX94G8YfFipvnl0vSDhLS"></span>
                                 <button class="edit-tool-btn" onclick="formatDoc('insertUnorderedList')" data-page-node-id="hckE73oprR3jV2aoRs2EMa">• 列表</button>
-                                <button class="edit-tool-btn" onclick="formatDoc('formatBlock','<h3 data-page-node-id="QOtSngrZvqPIAFVnwAAkSX">')">标题</button>
+                                <button class="edit-tool-btn" onclick="formatDoc('formatBlock','<h3 data-page-node-id=" qotsngrzvqpiafvnwaaksx"="">')"&gt;标题</button>
                                 <span class="edit-tool-info" data-page-node-id="KULAv922P8TkOyiuPWWrMa">修改实时保存</span>
                             </div>
                             <div class="doc-container" id="detailedDoc" data-page-node-id="KFNwe70NRhAQvg4b23wmVW">
@@ -815,24 +760,24 @@
                                     <button class="btn btn-default btn-sm" onclick="toggleTopicsEdit()" id="editTopicsBtn" data-page-node-id="WDBnW96meACxdOpTbDiapW"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="0KXyLPwENDvDxQQEzXbhYz"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" data-page-node-id="7XvBMbBm3LV0Yu6QBCRmeW"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="Y8xBM87pJ8Ukz9WUM9YUfi"></path></svg>编辑</button>
                                 </div>
                             </div>
-                            <div id="topicsContainer" data-page-node-id="usCCyb5ZYOvEyyVPK6Pmfi"></div>
+                            <div id="topicsContainer" data-page-node-id="usCCyb5ZYOvEyyVPK6Pmfi"><div class="topic-item" data-tid="t1"><div class="topic-title">议题一：2026年上半年工作总结与下半年工作安排</div><div class="topic-content">会议听取了办公室2026年上半年工作情况汇报，与会人员对上半年工作成效进行了充分讨论，并就下半年重点任务进行了研究部署。</div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">各处室于7月20日前完成上半年工作总结报告，交由综合处汇总。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">下半年重点抓好政务服务标准化建设、机关效能提升、干部队伍建设三项工作。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">由王副主任牵头，7月底前形成下半年工作要点报领导审定。</span></div></div><div class="topic-item" data-tid="t2"><div class="topic-title">议题二：政务信息化项目推进情况</div><div class="topic-content">张处长汇报了政务信息化项目一期建设进展，就系统上线、业务培训、二期启动等事项进行了讨论。</div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">加快推进项目一期收尾，确保8月15日前完成系统上线试运行。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">由张处长负责，牵头组织业务培训，8月30日前完成全员培训。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-pending">待进一步研究</span><span class="conclusion-text">项目二期具体建设内容需进一步调研，9月初正式启动需求调研工作。</span></div></div><div class="topic-item" data-tid="t3"><div class="topic-title">议题三：干部培训工作方案研究</div><div class="topic-content">会议围绕干部培训对象、内容、时间安排、经费保障等进行了充分讨论。</div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">原则通过干部培训工作方案，由赵科长负责修改完善。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-agreed">已达成一致</span><span class="conclusion-text">培训时间安排在9月中下旬，为期一周。</span></div><div class="topic-conclusion"><span class="topic-conclusion-label status-diff">存在分歧</span><span class="conclusion-text">关于是否邀请外部专家授课，与会人员意见不一，需进一步研究后再定。</span></div></div></div>
                         </div>
 
                         <!-- 待办事项 -->
                         <div class="result-panel" id="panel-todos" data-page-node-id="0blOnxKyRJNUpXlu6eJu7C">
                             <div class="action-bar" data-page-node-id="LPr29uPpxEEvPv2qj9touh">
-                                <div class="action-bar-left" data-page-node-id="I3EVGx2tk58WVpIgfPLcNK">共 <b style="color:var(--primary);" id="todoTotal" data-page-node-id="90g46KOBCc50XYVI5HdU0t">6</b> 项待办 <span id="todoMissTip" style="color:var(--warning);margin-left:8px;display:none;" data-page-node-id="VMIgJQxYK7nYOgk9zvrYLD">· <b id="todoMissCount" data-page-node-id="hqEbr9ZA1qd8YHODjWwGEu">1</b> 项未识别到责任主体，请手工补充</span> · 分组查看：
+                                <div class="action-bar-left" data-page-node-id="I3EVGx2tk58WVpIgfPLcNK">共 <b style="color:var(--primary);" id="todoTotal" data-page-node-id="90g46KOBCc50XYVI5HdU0t">6</b> 项待办 <span id="todoMissTip" style="color: var(--warning); margin-left: 8px; display: inline;" data-page-node-id="VMIgJQxYK7nYOgk9zvrYLD">· <b id="todoMissCount" data-page-node-id="hqEbr9ZA1qd8YHODjWwGEu">1</b> 项未识别到责任主体，请手工补充</span> · 分组查看：
                                     <select class="form-select" style="height:28px;padding:0 8px;font-size:12px;width:auto;" onchange="showToast('已按 '+this.options[this.selectedIndex].text+' 分组')" data-page-node-id="kREgV4UPyCxjAxnwd9otEp"><option data-page-node-id="0sRd76FRxAhveL3K3gDBIz">全部</option><option data-page-node-id="mxvJndqomQWoC0EQkxpGWi">按责任主体</option><option data-page-node-id="BcVcXfSH3ezB2OEB6Xr6Se">按时限</option><option data-page-node-id="iK0gGXSU2mqpV31k6FwDtB">按议题</option></select>
                                 </div>
                                 <div class="action-bar-right" data-page-node-id="VAmSb2XFeptBgljJnahCWT"><button class="btn btn-default btn-sm" onclick="showToast('已导出待办清单')" data-page-node-id="mHU4Ahhu4dwLMAnFAUiGRy">导出清单</button></div>
                             </div>
-                            <table class="table" data-page-node-id="V54piKShJz6oUoCuJiSgwm"><thead data-page-node-id="9VRjukVFGwCDJmXvfhc8C0"><tr data-page-node-id="DRSDKGIERTo2AcbrVwvJX6"><th style="width:40px;" data-page-node-id="EkTExNGZjsO6blDy1YTv8Q">序号</th><th class="col-content" data-page-node-id="hHfhTF8neQQNV1BMHUGvtY">任务内容</th><th style="width:150px;" data-page-node-id="HKJMXdV82fPqDTv1GljT57">责任主体</th><th style="width:130px;" data-page-node-id="ChAH7QrEQMcKLhOMhTsOUG">时限</th><th style="width:110px;" data-page-node-id="t6STE9cojQdmR7cew3ZoCi">关联议题</th><th style="width:150px;" id="sourceColTitle" data-page-node-id="5BvejjY7eNR9Sn9CRwLuiI">信息来源</th></tr></thead><tbody id="todosBody" data-page-node-id="R4SBeE1JJKSf3IFURSOebF"></tbody></table>
+                            <table class="table" data-page-node-id="V54piKShJz6oUoCuJiSgwm"><thead data-page-node-id="9VRjukVFGwCDJmXvfhc8C0"><tr data-page-node-id="DRSDKGIERTo2AcbrVwvJX6"><th style="width:40px;" data-page-node-id="EkTExNGZjsO6blDy1YTv8Q">序号</th><th class="col-content" data-page-node-id="hHfhTF8neQQNV1BMHUGvtY">任务内容</th><th style="width:150px;" data-page-node-id="HKJMXdV82fPqDTv1GljT57">责任主体</th><th style="width:130px;" data-page-node-id="ChAH7QrEQMcKLhOMhTsOUG">时限</th><th style="width:110px;" data-page-node-id="t6STE9cojQdmR7cew3ZoCi">关联议题</th><th style="width:150px;" id="sourceColTitle" data-page-node-id="5BvejjY7eNR9Sn9CRwLuiI">文本段落</th></tr></thead><tbody id="todosBody" data-page-node-id="R4SBeE1JJKSf3IFURSOebF"><tr><td>1</td><td><div class="content-cell" onclick="startEditField(0, 'content')">修改完善干部培训工作方案并提交办公会审议<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-tag" onclick="startEditField(0, 'owner')">赵科长<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div></td><td><span class="content-cell" onclick="startEditField(0, 'deadline')">2026-07-18<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t3')">议题三</span></td><td><span class="source-link" onclick="locateSource(10)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 10 段</span></td></tr><tr><td>2</td><td><div class="content-cell" onclick="startEditField(1, 'content')">完成上半年工作总结报告并交综合处汇总<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-tag" onclick="startEditField(1, 'owner')">各处室<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div></td><td><span class="content-cell" onclick="startEditField(1, 'deadline')">2026-07-20<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t1')">议题一</span></td><td><span class="source-link" onclick="locateSource(4)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 4 段</span></td></tr><tr><td>3</td><td><div class="content-cell" onclick="startEditField(2, 'content')">牵头形成下半年工作要点报领导审定<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-tag" onclick="startEditField(2, 'owner')">王副主任<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div></td><td><span class="content-cell" onclick="startEditField(2, 'deadline')">2026-07-31<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t1')">议题一</span></td><td><span class="source-link" onclick="locateSource(3)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 3 段</span></td></tr><tr><td>4</td><td><div class="content-cell" onclick="startEditField(3, 'content')">推动政务信息化项目一期完成系统上线试运行<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-tag" onclick="startEditField(3, 'owner')">张处长<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div></td><td><span class="content-cell" onclick="startEditField(3, 'deadline')">2026-08-15<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t2')">议题二</span></td><td><span class="source-link" onclick="locateSource(5)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 5 段</span></td></tr><tr><td>5</td><td><div class="content-cell" onclick="startEditField(4, 'content')">牵头组织信息化系统全员业务培训<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-tag" onclick="startEditField(4, 'owner')">张处长<svg class="edit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></span></div></td><td><span class="content-cell" onclick="startEditField(4, 'deadline')">2026-08-30<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t2')">议题二</span></td><td><span class="source-link" onclick="locateSource(5)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 5 段</span></td></tr><tr><td>6</td><td><div class="content-cell" onclick="startEditField(5, 'content')">启动政务信息化项目二期需求调研工作<span class="edit-hint">✎</span></div></td><td><div class="owner-cell"><span class="owner-empty" onclick="startEditField(5, 'owner')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>补充责任主体</span></div></td><td><span class="content-cell" onclick="startEditField(5, 'deadline')">2026-09-初<span class="edit-hint">✎</span></span></td><td><span class="topic-link" onclick="locateTopic('t2')">议题二</span></td><td><span class="source-link" onclick="locateSource(6)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>第 6 段</span></td></tr></tbody></table>
                             <div style="margin-top:12px;font-size:12px;color:var(--text-tip);text-align:center;" data-page-node-id="pHSzhXUrauUqUJ5hWhwEQS"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;" data-page-node-id="ll6oQ4rxoAH7hEjEvQSXmr"><circle cx="12" cy="12" r="10" data-page-node-id="bGMBXJ5uRUp0sN7pcbXVEh"></circle><line x1="12" y1="16" x2="12" y2="12" data-page-node-id="L9oNGRHwOQu24t6WQ3Emov"></line><line x1="12" y1="8" x2="12.01" y2="8" data-page-node-id="sekEeaerSpybYMd26HtClc"></line></svg>点击「任务内容/时限/责任主体」可直接编辑；点击「关联议题」定位议题结论；点击「信息来源」定位转写文本</div>
                         </div>
 
                         <!-- 转写文本 -->
                         <div class="result-panel" id="panel-transcript" data-page-node-id="XMWdZX6K226NsAJYbwEYIL">
-                            <div class="audio-player" id="audioPlayerBlock" data-page-node-id="Sx2xmHkrBE8rHT206eOaOc">
+                            <div class="audio-player hidden" id="audioPlayerBlock" data-page-node-id="Sx2xmHkrBE8rHT206eOaOc">
                                 <div class="player-controls" data-page-node-id="FWpqJ4fGCSXAT6532weeTy">
                                     <button class="play-btn" id="playBtn" onclick="togglePlay()" data-page-node-id="2DI7XBFGKMvTxECNCnjwiw"><svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="w7sc6UVgXgmwn3Vrbx9JHk"><polygon points="6 4 20 12 6 20 6 4" data-page-node-id="QStR54O3fvpb4IkQzWn9Oa"></polygon></svg><svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="hidden" data-page-node-id="4ECp8p1RfLCTav4ejMudwR"><rect x="6" y="4" width="4" height="16" data-page-node-id="waokyTDZuN7Dqu85eftujm"></rect><rect x="14" y="4" width="4" height="16" data-page-node-id="4BB53I2jfDmGOhQJNFaxH4"></rect></svg></button>
                                     <span class="player-time" id="currentTime" data-page-node-id="y1225jyXJekTlZBIBNTDmV">00:00:00</span>
@@ -842,13 +787,13 @@
                                 </div>
                                 <div style="margin-top:10px;font-size:12px;color:var(--text-tip);" data-page-node-id="JtppOxHxjahVZQKv1XPgBh">时长 01:28:45 · 点击下方文本可跳转对应时间</div>
                             </div>
-                            <div class="audio-player hidden" id="textOnlyBlock" data-page-node-id="ivA1bI5IEbrZnOSe72Fwub">
-                                <div style="font-size:13px;color:var(--text-sub);" data-page-node-id="MsifvGvx6lYB7ymsqu8WuE"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;color:var(--primary);" data-page-node-id="HpCRVblNGXkJsPbV7dkYW8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" data-page-node-id="t6PuOuxEJKAnoPMXwRIz4m"></path><polyline points="14 2 14 8 20 8" data-page-node-id="zg0eCTEcvojuM3xqBZbQEK"></polyline></svg><span id="textOnlyLabel" data-page-node-id="lW0y9YGOecpQ4VTx4CtpyN">已转写文本</span> · 共 <b id="paraTotal" data-page-node-id="7D1vE36mEIDa0o6fTUkL5z">10</b> 段 <span style="color:var(--text-tip);margin-left:8px;" data-page-node-id="fcXcepuryhHPxd28e5mZcF">（未上传音频，无播放功能）</span></div>
+                            <div class="audio-player" id="textOnlyBlock" data-page-node-id="ivA1bI5IEbrZnOSe72Fwub">
+                                <div style="font-size:13px;color:var(--text-sub);" data-page-node-id="MsifvGvx6lYB7ymsqu8WuE"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;color:var(--primary);" data-page-node-id="HpCRVblNGXkJsPbV7dkYW8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" data-page-node-id="t6PuOuxEJKAnoPMXwRIz4m"></path><polyline points="14 2 14 8 20 8" data-page-node-id="zg0eCTEcvojuM3xqBZbQEK"></polyline></svg><span id="textOnlyLabel" data-page-node-id="lW0y9YGOecpQ4VTx4CtpyN">粘贴文本</span> · 共 <b id="paraTotal" data-page-node-id="7D1vE36mEIDa0o6fTUkL5z">10</b> 段 <span style="color:var(--text-tip);margin-left:8px;" data-page-node-id="fcXcepuryhHPxd28e5mZcF">（未上传音频，无播放功能）</span></div>
                             </div>
-                            <div class="speaker-manage-bar" data-page-node-id="Yx569d4zflfm5iuJ4vdmiU">
+                            <div class="speaker-manage-bar hidden" data-page-node-id="Yx569d4zflfm5iuJ4vdmiU">
                                 <div class="speaker-manage-info" data-page-node-id="NF0AdEcUWYCiri8ZDZv6pJ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="OTlX4tPGeGc5mfZWiWGrao"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" data-page-node-id="AiH1ry092qrMyb6OGCGL9g"></path><circle cx="8.5" cy="7" r="4" data-page-node-id="C3KZVkOuRT2HWFwiBFCbaL"></circle><path d="M20 8v6" data-page-node-id="T9dN8tSQUWis9mxs8pmwDj"></path><path d="M23 11h-6" data-page-node-id="DOuZc8hwAlfDzg3tnQMWGr"></path></svg>转写文本仅支持查看，说话人标记请在生成前的转写标记环节完成</div>
                             </div>
-                            <div class="transcript-list" id="transcriptList" data-page-node-id="qMEdLJUSiUSdYVMz1Qkxw7"></div>
+                            <div class="transcript-list" id="transcriptList" data-page-node-id="qMEdLJUSiUSdYVMz1Qkxw7"><div class="transcript-line" data-id="1"><div class="transcript-meta"><span class="transcript-para-num">第 1 段</span></div><div class="transcript-text">好，同志们，我们现在开始今天的工作例会。今天的会议主要有三项议题：一是2026年上半年工作总结与下半年工作安排；二是政务信息化项目推进情况汇报；三是干部培训工作方案研究。下面我们进入第一项议题。</div></div><div class="transcript-line" data-id="2"><div class="transcript-meta"><span class="transcript-para-num">第 2 段</span></div><div class="transcript-text">上半年工作情况我先做个简要汇报。总体上看，我们各项工作推进比较顺利，重点任务完成情况良好。下面我从几个方面详细介绍......</div></div><div class="transcript-line" data-id="3"><div class="transcript-meta"><span class="transcript-para-num">第 3 段</span></div><div class="transcript-text">刚才王副主任的汇报很全面。我认为，下半年工作要突出三个重点：第一是政务服务标准化建设，第二是机关效能提升，第三是干部队伍建设。请王副主任牵头，7月底前形成一个下半年工作要点，报我这里审定。</div></div><div class="transcript-line" data-id="4"><div class="transcript-meta"><span class="transcript-para-num">第 4 段</span></div><div class="transcript-text">好的，我这边7月底前一定完成。另外建议各处室在7月20日前把上半年工作总结报告交给综合处，方便统一汇总。</div></div><div class="transcript-line" data-id="5"><div class="transcript-meta"><span class="transcript-para-num">第 5 段</span></div><div class="transcript-text">下面我汇报下政务信息化项目一期的进展情况。目前系统开发已经完成85%，测试环境已经搭建完毕，预计8月15日之前可以完成上线试运行。培训方面，我们计划8月30日之前完成全员的业务培训......</div></div><div class="transcript-line" data-id="6"><div class="transcript-meta"><span class="transcript-para-num">第 6 段</span></div><div class="transcript-text">信息化项目非常重要，张处长要盯紧一点。二期的需求调研也要早点启动，我看9月初就可以开始。</div></div><div class="transcript-line" data-id="7"><div class="transcript-meta"><span class="transcript-para-num">第 7 段</span></div><div class="transcript-text">关于干部培训方案，我做个简要汇报。培训对象覆盖机关全体干部，培训内容包括理论学习、业务能力、政务礼仪等。时间安排上，建议9月中下旬集中一周开展......</div></div><div class="transcript-line" data-id="8"><div class="transcript-meta"><span class="transcript-para-num">第 8 段</span></div><div class="transcript-text">我补充一下，是否可以考虑邀请一些外部专家授课，这样培训效果可能更好。</div></div><div class="transcript-line" data-id="9"><div class="transcript-meta"><span class="transcript-para-num">第 9 段</span></div><div class="transcript-text">邀请外部专家成本比较高，而且日程安排也不好协调，我建议以内部讲师为主。</div></div><div class="transcript-line" data-id="10"><div class="transcript-meta"><span class="transcript-para-num">第 10 段</span></div><div class="transcript-text">这个问题大家还有分歧，赵科长在修改方案时综合考虑一下，7月18日前把方案再拿到办公会讨论。今天的会议就到这里，散会。</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -864,10 +809,10 @@
 <div class="modal-mask" id="modalSuccess" data-page-node-id="PoCsgTOLUdEj7Tds87U4Ci"><div class="modal" data-page-node-id="lM1KtnSGKeY3lOcGDpoS6g"><div class="modal-header" data-page-node-id="Jx3dTRCXQvHZBlrZ6LtxGY">生成成功<span class="modal-close" onclick="hideModal('modalSuccess')" data-page-node-id="rSuEVPCBTdG9fPACk2VEPI">×</span></div><div class="modal-body" data-page-node-id="ifGngN9O8SQhGp421Y1zIu"><div class="modal-icon success" data-page-node-id="JLEDuTCx9Faq0kun6nWNC6"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="j5p60yroG0RmbjXK12aUjk"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" data-page-node-id="IKeSESr24w1HN3tOW3qr48"></path><polyline points="22 4 12 14.01 9 11.01" data-page-node-id="sPSQLgQ6f62OXGKm99df1L"></polyline></svg></div><div style="text-align:center;" data-page-node-id="sIH1oaUO2TLWxFAGxXFWJr"><div style="font-size:15px;color:var(--text-main);font-weight:500;margin-bottom:8px;" data-page-node-id="5a0qlFmRA198cJs8FLxHwG">会议纪要已生成完成！</div><div data-page-node-id="hB0m0dCeRtnoU3K23wsaxG">已智能识别 <b style="color:var(--primary);" data-page-node-id="ClSqo8aKofCYGPvsoEMpdC">3</b> 个议题、<b style="color:var(--primary);" data-page-node-id="qfbOI5OibElrA5gpykXnGU">9</b> 项结论、<b style="color:var(--primary);" data-page-node-id="7y2QiHG45wypAZvqqC8tnO">6</b> 项待办事项<br data-page-node-id="FxBVlpKHZzoVKaIfqSAogw">同步输出「详细版」与「概览版」双版本纪要<br data-page-node-id="Dy26fbmimSX5wYXmPeGIqf"><br data-page-node-id="pAbH38MQpA3P5EBhqGq1E7"><span style="color:var(--warning);" data-page-node-id="LRXDFEPElSIqLCSC89k4Vy">建议使用「一句话生成」快速补充会议要素</span></div></div></div><div class="modal-footer" data-page-node-id="9UkCN4YBLQYGCugA7tXGFN"><button class="btn btn-primary" onclick="hideModal('modalSuccess')" data-page-node-id="Dq0fsoC6pQfoHLBtAwvQqi">查看结果</button></div></div></div>
 
 <!-- 弹窗：导出 -->
-<div class="modal-mask" id="modalExport" data-page-node-id="i4KM6lHaulyKHozvH2pTdT"><div class="modal" data-page-node-id="xfIcGJ7of24zGYrcSI3xcJ"><div class="modal-header" data-page-node-id="PDWG8fB70aGeCUXx2BJyum">导出会议纪要<span class="modal-close" onclick="hideModal('modalExport')" data-page-node-id="fdONOfkonkvlXx6Yznt9O8">×</span></div><div class="modal-body" data-page-node-id="Cja47JAIgjerSeAipavkSj"><div id="exportSecretWarn" style="display:none;padding:8px 12px;background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;color:var(--danger);font-size:12px;margin-bottom:14px;" data-page-node-id="XDWGgCNrxdrakzZqdTm6UM"><b data-page-node-id="cC1g6phbnO4Al1I86BTbiy">密级提示：</b>当前文件为「秘密」级别，导出后请通过安全通道传递，禁止上传至公开网络。</div><div id="exportInternalWarn" style="display:none;padding:8px 12px;background:#fff7e6;border:1px solid #ffd591;border-radius:4px;color:#d46b08;font-size:12px;margin-bottom:14px;" data-page-node-id="dEYaZuEGCxRniBdrfoO8oD"><b data-page-node-id="sgvySew3mucC6GpPsyleq8">密级提示：</b>当前文件为「内部」级别，仅限单位内部使用。</div><div style="margin-bottom:14px;" data-page-node-id="tSBX8lBHsuDI1TyDppgIhs"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;" data-page-node-id="5Rp6gKlaMt24JEBpHC6zhz">选择导出内容</div><div style="display:flex;flex-wrap:wrap;gap:12px;" data-page-node-id="U9TbEHkmDWU4UETFLfyJCe"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="bVeG3eyQVpgtJvXm834dMA"><input type="checkbox" checked data-page-node-id="3s7CgBtgRSvbHHomPEQB05">详细版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="42MXScsW5aTWGv2K04lkzw"><input type="checkbox" checked data-page-node-id="8VZ9Uwipvoq8hGvroBhARm">概览版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="kOEfvEFZ3Ghmc7MFeA07v6"><input type="checkbox" data-page-node-id="H3DnpRWf0BxDBXi9mswS9R">议题结论</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="lG1uznMnhgZKLAoaiAwJtO"><input type="checkbox" data-page-node-id="LVNhi2we0HnVlHunDcX58G">待办事项清单</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="1G3kx3M73CGRSmDGEFWeaU"><input type="checkbox" id="exportTranscript" data-page-node-id="zN36gYxFHEeJzbA1rRMMfo">转写文本</label></div></div><div data-page-node-id="plGXoD0xH1muvUGbdPyNST"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;" data-page-node-id="1rD6g8cCPRxuQ0hCulx7Lh">导出格式</div><div style="display:flex;gap:16px;" data-page-node-id="m3lklLY3oQQvryygaAAk08"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="ArFwKTgD5IMdPOH8W7pBwo"><input type="radio" name="exportFormat" value="docx" checked data-page-node-id="dFmoHZg8XgDygGHhbKWa8R">DOCX</label></div></div></div><div class="modal-footer" data-page-node-id="9YOSIMJPuFHVBZFBAIbPNe"><button class="btn btn-default" onclick="hideModal('modalExport')" data-page-node-id="nT1JtQecwi6ytzp866sjCn">取消</button><button class="btn btn-primary" onclick="doExport()" data-page-node-id="yi6fKF8HN2Va9clW0jdnAN">确认导出</button></div></div></div>
+<div class="modal-mask" id="modalExport" data-page-node-id="i4KM6lHaulyKHozvH2pTdT"><div class="modal" data-page-node-id="xfIcGJ7of24zGYrcSI3xcJ"><div class="modal-header" data-page-node-id="PDWG8fB70aGeCUXx2BJyum">导出会议纪要<span class="modal-close" onclick="hideModal('modalExport')" data-page-node-id="fdONOfkonkvlXx6Yznt9O8">×</span></div><div class="modal-body" data-page-node-id="Cja47JAIgjerSeAipavkSj"><div id="exportSecretWarn" style="display:none;padding:8px 12px;background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;color:var(--danger);font-size:12px;margin-bottom:14px;" data-page-node-id="XDWGgCNrxdrakzZqdTm6UM"><b data-page-node-id="cC1g6phbnO4Al1I86BTbiy">密级提示：</b>当前文件为「秘密」级别，导出后请通过安全通道传递，禁止上传至公开网络。</div><div id="exportInternalWarn" style="display:none;padding:8px 12px;background:#fff7e6;border:1px solid #ffd591;border-radius:4px;color:#d46b08;font-size:12px;margin-bottom:14px;" data-page-node-id="dEYaZuEGCxRniBdrfoO8oD"><b data-page-node-id="sgvySew3mucC6GpPsyleq8">密级提示：</b>当前文件为「内部」级别，仅限单位内部使用。</div><div style="margin-bottom:14px;" data-page-node-id="tSBX8lBHsuDI1TyDppgIhs"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;" data-page-node-id="5Rp6gKlaMt24JEBpHC6zhz">选择导出内容</div><div style="display:flex;flex-wrap:wrap;gap:12px;" data-page-node-id="U9TbEHkmDWU4UETFLfyJCe"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="bVeG3eyQVpgtJvXm834dMA"><input type="checkbox" checked="" data-page-node-id="3s7CgBtgRSvbHHomPEQB05">详细版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="42MXScsW5aTWGv2K04lkzw"><input type="checkbox" checked="" data-page-node-id="8VZ9Uwipvoq8hGvroBhARm">概览版纪要</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="kOEfvEFZ3Ghmc7MFeA07v6"><input type="checkbox" data-page-node-id="H3DnpRWf0BxDBXi9mswS9R">议题结论</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="lG1uznMnhgZKLAoaiAwJtO"><input type="checkbox" data-page-node-id="LVNhi2we0HnVlHunDcX58G">待办事项清单</label><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="1G3kx3M73CGRSmDGEFWeaU"><input type="checkbox" id="exportTranscript" data-page-node-id="zN36gYxFHEeJzbA1rRMMfo">转写文本</label></div></div><div data-page-node-id="plGXoD0xH1muvUGbdPyNST"><div style="font-size:13px;color:var(--text-main);margin-bottom:8px;font-weight:500;" data-page-node-id="1rD6g8cCPRxuQ0hCulx7Lh">导出格式</div><div style="display:flex;gap:16px;" data-page-node-id="m3lklLY3oQQvryygaAAk08"><label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;" data-page-node-id="ArFwKTgD5IMdPOH8W7pBwo"><input type="radio" name="exportFormat" value="docx" checked="" data-page-node-id="dFmoHZg8XgDygGHhbKWa8R">DOCX</label></div></div></div><div class="modal-footer" data-page-node-id="9YOSIMJPuFHVBZFBAIbPNe"><button class="btn btn-default" onclick="hideModal('modalExport')" data-page-node-id="nT1JtQecwi6ytzp866sjCn">取消</button><button class="btn btn-primary" onclick="doExport()" data-page-node-id="yi6fKF8HN2Va9clW0jdnAN">确认导出</button></div></div></div>
 
 <!-- 弹窗：要素补充 -->
-<div class="modal-mask" id="modalSupplement" data-page-node-id="61f49LsdnJbtwy6rXzINvY"><div class="modal" style="min-width:580px;" data-page-node-id="6U6mhBGkMEDoKSTt9oegRl"><div class="modal-header" data-page-node-id="wR7DzGlP0BCdZQ4GlwFnpT">要素补充与修改<span class="modal-close" onclick="tryCloseSupplement()" data-page-node-id="a6yKwIxWi62VCMlkXvwzSF">×</span></div><div class="modal-body" data-page-node-id="SjcdKw3Am5iLWMmTdesQpO"><div class="sup-mode-tabs" data-page-node-id="kLhE0Jw6SmmuAkXeApnpUH"><div class="sup-mode-tab active" data-mode="ai" onclick="switchSupMode('ai')" data-page-node-id="4HioqmuPwUyVo0ht1y7qhs"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="b2Bd8KzETWqXp8mGEcckdo"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" data-page-node-id="ZqXEElOSo7wbV7LhKravo4"></path></svg>一句话生成<span class="hot-badge" data-page-node-id="vJLG8ZwbV1uHrFTRopurkh">推荐</span></div><div class="sup-mode-tab" data-mode="manual" onclick="switchSupMode('manual')" data-page-node-id="FPwVA5jUOyB3WV2sVlEOcu"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="XdDi9mSDgcRhFpsKRqgqE8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" data-page-node-id="JWSSzSQduFtnqd6GqJt1dM"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="vZLqmy1LIL3IcA8U57WHN5"></path></svg>手动填写</div></div><div id="supModeAI" data-page-node-id="eMGrAzToT8zDtcisD40wVM"><div class="ai-input-area" data-page-node-id="SzWhOBY5mC6vvRlzXboy8g"><div class="ai-input-header" data-page-node-id="a3FDTbkjzjBELHygkWeYAG"><span class="ai-tag-inline" data-page-node-id="vgD2a0Zq6V5SyVtVEogDXS"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="tejysQh0PyzZhWHWAgIzFk"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" data-page-node-id="pnCU6BMTv6v0FWS9UfzWId"></path></svg>AI</span>用一句话描述会议基本情况，智能体将自动补齐要素</div><textarea class="ai-input-textarea" id="aiSentence" placeholder="例如：今天上午9点半在第一会议室，李主任主持召开办公室工作例会，王副主任、张处长、赵科长参加，张秘书做记录"></textarea><div class="ai-example-title" data-page-node-id="mkDEdn1YKikA52BmY02xUY">您也可以点击以下常用示例快速填入：</div><div class="ai-examples" id="aiExamples" data-page-node-id="mUVaPrweasnvxJdpb6ML3h"></div><div class="ai-btn-row" data-page-node-id="KHie7izGjUWoCnkD6fDzVc"><div class="ai-btn-hint" data-page-node-id="O7oueqcnUU5PbZacvOGrmp"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;" data-page-node-id="NZd1XGTm3M8ZwTMqIoqAVl"><circle cx="12" cy="12" r="10" data-page-node-id="7bExH1iLRXF3EnZEoIaTWG"></circle><line x1="12" y1="16" x2="12" y2="12" data-page-node-id="rWRQZxCxE6gryX5X5sAV6G"></line><line x1="12" y1="8" x2="12.01" y2="8" data-page-node-id="pqfeevqG66FXVyaozgQLkD"></line></svg>可识别：时间 / 地点 / 主持人 / 出席人员 / 记录人</div><button class="btn btn-primary btn-sm" onclick="aiParse()" data-page-node-id="X4Cd9IOLqx4mhS9FBQLkUC"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="B3lNlOjYfrUSzfMpVcWeQF"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" data-page-node-id="FbzIYyCFzR8ozdxmycTEPB"></polygon></svg>智能识别</button></div></div><div class="ai-parse-result" id="aiParseResult" data-page-node-id="Op1DP7jhuIsFLY9lTl91eo"><div class="ai-parse-header" data-page-node-id="cS6R1DWkXExl7Aet9RhjyE"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="MwdETBOphUnDhtLpOaLDGo"><polyline points="20 6 9 17 4 12" data-page-node-id="kTiB1n2Swfi8mJOFZVVHEI"></polyline></svg>AI 识别结果，请确认后保存</div><div class="ai-parse-grid" id="aiParseGrid" data-page-node-id="1bGJu1C6CLvIKGdzDQugQ3"></div><div class="ai-parse-tip" id="aiParseMissTip" data-page-node-id="ovY711Ju1oJhwNZbPQgr5I"></div><div class="ai-parse-footer" data-page-node-id="AAbrWfEJHi1dtgVfXjqY5a"><span style="color:var(--text-tip);" data-page-node-id="xjpIsifcwIOWOfZ37tZlPd">识别不准？</span><a href="javascript:void(0);" style="color:var(--primary);" onclick="switchSupMode('manual')" data-page-node-id="JOMvXLeXZBBjULrvO1Jush">切换到手动填写</a>&nbsp;或&nbsp;<a href="javascript:void(0);" style="color:var(--primary);" onclick="aiReset()" data-page-node-id="Qvucdxw6GU8FYTIEO9LCWl">重新描述</a></div></div></div><div id="supModeManual" class="hidden" data-page-node-id="0LwZrc2HKHYi4W51M8te1q"><div style="color:var(--text-tip);margin-bottom:14px;font-size:12px;" data-page-node-id="lnyFEzxr60qFYUpwyXBd3N">请补充或修正会议基本要素，保存后将自动更新至详细版纪要</div><div class="form-item" data-page-node-id="zYGtKPQh9LqOww3VChyiAz"><label class="form-label required" data-page-node-id="VaL9lBOtEDK7QnDt8ye4GG">会议时间</label><input type="datetime-local" class="form-input" id="supMeetingTime" data-page-node-id="UI0gLihyyrOcn5UugtEVml"><div class="form-error" id="err-supMeetingTime" data-page-node-id="c75l2I5QDNYH8caGvEyXdK"></div></div><div class="form-item" data-page-node-id="MCZITEk9AlKvbe3D3PCcZr"><label class="form-label" data-page-node-id="xnTgJonwnXm5yEoPEs5Drs">会议地点</label><input type="text" class="form-input" id="supMeetingPlace" placeholder="例如：第一会议室" data-page-node-id="ow6255ntt3FCsFPpnrBUDc"></div><div class="form-item" data-page-node-id="jrs6DRaUeaA3XnjNAljBMG"><label class="form-label" data-page-node-id="aNkacjgRQ0uN49lHBq88Ch">主持人</label><input type="text" class="form-input" id="supHost" placeholder="例如：李主任" data-page-node-id="sfEC1E1kVefPDgONxKq2Oo"></div><div class="form-item" data-page-node-id="xr3f2Ae3FADUbkotddbkTO"><label class="form-label" data-page-node-id="BXG0J2Gbknw1Da8Qne66Y4">出席人员 <span class="form-tip" data-page-node-id="9sNKe6AYlBkkmA3lxrcK6J">多人以顿号分隔</span></label><input type="text" class="form-input" id="supAttendees" placeholder="例如：李主任、王副主任、张处长、赵科长" data-page-node-id="2rkcqqLGRpSm8pxiEii63t"></div><div class="form-item" data-page-node-id="feiyXRs7nx60exTPAVyE9Z"><label class="form-label" data-page-node-id="NaKFsfjwGXmwzgtepmvHgq">列席人员</label><input type="text" class="form-input" id="supObservers" placeholder="如有列席人员，请填写" data-page-node-id="UOqw82kFeiVy7l7y99lD8Q"></div><div class="form-item" data-page-node-id="hNCrE6OFLy33A9BrG7XigI"><label class="form-label" data-page-node-id="sXtUnAA3M2631lM70yHSA4">记录人</label><input type="text" class="form-input" id="supRecorder" placeholder="例如：张秘书" data-page-node-id="Kg419UyXhgazZA4uU3W4oz"></div><div class="form-item" data-page-node-id="mtC9HVKU8sweHALWg9MFwd"><label class="form-label" data-page-node-id="bXSp1ptHf1KHU4LIUN9qUk">备注说明</label><textarea class="form-textarea" id="supRemark" placeholder="如需补充说明的信息"></textarea></div></div></div><div class="modal-footer" data-page-node-id="erZ6oqg19aq9gXfzQrS6Zu"><button class="btn btn-default" onclick="tryCloseSupplement()" data-page-node-id="5KVufzoqYsX8DjizcGRpyW">取消</button><button class="btn btn-primary" onclick="saveSupplement()" data-page-node-id="o99CBFMmPR0q7hKIs3d9ve">保存并更新纪要</button></div></div></div>
+<div class="modal-mask" id="modalSupplement" data-page-node-id="61f49LsdnJbtwy6rXzINvY"><div class="modal" style="min-width:580px;" data-page-node-id="6U6mhBGkMEDoKSTt9oegRl"><div class="modal-header" data-page-node-id="wR7DzGlP0BCdZQ4GlwFnpT">要素补充与修改<span class="modal-close" onclick="tryCloseSupplement()" data-page-node-id="a6yKwIxWi62VCMlkXvwzSF">×</span></div><div class="modal-body" data-page-node-id="SjcdKw3Am5iLWMmTdesQpO"><div class="sup-mode-tabs" data-page-node-id="kLhE0Jw6SmmuAkXeApnpUH"><div class="sup-mode-tab active" data-mode="ai" onclick="switchSupMode('ai')" data-page-node-id="4HioqmuPwUyVo0ht1y7qhs"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="b2Bd8KzETWqXp8mGEcckdo"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" data-page-node-id="ZqXEElOSo7wbV7LhKravo4"></path></svg>一句话生成<span class="hot-badge" data-page-node-id="vJLG8ZwbV1uHrFTRopurkh">推荐</span></div><div class="sup-mode-tab" data-mode="manual" onclick="switchSupMode('manual')" data-page-node-id="FPwVA5jUOyB3WV2sVlEOcu"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="XdDi9mSDgcRhFpsKRqgqE8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" data-page-node-id="JWSSzSQduFtnqd6GqJt1dM"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="vZLqmy1LIL3IcA8U57WHN5"></path></svg>手动填写</div></div><div id="supModeAI" data-page-node-id="eMGrAzToT8zDtcisD40wVM"><div class="ai-input-area" data-page-node-id="SzWhOBY5mC6vvRlzXboy8g"><div class="ai-input-header" data-page-node-id="a3FDTbkjzjBELHygkWeYAG"><span class="ai-tag-inline" data-page-node-id="vgD2a0Zq6V5SyVtVEogDXS"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="tejysQh0PyzZhWHWAgIzFk"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" data-page-node-id="pnCU6BMTv6v0FWS9UfzWId"></path></svg>AI</span>用一句话描述会议基本情况，智能体将自动补齐要素</div><textarea class="ai-input-textarea" id="aiSentence" placeholder="例如：今天上午9点半在第一会议室，李主任主持召开办公室工作例会，王副主任、张处长、赵科长参加，张秘书做记录"></textarea><div class="ai-example-title" data-page-node-id="mkDEdn1YKikA52BmY02xUY">您也可以点击以下常用示例快速填入：</div><div class="ai-examples" id="aiExamples" data-page-node-id="mUVaPrweasnvxJdpb6ML3h"><span class="ai-example" onclick="useExample(0)">今天上午9点半在第一会议室，李主任主持召开办公室工作例会，王副主任、张处长、赵科...</span><span class="ai-example" onclick="useExample(1)">2026年7月13日上午9:30，第一会议室，李主任主持，出席：王副主任、张处长...</span><span class="ai-example" onclick="useExample(2)">刚才在三楼会议室开的会，李主任主持，办公室全体人员参加</span></div><div class="ai-btn-row" data-page-node-id="KHie7izGjUWoCnkD6fDzVc"><div class="ai-btn-hint" data-page-node-id="O7oueqcnUU5PbZacvOGrmp"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;" data-page-node-id="NZd1XGTm3M8ZwTMqIoqAVl"><circle cx="12" cy="12" r="10" data-page-node-id="7bExH1iLRXF3EnZEoIaTWG"></circle><line x1="12" y1="16" x2="12" y2="12" data-page-node-id="rWRQZxCxE6gryX5X5sAV6G"></line><line x1="12" y1="8" x2="12.01" y2="8" data-page-node-id="pqfeevqG66FXVyaozgQLkD"></line></svg>可识别：时间 / 地点 / 主持人 / 出席人员 / 记录人</div><button class="btn btn-primary btn-sm" onclick="aiParse()" data-page-node-id="X4Cd9IOLqx4mhS9FBQLkUC"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" data-page-node-id="B3lNlOjYfrUSzfMpVcWeQF"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" data-page-node-id="FbzIYyCFzR8ozdxmycTEPB"></polygon></svg>智能识别</button></div></div><div class="ai-parse-result" id="aiParseResult" data-page-node-id="Op1DP7jhuIsFLY9lTl91eo"><div class="ai-parse-header" data-page-node-id="cS6R1DWkXExl7Aet9RhjyE"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="MwdETBOphUnDhtLpOaLDGo"><polyline points="20 6 9 17 4 12" data-page-node-id="kTiB1n2Swfi8mJOFZVVHEI"></polyline></svg>AI 识别结果，请确认后保存</div><div class="ai-parse-grid" id="aiParseGrid" data-page-node-id="1bGJu1C6CLvIKGdzDQugQ3"></div><div class="ai-parse-tip" id="aiParseMissTip" data-page-node-id="ovY711Ju1oJhwNZbPQgr5I"></div><div class="ai-parse-footer" data-page-node-id="AAbrWfEJHi1dtgVfXjqY5a"><span style="color:var(--text-tip);" data-page-node-id="xjpIsifcwIOWOfZ37tZlPd">识别不准？</span><a href="javascript:void(0);" style="color:var(--primary);" onclick="switchSupMode('manual')" data-page-node-id="JOMvXLeXZBBjULrvO1Jush">切换到手动填写</a>&nbsp;或&nbsp;<a href="javascript:void(0);" style="color:var(--primary);" onclick="aiReset()" data-page-node-id="Qvucdxw6GU8FYTIEO9LCWl">重新描述</a></div></div></div><div id="supModeManual" class="hidden" data-page-node-id="0LwZrc2HKHYi4W51M8te1q"><div style="color:var(--text-tip);margin-bottom:14px;font-size:12px;" data-page-node-id="lnyFEzxr60qFYUpwyXBd3N">请补充或修正会议基本要素，保存后将自动更新至详细版纪要</div><div class="form-item" data-page-node-id="zYGtKPQh9LqOww3VChyiAz"><label class="form-label required" data-page-node-id="VaL9lBOtEDK7QnDt8ye4GG">会议时间</label><input type="datetime-local" class="form-input" id="supMeetingTime" data-page-node-id="UI0gLihyyrOcn5UugtEVml"><div class="form-error" id="err-supMeetingTime" data-page-node-id="c75l2I5QDNYH8caGvEyXdK"></div></div><div class="form-item" data-page-node-id="MCZITEk9AlKvbe3D3PCcZr"><label class="form-label" data-page-node-id="xnTgJonwnXm5yEoPEs5Drs">会议地点</label><input type="text" class="form-input" id="supMeetingPlace" placeholder="例如：第一会议室" data-page-node-id="ow6255ntt3FCsFPpnrBUDc"></div><div class="form-item" data-page-node-id="jrs6DRaUeaA3XnjNAljBMG"><label class="form-label" data-page-node-id="aNkacjgRQ0uN49lHBq88Ch">主持人</label><input type="text" class="form-input" id="supHost" placeholder="例如：李主任" data-page-node-id="sfEC1E1kVefPDgONxKq2Oo"></div><div class="form-item" data-page-node-id="xr3f2Ae3FADUbkotddbkTO"><label class="form-label" data-page-node-id="BXG0J2Gbknw1Da8Qne66Y4">出席人员 <span class="form-tip" data-page-node-id="9sNKe6AYlBkkmA3lxrcK6J">多人以顿号分隔</span></label><input type="text" class="form-input" id="supAttendees" placeholder="例如：李主任、王副主任、张处长、赵科长" data-page-node-id="2rkcqqLGRpSm8pxiEii63t"></div><div class="form-item" data-page-node-id="feiyXRs7nx60exTPAVyE9Z"><label class="form-label" data-page-node-id="NaKFsfjwGXmwzgtepmvHgq">列席人员</label><input type="text" class="form-input" id="supObservers" placeholder="如有列席人员，请填写" data-page-node-id="UOqw82kFeiVy7l7y99lD8Q"></div><div class="form-item" data-page-node-id="hNCrE6OFLy33A9BrG7XigI"><label class="form-label" data-page-node-id="sXtUnAA3M2631lM70yHSA4">记录人</label><input type="text" class="form-input" id="supRecorder" placeholder="例如：张秘书" data-page-node-id="Kg419UyXhgazZA4uU3W4oz"></div><div class="form-item" data-page-node-id="mtC9HVKU8sweHALWg9MFwd"><label class="form-label" data-page-node-id="bXSp1ptHf1KHU4LIUN9qUk">备注说明</label><textarea class="form-textarea" id="supRemark" placeholder="如需补充说明的信息"></textarea></div></div></div><div class="modal-footer" data-page-node-id="erZ6oqg19aq9gXfzQrS6Zu"><button class="btn btn-default" onclick="tryCloseSupplement()" data-page-node-id="5KVufzoqYsX8DjizcGRpyW">取消</button><button class="btn btn-primary" onclick="saveSupplement()" data-page-node-id="o99CBFMmPR0q7hKIs3d9ve">保存并更新纪要</button></div></div></div>
 
 <!-- 弹窗：编辑取消 -->
 <div class="modal-mask" id="modalEditCancel" data-page-node-id="gVxLDCSUr1gEoSSAu2X4vd"><div class="modal" data-page-node-id="LodLOugQH1xZVDHJ4C3TtX"><div class="modal-header" data-page-node-id="nX5gkk29916JW2PJfV0L9G">放弃编辑？<span class="modal-close" onclick="hideModal('modalEditCancel')" data-page-node-id="jGs9NgtQRMGEo3Wf39QRAy">×</span></div><div class="modal-body" data-page-node-id="oTKDcDgHvy0iSr5C7djN86"><div style="text-align:center;" data-page-node-id="XLyzfLoSHonS5L8COoPKd2">当前编辑内容尚未保存，是否放弃修改？</div></div><div class="modal-footer" data-page-node-id="7HBjfmlhXSAwkFaqKiR6Je"><button class="btn btn-default" onclick="hideModal('modalEditCancel')" data-page-node-id="zcNXP5aJNa16B9WpCcqtPX">继续编辑</button><button class="btn btn-danger" onclick="confirmCancelEdit()" data-page-node-id="WM2RVDEJZlbG7WnfM3xzSO">放弃修改</button></div></div></div>
@@ -882,7 +827,7 @@
 <div class="modal-mask" id="modalTemplate" data-page-node-id="jbk4c7TjYzlvcOmFsZDgU9"><div class="modal" style="min-width:560px;max-width:680px;" data-page-node-id="CHcq7URnZPIgN7HhSPHKGO"><div class="modal-header" data-page-node-id="Mi2f88dtotYOuuacMfYbOs">纪要模板预览<span class="modal-close" onclick="hideModal('modalTemplate')" data-page-node-id="6C4X5lXZGaQeDSLq25HyNp">×</span></div><div class="modal-body" data-page-node-id="5BXIfL3nBHwyivPmpVg6kE"><div style="margin-bottom:12px;font-size:12px;color:var(--text-tip);" data-page-node-id="ZsoMyJicth2mweA9I0BaZr">可在下方切换查看各类模板结构，选中模板将作为生成依据。</div><div style="margin-bottom:12px;" data-page-node-id="Il4xwXDFjez48pCOcaY8UH"><select class="form-select" id="templatePreviewSelect" onchange="renderTemplatePreview()" style="max-width:300px;" data-page-node-id="K0LXW5iFEfMnC9oMpVeWEp"><option value="auto" data-page-node-id="c0ZztS0c4yxAmwx0rffrFv">智能匹配（推荐）</option><option value="1" data-page-node-id="chIw9k4r1iQOFvLgelMTRk">工作例会标准模板</option><option value="2" data-page-node-id="xC6rfOupNVl3B9vK3H4fb6">专题协调会议模板</option><option value="3" data-page-node-id="FV2r2YdN3kAUhWmFaGsjjF">项目推进会议模板</option><option value="4" data-page-node-id="1skxJNOEqoHJeeQNyMY8hz">部门会商模板</option></select></div><div id="templatePreviewContent" style="background:#fafbfc;border:1px solid var(--border-light);border-radius:6px;padding:16px;max-height:420px;overflow-y:auto;font-size:13px;line-height:1.9;" data-page-node-id="fwuA8h9EAoLKUshlZiIAH7"></div></div><div class="modal-footer" data-page-node-id="BRE9EMWAPD0nEW2ONZofO7"><button class="btn btn-default" onclick="hideModal('modalTemplate')" data-page-node-id="wKDA54GSsCRSMiQGpu5Yqn">关闭</button><button class="btn btn-primary" onclick="applyTemplatePreview()" data-page-node-id="F3QpQcQutdwYdqgkgqiWBv">使用该模板</button></div></div></div>
 
 <!-- 弹窗：使用说明 -->
-<div class="modal-mask" id="modalHelp" data-page-node-id="wvywsaCC0mxDHlmlbGce18"><div class="modal" style="min-width:560px;max-width:600px;" data-page-node-id="S9b10jEjDIxdE5XWbYKJjw"><div class="modal-header" data-page-node-id="ZkFOUyrvBJt652y0mDuspm">使用说明<span class="modal-close" onclick="hideModal('modalHelp')" data-page-node-id="c0TDsqvmz7RFG4S4lTjtJG">×</span></div><div class="modal-body" data-page-node-id="CgoMMIjiRHZSzDEGZpSywx"><div style="line-height:1.9;" data-page-node-id="EHHq78yxYAvaJIsyCx0pYr"><div style="color:var(--text-main);font-weight:500;margin-bottom:8px;" data-page-node-id="djSf0WYWju9GX6mJASClBE">使用步骤：</div><ol style="padding-left:20px;color:var(--text-sub);" data-page-node-id="xLOyQcKBKRhJGzYR1jZLpi"><li data-page-node-id="YCvXJAK2x9QJ5TaEOiaIlE"><b style="color:var(--text-main);" data-page-node-id="WjBc5QM0VQwdHZPJf5HMst">上传会议资料：</b>录音（自动转写）、转写文本文件或直接粘贴文本，可附加方案材料辅助</li><li data-page-node-id="Aa3x8xmfh8gAzwCikUX18C"><b style="color:var(--text-main);" data-page-node-id="CQj18JEGKncVBH5GAtW0HY">确认推荐信息：</b>智能体基于转写内容推荐会议名称、类型、纪要模板，可修改并查看模板；会议类型支持自定义</li><li data-page-node-id="YuMZmuGumTJOuXf2mW3zr0"><b style="color:var(--text-main);" data-page-node-id="DDHczLmTBy6Ay9e2CXh9X9">选择保密级别：</b>选择后点击「开始智能生成」</li><li data-page-node-id="eqbI0j0NlECSVUVuekbC3u"><b style="color:var(--text-main);" data-page-node-id="C6fF3cbFdb24jW8a42tDv5">生成纪要：</b>系统生成议题结论、待办事项、详细版与概览版纪要</li><li data-page-node-id="liZajHbsp2KdECkfzeZEdv"><b style="color:var(--text-main);" data-page-node-id="Ap9GgDedpCqTlhtUotT7qt">要素补充：</b><b data-page-node-id="ykFx0Up3aP0ZPauSU7JFcl">推荐使用「一句话生成」</b>快速补齐会议要素</li><li data-page-node-id="rUCavDLNvBTdgMqBoe7U8N"><b style="color:var(--text-main);" data-page-node-id="KAiTkOayW5gPGjy8KB7NuD">说话人标记：</b>在转写文本中标记说话人身份，自动同步</li><li data-page-node-id="1DSC9bP01nXNZmqXtnWvKv"><b style="color:var(--text-main);" data-page-node-id="zmBGJNmm2V1vCQokZbGSsS">内容编辑：</b>纪要全文、待办任务内容与时限均可在线编辑</li></ol><div style="margin-top:14px;padding:10px 12px;background:var(--primary-lighter);border-radius:4px;color:var(--text-sub);" data-page-node-id="cAAWUkV0HA2fm9oQMGa3C6"><b style="color:var(--primary);" data-page-node-id="BkLJV4lj4aGCCz5r3h4cIf">无感处理：</b>系统自动切分大文件与长录音，保证上下文完整，全程透明无感知</div></div></div><div class="modal-footer" data-page-node-id="etA1fTJjhWHtuZ0zPFtAoN"><button class="btn btn-primary" onclick="hideModal('modalHelp')" data-page-node-id="TGYM1ebQU6RbTRHwBWDTLc">我知道了</button></div></div></div>
+<div class="modal-mask" id="modalHelp" data-page-node-id="wvywsaCC0mxDHlmlbGce18"><div class="modal" style="min-width:560px;max-width:600px;" data-page-node-id="S9b10jEjDIxdE5XWbYKJjw"><div class="modal-header" data-page-node-id="ZkFOUyrvBJt652y0mDuspm">使用说明<span class="modal-close" onclick="hideModal('modalHelp')" data-page-node-id="c0TDsqvmz7RFG4S4lTjtJG">×</span></div><div class="modal-body" data-page-node-id="CgoMMIjiRHZSzDEGZpSywx"><div style="line-height:1.9;" data-page-node-id="EHHq78yxYAvaJIsyCx0pYr"><div style="color:var(--text-main);font-weight:500;margin-bottom:8px;" data-page-node-id="djSf0WYWju9GX6mJASClBE">使用步骤：</div><ol style="padding-left:20px;color:var(--text-sub);" data-page-node-id="xLOyQcKBKRhJGzYR1jZLpi"><li data-page-node-id="YCvXJAK2x9QJ5TaEOiaIlE"><b style="color:var(--text-main);" data-page-node-id="WjBc5QM0VQwdHZPJf5HMst">上传会议资料：</b>录音（自动转写）或直接粘贴文本，可附加方案材料辅助</li><li data-page-node-id="Aa3x8xmfh8gAzwCikUX18C"><b style="color:var(--text-main);" data-page-node-id="CQj18JEGKncVBH5GAtW0HY">确认推荐信息：</b>智能体基于转写内容推荐会议名称、类型、纪要模板，可修改并查看模板；会议类型支持自定义</li><li data-page-node-id="YuMZmuGumTJOuXf2mW3zr0"><b style="color:var(--text-main);" data-page-node-id="DDHczLmTBy6Ay9e2CXh9X9">选择保密级别：</b>选择后点击「开始智能生成」</li><li data-page-node-id="eqbI0j0NlECSVUVuekbC3u"><b style="color:var(--text-main);" data-page-node-id="C6fF3cbFdb24jW8a42tDv5">生成纪要：</b>系统生成议题结论、待办事项、详细版与概览版纪要</li><li data-page-node-id="liZajHbsp2KdECkfzeZEdv"><b style="color:var(--text-main);" data-page-node-id="Ap9GgDedpCqTlhtUotT7qt">要素补充：</b><b data-page-node-id="ykFx0Up3aP0ZPauSU7JFcl">推荐使用「一句话生成」</b>快速补齐会议要素</li><li data-page-node-id="rUCavDLNvBTdgMqBoe7U8N"><b style="color:var(--text-main);" data-page-node-id="KAiTkOayW5gPGjy8KB7NuD">说话人标记：</b>在转写文本中标记说话人身份，自动同步</li><li data-page-node-id="1DSC9bP01nXNZmqXtnWvKv"><b style="color:var(--text-main);" data-page-node-id="zmBGJNmm2V1vCQokZbGSsS">内容编辑：</b>纪要全文、待办任务内容与时限均可在线编辑</li></ol><div style="margin-top:14px;padding:10px 12px;background:var(--primary-lighter);border-radius:4px;color:var(--text-sub);" data-page-node-id="cAAWUkV0HA2fm9oQMGa3C6"><b style="color:var(--primary);" data-page-node-id="BkLJV4lj4aGCCz5r3h4cIf">无感处理：</b>系统自动切分大文件与长录音，保证上下文完整，全程透明无感知</div></div></div><div class="modal-footer" data-page-node-id="etA1fTJjhWHtuZ0zPFtAoN"><button class="btn btn-primary" onclick="hideModal('modalHelp')" data-page-node-id="TGYM1ebQU6RbTRHwBWDTLc">我知道了</button></div></div></div>
 
 <!-- Toast -->
 <div class="toast" id="toast" data-page-node-id="A1vmLVz3ej6v9XmZATMrhV"></div>
@@ -891,7 +836,7 @@
 <script>
 /* ========================================================
    会议纪要智能生成智能体 v5
-   新增：材料上传 / 历史筛选 / 说话人标记同步 / 无感处理 / 内容编辑(含修改历史)
+   新增：历史筛选 / 说话人标记同步 / 无感处理 / 内容编辑(含修改历史)
    ======================================================== */
 
 /* ==================== 全局数据 ==================== */
@@ -904,11 +849,12 @@ let historyData = [
     { id: 'h6', title: '数字政府建设推进会', time: '06-28 14:30', dateStr: '2026-06-28', type: '项目推进会议', status: 'done' }
 ];
 
-const uploadFiles = { audio: null, text: null, paste: null, material: [] };
+const uploadFiles = { audio: null, paste: null, file: null };
 let uploadMode = null;
 let currentSecretLevel = '0';
 let progressTimer = null;
 let audioUploadTimer = null;
+let fileUploadTimer = null;
 
 const transcriptData = [
     { id: 1, para: 1, speakerId: 'sp1', speaker: '说话人1', timeStr: '00:00:15', startSec: 15, text: '好，同志们，我们现在开始今天的工作例会。今天的会议主要有三项议题：一是2026年上半年工作总结与下半年工作安排；二是政务信息化项目推进情况汇报；三是干部培训工作方案研究。下面我们进入第一项议题。' },
@@ -1133,18 +1079,6 @@ function bindEvents() {
         });
     });
 
-    // 附加材料区拖拽（独立绑定，不在 upload-panel 内）
-    const attachArea = document.getElementById('attachUploadArea');
-    if (attachArea) {
-        attachArea.addEventListener('dragover', e => { e.preventDefault(); attachArea.classList.add('dragover'); });
-        attachArea.addEventListener('dragleave', () => attachArea.classList.remove('dragover'));
-        attachArea.addEventListener('drop', e => {
-            e.preventDefault();
-            attachArea.classList.remove('dragover');
-            simulateUpload('material');
-        });
-    }
-
     document.getElementById('progressBar').addEventListener('click', e => {
         const rect = e.currentTarget.getBoundingClientRect();
         const percent = (e.clientX - rect.left) / rect.width;
@@ -1176,34 +1110,20 @@ function switchResultTab(tabName) {
 function simulateUpload(type) {
     if (type === 'audio') {
         if (uploadFiles.audio) { showToast('单次仅可上传 1 个录音文件，请先删除现有文件'); return; }
-        if (uploadFiles.text) { showToast('已上传转写文本，请先删除再上传录音'); return; }
         if (uploadFiles.paste) { showToast('已存在粘贴文本，请先删除再上传录音'); return; }
+        if (uploadFiles.file) { showToast('已上传会议文件，请先删除文件再上传录音'); return; }
         startAudioUploadProgress();
-        return;
-    }
-    if (type === 'text') {
-        if (uploadFiles.text) { showToast('单次仅可上传 1 个文本文件，请先删除现有文件'); return; }
-        if (uploadFiles.audio) { showToast('已上传录音，请先删除再上传文本'); return; }
-        if (uploadFiles.paste) { showToast('已存在粘贴文本，请先删除再上传文本文件'); return; }
-        uploadFiles.text = { name: `会议转写文稿_${new Date().toISOString().slice(0,10)}.docx`, meta: (Math.random() * 500 + 100).toFixed(0) + ' KB · 约 12,000 字' };
-        renderFileList('text');
-        showToast('文件上传成功');
-        uploadMode = 'text';
-        updateMainActionBtn();
         return;
     }
     if (type === 'paste') {
         // 切换页签时不重复提示
         return;
     }
-    if (type === 'material') {
-        const name = `会议材料${uploadFiles.material.length + 1}.pdf`;
-        uploadFiles.material.push({ name, meta: (Math.random() * 5 + 1).toFixed(1) + ' MB' });
-        // 自动展开附加区，让用户看到已上传材料
-        const wrap = document.querySelector('.attach-material');
-        if (wrap && !wrap.classList.contains('expanded')) wrap.classList.add('expanded');
-        renderFileList('material');
-        showToast('材料已上传，将辅助优化识别');
+    if (type === 'file') {
+        if (uploadFiles.file) { showToast('单次仅可上传 1 个文件，请先删除现有文件'); return; }
+        if (uploadFiles.audio) { showToast('已上传录音，请先删除录音再上传文件'); return; }
+        if (uploadFiles.paste) { showToast('已存在粘贴文本，请先删除再上传文件'); return; }
+        startFileUploadProgress();
         return;
     }
 }
@@ -1236,17 +1156,36 @@ function startAudioUploadProgress() {
     }, 150);
 }
 
+/* 文档上传：无感处理 - 进度条完成后自动提取文本 */
+function startFileUploadProgress() {
+    const fileName = `会议文稿_${new Date().toISOString().slice(0,10)}.docx`;
+    const progress = document.getElementById('fileProgress');
+    const bar = document.getElementById('fileProgressBar');
+    progress.classList.add('show');
+    let pct = 0;
+    if (fileUploadTimer) clearInterval(fileUploadTimer);
+    fileUploadTimer = setInterval(() => {
+        pct += Math.random() * 12 + 5;
+        if (pct >= 100) {
+            pct = 100;
+            clearInterval(fileUploadTimer);
+            bar.style.width = '100%';
+            setTimeout(() => {
+                progress.classList.remove('show');
+                bar.style.width = '0%';
+                uploadFiles.file = { name: fileName, meta: (Math.random() * 3 + 0.5).toFixed(1) + ' MB · 文本已自动提取' };
+                renderFileList('file');
+                showToast('文件上传成功，已自动提取文本内容');
+                uploadMode = 'file';
+                updateMainActionBtn();
+            }, 300);
+        }
+        bar.style.width = pct + '%';
+    }, 150);
+}
+
 function renderFileList(type) {
     const list = document.getElementById(`fileList-${type}`);
-    if (type === 'material') {
-        if (uploadFiles.material.length === 0) {
-            list.innerHTML = '';
-        } else {
-            list.innerHTML = uploadFiles.material.map((f, i) => `<div class="file-item"><div class="file-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div><div class="file-item-name">${escapeHtml(f.name)}</div><div class="file-item-meta">${f.meta}</div><span class="file-item-tag aux">辅助材料</span><span class="file-item-remove" onclick="removeFile('material', ${i})">删除</span></div>`).join('');
-        }
-        updateAttachCount();
-        return;
-    }
     if (type === 'paste') {
         if (!uploadFiles.paste) { list.innerHTML = ''; return; }
         const f = uploadFiles.paste;
@@ -1258,49 +1197,24 @@ function renderFileList(type) {
     list.innerHTML = `<div class="file-item"><div class="file-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div><div class="file-item-name">${escapeHtml(f.name)}</div><div class="file-item-meta">${f.meta}</div><span class="file-item-tag primary">主材料</span><span class="file-item-remove" onclick="removeFile('${type}')">删除</span></div>`;
 }
 
-/* ==================== 粘贴文本 ==================== */
-function focusPasteTextarea() {
-    const area = document.getElementById('pasteArea');
-    const ta = document.getElementById('pasteTextarea');
-    if (uploadFiles.paste) { showToast('已有确认的粘贴文本，如需修改请先删除'); return; }
-    area.classList.add('has-content');
-    updatePasteUI();
-    setTimeout(() => ta.focus(), 0);
-}
-
+/* ==================== 粘贴文本（直接输入框） ==================== */
 function onPasteInput() {
     const ta = document.getElementById('pasteTextarea');
-    document.getElementById('pasteArea').classList.add('has-content');
     updatePasteUI(ta.value);
-}
-
-function onPasteBlur() {
-    const ta = document.getElementById('pasteTextarea');
-    // 未输入内容且未确认时，恢复引导态
-    if (!ta.value.trim() && !uploadFiles.paste) {
-        document.getElementById('pasteArea').classList.remove('has-content');
-        updatePasteUI();
-    }
 }
 
 function updatePasteUI(text) {
     const ta = document.getElementById('pasteTextarea');
     const val = (text !== undefined ? text : ta.value) || '';
-    const bar = document.getElementById('pasteStatusBar');
     const count = document.getElementById('pasteCount');
-    if (val.length > 0) {
-        bar.style.display = 'flex';
-        count.innerHTML = `已输入 <b>${val.length.toLocaleString()}</b> 字` + (val.length < 50 ? ' · 至少 50 字方可确认' : '');
-    } else {
-        bar.style.display = 'none';
-    }
+    count.innerHTML = `已输入 <b>${val.length.toLocaleString()}</b> 字` + (val.length > 0 && val.length < 50 ? ' · 至少 50 字方可确认' : '');
 }
 
 function confirmPasteText() {
     const ta = document.getElementById('pasteTextarea');
     const val = ta.value.trim();
     if (uploadFiles.audio) { showToast('已上传录音，请先删除录音再使用粘贴文本'); return; }
-    if (uploadFiles.text) { showToast('已上传转写文本文件，请先删除后再粘贴文本'); return; }
+    if (uploadFiles.file) { showToast('已上传会议文件，请先删除文件再使用粘贴文本'); return; }
     if (uploadFiles.paste) { showToast('粘贴文本已确认，无需重复操作'); return; }
     if (!val) { showToast('请先粘贴或输入会议文本内容'); return; }
     if (val.length < 50) { showToast('文本内容过短（至少 50 字），请检查是否粘贴完整'); return; }
@@ -1319,49 +1233,25 @@ function clearPasteText() {
     if (uploadFiles.paste) {
         uploadFiles.paste = null;
         renderFileList('paste');
-        if (!uploadFiles.audio && !uploadFiles.text) uploadMode = null;
+        if (!uploadFiles.audio && !uploadFiles.file) uploadMode = null;
         updateMainActionBtn();
         showToast('已清空粘贴文本');
     }
 }
 
-/* 附加材料折叠与计数 */
-function toggleAttachMaterial() {
-    const wrap = document.querySelector('.attach-material');
-    if (!wrap) return;
-    wrap.classList.toggle('expanded');
-}
-
-function updateAttachCount() {
-    const el = document.getElementById('attachCount');
-    if (!el) return;
-    const n = uploadFiles.material.length;
-    el.textContent = n > 0 ? n : '';
-}
-
 function removeFile(type, idx) {
-    if (type === 'material') {
-        uploadFiles.material.splice(idx, 1);
-    } else {
-        uploadFiles[type] = null;
-        if (type === 'audio' && audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
-        if (type === 'paste') {
-            // 清空粘贴输入区并恢复引导态
-            const ta = document.getElementById('pasteTextarea');
-            if (ta) ta.value = '';
-            const area = document.getElementById('pasteArea');
-            if (area) area.classList.remove('has-content');
-            updatePasteUI();
-        }
+    uploadFiles[type] = null;
+    if (type === 'audio' && audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
+    if (type === 'file' && fileUploadTimer) { clearInterval(fileUploadTimer); document.getElementById('fileProgress').classList.remove('show'); }
+    if (type === 'paste') {
+        // 清空粘贴输入区并恢复引导态
+        const ta = document.getElementById('pasteTextarea');
+        if (ta) ta.value = '';
+        updatePasteUI();
     }
     renderFileList(type);
-    if (!uploadFiles.audio && !uploadFiles.text && !uploadFiles.paste) {
+    if (!uploadFiles.audio && !uploadFiles.paste && !uploadFiles.file) {
         uploadMode = null;
-        document.body.classList.remove('bridge-has-source', 'bridge-audio-source', 'bridge-text-source', 'bridge-paste-source');
-        const sourceStepTitle = document.getElementById('sourceStepTitle');
-        if (sourceStepTitle) sourceStepTitle.textContent = '上传会议资料';
-        const sourceNote = document.getElementById('conversationSourceNote');
-        if (sourceNote) sourceNote.remove();
     }
     updateMainActionBtn();
     showToast('文件已删除');
@@ -1380,7 +1270,7 @@ function updateMainActionBtn() {
     txt.textContent = uploadMode === 'audio' ? '开始转写文本' : '开始智能生成';
 }
 
-/* 主操作入口：录音→转写标记视图；转写文本/粘贴文本→直接生成 */
+/* 主操作入口：录音→转写标记视图；上传文件/粘贴文本→直接生成 */
 function mainAction() {
     if (!uploadMode) { showToast('请先上传会议资料'); return; }
     // 校验填写
@@ -1439,18 +1329,12 @@ function enterTranscribeView() {
     const tplSel = document.getElementById('template');
     const tplText = tplSel.value === 'auto' ? '智能匹配（推荐）' : (tplSel.options[tplSel.selectedIndex] ? tplSel.options[tplSel.selectedIndex].text : '智能匹配');
     const secretText = document.getElementById('secret').options[document.getElementById('secret').selectedIndex].text;
-    // 辅助材料列表（如已上传）
-    let materialHtml = '';
-    if (uploadFiles.material.length > 0) {
-        materialHtml = `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-light);"><b style="color:var(--text-main);">辅助材料：</b>${uploadFiles.material.map(f => escapeHtml(f.name)).join('、')}</div>`;
-    }
     document.getElementById('transcribeInfoSummary').innerHTML = `
         <div><b style="color:var(--text-main);">会议名称：</b>${escapeHtml(document.getElementById('meetingName').value.trim())}</div>
         <div><b style="color:var(--text-main);">会议类型：</b>${escapeHtml(typeText)}</div>
         <div><b style="color:var(--text-main);">纪要模板：</b>${escapeHtml(tplText)}</div>
         <div><b style="color:var(--text-main);">保密级别：</b>${escapeHtml(secretText)}</div>
         <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border-light);color:var(--text-tip);">上传文件：${escapeHtml(uploadFiles.audio ? uploadFiles.audio.name : '')}</div>
-        ${materialHtml}
     `;
     // 渲染说话人筛选项与转写文本
     renderTranscribeSpeakerFilter();
@@ -1572,22 +1456,20 @@ function updateSecretHint() {
 }
 
 function startGenerate() {
-    if (!uploadFiles.audio && !uploadFiles.text && !uploadFiles.paste) { showToast('请先上传会议录音、转写文本或粘贴文本'); return; }
+    if (!uploadFiles.audio && !uploadFiles.paste && !uploadFiles.file) { showToast('请先上传会议录音、会议文件或粘贴文本'); return; }
     const name = document.getElementById('meetingName').value.trim();
     if (!name) { showToast('请填写会议名称'); document.getElementById('meetingName').focus(); return; }
     if (!validateMeetingType()) return;
     currentSecretLevel = document.getElementById('secret').value;
-    notifyConversationTask('progress', { stage:'正在识别会议议题与结论', progress:55 });
     switchView('viewProgress');
     runProgress();
 }
 
 function runProgress() {
-    const hasMaterial = uploadFiles.material.length > 0;
-    const matLog = hasMaterial ? ['已关联会议方案/材料，作为辅助信息参与生成...'] : [];
+    if (progressTimer) clearInterval(progressTimer);
     // 生成阶段统一4步：议题结论→待办抽取→详细版→概览版（转写已在上传后前置完成）
     const steps = [
-        { text: '正在进行议题与结论智能提取', logs: [...matLog, '文本分段与议题边界识别...','大模型分析各段落主旨...','智能命名核心议题...','提炼各议题结论与决议...'] },
+        { text: '正在进行议题与结论智能提取', logs: ['文本分段与议题边界识别...','大模型分析各段落主旨...','智能命名核心议题...','提炼各议题结论与决议...'] },
         { text: '正在抽取待办事项与责任主体', logs: ['扫描行动导向语句...','提取任务内容...','识别责任主体...','识别时限...','关联转写文本来源位置...'] },
         { text: '正在生成标准纪要（详细版）', logs: ['匹配政务纪要模板...','应用密级标识：' + secretLevelMap[currentSecretLevel].name + '...','要素自动填充至模板...','语言润色与正式化处理...'] },
         { text: '正在生成概览纪要（概览版）', logs: ['提取核心结论...','筛选关键待办任务...','生成精炼摘要文本...','详细版+概览版双版本同步输出...'] }
@@ -1618,20 +1500,10 @@ function runProgress() {
                 renderTodos();
                 renderTranscript();
                 switchResultTab('detailed');
-                document.body.classList.add('bridge-result-ready');
-                notifyConversationTask('complete', {
-                    title: document.getElementById('meetingName').value.trim() || '会议纪要',
-                    version: 1,
-                    topicCount: topicsData.length || 3,
-                    conclusionCount: topicsData.reduce((sum, item) => sum + (item.conclusions || []).length, 0) || 9,
-                    todoCount: todosData.length || 6,
-                    missingCount: todosData.filter(item => !item.owner || !item.deadline).length
-                });
             }, 800);
             return;
         }
         const step = steps[stepIdx];
-        notifyConversationTask('progress', { stage:step.text, progress:55 + Math.round((stepIdx / steps.length) * 40) });
         document.getElementById('progressStepText').textContent = step.text;
         if (logIdx < step.logs.length) { appendLog(step.logs[logIdx], 'info'); logIdx++; }
         else {
@@ -1668,7 +1540,7 @@ function updateResultHeader() {
     document.getElementById('topResultName').textContent = name;
     document.getElementById('topResultDesc').textContent = typeText + ' · 生成结果';
     document.getElementById('docMeetingName').textContent = name;
-    const tabLabelMap = { audio: '转写文本', text: '已转写文本', paste: '粘贴文本' };
+    const tabLabelMap = { audio: '转写文本', paste: '粘贴文本', file: '上传文档' };
     document.getElementById('transcriptTabLabel').textContent = tabLabelMap[uploadMode] || '文本内容';
     const secEl = document.getElementById('resultSecretLevel');
     const level = currentSecretLevel;
@@ -1721,15 +1593,14 @@ function cancelGenerate() { showModal('modalCancel'); }
 function confirmCancel() { if (progressTimer) clearInterval(progressTimer); hideModal('modalCancel'); switchView('viewCreate'); showToast('已取消生成'); }
 
 function resetForm() {
-    uploadFiles.audio = null; uploadFiles.text = null; uploadFiles.paste = null; uploadFiles.material = [];
+    uploadFiles.audio = null; uploadFiles.paste = null; uploadFiles.file = null;
     uploadMode = null;
     if (audioUploadTimer) { clearInterval(audioUploadTimer); document.getElementById('audioProgress').classList.remove('show'); }
-    renderFileList('audio'); renderFileList('text'); renderFileList('material'); renderFileList('paste');
+    if (fileUploadTimer) { clearInterval(fileUploadTimer); document.getElementById('fileProgress').classList.remove('show'); }
+    renderFileList('audio'); renderFileList('paste'); renderFileList('file');
     // 重置粘贴输入区
     const pasteTa = document.getElementById('pasteTextarea');
     if (pasteTa) pasteTa.value = '';
-    const pasteArea = document.getElementById('pasteArea');
-    if (pasteArea) pasteArea.classList.remove('has-content');
     updatePasteUI();
     document.getElementById('meetingName').value = '';
     document.getElementById('meetingType').value = '';
@@ -2112,7 +1983,7 @@ function renderTranscript() {
         }).join('');
     } else {
         const labelEl = document.getElementById('textOnlyLabel');
-        if (labelEl) labelEl.textContent = uploadMode === 'paste' ? '粘贴文本' : '已转写文本';
+        if (labelEl) labelEl.textContent = uploadMode === 'file' ? '上传文档' : '粘贴文本';
         document.getElementById('paraTotal').textContent = transcriptData.length;
         list.innerHTML = transcriptData.map(line => `<div class="transcript-line" data-id="${line.id}"><div class="transcript-meta"><span class="transcript-para-num">第 ${line.para} 段</span></div><div class="transcript-text">${escapeHtml(line.text)}</div></div>`).join('');
     }
@@ -2128,7 +1999,7 @@ function showExport() {
     document.getElementById('exportSecretWarn').style.display = currentSecretLevel === '2' ? 'block' : 'none';
     document.getElementById('exportInternalWarn').style.display = currentSecretLevel === '1' ? 'block' : 'none';
     const label = document.getElementById('exportTranscript').parentNode;
-    const labelMap = { audio: '转写文本', text: '已转写文本', paste: '粘贴文本' };
+    const labelMap = { audio: '转写文本', paste: '粘贴文本', file: '上传文档' };
     label.lastChild.textContent = labelMap[uploadMode] || '转写文本';
     showModal('modalExport');
 }
@@ -2371,162 +2242,6 @@ function escapeHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 </script>
-<script>
-/* 对话任务桥：同一任务在对话和会议纪要工作台之间共享来源、状态与成果。 */
-let conversationTaskContext = null;
-const WORKBENCH_CONTEXT_PREFIX = 'JBAI_WORKBENCH_CONTEXT_V1:';
-const WORKBENCH_EVENT_KEY = 'JBAI_WORKBENCH_EVENT_V1';
 
-function bridgeTaskIdFromUrl() {
-    try { return new URLSearchParams(window.location.search).get('taskId') || ''; } catch (error) { return ''; }
-}
 
-function bridgeHostWindows() {
-    const targets = [];
-    if (window.parent && window.parent !== window) targets.push(window.parent);
-    if (window.opener && window.opener !== window && !window.opener.closed && !targets.includes(window.opener)) targets.push(window.opener);
-    return targets;
-}
-
-function bridgePersistEvent(data) {
-    try { localStorage.setItem(WORKBENCH_EVENT_KEY, JSON.stringify({ ...data,nonce:Date.now() + '-' + Math.random().toString(36).slice(2,7) })); } catch (error) {}
-}
-
-function notifyConversationTask(eventName, payload) {
-    if (!conversationTaskContext) return;
-    const data = { type:'JBAI_WORKBENCH_TASK_EVENT',event:eventName,taskId:conversationTaskContext.taskId,...(payload || {}) };
-    bridgeHostWindows().forEach(target => { try { target.postMessage(data, '*'); } catch (error) {} });
-    bridgePersistEvent(data);
-}
-
-function bridgeReturnToConversation() {
-    notifyConversationTask('return', {});
-    if (window.opener && window.opener !== window && !window.opener.closed) {
-        try { window.opener.focus(); } catch (error) {}
-        setTimeout(() => { try { window.close(); } catch (error) {} }, 80);
-    }
-}
-
-function bridgeAnnounceReady() {
-    const data = { type:'JBAI_WORKBENCH_READY',targetAgentId:'meeting',taskId:bridgeTaskIdFromUrl() };
-    bridgeHostWindows().forEach(target => { try { target.postMessage(data, '*'); } catch (error) {} });
-}
-
-function bridgeRestoreStoredContext() {
-    const taskId = bridgeTaskIdFromUrl();
-    if (!taskId) return false;
-    try {
-        const saved = JSON.parse(localStorage.getItem(WORKBENCH_CONTEXT_PREFIX + taskId) || 'null');
-        if (saved && saved.targetAgentId === 'meeting') { bridgeHydrateMeeting(saved); return true; }
-    } catch (error) {}
-    return false;
-}
-
-function bridgeMeetingTitle(context) {
-    const sources = (context.sources || []).filter(name => name && !/本次对话输入内容|待补充/.test(name));
-    let base = sources[0] || '';
-    base = base.replace(/\.[^.]+$/, '').replace(/(?:会议)?(?:录音|转写稿|转写文本|议程|材料)$/g, '').replace(/[\-_]+$/g, '').trim();
-    if (!base || base.length < 4) base = '江北新区数字政府建设项目推进会';
-    return /纪要$/.test(base) ? base : `${base}会议纪要`;
-}
-
-function bridgeAddSourceNote(context) {
-    const header = document.querySelector('#viewCreate .welcome-header');
-    if (!header || document.getElementById('conversationSourceNote')) return;
-    const names = (context.sources || []).length ? context.sources : ['本次对话输入内容'];
-    const note = document.createElement('div');
-    note.id = 'conversationSourceNote';
-    note.className = 'conversation-source-note';
-    note.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg><span><b>已从当前对话接入 ${names.length} 份材料</b>，无需重复上传；如需更换，可删除当前主材料后重新选择。</span>`;
-    header.insertAdjacentElement('afterend', note);
-}
-
-function bridgeInstallReturnActions() {
-    const actions = document.querySelector('#viewResult .result-actions');
-    if (actions && !actions.querySelector('.bridge-return-btn')) {
-        const button = document.createElement('button');
-        button.className = 'btn btn-default bridge-return-btn';
-        button.type = 'button';
-        button.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>返回对话';
-        button.onclick = bridgeReturnToConversation;
-        actions.prepend(button);
-    }
-    const footer = document.querySelector('#modalSuccess .modal-footer');
-    if (footer) footer.innerHTML = '<button class="btn btn-default" onclick="bridgeReturnToConversation()">返回对话</button><button class="btn btn-primary" onclick="hideModal(\'modalSuccess\')">查看成果</button>';
-}
-
-function bridgeHydrateMeeting(context) {
-    if (!context || context.targetAgentId !== 'meeting') return;
-    if (conversationTaskContext && conversationTaskContext.taskId === context.taskId && document.body.classList.contains('bridge-context-ready')) return;
-    conversationTaskContext = context;
-    document.body.classList.add('conversation-task', 'bridge-context-ready', 'bridge-has-source');
-    const sourceStepTitle = document.getElementById('sourceStepTitle');
-    if (sourceStepTitle) sourceStepTitle.textContent = '确认会议材料';
-    bridgeAddSourceNote(context);
-    bridgeInstallReturnActions();
-
-    const names = (context.sources || []).filter(Boolean);
-    const audioIndex = names.findIndex(name => /\.(mp3|wav|m4a|aac|flac|ogg|wma|amr)$/i.test(name));
-    const textIndex = names.findIndex(name => /\.(doc|docx|txt|pdf)$/i.test(name));
-    let usedIndex = -1;
-    if (audioIndex >= 0) {
-        usedIndex = audioIndex;
-        uploadFiles.audio = { name:names[audioIndex],meta:'已从当前对话接入 · 等待转写' };
-        uploadMode = 'audio';
-        renderFileList('audio');
-        document.body.classList.add('bridge-audio-source');
-        document.querySelector('.upload-tab[data-tab="audio"]')?.click();
-    } else if (textIndex >= 0) {
-        usedIndex = textIndex;
-        uploadFiles.text = { name:names[textIndex],meta:'已从当前对话接入 · 内容可解析' };
-        uploadMode = 'text';
-        renderFileList('text');
-        document.body.classList.add('bridge-text-source');
-        document.querySelector('.upload-tab[data-tab="text"]')?.click();
-    } else {
-        usedIndex = names.length ? 0 : -1;
-        const sourceName = names[0] || '本次对话输入内容';
-        uploadFiles.paste = { name:sourceName,meta:'已从当前对话接入 · 内容可解析',chars:String(context.text || '').length };
-        uploadMode = 'paste';
-        renderFileList('paste');
-        document.body.classList.add('bridge-paste-source');
-        document.querySelector('.upload-tab[data-tab="paste"]')?.click();
-    }
-    uploadFiles.material = names.filter((_, index) => index !== usedIndex).map(name => ({ name,meta:'已从当前对话接入' }));
-    renderFileList('material');
-    if (uploadFiles.material.length) document.querySelector('.attach-material')?.classList.add('expanded');
-
-    document.getElementById('meetingName').value = context.resultTitle || bridgeMeetingTitle(context);
-    document.getElementById('meetingType').value = '3';
-    if (typeof onMeetingTypeChange === 'function') onMeetingTypeChange();
-    document.getElementById('template').value = '3';
-    document.getElementById('secret').value = '0';
-    updateMainActionBtn();
-    notifyConversationTask('progress', { stage:'材料已载入，等待确认会议信息',progress:100 });
-
-    if (context.resumeToResult) {
-        currentSecretLevel = '0';
-        switchView('viewResult');
-        updateResultHeader();
-        applySecretLevel();
-        renderTodos();
-        renderTranscript();
-        switchResultTab('detailed');
-        document.body.classList.add('bridge-result-ready');
-    }
-}
-
-window.addEventListener('message', function (event) {
-    const data = event.data;
-    if (!data || data.type !== 'JBAI_WORKBENCH_CONTEXT' || !data.payload || data.payload.targetAgentId !== 'meeting') return;
-    bridgeHydrateMeeting(data.payload);
-});
-
-window.addEventListener('DOMContentLoaded', function () {
-    bridgeRestoreStoredContext();
-    bridgeAnnounceReady();
-    setTimeout(bridgeAnnounceReady, 500);
-});
-</script>
-</body>
-</html>
+</body></html>

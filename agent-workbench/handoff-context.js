@@ -117,6 +117,10 @@
     var data = event.data || {};
     if (data.type !== "JBAI_WORKBENCH_CONTEXT" || !data.payload) return;
     var payload = data.payload;
+    if (payload.targetAgentId === "interpret" && typeof window.JBAIInterpretWorkbenchLoad === "function") {
+      window.JBAIInterpretWorkbenchLoad(payload);
+      return;
+    }
     fillByLabels(payload.structuredValues || {});
     if (!applyNoticeResult(payload)) renderInFlowResult(payload);
   });
