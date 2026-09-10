@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="Aq0lQQ0mB2oerqjPkl5HK9" data-dm-ref="1"><head><style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head><body data-page-node-id="CVnOACZJHZPwW5I7oVRZ1G" style="position: relative;">﻿
+<html lang="zh-CN" data-page-node-id="Aq0lQQ0mB2oerqjPkl5HK9" data-dm-ref="1" style=""><head><style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head><body data-page-node-id="CVnOACZJHZPwW5I7oVRZ1G" style="position: relative;">﻿
 
 
 <meta charset="UTF-8" data-page-node-id="Buyn6fUPbWTPxssMoFbgTN">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="G7LzSdFGC6Wq7uGFFTq08w">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="G7LzSdFGC6Wq7uGFFTq08w"><title data-page-node-id="yUNicLDOY0TCuflBpobYR9" data-pnid-children="pmfINVxPpw4N5908fBnP3s" style="-webkit-user-drag:none !important;margin:0;padding:0;box-sizing:border-box;animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important">智能政务PPT助手</title>
 <title>智能政务PPT助手</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="MLPAutJLvjj0BYuffaVRkJ">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" data-page-node-id="711ac8apApiMpg1WEFwo7y">
@@ -1194,17 +1194,16 @@ input, textarea, select { font-family: inherit; outline: none; }
 .file-action-btn:hover { background: var(--gray-100); color: var(--navy-600); }
 .file-action-btn.delete:hover { color: var(--red-gov); background: #fef2f2; }
 
-/* 底部提交栏 */
+/* 底部提交栏（透明容器，仅承载按钮） */
 .s1-footer {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 8px;
   padding: 6px 14px;
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   flex-shrink: 0;
 }
 .s1-footer-info {
@@ -1910,26 +1909,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   justify-content: center;
 }
 
-/* ========== 屏幕7: 初版预览与对话优化页 ========== */
-.intent-parse-panel {
-  background: var(--navy-50); border-radius: var(--radius-md);
-  padding: 10px 12px; margin-bottom: 8px;
-  border: 1px solid var(--navy-100);
-}
-.intent-parse-steps {
-  display: flex; align-items: center; gap: 6px;
-}
-.intent-step {
-  flex: 1; background: var(--card); border-radius: var(--radius-sm);
-  padding: 6px 8px; border: 1px solid var(--border-light);
-}
-.intent-step-label { font-size: 10px; color: var(--text-tertiary); margin-bottom: 2px; }
-.intent-step-value { font-size: 11px; color: var(--navy-700); font-weight: 500; }
-.intent-cat {
-  padding: 1px 6px; border-radius: 3px;
-  background: var(--gold-pale); color: var(--gold); font-size: 10px;
-}
-.intent-step-arrow { font-size: 12px; color: var(--gray-300); }
+/* ========== 屏幕7: 初版预览页 ========== */
 #screen-7 {
   display: flex;
   flex-direction: column;
@@ -2214,7 +2194,7 @@ input, textarea, select { font-family: inherit; outline: none; }
 }
 .s4-body {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr;
   gap: 0;
   flex: 1;
   overflow: hidden;
@@ -2353,197 +2333,6 @@ input, textarea, select { font-family: inherit; outline: none; }
   padding: 8px 6px 4px;
 }
 
-/* 右侧对话面板 */
-.chat-panel {
-  display: flex;
-  flex-direction: column;
-  background: var(--card);
-  border-left: 1px solid var(--border);
-  overflow: hidden;
-}
-.chat-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(19,168,168,.18);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, rgba(10,53,115,.92), rgba(14,76,146,.88));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(10,53,115,.18), inset 0 0 24px rgba(19,168,168,.08);
-  position: relative;
-}
-.chat-header::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--ai-cyan), var(--ai-green), transparent);
-  opacity: .6;
-}
-.chat-title {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.chat-title .icon { color: var(--ai-cyan); }
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.chat-msg {
-  display: flex;
-  gap: 10px;
-  animation: slideIn .4s var(--ease-out);
-}
-.chat-msg.user { flex-direction: row-reverse; }
-.msg-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.chat-msg.user .msg-avatar {
-  background: var(--navy-600);
-  color: #fff;
-}
-.chat-msg.system .msg-avatar {
-  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
-  color: #fff;
-  box-shadow: var(--ai-glow);
-}
-.msg-content {
-  max-width: 75%;
-}
-.msg-bubble {
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  line-height: 1.6;
-  animation: msgBubbleIn .4s var(--ease-out) both;
-}
-.chat-msg.user .msg-bubble {
-  background: linear-gradient(135deg, var(--ai-blue), var(--navy-600));
-  color: #fff;
-  border-bottom-right-radius: 4px;
-  animation: slideInRight .35s var(--ease-out) both;
-}
-.chat-msg.system .msg-bubble {
-  background: var(--navy-50);
-  color: var(--text-primary);
-  border: 1px solid var(--navy-100);
-  border-bottom-left-radius: 4px;
-  animation: slideInLeft .35s var(--ease-out) both;
-}
-.msg-time {
-  font-size: 10px;
-  color: var(--text-tertiary);
-  margin-top: 4px;
-}
-.chat-msg.user .msg-time { text-align: right; }
-.chat-typing {
-  display: flex;
-  gap: 4px;
-  padding: 12px 14px;
-  background: var(--navy-50);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--navy-100);
-  width: fit-content;
-  animation: msgBubbleIn .3s var(--ease-out) both;
-}
-.chat-typing span {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--ai-cyan);
-  animation: thinkingBounce 1.4s infinite;
-}
-.chat-typing span:nth-child(2) { animation-delay: .2s; }
-.chat-typing span:nth-child(3) { animation-delay: .4s; }
-.chat-input-area {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--border);
-}
-.chat-suggestions {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-.suggestion-chip {
-  font-size: 11px;
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  color: var(--navy-600);
-  cursor: pointer;
-  transition: all .25s var(--ease-out);
-  background: var(--gray-50);
-  animation: floatUp .4s var(--ease-out) both;
-}
-.suggestion-chip:nth-child(1) { animation-delay: 0s; }
-.suggestion-chip:nth-child(2) { animation-delay: .06s; }
-.suggestion-chip:nth-child(3) { animation-delay: .12s; }
-.suggestion-chip:nth-child(4) { animation-delay: .18s; }
-.suggestion-chip:hover {
-  border-color: var(--ai-cyan);
-  background: rgba(19,168,168,.08);
-  color: var(--ai-cyan);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(19,168,168,.15);
-}
-.chat-input-wrap {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 8px 10px;
-  background: var(--gray-50);
-  transition: all .25s;
-}
-.chat-input-wrap:focus-within {
-  border-color: var(--ai-cyan);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(19,168,168,.12);
-}
-.chat-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: 13px;
-  resize: none;
-  max-height: 80px;
-  line-height: 1.5;
-  color: var(--text-primary);
-}
-.chat-input::placeholder { color: var(--gray-400); }
-.chat-send {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
-  color: #fff;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .25s var(--ease-bounce);
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(14,76,146,.2);
-}
-.chat-send:hover { transform: scale(1.1) rotate(-5deg); box-shadow: var(--ai-glow); }
-.chat-send:active { transform: scale(0.95); }
-.chat-send:disabled { background: var(--gray-300); cursor: not-allowed; box-shadow: none; }
 
 .s4-footer {
   padding: 12px 32px;
@@ -3048,18 +2837,6 @@ input, textarea, select { font-family: inherit; outline: none; }
   100% { background-position: 200% 0; }
 }
 /* ===== AI 智能体增强动效 ===== */
-@keyframes msgBubbleIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes thinkingBounce {
-  0%, 60%, 100% { opacity: .25; transform: translateY(0) scale(0.8); }
-  30% { opacity: 1; transform: translateY(-5px) scale(1.1); }
-}
-@keyframes typingCursorBlink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
 @keyframes aiGlowPulse {
   0%, 100% { box-shadow: 0 0 12px rgba(19,168,168,.2); }
   50% { box-shadow: 0 0 24px rgba(19,168,168,.45); }
@@ -3068,18 +2845,6 @@ input, textarea, select { font-family: inherit; outline: none; }
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-@keyframes floatUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(16px); }
-  to { opacity: 1; transform: translateX(0); }
 }
 
 /* ===== 无障碍：尊重 prefers-reduced-motion ===== */
@@ -3098,7 +2863,6 @@ svg { display: block; }
 @media (max-width: 1200px) {
   .s1-grid { grid-template-columns: 1fr 160px; }
   .s3-body { grid-template-columns: 1fr 400px; }
-  .s4-body { grid-template-columns: 1fr 340px; }
 }
 
 /* ========== 屏幕2: 智能内容解析页 ========== */
@@ -3393,15 +3157,6 @@ svg { display: block; }
   display: flex;
   align-items: center;
   gap: 4px;
-}
-.cc-enhanced-tag {
-  font-size: 9px;
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: #e6f2f5;
-  color: #0E4C92;
-  font-weight: 500;
-  border: 1px solid #bfe3e3;
 }
 .cc-content-point-delete {
   width: 22px; height: 22px;
@@ -3744,6 +3499,10 @@ svg { display: block; }
   color: #fff;
   background: linear-gradient(135deg, var(--navy-600), var(--navy-500));
 }
+/* 一键生成页签：金色高亮 */
+.mode-btn.mode-btn-gold.active {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+}
 .mode-btn:not(.active):hover {
   background: var(--navy-50);
   color: var(--navy-700);
@@ -3844,13 +3603,13 @@ svg { display: block; }
       <div class="brand-text" data-page-node-id="K5FU3UfwkMiFWy7jsviBqY">智能政务PPT助手</div>
     </div>
     <nav class="steps-nav mode-normal" id="stepsNav" data-page-node-id="grXxrqPNnCVlfTKi7QbmrU">
-      <div class="step-item active" data-step="1" data-page-node-id="bzV4vWPstVPFjb4L4be4u7"><div class="step-circle" data-page-node-id="xFc81x0lb7rdLIQnVx6DUl">1</div><span class="step-label" data-page-node-id="Ax0D17s8l8Yy9KcYgxHVlU">需求输入</span></div>
+      <div class="step-item done" data-step="1" data-page-node-id="bzV4vWPstVPFjb4L4be4u7"><div class="step-circle" data-page-node-id="xFc81x0lb7rdLIQnVx6DUl">1</div><span class="step-label" data-page-node-id="Ax0D17s8l8Yy9KcYgxHVlU">需求输入</span></div>
       <div class="step-connector" data-page-node-id="U0qHdHjgrW8gduknNpQOGb"></div>
       <div class="step-item step-advanced-only" data-step="2" data-page-node-id="PTI6Vjtz8byNPh4Hao77v7"><div class="step-circle" data-page-node-id="Jj8yO5EqeGBQBIrz6CosCd">2</div><span class="step-label" data-page-node-id="2myGTdX0mvdFfXOjnzBy8Q">智能解析</span></div>
       <div class="step-connector step-advanced-only" data-page-node-id="w40BlMjEW43m8YLZAEtdhm"></div>
-      <div class="step-item" data-step="3" data-page-node-id="230XAeDtCpgR2KabmhzFQn"><div class="step-circle" data-page-node-id="h9n6mbFhas7eUQrvYR8P13">2</div><span class="step-label" data-page-node-id="3p71EesUuKzPwWyFoNDk8k">大纲确认</span></div>
+      <div class="step-item done" data-step="3" data-page-node-id="230XAeDtCpgR2KabmhzFQn"><div class="step-circle" data-page-node-id="h9n6mbFhas7eUQrvYR8P13">2</div><span class="step-label" data-page-node-id="3p71EesUuKzPwWyFoNDk8k">大纲确认</span></div>
       <div class="step-connector" data-page-node-id="pSp5CRvZ8q0eD79VlD6GKc"></div>
-      <div class="step-item" data-step="6" data-page-node-id="b883kxyS7gJtiXhh8Nwa7H"><div class="step-circle" data-page-node-id="tA84DByAMu97kyIBxmHhZi">3</div><span class="step-label" data-page-node-id="1mgEi9wXOGNy4IGwselXHK">内容确认</span></div>
+      <div class="step-item active" data-step="6" data-page-node-id="b883kxyS7gJtiXhh8Nwa7H"><div class="step-circle" data-page-node-id="tA84DByAMu97kyIBxmHhZi">3</div><span class="step-label" data-page-node-id="1mgEi9wXOGNy4IGwselXHK">内容确认</span></div>
       <div class="step-connector" data-page-node-id="pU6K2RpaxzCBQsT75UT3uJ"></div>
       <div class="step-item" data-step="5" data-page-node-id="VaYtAw6nFpEH61kEuN34tF"><div class="step-circle" data-page-node-id="6u28tWGpgG50CIFIXqY4qP">4</div><span class="step-label" data-page-node-id="JG5edGfYZdR51IpgNUAAdk">模板匹配</span></div>
       <div class="step-connector" data-page-node-id="Tq9vpkWHX5aHa77z52Uuyn"></div>
@@ -3858,8 +3617,8 @@ svg { display: block; }
     </nav>
     <div class="topbar-right" data-page-node-id="wy3M5eqgHDVg9BwMhOzNEF">
       <div class="topbar-user" id="topbarUser" data-page-node-id="MdR9vaCFweAeVEAFGDGpiR">
-        <span id="topbarUserName" data-page-node-id="dCay3GMOEIaPtJcWtgJOaO">省数据局 · 张明（超管）</span>
-        <div class="user-avatar" id="topbarUserAvatar" style="background:linear-gradient(135deg,#0E4C92,#13A8A8);" data-page-node-id="ahlIZgPlwMG7UB08HldDGG">张</div>
+        
+        
         <div class="user-dropdown" id="userDropdown" style="display:none;" data-page-node-id="COrtEw8hT2un8dJYVv32Ri">
           <div class="user-dropdown-item active" data-uid="admin" onclick="switchUser('admin')" data-page-node-id="olYU9fv1UYITYvtmtiVItG">
             <div class="user-role-tag role-admin" data-page-node-id="DvecDBjvKi5AasJg8JA5ZI">超管</div>
@@ -3888,7 +3647,7 @@ svg { display: block; }
       </button>
       <div class="sidebar-tabs" data-page-node-id="ZIbGMEgWYoedd0mzTbXnkW">
         <div class="sidebar-tab" data-tab="drafts" data-page-node-id="tRwPc0puWCo4HSM5T1M7BU">
-          草稿 <span class="tab-badge" id="draftBadge" data-page-node-id="fpD0QxWQL7snqASzoEapDE">0</span>
+          草稿 <span class="tab-badge" id="draftBadge" data-page-node-id="fpD0QxWQL7snqASzoEapDE">1</span>
         </div>
         <div class="sidebar-tab active" data-tab="history" data-page-node-id="aYEn3F1hriOYOcGGlWkEdn">
           历史 <span class="tab-badge" id="historyBadge" data-page-node-id="YWJvDESYwsmEEzrt5DIEwZ">7</span>
@@ -3898,7 +3657,7 @@ svg { display: block; }
         <div class="search-wrap" data-page-node-id="Ss0QWzVR9lnw9sSuLipkmt">
           <span class="search-icon" data-page-node-id="FLnP01z8DDJaPvOAMWptLE">🔍</span>
           <input type="text" class="search-input" id="sidebarSearch" placeholder="搜索标题、模板等" oninput="applySidebarFilter()" data-page-node-id="yk7nz1PxlP0MG3dejnfgvI">
-          <span class="search-clear" id="searchClear" onclick="clearSidebarSearch()" data-page-node-id="SdBmsS4vxIKvB33BHZmXSQ">✕</span>
+          <span class="search-clear" id="searchClear" onclick="clearSidebarSearch()" data-page-node-id="SdBmsS4vxIKvB33BHZmXSQ" style="display: none;">✕</span>
         </div>
         <div class="time-filter-row" id="timeFilterRow" data-page-node-id="e2jYSpdylv6JuO1GDM9aGV">
           <span class="time-chip active" data-range="all" onclick="setSidebarTimeFilter(this)" data-page-node-id="1fygRp30zeAG32ZUCQ2yjg">全部</span>
@@ -3915,7 +3674,112 @@ svg { display: block; }
           </div>
         </div>
       </div>
-      <div class="sidebar-list" id="sidebarList" data-page-node-id="Rxp0Vv58hgbtbbXOgYiV06"><div class="sidebar-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6M16 13H8M16 17H8"></path></svg><p>暂无草稿<br>点击下方"保存当前草稿"开始</p></div></div>
+      <div class="sidebar-list" id="sidebarList" data-page-node-id="Rxp0Vv58hgbtbbXOgYiV06"><div class="date-group-label">2026-08</div><div class="history-item" data-date="2026-08-13 14:30" data-title="2026上半年数字政府建设汇报" onclick="loadHistoryPPT('h1')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">2026上半年数字政府建设汇报</div>
+        </div>
+        <div class="history-item-meta">2026-08-13 14:30</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">15页</span>
+          <span class="history-info-tag">8.6MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：2026上半年数字政府建设汇报', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="history-item" data-date="2026-08-12 09:15" data-title="放管服改革工作总结" onclick="loadHistoryPPT('h2')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">放管服改革工作总结</div>
+        </div>
+        <div class="history-item-meta">2026-08-12 09:15</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">12页</span>
+          <span class="history-info-tag">6.2MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：放管服改革工作总结', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="history-item" data-date="2026-08-10 16:00" data-title="营商环境优化政策宣讲" onclick="loadHistoryPPT('h3')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">营商环境优化政策宣讲</div>
+        </div>
+        <div class="history-item-meta">2026-08-10 16:00</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">18页</span>
+          <span class="history-info-tag">10.4MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：营商环境优化政策宣讲', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="history-item" data-date="2026-08-08 11:20" data-title="政务服务标准化建设汇报" onclick="loadHistoryPPT('h4')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">政务服务标准化建设汇报</div>
+        </div>
+        <div class="history-item-meta">2026-08-08 11:20</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">14页</span>
+          <span class="history-info-tag">7.8MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：政务服务标准化建设汇报', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="date-group-label">2026-07</div><div class="history-item" data-date="2026-07-25 10:30" data-title="2025年度政务服务年终总结" onclick="loadHistoryPPT('h5')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">2025年度政务服务年终总结</div>
+        </div>
+        <div class="history-item-meta">2026-07-25 10:30</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">22页</span>
+          <span class="history-info-tag">12.8MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：2025年度政务服务年终总结', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="history-item" data-date="2026-07-15 14:00" data-title="智慧城市建设项目阶段性报告" onclick="loadHistoryPPT('h6')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">智慧城市建设项目阶段性报告</div>
+        </div>
+        <div class="history-item-meta">2026-07-15 14:00</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">16页</span>
+          <span class="history-info-tag">9.2MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：智慧城市建设项目阶段性报告', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="date-group-label">2026-04</div><div class="history-item" data-date="2026-04-05 09:30" data-title="2026年一季度工作总结汇报" onclick="loadHistoryPPT('h7')">
+        <div class="draft-item-header">
+          <div class="history-item-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+          </div>
+          <div class="history-item-title">2026年一季度工作总结汇报</div>
+        </div>
+        <div class="history-item-meta">2026-04-05 09:30</div>
+        <div class="history-item-info">
+          <span class="history-info-tag">10页</span>
+          <span class="history-info-tag">5.6MB</span>
+          <button class="history-item-download" onclick="showToast('下载历史文件：2026年一季度工作总结汇报', 'info'); event.stopPropagation();" title="下载">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+          </button>
+        </div>
+      </div><div class="filter-empty" id="filterEmpty" style="display:none;">未找到匹配的记录</div></div>
       <div class="sidebar-footer" data-page-node-id="jNTwDSwZ18q9KEKWm5NoBf">
         <button class="sidebar-save-draft" id="saveDraftBtn" data-page-node-id="3WBhn3mn1hZdAGKKhesAZu">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="heis1fhupidE2KQS44PbWA"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" data-page-node-id="H8jdoVHJOXFxCmGaCFJ6Jq"></path><path d="M17 21v-8H7v8M7 3v5h8" data-page-node-id="z3zl2FUAx66g25JP4wOfMF"></path></svg>
@@ -3934,7 +3798,7 @@ svg { display: block; }
   <!-- 主内容 -->
   <div class="main-content" id="mainContent" data-page-node-id="RAxSPQNYbthmXf91tXMXJD">
     <!-- ====== 屏幕1: 需求输入页 ====== -->
-    <div class="screen active" id="screen-1" data-page-node-id="CtrCNxuG0bSBwetznhUjX7">
+    <div class="screen" id="screen-1" data-page-node-id="CtrCNxuG0bSBwetznhUjX7">
       <div class="s1-header" data-page-node-id="WSwL8DfCzMe26OUO1Erj76">
         <div class="s1-header-text" data-page-node-id="sMrM20UgaRyR86S3XaG6kN">
           <h1 data-page-node-id="CoKVn4b89oCTf9LziIQHjK"><span class="ai-avatar" data-page-node-id="sMHE3GLDLjSIXbqmBJ8Zgh"><span class="ai-eyes" data-page-node-id="GBQYwzOQ13EQYTTrIuCkeO"></span></span>智能政务PPT助手 — 新建PPT</h1>
@@ -3955,11 +3819,14 @@ svg { display: block; }
               <span class="mode-btn-sub" data-page-node-id="Yi0GEkz4anmTvR5DbomgJA">逐步确认 · 高精度</span>
             </div>
           </button>
+          <button class="mode-btn mode-btn-gold" data-mode="oneclick" id="modeOneClickBtn" onclick="selectMode('oneclick')" data-page-node-id="gf6IEgEkatwIVRbVmS2nmo">
+            <svg class="mode-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="YnAIiK5urHTPfTsUYgtaU5"><path d="M13 10V3L4 14h7v7l9-11h-7z" data-page-node-id="1KQjxYBNKEgRpwEBe5qall"></path></svg>
+            <div class="mode-btn-content" data-page-node-id="voizTtFBfHjW2ItJtQ7pS7b">
+              <span class="mode-btn-title" data-page-node-id="QUPFUIVwbctjE5XM4ZKphqb">一键生成</span>
+              <span class="mode-btn-sub" data-page-node-id="ByhaJRCHzkd50PD52WVjQbb">端到端 · 直达预览</span>
+            </div>
+          </button>
         </div>
-        <button class="btn btn-gold" id="oneClickBtn" style="flex-shrink:0;padding:8px 16px;font-size:13px;white-space:nowrap;" data-page-node-id="gf6IEgEkatwIVRbVmS2nmo">
-          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="YnAIiK5urHTPfTsUYgtaU5"><path d="M13 10V3L4 14h7v7l9-11h-7z" data-page-node-id="1KQjxYBNKEgRpwEBe5qall"></path></svg>
-          一键生成
-        </button>
       </div>
       <div class="s1-grid" data-page-node-id="RMtwVOowDcUvTMYJKj255r">
         <!-- 左侧 -->
@@ -3969,7 +3836,7 @@ svg { display: block; }
             <div class="theme-input-wrapper" data-page-node-id="znxgf00r4TwLD0V9MWYArk">
               <div class="theme-input-inner" data-page-node-id="6pmJ7xArHFDJfOvajFcDET">
                 <textarea class="theme-textarea" id="themeInput" placeholder="把要做PPT的文字直接粘贴到这里：会议纪要、方案介绍、汇报要点等"></textarea>
-                <div class="theme-input-footer" data-page-node-id="Iyq6QXBIUpJTqWHFmzYXCC">
+                <textarea data-page-node-id="pLnX2FcshBenff2BGH9P1D" class="theme-textarea" id="themeInput" placeholder="把要做PPT的文字直接粘贴到这里：会议纪要、方案介绍、汇报要点等" style="-webkit-user-drag:none !important;margin:0;padding:0;box-sizing:border-box;animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;font-family:" noto="" sans="" sc","pingfang="" sc","microsoft="" yahei",sans-serif;outline:none;width:100%;min-height:100px;max-height:400px;border:none;border-radius:0;font-size:14px;resize:vertical;overflow-y:auto;transition:all="" .25s;background:transparent;color:#1a202c;line-height:1.6"=""></textarea><div class="theme-input-footer" data-page-node-id="Iyq6QXBIUpJTqWHFmzYXCC">
                   <div class="char-count" data-page-node-id="IAGOITSlsMYEM7lhcu5Uv7"><span id="charCount" data-page-node-id="qGecBEdpCXhB7OzWHJwWCo">0</span> / 5000 字</div>
                 </div>
               </div>
@@ -4035,7 +3902,7 @@ svg { display: block; }
                 </div>
               </div>
             </div>
-          </div><div class="s1-footer" data-page-node-id="aSRMx8k948ftWjUknzwXIH">
+          </div><div class="s1-footer" data-page-node-id="aSRMx8k948ftWjUknzwXIH" style="">
             
             <button class="btn btn-gold btn-lg" id="submitBtn" data-page-node-id="AXrcSvtLCiTd9XDhW7l6rS">
               <span id="submitBtnText" data-page-node-id="fJWLWWVF6UMzptJtiWB32k">提交并生成</span>
@@ -4060,7 +3927,7 @@ svg { display: block; }
               <div class="file-icon pdf" data-page-node-id="sal5seVTRKGiV6lttzVOak">PDF</div>
               <div class="file-info" data-page-node-id="eQvrjug8sncs6I7IBkWxAC">
                 <div class="file-name" data-page-node-id="8vT8OlwZwpE1Gx5Ya3lKpp">数字政府建设三年规划纲要.pdf</div>
-                <div class="file-meta" data-page-node-id="T238dO5R0Td7O3PZcQvA34" style=""><br><span data-page-node-id="HgoaRn8gppGj9KcfxXqCWW">2.4MB</span> · 
+                <div class="file-meta" data-page-node-id="T238dO5R0Td7O3PZcQvA34" style=""><br data-page-node-id="fDPMBdKtTv1nTDsb2ZcOb5" style="-webkit-user-drag:none !important;margin:0;padding:0;box-sizing:border-box;animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important"><span data-page-node-id="HgoaRn8gppGj9KcfxXqCWW">2.4MB</span> · 
                   <span class="file-status" data-page-node-id="Ba6OOrajCY3DC5EUmWP8cP"><span class="dot" data-page-node-id="svSLtZ4xsDuEkDnJhXomP8"></span>已解析</span>
                 </div>
               </div>
@@ -4077,7 +3944,7 @@ svg { display: block; }
               <div class="file-icon doc" data-page-node-id="QI4HiIuTjRMLwcqvH8CfLs">DOC</div>
               <div class="file-info" data-page-node-id="gOTA84WuB8BrZmlcTfIrDe">
                 <div class="file-name" data-page-node-id="8tTVHF3K3Fc6c9SajYmJwq">上半年工作总结会议纪要.docx</div>
-                <div class="file-meta" data-page-node-id="LJbOsfvckVAz23j85ZZ63U" style=""><br><span data-page-node-id="ZK7KKBrjwBxJ2V6pgaY9XS">1.1MB</span> · 
+                <div class="file-meta" data-page-node-id="LJbOsfvckVAz23j85ZZ63U" style=""><br data-page-node-id="WgHYYAAnFCWc3mBpYbSLCC" style="-webkit-user-drag:none !important;margin:0;padding:0;box-sizing:border-box;animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important"><span data-page-node-id="ZK7KKBrjwBxJ2V6pgaY9XS">1.1MB</span> · 
                   <span class="file-status" data-page-node-id="4xhgPuw8zL5HlS6eSk3i3l"><span class="dot" data-page-node-id="Z3yN7VH7khBp5nEVosnjOY"></span>已解析</span>
                 </div>
               </div>
@@ -4169,13 +4036,82 @@ svg { display: block; }
                 <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tSSXUwntVI4p3HmeXXQvIT"><path d="M21 7v6h-6M3 17a9 9 0 019-9 9 9 0 017 3l2 2" data-page-node-id="J5wFKcoK5a3fBJdbgo5zMw"></path></svg>
                 恢复
               </button>
-              <button class="toolbar-btn" id="expandAllOutlineBtn" data-page-node-id="OsmVpR4wJyGj3Bl1o53THO">
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="pbH1VI965BlfirXkAqUFsR"><path d="M4 6h16M4 12h16M4 18h16" data-page-node-id="4l8BohmKC1zRTqDiVSVZ03"></path></svg>
-                全部展开
-              </button>
+              <button class="toolbar-btn" id="expandAllOutlineBtn" data-page-node-id="OsmVpR4wJyGj3Bl1o53THO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11l5-5 5 5M7 18l5-5 5 5"></path></svg> 全部收起</button>
             </div>
           </div>
-          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"></div>
+          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"><div class="tree-node" data-id="1" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第一章 项目背景与意义</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div><div class="node-children"><div class="tree-node" data-id="11" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">政策背景：数字中国战略部署</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="12" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">现实需求：群众办事痛点分析</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="13" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">建设目标：打造智慧政务新生态</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="2" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第二章 实施进展与成效</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div><div class="node-children"><div class="tree-node" data-id="21" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">一网通办：政务服务线上线下融合</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="22" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据共享：打破信息孤岛成效显著</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="23" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">营商环境：审批流程优化提速</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="3" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第三章 典型案例与数据</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div><div class="node-children"><div class="tree-node" data-id="31" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例一：不动产登记"一窗受理"</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="32" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例二：企业开办"半日办结"</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="4" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第四章 存在问题与不足</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div><div class="node-children"><div class="tree-node" data-id="41" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据质量与标准化有待提升</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="42" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">基层数字化能力参差不齐</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="5" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第五章 下半年工作计划</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div><div class="node-children"><div class="tree-node" data-id="51" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">深化"一网通办"全域覆盖</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="52" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">推进公共数据有序开放</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="53" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">强化网络安全保障体系</div><div class="node-actions">
+    <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+  </div></div></div></div></div></div>
         </div>
       </div>
       <div class="s2-footer" data-page-node-id="pjLWei6dreAFPwFtth4nhE">
@@ -4237,14 +4173,1125 @@ svg { display: block; }
     </div>
 
     <!-- ====== 屏幕6: 内容确认页 ====== -->
-    <div class="screen" id="screen-6" data-page-node-id="5QMNnIymMOFNFJUSig0CQl">
+    <div class="screen active" id="screen-6" data-page-node-id="5QMNnIymMOFNFJUSig0CQl">
       <div class="s3-header" data-page-node-id="2QrnFRTk9SLKFUFjHtBmEr">
         <h2 data-page-node-id="9iN8U4RYuzRVVI3ODXwhKS">内容确认</h2>
-        <p data-page-node-id="AMu7PlD3QrGBG6RGx6Dd9O">知识库内容已与大纲深度融合，请检查并编辑以下各章节标题与内容，确认无误后进入模板匹配</p>
+        
       </div>
       <div class="content-confirm-body" id="contentConfirmBody" data-page-node-id="VWrNF7l26OtEFurBBLufc2">
-        <!-- 由 renderContentConfirm() 动态渲染 -->
+    <div class="cc-summary">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>共 <strong style="color:#1890ff;">15</strong> 页 · <strong style="color:#1890ff;">8</strong> 个内容页 · <strong style="color:#1890ff;">32</strong> 条要点</span>
       </div>
+      <div style="display:flex;align-items:center;gap:4px;color:#8c8c8c;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+        所有字段均可直接点击编辑
+      </div>
+    </div>
+    
+      <div class="cc-page" data-pidx="0">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 1 页</span>
+          <span class="cc-page-badge cover">封面</span>
+          <div class="cc-page-actions">
+            
+            <button class="cc-page-action-btn" data-action="down" data-pidx="0" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="0" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="0" value="2026年上半年数字政府建设情况汇报">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="0" value="2026年半年度工作汇报">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="0" value="居中大标题 + 金色装饰线 + 省政务服务中心标识" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="0" placeholder="输入演讲备注...">各位领导，现在汇报2026年上半年数字政府建设情况汇报。本次汇报围绕2026年半年度工作汇报展开，请各位领导审阅指导。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="1">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 2 页</span>
+          <span class="cc-page-badge toc">目录</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="1" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="1" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="1" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="1" value="目录">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="1" value="本次汇报主要内容概览" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="1" data-ptidx="0">项目背景与意义</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：大纲
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="1" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="1" data-ptidx="1">实施进展与成效</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：大纲
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="1" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="1" data-ptidx="2">典型案例与数据</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：大纲
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="1" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="1" data-ptidx="3">存在问题与不足</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：大纲
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="1" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">5.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="1" data-ptidx="4">下半年工作计划</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：大纲
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="1" data-ptidx="4" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="1" value="左侧编号列表 + 右侧金色竖线装饰" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="1" placeholder="输入演讲备注...">接下来汇报的主要内容分为以下几个部分：项目背景与意义；实施进展与成效；典型案例与数据；存在问题与不足；下半年工作计划。我们将依次进行详细汇报。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="2">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 3 页</span>
+          <span class="cc-page-badge section">章节页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="2" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="2" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="2" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="2" value="项目背景与意义">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="2" value="BACKGROUND &amp; SIGNIFICANCE">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="2" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="2" placeholder="输入演讲备注...">下面进入项目背景与意义部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="3">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 4 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="3" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="3" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="3" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="3" value="政策背景">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="3" value="数字中国战略部署" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="3" data-ptidx="0">国家《数字中国建设整体布局规划》明确数字化发展方向</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：政策文件原文
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="3" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="3" data-ptidx="1">"十四五"规划提出加快数字政府建设</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：政策文件原文
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="3" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="3" data-ptidx="2">国务院推进"互联网+政务服务"系列部署</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：政策文件原文
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="3" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="3" data-ptidx="3">省委省政府将数字政府建设列入重点工程</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：会议纪要
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="3" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="3">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="3" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="3" placeholder="输入演讲备注...">本页汇报政策背景的相关内容。数字中国战略部署。主要要点包括：国家《数字中国建设整体布局规划》明确数字化发展方向；"十四五"规划提出加快数字政府建设；国务院推进"互联网+政务服务"系列部署；省委省政府将数字政府建设列入重点工程。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="4">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 5 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="4" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="4" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="4" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="4" value="现实需求">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="4" value="群众办事痛点分析" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="4" data-ptidx="0">群众办事多头跑、反复跑问题突出</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="4" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="4" data-ptidx="1">部门间数据壁垒导致"信息孤岛"</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="4" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="4" data-ptidx="2">审批流程繁琐，企业开办周期长</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="4" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="4" data-ptidx="3">线上线下服务标准不统一</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="4" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="4">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="4" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="4" placeholder="输入演讲备注...">本页汇报现实需求的相关内容。群众办事痛点分析。主要要点包括：群众办事多头跑、反复跑问题突出；部门间数据壁垒导致"信息孤岛"；审批流程繁琐，企业开办周期长；线上线下服务标准不统一。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="5">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 6 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="5" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="5" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="5" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="5" value="建设目标">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="5" value="打造智慧政务新生态" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="5" data-ptidx="0">实现政务服务"一网通办、一次办好"</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：讲话稿
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="5" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="5" data-ptidx="1">构建全省统一的数据共享交换平台</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="5" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="5" data-ptidx="2">推动营商环境进入全国第一方阵</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="5" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="5" data-ptidx="3">建成高效协同的数字政府治理体系</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：政策文件原文
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="5" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="5" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="5" placeholder="输入演讲备注...">本页汇报建设目标的相关内容。打造智慧政务新生态。主要要点包括：实现政务服务"一网通办、一次办好"；构建全省统一的数据共享交换平台；推动营商环境进入全国第一方阵；建成高效协同的数字政府治理体系。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="6">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 7 页</span>
+          <span class="cc-page-badge section">章节页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="6" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="6" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="6" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="6" value="实施进展与成效">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="6" value="PROGRESS &amp; ACHIEVEMENTS">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="6" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="6" placeholder="输入演讲备注...">下面进入实施进展与成效部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="7">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 8 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="7" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="7" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="7" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="7" value="一网通办">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="7" value="政务服务线上线下融合" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="7" data-ptidx="0">省级政务服务事项100%实现"一网通办"</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="7" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="7" data-ptidx="1">建成全省统一政务服务门户和APP</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="7" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="7" data-ptidx="2">累计办件量突破2,800万件</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="7" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="7" data-ptidx="3">群众满意度达98.6%</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="7" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="7">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="7" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="7" placeholder="输入演讲备注...">本页汇报一网通办的相关内容。政务服务线上线下融合。主要要点包括：省级政务服务事项100%实现"一网通办"；建成全省统一政务服务门户和APP；累计办件量突破2,800万件；群众满意度达98.6%。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="8">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 9 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="8" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="8" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="8" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="8" value="数据共享">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="8" value="打破信息孤岛成效显著" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="8" data-ptidx="0">归集57个省级部门共126亿条数据</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="8" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="8" data-ptidx="1">建成人口、法人、电子证照等基础库</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="8" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="8" data-ptidx="2">实现160类电子证照跨部门互认</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="8" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="8" data-ptidx="3">数据调用次数超3.2亿次</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="8" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="8">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="8" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="8" placeholder="输入演讲备注...">本页汇报数据共享的相关内容。打破信息孤岛成效显著。主要要点包括：归集57个省级部门共126亿条数据；建成人口、法人、电子证照等基础库；实现160类电子证照跨部门互认；数据调用次数超3.2亿次。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="9">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 10 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="9" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="9" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="9" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="9" value="营商环境">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="9" value="审批流程优化提速" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="9" data-ptidx="0">企业开办压缩至半个工作日</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="9" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="9" data-ptidx="1">工程建设项目审批减至60个工作日</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="9" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="9" data-ptidx="2">不动产登记实现"一窗受理、并行办理"</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="9" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="9" data-ptidx="3">"证照分离"改革覆盖全省</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：知识库 · 政策法规
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="9" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="9">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="9" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="9" placeholder="输入演讲备注...">本页汇报营商环境的相关内容。审批流程优化提速。主要要点包括：企业开办压缩至半个工作日；工程建设项目审批减至60个工作日；不动产登记实现"一窗受理、并行办理"；"证照分离"改革覆盖全省。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="10">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 11 页</span>
+          <span class="cc-page-badge section">章节页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="10" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="10" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="10" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="10" value="典型案例与数据">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="10" value="CASES &amp; DATA">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="10" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="10" placeholder="输入演讲备注...">下面进入典型案例与数据部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="11">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 12 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="11" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="11" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="11" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="11" value="存在问题">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="11" value="需要持续改进的方面" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="11" data-ptidx="0">数据质量与标准化水平有待提升</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="11" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="11" data-ptidx="1">基层数字化能力参差不齐</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="11" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="11" data-ptidx="2">部分系统整合还不够深入</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作报告草案
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="11" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="11" data-ptidx="3">网络安全防护能力需持续加强</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作规范 · 知识库
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="11" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="11">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="11" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="11" placeholder="输入演讲备注...">本页汇报存在问题的相关内容。需要持续改进的方面。主要要点包括：数据质量与标准化水平有待提升；基层数字化能力参差不齐；部分系统整合还不够深入；网络安全防护能力需持续加强。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="12">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 13 页</span>
+          <span class="cc-page-badge section">章节页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="12" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="12" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="12" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="12" value="下半年工作计划">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="12" value="WORK PLAN">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="12" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="12" placeholder="输入演讲备注...">下面进入下半年工作计划部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="13">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 14 页</span>
+          <span class="cc-page-badge content">内容页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="13" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            <button class="cc-page-action-btn" data-action="down" data-pidx="13" title="下移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path></svg></button>
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="13" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="13" value="重点任务">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明，可选）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="13" value="深化推进数字政府建设" placeholder="输入副标题...">
+          </div>
+        
+        
+          <div class="cc-field">
+            <div class="cc-field-label">内容介绍点 <span class="cc-field-hint">（本页的核心要点，可编辑/删除/添加）</span></div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">1.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="13" data-ptidx="0">深化"一网通办"全域覆盖，向基层延伸</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：讲话稿
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="13" data-ptidx="0" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">2.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="13" data-ptidx="1">推进公共数据有序开放与开发利用</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：行业术语 · 知识库
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="13" data-ptidx="1" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">3.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="13" data-ptidx="2">强化网络安全保障体系建设</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：工作规范 · 知识库
+
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="13" data-ptidx="2" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+              <div class="cc-content-point">
+                <span class="cc-content-point-num">4.</span>
+                <div style="flex:1;">
+                  <div class="cc-content-point-text" data-field="pointText" data-pidx="13" data-ptidx="3">开展数字化能力提升专项培训</div>
+                  <div class="cc-content-point-source">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"></path></svg>
+                    来源：讲话稿
+                    
+                  </div>
+                </div>
+                <button class="cc-content-point-delete" data-pidx="13" data-ptidx="3" title="删除">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            
+            <div class="cc-add-point" data-pidx="13">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+              添加要点
+            </div>
+          </div>
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="13" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="13" placeholder="输入演讲备注...">本页汇报重点任务的相关内容。深化推进数字政府建设。主要要点包括：深化"一网通办"全域覆盖，向基层延伸；推进公共数据有序开放与开发利用；强化网络安全保障体系建设；开展数字化能力提升专项培训。以上数据均来自实际工作统计，已核实确认。</textarea>
+        </div>
+      </div>
+    
+      <div class="cc-page" data-pidx="14">
+        <div class="cc-page-header">
+          <span class="cc-page-num">第 15 页</span>
+          <span class="cc-page-badge end">结束页</span>
+          <div class="cc-page-actions">
+            <button class="cc-page-action-btn" data-action="up" data-pidx="14" title="上移"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"></path></svg></button>
+            
+            <button class="cc-page-action-btn danger" data-action="delete" data-pidx="14" title="删除此页"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
+          </div>
+        </div>
+        <div class="cc-field">
+          <div class="cc-field-label">标题 <span class="cc-field-hint">（本页的主标题）</span></div>
+          <input class="cc-input" type="text" data-field="title" data-pidx="14" value="感谢各位领导指导">
+        </div>
+        
+          <div class="cc-field">
+            <div class="cc-field-label">副标题 <span class="cc-field-hint">（补充说明）</span></div>
+            <input class="cc-input" type="text" data-field="desc" data-pidx="14" value="恳请提出宝贵意见建议">
+          </div>
+        
+        
+        <div class="cc-field">
+          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
+          <input class="cc-input" type="text" data-field="format" data-pidx="14" value="居中感谢语 + 金色装饰线 + 单位落款" placeholder="描述版式...">
+        </div>
+        <div class="cc-field cc-notes-field">
+          <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
+          <textarea class="cc-notes-textarea" data-field="note" data-pidx="14" placeholder="输入演讲备注...">以上是本次汇报的全部内容。感谢各位领导指导，恳请各位领导提出宝贵意见和指导建议。谢谢大家。</textarea>
+        </div>
+      </div>
+    
+  </div>
       <div class="s3-footer" data-page-node-id="bUU0yr1SoeOWrpu05NsK8d">
         <div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;" data-page-node-id="ac78VBO6egXgWDbYyW2Yz5">
           <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gold);" data-page-node-id="fsUwU147DuCa5K9BpywYF4"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-page-node-id="OHZCDjv1nElVCqYwq9MVJu"></path></svg>
@@ -4308,112 +5355,30 @@ svg { display: block; }
           <div class="thumb-grid-view" id="gridView" style="display:none;" data-page-node-id="5qC5HF1n7XUV7YZs02TE4x"></div>
           <div class="slide-page-indicator" id="pageIndicator" data-page-node-id="Ja7awojztCKcmtUVEltDeS"></div>
         </div>
-        <!-- 右侧对话 -->
-        <div class="chat-panel" data-page-node-id="SAwJLLuAo7TP4w4JMQNIFa">
-          <div class="chat-header" data-page-node-id="oe3bM5vcx6Mr3sDVmYcyVT">
-            <div class="chat-title" data-page-node-id="UiSsCGkSvHq9rRghXyO7P7">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="R7gedqmDQozmnYaALOxpUK"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" data-page-node-id="aWyhtAdHwjwQV5E1O9QRz8"></path></svg>
-              修改建议
-            </div>
-          </div>
-          <div class="intent-parse-panel" id="intentParsePanel" data-page-node-id="efxrCM3zRKYJwJRSGx2sfD">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;" data-page-node-id="EcXFqonRZ34RzWDXTqPByk">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--navy-500)" stroke-width="2" data-page-node-id="DwgRo4KVznjtOzd0AHoH9t"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" data-page-node-id="amCCeSUzutOQFlopSwlZPK"></path></svg>
-              <span style="font-size:11px;font-weight:600;color:var(--navy-600);" data-page-node-id="geoaBO1BFNPlxiFvKHAotJ">修改意图解析 · 三级流程</span>
-            </div>
-            <div class="intent-parse-steps" data-page-node-id="IddzRe0CtcXg0DeQp9VRad">
-              <div class="intent-step" data-page-node-id="0EfAXsXDtyh5QqAldUv0CK">
-                <div class="intent-step-label" data-page-node-id="5do7r15eHkotFQwkQi5hog">① 意图分类</div>
-                <div class="intent-step-value" data-page-node-id="xx9d4mKEp0a5Wefn7jcJGf"><span class="intent-cat" data-page-node-id="QvWTWCaoyntN9sX0tGGurL">修改文字</span></div>
-              </div>
-              <div class="intent-step-arrow" data-page-node-id="E2NYJBtpnZLStFACV5WF8I">→</div>
-              <div class="intent-step" data-page-node-id="xMykyfcCGsMEQgcAFIAsUI">
-                <div class="intent-step-label" data-page-node-id="ZmcLtYpJ2AVJChFDPIHNrz">② 目标定位</div>
-                <div class="intent-step-value" data-page-node-id="8PCfgxMfTHJ5UWPgeXdkCu">封面页 · 副标题</div>
-              </div>
-              <div class="intent-step-arrow" data-page-node-id="qq6COktJUZRzGixCS8Mhzi">→</div>
-              <div class="intent-step" data-page-node-id="a9jAH35HkYPPdVgws15Fo3">
-                <div class="intent-step-label" data-page-node-id="lYS5zh0RbRhNH1SbvfE018">③ 参数提取</div>
-                <div class="intent-step-value" data-page-node-id="9x42AhkAuDAcK6SF3fneFt">"2026年半年度工作汇报"</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;" data-page-node-id="FYqyXGNr15qNG4vwaK2UGU">
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="NckiQTKKWX2vuUtB37AXHv">修改文字</span>
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="hD3ZNguVTUcDyjnmIvWXq2">调整结构</span>
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="D80C52QIzUjv6gLfgS75J9">更换格式</span>
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="d0yv81XAB80kEACdsXSHva">替换模板</span>
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="OwhhEJBJB8HFLiGwkHgtER">生成内容</span>
-              <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--navy-50);color:var(--navy-400);" data-page-node-id="CEDuj0vlzXiKTBdaCkh5UY">版本操作</span>
-            </div>
-          </div>
-          <div class="chat-messages" id="chatMessages" data-page-node-id="B79G30Kx1sGvpf3EKyiclb">
-            <div class="chat-msg user" data-page-node-id="XkznVRv03dV02lzFE8SZ4P">
-              <div class="msg-avatar" data-page-node-id="nCvxW1uyFbKfBkjGgrs4Aq">张</div>
-              <div class="msg-content" data-page-node-id="cs8evfbjQ0cj8BqGXj0jAI">
-                <div class="msg-bubble" data-page-node-id="8kj2W05KhDFAyoQfCDjxaf">请把第二章的措辞改得更正式一些，增加规范的公文表述</div>
-                <div class="msg-time" data-page-node-id="1ty2VyjGc3BHXYIahnw0vE">14:32</div>
-              </div>
-            </div>
-            <div class="chat-msg system" data-page-node-id="mfhR6RLODWwSC3S7I5z2TV">
-              <div class="msg-avatar" data-page-node-id="iUTeSUrRDcd0U86gVm65c8">AI</div>
-              <div class="msg-content" data-page-node-id="vo0efYKBvi9PfrQBnaaAu7">
-                <div class="msg-bubble" data-page-node-id="mUCjOhC1hnKdLO3bcUXgeU">已为您调整第二章"实施进展"的措辞，并补充了关于"放管服"改革的规范表述。主要修改：<br data-page-node-id="OIX7r3gZCigUsDkieNNHgB">• "搞得不错" → "取得显著成效"<br data-page-node-id="XGMGlsqkGQexycmaLvguEh">• "还在推进" → "持续深化推进"<br data-page-node-id="2oPXp2GeO0ic8SVcGGXdKi">• 补充"简政放权、放管结合、优化服务"标准表述</div>
-                <div class="msg-time" data-page-node-id="iW5XyXiySha3mo5Rg9AoiV">14:32</div>
-              </div>
-            </div>
-            <div class="chat-msg user" data-page-node-id="jkNamGWpJErEZsxRR0HIOh">
-              <div class="msg-avatar" data-page-node-id="daxDoYLzd2fOcuOeNjTv7w">张</div>
-              <div class="msg-content" data-page-node-id="UXiAEMGGxMAeodzgWcVoU6">
-                <div class="msg-bubble" data-page-node-id="DAlIxbyMpGJf2OHtMieMhe">封面页的副标题改为"2026年半年度工作汇报"</div>
-                <div class="msg-time" data-page-node-id="7nH1OZwphulFYkPgPAKDng">14:35</div>
-              </div>
-            </div>
-            <div class="chat-msg system" data-page-node-id="Z5S1n8VHvGjUOmTwDbJbBv">
-              <div class="msg-avatar" data-page-node-id="2MThEECynmxu9JnDaLpo5J">AI</div>
-              <div class="msg-content" data-page-node-id="EDlLohSXMOGcvuG4RZOBn4">
-                <div class="msg-bubble" data-page-node-id="YOOpgl9oE7aDflVwMAoU6L">已更新封面页副标题，同时调整了标题字号和间距以保持视觉平衡。左侧预览已同步刷新。</div>
-                <div class="msg-time" data-page-node-id="tmflrFl2dBHviVpwE8Cttp">14:35</div>
-              </div>
-            </div>
-          </div>
-          <div class="chat-input-area" data-page-node-id="gQlwQRUKFRNv1IcI1BIKsJ">
-            <div class="chat-suggestions" data-page-node-id="XNJhgT980qGSSy4YzUDvmN">
-              <div class="suggestion-chip" data-suggestion="将背景色更换为深蓝色" data-page-node-id="iy3tkjdySnZgZXzmpVsPV4">将背景色更换为深蓝色</div>
-              <div class="suggestion-chip" data-suggestion="增加一页数据图表" data-page-node-id="MorkfaK18dKRFxUf2d4thy">增加一页数据图表</div>
-              <div class="suggestion-chip" data-suggestion="优化第三章排版" data-page-node-id="JEQlU2p6Uf9Y5cF0dtVdUc">优化第三章排版</div>
-            </div>
-            <div class="chat-input-wrap" data-page-node-id="QiGHG8Htr41NAEfPA09yUp">
-              <textarea class="chat-input" id="chatInput" rows="1" placeholder="输入修改需求，如：将背景色更换为深蓝色"></textarea>
-              <button class="chat-send" id="chatSend" data-page-node-id="UuRaFliPsgXpdBOgcdILB3" disabled="">
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="wyTg5Wyf3TUzGpD7370VOj"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" data-page-node-id="WAwxSUVFbUdxK1wq8mlpfx"></path></svg>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
-      <div class="s4-footer" data-page-node-id="sAhrdq5p6Ei64TqYYHh0Pn">
-        <button class="btn btn-secondary" onclick="navigateTo(5)" data-page-node-id="aiwDJq54PxdPsIZcMfTMm5">
-          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="iX2m4efJThPPreWbBwzPPq"><path d="M19 12H5M12 19l-7-7 7-7" data-page-node-id="7I2x8YCPI43F3lE6X3hA8V"></path></svg>
+      <div class="s4-footer" data-page-node-id="Ft8kRmQvNp7wXcVbHd5mJnRt">
+        <button class="btn btn-secondary" onclick="navigateTo(5)" data-page-node-id="Tt3kLmNvPg9sQwErTa6nBvCx">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Bs2vNcXdUp4wQzRnWr6tYbNc"><path d="M19 12H5M12 19l-7-7 7-7" data-page-node-id="Nt5kRmWvQw8nTcVdSp3vKcXb"></path></svg>
           上一步
         </button>
-        <div style="display:flex;align-items:center;gap:12px;" data-page-node-id="SfDoFTVYuUlwnC95E30NF6">
-          <button class="s7-notes-toggle" id="s7NotesToggle" data-page-node-id="b5P06TfaBkNia79zc93F4Z">
-            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="VDInkC7T6mlm62dqCWV2JL"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="VEThgDEAND5jC4xg79Qdvj"></path><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" data-page-node-id="KcOGFCBGAHw5XTJ96Gi8um"></path></svg>
-            <span data-page-node-id="JlDfmgs9VPi5csgkN5pe4I">演讲备注</span>
+        <div style="display:flex;align-items:center;gap:12px;" data-page-node-id="Ex9kRtNwDw6nTcQvFv4kPmNw">
+          <button class="s7-notes-toggle" id="s7NotesToggle" data-page-node-id="Ar7kPmNsVe2kPmQwXz5nRtWq">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Kj3mVbXcPq7sRtNwEy5uIoPz"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="Lm4nWcYdQr8tSuOxFz6vJqRa"></path><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" data-page-node-id="Op5oXdZeRs9uTvPyGa7wKrSb"></path></svg>
+            <span data-page-node-id="Qr6pYeAfSt0vUwQzHb8xLsTc">演讲备注</span>
           </button>
-          <button class="btn btn-gold btn-lg" id="previewExportBtn" data-page-node-id="Rer4xvo1bVTHDevpp1J8Pb">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="P0g59Isghq8wSPAvTM4W2P"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" data-page-node-id="eicasrZlgJrRu4BhrxDyd5"></path></svg>
+          <button class="btn btn-gold btn-lg" id="previewExportBtn" data-page-node-id="Sw7qZfBgTu1wVxRaIc9yMtUd">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Ux8rAgChVv2xWySbJd0zNuVe"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" data-page-node-id="Vy9sBhDiWw3yXzTcKe1aOvWf"></path></svg>
             确认完成，导出PPT
           </button>
         </div>
       </div>
       <!-- 演讲备注面板（右下角弹出） -->
-      <div class="s7-notes-panel" id="s7NotesPanel" data-page-node-id="ArGnOY3PGO6oXuB2lZ1Hoh">
-        <div class="s7-notes-header" data-page-node-id="AVlFHpaGJjXRTsRBSH5qWr">
-          <span class="s7-notes-title" data-page-node-id="unhQaLfQmbneNiFvbf0VgO">演讲备注</span>
-          <span class="s7-notes-page" data-page-node-id="6OPpU5JUzexLVKu6GaASIr">第 <span id="s7NotePageNum" data-page-node-id="zForMXo79Jyi7Jjw1UJhDh">1</span> 页</span>
+      <div class="s7-notes-panel" id="s7NotesPanel" data-page-node-id="Wz0tChEjXx4yZaUdLe2bNvXg">
+        <div class="s7-notes-header" data-page-node-id="Xa1uDiFkYy5zAbVeMf3cOwYh">
+          <span class="s7-notes-title" data-page-node-id="Yb2vEjGlZz6aBcWfNg4dPxZi">演讲备注</span>
+          <span class="s7-notes-page" data-page-node-id="Zc3wFkHmAa7bCdXgOh5eQyAj">第 <span id="s7NotePageNum" data-page-node-id="Ad4xGlInBb8cDeYhPi6fRzBk">1</span> 页</span>
         </div>
-        <textarea class="s7-notes-textarea" id="s7NotesTextarea" placeholder="点击编辑本页演讲备注..."></textarea>
+        <textarea class="s7-notes-textarea" id="s7NotesTextarea" placeholder="点击编辑本页演讲备注..." data-page-node-id="Be5yHmJoCc9dEfZiQj7gSaCl"></textarea>
         <div class="s7-notes-footer" data-page-node-id="goUw0v8DbGZG07lojNWUJx">
           <span class="s7-notes-hint" data-page-node-id="2WMYzuWiB3pvPDfROqi6aT">修改自动保存</span>
         </div>
@@ -4823,7 +5788,7 @@ svg { display: block; }
 <script>
 /* ========== 全局状态 ========== */
 const state = {
-  generationMode: 'normal', // 'normal' or 'advanced'
+  generationMode: 'normal', // 'normal' | 'advanced' | 'oneclick'
   currentScreen: 1,
   outline: [
     { id: 1, title: '第一章 项目背景与意义', expanded: true, children: [
@@ -5528,42 +6493,26 @@ function selectMode(mode) {
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.mode === mode);
   });
-  
+
   const stepsNav = document.getElementById('stepsNav');
   stepsNav.classList.remove('mode-normal', 'mode-advanced');
-  stepsNav.classList.add('mode-' + mode);
-  
+  if (mode !== 'oneclick') stepsNav.classList.add('mode-' + mode);
+
   // Update submit button text
   const submitText = document.getElementById('submitBtnText');
   if (submitText) {
-    submitText.textContent = mode === 'normal' ? '提交并生成' : '提交并开始解析';
+    submitText.textContent = mode === 'normal' ? '提交并生成' : (mode === 'oneclick' ? '提交并一键生成' : '提交并开始解析');
   }
-  
+
   // Renumber steps for normal mode
   updateStepNumbers(mode);
-  
+
   // Update navigation labels for normal mode
   updateNavLabels(mode);
 }
 
 function updateStepNumbers(mode) {
-  if (mode === 'normal') {
-    // Normal mode visible steps: 1, 3, 6, 5, 7 -> renumber as 1-5
-    const normalSteps = [
-      { step: 1, num: 1 },
-      { step: 3, num: 2 },
-      { step: 6, num: 3 },
-      { step: 5, num: 4 },
-      { step: 7, num: 5 },
-    ];
-    normalSteps.forEach(({ step, num }) => {
-      const item = document.querySelector('.step-item[data-step="' + step + '"]');
-      if (item) {
-        const circle = item.querySelector('.step-circle');
-        if (circle) circle.textContent = num;
-      }
-    });
-  } else {
+  if (mode === 'advanced') {
     // Advanced mode: restore original numbers (7 steps)
     const advSteps = [
       { step: 1, num: 1 },
@@ -5574,6 +6523,22 @@ function updateStepNumbers(mode) {
       { step: 7, num: 6 },
     ];
     advSteps.forEach(({ step, num }) => {
+      const item = document.querySelector('.step-item[data-step="' + step + '"]');
+      if (item) {
+        const circle = item.querySelector('.step-circle');
+        if (circle) circle.textContent = num;
+      }
+    });
+  } else {
+    // Normal & one-click mode: same visible steps 1, 3, 6, 5, 7 -> renumber as 1-5
+    const normalSteps = [
+      { step: 1, num: 1 },
+      { step: 3, num: 2 },
+      { step: 6, num: 3 },
+      { step: 5, num: 4 },
+      { step: 7, num: 5 },
+    ];
+    normalSteps.forEach(({ step, num }) => {
       const item = document.querySelector('.step-item[data-step="' + step + '"]');
       if (item) {
         const circle = item.querySelector('.step-circle');
@@ -5601,7 +6566,8 @@ function getAdvancedModeSequence() {
 }
 
 function getActiveSequence() {
-  return state.generationMode === 'normal' ? getNormalModeSequence() : getAdvancedModeSequence();
+  if (state.generationMode === 'advanced') return getAdvancedModeSequence();
+  return getNormalModeSequence(); // normal 与 oneclick 共用简化步骤序列
 }
 
 /* Normal mode AI processing animation */
@@ -5683,10 +6649,15 @@ function showNormalProcessing() {
 document.getElementById('submitBtn').addEventListener('click', () => {
   if (state.generationMode === 'normal') {
     showNormalProcessing();
+  } else if (state.generationMode === 'oneclick') {
+    startOneClickGeneration();
   } else {
     showProgress();
   }
 });
+
+/* 一键生成：端到端生成动画（原 oneClickBtn 独立按钮逻辑迁移至此） */
+function startOneClickGeneration() {
 
 function showProgress() {
   const overlay = document.getElementById('progressOverlay');
@@ -5736,8 +6707,7 @@ function showProgress() {
   steps[0].classList.add('active');
 }
 
-// 一键生成按钮
-document.getElementById('oneClickBtn').addEventListener('click', () => {
+// 一键生成（入口已合并为第三个生成模式页签，由 startOneClickGeneration 调用）
   const oneClickSteps = [
     { name: '智能解析中...', start: 0, end: 12 },
     { name: '大纲生成中...', start: 12, end: 26 },
@@ -5835,7 +6805,7 @@ document.getElementById('oneClickBtn').addEventListener('click', () => {
       }, 800);
     }
   }, 50);
-});
+}
 
 /* ========== 屏幕2: 智能内容解析 ========== */
 const parseTabData = {
@@ -6695,14 +7665,12 @@ function renderContentConfirm() {
   });
   const contentPages = data.filter(p => p.type === 'content');
   const totalPoints = contentPages.reduce((sum, p) => sum + (p.points ? p.points.length : 0), 0);
-  const enhancedCount = contentPages.reduce((sum, p) => sum + (p.points ? p.points.filter(pt => pt.enhanced).length : 0), 0);
 
   body.innerHTML = `
     <div class="cc-summary">
       <div style="display:flex;align-items:center;gap:8px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span>共 <strong style="color:#1890ff;">${data.length}</strong> 页 · <strong style="color:#1890ff;">${contentPages.length}</strong> 个内容页 · <strong style="color:#1890ff;">${totalPoints}</strong> 条要点</span>
-        ${enhancedCount > 0 ? `<span style="margin-left:8px;padding:2px 8px;border-radius:4px;background:#e6f2f5;color:#0E4C92;font-size:11px;font-weight:500;border:1px solid #bfe3e3;">知识库增强 ${enhancedCount} 条</span>` : ''}
       </div>
       <div style="display:flex;align-items:center;gap:4px;color:#8c8c8c;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -6746,7 +7714,6 @@ function renderContentConfirm() {
                   <div class="cc-content-point-source">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2zM4 7l8 6 8-6"/></svg>
                     来源：${point.source}
-                    ${point.enhanced ? '<span class="cc-enhanced-tag">知识库增强</span>' : ''}
                   </div>
                 </div>
                 <button class="cc-content-point-delete" data-pidx="${pi}" data-ptidx="${pti}" title="删除">
@@ -7635,195 +8602,6 @@ function renderThumbGrid() {
     grid.appendChild(mini);
   });
 }
-
-// 对话功能
-const chatInput = document.getElementById('chatInput');
-const chatSend = document.getElementById('chatSend');
-const chatMessages = document.getElementById('chatMessages');
-
-function sendMessage(text) {
-  if (!text.trim()) return;
-  
-  // 用户消息
-  const userMsg = document.createElement('div');
-  userMsg.className = 'chat-msg user';
-  const now = new Date();
-  const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  userMsg.innerHTML = `
-    <div class="msg-avatar">张</div>
-    <div class="msg-content">
-      <div class="msg-bubble">${escapeHtml(text)}</div>
-      <div class="msg-time">${time}</div>
-    </div>
-  `;
-  chatMessages.appendChild(userMsg);
-  chatInput.value = '';
-  chatInput.style.height = 'auto';
-  chatSend.disabled = true;
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  // 打字指示器
-  const typing = document.createElement('div');
-  typing.className = 'chat-msg system';
-  typing.innerHTML = `
-    <div class="msg-avatar">AI</div>
-    <div class="msg-content">
-      <div class="chat-typing"><span></span><span></span><span></span></div>
-    </div>
-  `;
-  chatMessages.appendChild(typing);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  // 模拟AI回复
-  setTimeout(() => {
-    typing.remove();
-    const response = generateAIResponse(text);
-    const sysMsg = document.createElement('div');
-    sysMsg.className = 'chat-msg system';
-    sysMsg.innerHTML = `
-      <div class="msg-avatar">AI</div>
-      <div class="msg-content">
-        <div class="msg-bubble" id="streamingBubble"></div>
-        <div class="msg-time" id="streamingTime" style="visibility:hidden;">${time}</div>
-      </div>
-    `;
-    chatMessages.appendChild(sysMsg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    // 流式逐字输出
-    const bubble = document.getElementById('streamingBubble');
-    const timeEl = document.getElementById('streamingTime');
-    let idx = 0;
-    const cursor = '<span style="display:inline-block;width:2px;height:14px;background:var(--ai-cyan);margin-left:2px;vertical-align:text-bottom;animation:typingCursorBlink .8s steps(2) infinite;"></span>';
-    const streamTimer = setInterval(() => {
-      if (idx < response.length) {
-        bubble.innerHTML = response.substring(0, idx + 1) + cursor;
-        idx++;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      } else {
-        bubble.innerHTML = response;
-        bubble.removeAttribute('id');
-        timeEl.style.visibility = 'visible';
-        timeEl.removeAttribute('id');
-        clearInterval(streamTimer);
-        chatSend.disabled = false;
-        applyChatModification(text);
-      }
-    }, 28);
-  }, 1200);
-}
-
-function generateAIResponse(text) {
-  // 更新意图解析面板
-  updateIntentParse(text);
-  if (text.includes('深蓝色') || text.includes('背景色')) {
-    state.slideBgColor = 'deep';
-    return '已将所有幻灯片背景色更换为深蓝色（靛蓝色调），封面、章节页和结语页均已同步更新。左侧预览已刷新，请查看效果。';
-  }
-  if (text.includes('图表') || text.includes('数据')) {
-    return '已为您在"实施进展"章节后新增一页数据图表页，包含办件量趋势柱状图和满意度对比图。左侧预览已同步更新。';
-  }
-  if (text.includes('排版') || text.includes('第三章')) {
-    return '已优化第三章排版：调整了要点间距、统一了字号层级，并将列表项左侧色条改为渐变样式，视觉层次更清晰。';
-  }
-  if (text.includes('正式') || text.includes('措辞')) {
-    return '已调整措辞为更正式的公文表述：<br>• "搞得不错" → "取得显著成效"<br>• "还在推进" → "持续深化推进"<br>• 补充"简政放权、放管结合、优化服务"标准表述';
-  }
-  if (text.includes('副标题')) {
-    return '已更新封面页副标题，同时微调了标题字号和间距以保持视觉平衡。左侧预览已同步刷新。';
-  }
-  return `已收到您的修改需求"${text}"，正在智能处理中。左侧预览已同步更新，请查看修改效果。如需进一步调整请继续告诉我。`;
-}
-
-function updateIntentParse(text) {
-  if (!text) return;
-  const panel = document.getElementById('intentParsePanel');
-  if (!panel) return;
-  let cat = '修改文字', target = '全文', param = text.substring(0, 20);
-  if (text.includes('背景') || text.includes('颜色') || text.includes('深蓝')) {
-    cat = '更换格式'; target = '全部页面 · 背景色'; param = '深蓝色（#0f2942）';
-  } else if (text.includes('图表') || text.includes('增加') || text.includes('新增')) {
-    cat = '调整结构'; target = '第二章后 · 新增页面'; param = '数据图表页';
-  } else if (text.includes('排版') || text.includes('格式')) {
-    cat = '更换格式'; target = '第三章 · 版式'; param = '间距+字号层级优化';
-  } else if (text.includes('正式') || text.includes('措辞') || text.includes('文字')) {
-    cat = '修改文字'; target = '第二章 · 正文措辞'; param = '公文规范表述';
-  } else if (text.includes('副标题') || text.includes('标题')) {
-    cat = '修改文字'; target = '封面页 · 副标题'; param = '"' + text.replace(/.*副标题/, '').trim() + '"';
-  } else if (text.includes('模板')) {
-    cat = '替换模板'; target = '全部页面 · 模板'; param = '新模板风格';
-  } else if (text.includes('版本') || text.includes('撤销')) {
-    cat = '版本操作'; target = '全局 · 版本'; param = '回退/恢复';
-  }
-  const steps = panel.querySelector('.intent-parse-steps');
-  if (steps) {
-    steps.innerHTML = `
-      <div class="intent-step">
-        <div class="intent-step-label">① 意图分类</div>
-        <div class="intent-step-value"><span class="intent-cat">${cat}</span></div>
-      </div>
-      <div class="intent-step-arrow">→</div>
-      <div class="intent-step">
-        <div class="intent-step-label">② 目标定位</div>
-        <div class="intent-step-value">${target}</div>
-      </div>
-      <div class="intent-step-arrow">→</div>
-      <div class="intent-step">
-        <div class="intent-step-label">③ 参数提取</div>
-        <div class="intent-step-value">${escapeHtml(param)}</div>
-      </div>
-    `;
-  }
-}
-
-function applyChatModification(text) {
-  if (text.includes('深蓝色') || text.includes('背景色')) {
-    state.slideBgColor = 'deep';
-    renderSlide();
-  }
-  if (text.includes('副标题')) {
-    state.slideSubtitle = text.includes('半年度') ? '2026年半年度工作汇报' : state.slideSubtitle;
-    state.slides = generateSlides();
-    renderSlide();
-  }
-  // 其他修改通过重新渲染模拟
-  if (text.includes('图表')) {
-    // 模拟添加页面
-    renderSlide();
-  }
-  // 闪烁效果
-  const container = document.getElementById('mainSlide');
-  container.style.transition = 'opacity .3s';
-  container.style.opacity = '0.5';
-  setTimeout(() => { container.style.opacity = '1'; }, 300);
-}
-
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-chatSend.addEventListener('click', () => sendMessage(chatInput.value));
-chatInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage(chatInput.value);
-  }
-});
-chatInput.addEventListener('input', () => {
-  chatSend.disabled = !chatInput.value.trim();
-  chatInput.style.height = 'auto';
-  chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
-});
-chatSend.disabled = true;
-
-// 建议点击
-document.querySelectorAll('.suggestion-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    chatInput.value = chip.dataset.suggestion;
-    chatSend.disabled = false;
-    sendMessage(chip.dataset.suggestion);
-  });
-});
 
 /* ========== 屏幕5: 导出与下载 ========== */
 function renderExportSlide() {
