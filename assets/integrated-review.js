@@ -6,7 +6,12 @@
     { from:"确保所有隐患一次性清零", to:"推动风险隐患排查整改形成闭环", category:"内容导向", title:"政策表述存在绝对化风险", position:"正文第2段", reason:"避免使用无法客观验证的绝对化结果承诺。", file:"《政务文稿规范表述指引》", agency:"南京江北新区管理委员会办公室", clause:"第四章 规范表述要求", synced:"2026-08-19 16:20" },
     { from:"于七月十五日前", to:"于7月15日前", category:"公文要素", title:"日期数字用法不规范", position:"正文第4段", reason:"公文中的具体日期应使用阿拉伯数字。", file:"GB/T 9704—2012《党政机关公文格式》", agency:"国家质量监督检验检疫总局、国家标准化管理委员会", clause:"7.3.5.4 成文日期中的数字", synced:"2026-08-20 10:15" },
     { from:"立即上报", to:"立即报告", category:"行文规范", title:"向上行文用语不规范", position:"正文第4段", reason:"向上级机关反映情况时使用“报告”等规范表述。", file:"《党政机关公文处理工作条例》", agency:"中共中央办公厅、国务院办公厅", clause:"第二章 公文种类", synced:"2026-08-20 10:15" },
-    { from:"南京江北新区综合办公室", to:"南京江北新区管理委员会办公室", category:"机构名称", title:"落款机关名称需核实", position:"落款", reason:"发文机关和落款机关名称应与机构名录保持一致。", file:"南京江北新区机构名录", agency:"南京江北新区管理委员会", clause:"管理机构规范名称", synced:"2026-08-22 14:40" }
+    { from:"南京江北新区综合办公室", to:"南京江北新区管理委员会办公室", category:"机构名称", title:"落款机关名称需核实", position:"落款", reason:"发文机关和落款机关名称应与机构名录保持一致。", file:"南京江北新区机构名录", agency:"南京江北新区管理委员会", clause:"管理机构规范名称", synced:"2026-08-22 14:40" },
+    { from:"按照新区领导有关要求", to:"依据正式会议纪要、批示或工作部署文件补充具体来源", category:"政策依据", title:"依据表述过于笼统", position:"正文第1段", reason:"政策与制度依据应当可识别、可核验，避免使用无法追溯的笼统表述。", file:"《政务文稿规范表述指引》", agency:"南京江北新区管理委员会办公室", clause:"第二章 依据引用规范", synced:"2026-08-22 15:10" },
+    { from:"全面彻底排查", to:"全面排查", category:"简明表达", title:"同义修饰语叠加", position:"正文第2段", reason:"“全面”与“彻底”在此处语义叠加，政务行文应简明准确。", file:"《政务文稿规范表述指引》", agency:"南京江北新区管理委员会办公室", clause:"第四章 简明表达要求", synced:"2026-08-22 15:10" },
+    { from:"各单位、各有关单位", to:"各有关单位", category:"责任主体", title:"责任主体表述重复", position:"正文第4段", reason:"同一语句中的责任主体应边界明确，避免包含关系重复。", file:"江北新区机构与责任主体规范库", agency:"南京江北新区管理委员会办公室", clause:"责任主体规范称谓", synced:"2026-08-22 14:40" },
+    { from:"原则上不得晚于七月十五日之前", to:"于7月15日前", category:"时限表达", title:"完成时限条件叠加", position:"正文第4段", reason:"时间要求应明确唯一，避免“原则上”“不得晚于”“之前”等条件叠加。", file:"《党政机关公文处理工作条例》配套行文规则", agency:"中共中央办公厅、国务院办公厅", clause:"准确、简明的行文要求", synced:"2026-08-20 10:15" },
+    { from:"对整改不到位的一律严肃追责", to:"对未按要求完成整改的，依照有关规定处理", category:"法律责任", title:"追责表述缺少适用依据和程序边界", position:"正文第4段", reason:"责任追究类表述应有制度依据，并保留认定条件和程序边界。", file:"《中华人民共和国安全生产法》", agency:"全国人民代表大会常务委员会", clause:"第六章 法律责任相关规定", synced:"2026-08-20 10:00" }
   ];
 
   const esc = value => String(value == null ? "" : value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -107,13 +112,15 @@
   function issueCardsHTML() {
     const c = counts();
     if (!active.issues.length) return `<div class="review-pass-state"><span>✓</span><b>本轮未发现需要处理的合规问题</b><p>已完成文种、格式、行文规则、政策依据与机构名称检查。</p></div>`;
-    return `<div class="review-list-head"><div><b>本轮发现 ${c.total} 项问题</b><span>${c.pending ? `还有 ${c.pending} 项待处理` : "已完成本轮问题处理，可重新审查"}</span></div><button data-review-action="accept-all" ${c.pending ? "" : "disabled"}>全部采纳</button></div>
-      <div class="review-issue-list">${active.issues.map((row,index) => `<article class="review-issue-card ${row.state}" data-review-locate="${row.id}" title="点击定位原文">
+    const dimensions = new Set(active.issues.map(row => row.category)).size;
+    return `<section class="review-overview" aria-label="审查结果概览"><div><span>发现问题</span><b>${c.total}</b></div><div><span>待处理</span><b>${c.pending}</b></div><div><span>已处理</span><b>${c.accepted + c.ignored}</b></div><div><span>覆盖维度</span><b>${dimensions}</b></div></section>
+      <div class="review-list-head"><div><b>问题清单</b><span>${c.pending ? `还有 ${c.pending} 项待处理，点击卡片可定位原文` : "本轮问题已处理，可发起重新审查"}</span></div><button data-review-action="accept-all" ${c.pending ? "" : "disabled"}>全部采纳</button></div>
+      <div class="review-issue-list">${active.issues.map((row,index) => `<article class="review-issue-card ${row.state}" data-review-locate="${row.id}" data-review-category="${esc(row.category)}" title="点击定位原文">
         <span class="review-issue-index">${index+1}</span>
         <div class="review-issue-main"><header><span>${esc(row.category)}</span><b>${esc(row.title)}</b><em>${row.state==="accepted"?"已采纳":row.state==="ignored"?"已忽略":"待处理"}</em></header>
           <div class="review-compare"><div><small>原文</small><p>${esc(row.original || row.from)}</p></div><div><small>修改建议</small><p>${esc(row.suggestion || row.to)}</p></div></div>
           <p class="review-reason">${esc(row.reason)}</p>
-          <details class="review-basis"><summary>查看审查依据</summary><dl><div><dt>文件名称</dt><dd>${esc(row.file)}</dd></div><div><dt>发布机关</dt><dd>${esc(row.agency)}</dd></div><div><dt>具体条款</dt><dd>${esc(row.clause)}</dd></div><div><dt>最后同步时间</dt><dd>${esc(row.synced)}</dd></div></dl><p>原文位置：${esc(row.position)}</p></details>
+          <details class="review-basis" ${index < 2 ? "open" : ""}><summary>审查依据与原文位置</summary><dl><div><dt>文件名称</dt><dd>${esc(row.file)}</dd></div><div><dt>发布机关</dt><dd>${esc(row.agency)}</dd></div><div><dt>具体条款</dt><dd>${esc(row.clause)}</dd></div><div><dt>最后同步时间</dt><dd>${esc(row.synced)}</dd></div></dl><p>原文位置：${esc(row.position)}</p></details>
         </div>
         <div class="review-issue-actions"><button class="${row.state==="accepted"?"active":""}" data-review-action="accept" data-issue-id="${row.id}">采纳</button><button class="${row.state==="ignored"?"active":""}" data-review-action="ignore" data-issue-id="${row.id}">忽略</button></div>
       </article>`).join("")}</div>`;

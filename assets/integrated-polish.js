@@ -20,6 +20,8 @@
     { from:"要高度重视", to:"应高度重视", type:"语气规范", reason:"统一责任要求的规范表达。" },
     { from:"及时发现问题并进行整改", to:"及时发现并整改问题", type:"逻辑优化", reason:"压缩动词结构，使行动关系更清晰。" },
     { from:"积极主动地", to:"主动", type:"消除冗余", reason:"删除重复修饰语，避免口号化表达。" }
+    ,{ from:"帮助项目单位解决问题", to:"协调解决项目单位诉求", type:"政务表达", reason:"将口语化的“帮助解决问题”调整为职责边界更清晰的政务服务表述。" }
+    ,{ from:"避免问题长期搁置", to:"防止问题长期未解决", type:"表达准确", reason:"“搁置”带有主观判断，调整为可客观判断的办理状态表述。" }
   ];
 
   const esc = value => String(value == null ? "" : value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -99,7 +101,16 @@
         span.dataset.suggestion = hit.rule.to;
         span.textContent = hit.rule.to;
         fragment.append(span);
-        changes.push({ id, original:hit.rule.from, suggestion:hit.rule.to, type:hit.rule.type, reason:hit.rule.reason, state:"pending" });
+        const block = node.parentElement?.closest("h1,h2,h3,h4,p,li");
+        const paragraphs = Array.from(box.querySelectorAll("p,li"));
+        const paragraphIndex = block ? paragraphs.indexOf(block) : -1;
+        const position = block?.matches("h1,h2,h3,h4") ? "标题" : paragraphIndex >= 0 ? `正文第${paragraphIndex + 1}段` : "正文";
+        const basisMap = {
+          "文字校正":"语言文字规范库", "语句校正":"语言文字规范库", "表述规范":"政务行文规则库", "信息明确":"政务行文规则库",
+          "精简表达":"简明表达规则库", "政务表达":"政务术语库", "消除冗余":"简明表达规则库", "术语统一":"政务术语库",
+          "语气规范":"政务文书风格库", "逻辑优化":"篇章逻辑规则库", "公文表达":"公文范文库", "表达准确":"政务行文规则库"
+        };
+        changes.push({ id, original:hit.rule.from, suggestion:hit.rule.to, type:hit.rule.type, reason:hit.rule.reason, position, basis:basisMap[hit.rule.type] || "平台润色规则库", state:"pending" });
         rest = rest.slice(hit.index + hit.rule.from.length);
       }
       if (touched) { fragment.append(document.createTextNode(rest)); node.replaceWith(fragment); }
@@ -135,10 +146,11 @@
 
   function notesHTML() {
     if (!active?.changes.length) return '<div class="polish-empty"><b>当前文稿未发现可确定的语言问题</b><p>未对原文进行强制改写，避免为了产生痕迹而改变原意。</p></div>';
-    return `<div class="polish-note-list">${active.changes.map((item,index) => `<article class="polish-note-card" data-polish-locate="${item.id}" title="点击定位原文">
+    const c = changeCounts();
+    return `<section class="polish-overview" aria-label="润色结果概览"><div><span>优化建议</span><b>${c.total}</b></div><div><span>覆盖类型</span><b>${c.types}</b></div><div><span>已采纳</span><b>${active.changes.filter(item => item.state === "accepted").length}</b></div><div><span>事实保护</span><b>3</b></div></section><div class="polish-note-list">${active.changes.map((item,index) => `<article class="polish-note-card" data-polish-locate="${item.id}" title="点击定位原文">
       <span class="polish-note-number">${index + 1}</span>
       <div class="polish-note-main"><header><b>${esc(item.type)}</b><span>${item.state === "ignored" ? "已忽略" : item.state === "accepted" ? "已采纳" : "待处理"}</span></header>
-        <div class="polish-note-compare"><div><b>原文</b><br>${esc(item.original)}</div><div><b>建议</b><br>${esc(item.suggestion)}</div></div><p>${esc(item.reason)}</p></div>
+        <div class="polish-note-meta"><span>${esc(item.position)}</span><span>${esc(item.basis)}</span></div><div class="polish-note-compare"><div><b>原文</b><br>${esc(item.original)}</div><div><b>建议</b><br>${esc(item.suggestion)}</div></div><p>${esc(item.reason)}</p></div>
       <div class="polish-note-actions"><button class="${item.state === "accepted" ? "active" : ""}" data-polish-action="accept" data-change-id="${item.id}">采纳</button><button class="ignore ${item.state === "ignored" ? "active" : ""}" data-polish-action="ignore" data-change-id="${item.id}">忽略</button></div>
     </article>`).join("")}</div>`;
   }
