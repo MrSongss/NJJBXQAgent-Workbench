@@ -3992,8 +3992,11 @@ let sidebarCollapsed = false;
   function polishSourceHTML(source) {
     const lines = String(source?.text || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
     if (!lines.length) return "<p>（暂无可润色正文）</p>";
+    const isDemo = source?.type === "政务办公场景演示" || /^【政务办公场景演示文稿/.test(lines[0]);
+    if (isDemo && /^【.+】$/.test(lines[0])) lines.shift();
     const titleIndex = lines.length > 1 && lines[0].length <= 48 ? 0 : -1;
-    return lines.map((line, index) => index === titleIndex ? `<h2>${esc(line)}</h2>` : `<p>${esc(line)}</p>`).join("");
+    const notice = isDemo ? '<div class="focus-demo-notice"><b>演示文稿</b><span>以下内容仅用于体验专注模式的问题定位、采纳和版本操作，不作为正式政务文件。</span></div>' : '';
+    return notice + lines.map((line, index) => index === titleIndex ? `<h2>${esc(line)}</h2>` : `<p>${esc(line)}</p>`).join("");
   }
   function preparePolishDocument(conversationId, source) {
     const conversation = convs.find(item => item.id === conversationId);
