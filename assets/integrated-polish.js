@@ -184,8 +184,15 @@
 
   function startFromEditor(options) {
     if (running) { host()?.toast?.("全文智能润色正在处理中，请稍候。"); return false; }
-    const documentInfo = host()?.getActiveDocument?.();
+    let documentInfo = host()?.getActiveDocument?.();
     if (!documentInfo) { host()?.toast?.("请先生成或载入一份文稿。"); return false; }
+    if(options?.trigger!=="demo" && !/重点项目服务保障通知（演示文稿）/.test(documentInfo.title || "")) {
+      const text=window.JBAIPilotContent?.examples?.polish?.text;
+      const prepared=text && host()?.preparePolishDocument?.(documentInfo.conversationId,{name:"重点项目服务保障通知（演示文稿）",type:"政务办公场景演示",text});
+      if(!prepared){host()?.toast?.("演示文稿载入失败，请稍后重试。");return false;}
+      window.setTimeout(()=>startFromEditor({prompt:"使用政务通知示例进行全文润色",trigger:"demo"}),30);
+      return true;
+    }
     window.JBAIReviewPilot?.close({ silent:true });
     close({ silent:true });
     running = true; showLoading(documentInfo);
@@ -196,9 +203,11 @@
   }
 
   function start(args) {
-    const prepared = host()?.preparePolishDocument?.(args.conversationId, args.source);
+    const text=window.JBAIPilotContent?.examples?.polish?.text;
+    const source=text?{name:"重点项目服务保障通知（演示文稿）",type:"政务办公场景演示",text}:args.source;
+    const prepared = host()?.preparePolishDocument?.(args.conversationId, source);
     if (!prepared) { host()?.toast?.("未找到可润色的文稿内容。"); return false; }
-    window.setTimeout(() => startFromEditor({ prompt:args.prompt, trigger:"conversation" }), 30);
+    window.setTimeout(() => startFromEditor({ prompt:args.prompt, trigger:"demo" }), 30);
     return true;
   }
 

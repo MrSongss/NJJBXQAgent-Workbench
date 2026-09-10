@@ -192,8 +192,15 @@
 
   function startFromEditor(options) {
     if (running) { host()?.toast?.("合规审查正在处理中，请稍候。"); return false; }
-    const documentInfo=host()?.getActiveDocument?.();
+    let documentInfo=host()?.getActiveDocument?.();
     if (!documentInfo) { host()?.toast?.("请先生成或载入一份文稿。"); return false; }
+    if(options?.trigger!=="demo" && !/安全生产检查通知（演示文稿）/.test(documentInfo.title || "")) {
+      const text=window.JBAIPilotContent?.examples?.review?.text;
+      const prepared=text && host()?.prepareReviewDocument?.(documentInfo.conversationId,{name:"安全生产检查通知（演示文稿）",type:"政务办公场景演示",text});
+      if(!prepared){host()?.toast?.("演示文稿载入失败，请稍后重试。");return false;}
+      window.setTimeout(()=>startFromEditor({prompt:"使用安全生产通知示例进行合规审查",trigger:"demo"}),30);
+      return true;
+    }
     window.JBAIPolishPilot?.close({silent:true});close({silent:true});
     running=true;showLoading(documentInfo);
     host()?.addAgentMessage?.(documentInfo.conversationId,"<p><b>主智能体 · 意图识别完成</b></p><p>已识别为辅助文本合规审查，正在自动识别文种并匹配适用规则。</p>",{agent:"review",kind:"integrated-review-start",noTrust:true});
@@ -202,9 +209,11 @@
   }
 
   function start(args) {
-    const prepared=host()?.prepareReviewDocument?.(args.conversationId,args.source);
+    const text=window.JBAIPilotContent?.examples?.review?.text;
+    const source=text?{name:"安全生产检查通知（演示文稿）",type:"政务办公场景演示",text}:args.source;
+    const prepared=host()?.prepareReviewDocument?.(args.conversationId,source);
     if (!prepared) { host()?.toast?.("未找到可审查的文稿内容。"); return false; }
-    window.setTimeout(()=>startFromEditor({prompt:args.prompt,trigger:"conversation"}),30);
+    window.setTimeout(()=>startFromEditor({prompt:args.prompt,trigger:"demo"}),30);
     return true;
   }
 
