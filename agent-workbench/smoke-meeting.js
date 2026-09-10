@@ -145,6 +145,11 @@ setTimeout(() => {
     t("7.8 uploadMode 为 file", ev("uploadMode") === "file");
     t("7.9 主按钮文案为 开始智能生成", document.getElementById("mainActionText").textContent === "开始智能生成");
 
+    /* ===== 需求9：主按钮真实点击防回归（v1.9.23 修复）；需求10：v1.9.25 删除保密级别 ===== */
+    t("9.1 保密级别字段已删除（不存在#secret）", !document.getElementById("secret"));
+    t("9.2 表单三要素齐全（名称/类型/模板）", !!document.getElementById("meetingName") && !!document.getElementById("meetingType") && !!document.getElementById("template"));
+    t("9.3 页面无保密级别相关残留文案", !document.body.textContent.includes("保密级别") && !document.body.textContent.includes("密级"));
+
     // 文件路径直接生成（不进转写页）；本轮生成不取消，作为 6.x 完成态检查对象
     ev("startGenerate()");
     t("7.10 文件路径进入生成进度页", document.getElementById("viewProgress").classList.contains("active"));
@@ -158,7 +163,7 @@ setTimeout(() => {
         t("6.2 历史状态更新为 已完成", ev("historyData")[0].status === "done");
         t("6.3 结果页文本标签为 上传文档（file 路径）", document.getElementById("transcriptTabLabel").textContent === "上传文档");
         t("6.4 结果页无音频播放器（文本模式）", document.getElementById("audioPlayerBlock").classList.contains("hidden"));
-        t("6.5 待办来源列显示 段（非时间）", document.getElementById("sourceColTitle").textContent === "文本段落");
+        t("6.5 待办列表无信息来源列（v1.9.25 删除）", !document.getElementById("sourceColTitle") && !document.getElementById("todosBody").textContent.includes("信息来源"));
         t("6.6 无 JS 运行时错误", errors.length === 0);
         // file 路径生成完成后回到创建页，验证删除恢复
         ev("switchView('viewCreate')");
@@ -166,6 +171,15 @@ setTimeout(() => {
         ev("renderFileList('file')");
         click(document.querySelector("#fileList-file .file-item-remove"));
         t("7.13 删除后文件状态清空", !ev("uploadFiles").file && ev("uploadMode") === null);
+        // 主按钮真实点击防回归：上传文件 + 完整表单 + 真实 click 不抛错且进入进度页
+        ev("uploadFiles.file = { name: 'y.docx', meta: '1 MB' }; renderFileList('file'); uploadMode = 'file'; updateMainActionBtn();");
+        document.getElementById("meetingName").value = "真实点击测试";
+        ev("document.getElementById('meetingType').value = '1'; onMeetingTypeChange();");
+        document.getElementById("mainActionBtn").click();
+        t("9.4 主按钮真实点击进入进度页", document.getElementById("viewProgress").classList.contains("active"));
+        t("9.5 真实点击后无 JS 错误", errors.length === 0);
+        ev("confirmCancel()");
+        ev("switchView('viewCreate')");
         if (errors.length) console.log("ERRORS:", errors.join(" | "));
       } catch (e) { console.log("TEST_ERROR_6:", e.message); }
       console.log("RESULT:", passed, "passed,", failed, "failed");
