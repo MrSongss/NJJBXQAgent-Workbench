@@ -1411,6 +1411,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   cursor: grab;
   transition: background .2s;
   position: relative;
+  touch-action: pan-y;
 }
 .node-row:hover { background: var(--navy-50); }
 .node-row.dragging { opacity: .4; }
@@ -1484,6 +1485,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   color: var(--gray-400);
   opacity: 0;
   transition: opacity .2s, color .2s;
+  touch-action: none;
 }
 .node-row:hover .drag-handle { opacity: .6; }
 .drag-handle:hover { opacity: 1 !important; color: var(--gold); }
@@ -1507,21 +1509,25 @@ input, textarea, select { font-family: inherit; outline: none; }
   transition: max-height .3s var(--ease-out), opacity .3s;
 }
 .node-children.collapsed { max-height: 0; opacity: 0; }
-.drag-placeholder {
-  height: 2px;
-  background: var(--navy-600);
-  border-radius: 1px;
-  margin: 4px 0;
+.drag-ghost {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(15, 34, 66, .18);
+  opacity: .96;
+  animation: dndGhostPop .15s ease-out;
 }
-.drop-line {
-  height: 2px;
-  background: var(--navy-600);
-  border-radius: 1px;
-  margin: 2px 0;
-  opacity: 0;
-  transition: opacity .2s;
+.drag-ghost .node-toggle,
+.drag-ghost .node-actions { visibility: hidden; }
+@keyframes dndGhostPop {
+  from { transform: scale(.98); opacity: .55; }
+  to { transform: scale(1); opacity: .96; }
 }
-.drop-line.show { opacity: 1; }
+body.outline-dragging { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+body.outline-dragging * { cursor: grabbing !important; }
 
 .s2-footer {
   padding: 12px 32px 20px;
@@ -2953,65 +2959,6 @@ svg { display: block; }
 .keyinfo-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; display: flex; gap: 8px; }
 .keyinfo-source { display: inline-flex; align-items: center; gap: 3px; }
 
-/* 冗余过滤 */
-.filter-layer {
-  background: var(--card); border: 1px solid var(--border-light);
-  border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 12px;
-  display: flex; align-items: flex-start; gap: 16px;
-}
-.filter-layer-num {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono); font-size: 14px; font-weight: 700;
-  flex-shrink: 0;
-}
-.filter-layer-num.l1 { background: #fef2f2; color: #991b1b; }
-.filter-layer-num.l2 { background: #fffbeb; color: #92400e; }
-.filter-layer-num.l3 { background: #f0fdf4; color: #166534; }
-.filter-layer-content { flex: 1; }
-.filter-layer-title { font-size: 14px; font-weight: 600; color: var(--navy-700); margin-bottom: 4px; }
-.filter-layer-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
-.filter-removed {
-  display: flex; flex-wrap: wrap; gap: 6px;
-}
-.filter-removed-item {
-  font-size: 11px; padding: 3px 8px; border-radius: 4px;
-  background: var(--gray-100); color: var(--gray-500);
-  text-decoration: line-through;
-}
-.filter-stat {
-  font-size: 12px; color: var(--red-gov); font-weight: 500;
-  display: inline-flex; align-items: center; gap: 4px;
-}
-
-/* 要点编辑确认 */
-.dataset-meta-value { font-size: 13px; font-weight: 500; color: var(--navy-700); }
-.dataset-table {
-  width: 100%; border-collapse: collapse; background: var(--card);
-  border-radius: var(--radius-md); overflow: hidden;
-  border: 1px solid var(--border-light);
-}
-.dataset-table th {
-  background: var(--navy-50); padding: 10px 14px; text-align: left;
-  font-size: 12px; font-weight: 600; color: var(--navy-700);
-  border-bottom: 1px solid var(--border);
-}
-.dataset-table td {
-  padding: 10px 14px; font-size: 12px; color: var(--text-primary);
-  border-bottom: 1px solid var(--border-light);
-}
-.dataset-table tr:hover td { background: var(--navy-50); }
-.dataset-table td[contenteditable="true"] {
-  outline: none; border-radius: 3px;
-}
-.dataset-table td[contenteditable="true"]:focus {
-  background: #fff; box-shadow: 0 0 0 2px rgba(59,110,165,.2);
-}
-.dataset-dim-tag {
-  font-size: 10px; padding: 2px 8px; border-radius: 10px;
-  background: var(--navy-100); color: var(--navy-600);
-}
-
 /* ========== 屏幕6: 内容确认页 ========== */
 #screen-6 {
   padding: 20px 32px;
@@ -3603,13 +3550,13 @@ svg { display: block; }
       <div class="brand-text" data-page-node-id="K5FU3UfwkMiFWy7jsviBqY">智能政务PPT助手</div>
     </div>
     <nav class="steps-nav mode-normal" id="stepsNav" data-page-node-id="grXxrqPNnCVlfTKi7QbmrU">
-      <div class="step-item done" data-step="1" data-page-node-id="bzV4vWPstVPFjb4L4be4u7"><div class="step-circle" data-page-node-id="xFc81x0lb7rdLIQnVx6DUl">1</div><span class="step-label" data-page-node-id="Ax0D17s8l8Yy9KcYgxHVlU">需求输入</span></div>
+      <div class="step-item active" data-step="1" data-page-node-id="bzV4vWPstVPFjb4L4be4u7"><div class="step-circle" data-page-node-id="xFc81x0lb7rdLIQnVx6DUl">1</div><span class="step-label" data-page-node-id="Ax0D17s8l8Yy9KcYgxHVlU">需求输入</span></div>
       <div class="step-connector" data-page-node-id="U0qHdHjgrW8gduknNpQOGb"></div>
       <div class="step-item step-advanced-only" data-step="2" data-page-node-id="PTI6Vjtz8byNPh4Hao77v7"><div class="step-circle" data-page-node-id="Jj8yO5EqeGBQBIrz6CosCd">2</div><span class="step-label" data-page-node-id="2myGTdX0mvdFfXOjnzBy8Q">智能解析</span></div>
       <div class="step-connector step-advanced-only" data-page-node-id="w40BlMjEW43m8YLZAEtdhm"></div>
-      <div class="step-item done" data-step="3" data-page-node-id="230XAeDtCpgR2KabmhzFQn"><div class="step-circle" data-page-node-id="h9n6mbFhas7eUQrvYR8P13">2</div><span class="step-label" data-page-node-id="3p71EesUuKzPwWyFoNDk8k">大纲确认</span></div>
+      <div class="step-item" data-step="3" data-page-node-id="230XAeDtCpgR2KabmhzFQn"><div class="step-circle" data-page-node-id="h9n6mbFhas7eUQrvYR8P13">2</div><span class="step-label" data-page-node-id="3p71EesUuKzPwWyFoNDk8k">大纲确认</span></div>
       <div class="step-connector" data-page-node-id="pSp5CRvZ8q0eD79VlD6GKc"></div>
-      <div class="step-item active" data-step="6" data-page-node-id="b883kxyS7gJtiXhh8Nwa7H"><div class="step-circle" data-page-node-id="tA84DByAMu97kyIBxmHhZi">3</div><span class="step-label" data-page-node-id="1mgEi9wXOGNy4IGwselXHK">内容确认</span></div>
+      <div class="step-item" data-step="6" data-page-node-id="b883kxyS7gJtiXhh8Nwa7H"><div class="step-circle" data-page-node-id="tA84DByAMu97kyIBxmHhZi">3</div><span class="step-label" data-page-node-id="1mgEi9wXOGNy4IGwselXHK">内容确认</span></div>
       <div class="step-connector" data-page-node-id="pU6K2RpaxzCBQsT75UT3uJ"></div>
       <div class="step-item" data-step="5" data-page-node-id="VaYtAw6nFpEH61kEuN34tF"><div class="step-circle" data-page-node-id="6u28tWGpgG50CIFIXqY4qP">4</div><span class="step-label" data-page-node-id="JG5edGfYZdR51IpgNUAAdk">模板匹配</span></div>
       <div class="step-connector" data-page-node-id="Tq9vpkWHX5aHa77z52Uuyn"></div>
@@ -3798,7 +3745,7 @@ svg { display: block; }
   <!-- 主内容 -->
   <div class="main-content" id="mainContent" data-page-node-id="RAxSPQNYbthmXf91tXMXJD">
     <!-- ====== 屏幕1: 需求输入页 ====== -->
-    <div class="screen" id="screen-1" data-page-node-id="CtrCNxuG0bSBwetznhUjX7">
+    <div class="screen active" id="screen-1" data-page-node-id="CtrCNxuG0bSBwetznhUjX7">
       <div class="s1-header" data-page-node-id="WSwL8DfCzMe26OUO1Erj76">
         <div class="s1-header-text" data-page-node-id="sMrM20UgaRyR86S3XaG6kN">
           <h1 data-page-node-id="CoKVn4b89oCTf9LziIQHjK"><span class="ai-avatar" data-page-node-id="sMHE3GLDLjSIXbqmBJ8Zgh"><span class="ai-eyes" data-page-node-id="GBQYwzOQ13EQYTTrIuCkeO"></span></span>智能政务PPT助手 — 新建PPT</h1>
@@ -3983,19 +3930,17 @@ svg { display: block; }
     <div class="screen" id="screen-2" data-page-node-id="YNT9FEjeY54t9HvZbzjKvf">
       <div class="s2-parse-header" data-page-node-id="4nWkhvCGNUQAm9mvPYBATE">
         <h2 data-page-node-id="uwTRlcb0xSfdWbeSs0XqaD">智能内容解析</h2>
-        <p data-page-node-id="2tXyy2jVNqsOABy13Fw2I6">对核心信息与参考材料进行全方位智能解析，提取关键信息、过滤冗余，支持要点编辑</p>
+        <p data-page-node-id="2tXyy2jVNqsOABy13Fw2I6">对核心信息与参考材料进行全方位智能解析，提取关键信息，支持标签与内容编辑</p>
       </div>
       <div class="parse-tabs" data-page-node-id="0ogj4RhoaBJaC1d5RHz6JB">
         <div class="parse-tab active" data-ptab="ner" data-page-node-id="Udcn0Fpb1G4ktEM5vmxsRZ">文档解析 <span class="tab-badge" data-page-node-id="wfRrUZqh5g9IdKeid9UY6q">NER</span></div>
         <div class="parse-tab" data-ptab="keyinfo" data-page-node-id="LSGtHDzsTC669TBJQTNchM">关键信息提取 <span class="tab-badge" data-page-node-id="miS8taQYSUTGGmXjezNsDW">12</span></div>
-        <div class="parse-tab" data-ptab="filter" data-page-node-id="9quhGKJCheBtD42sgVpG1C">冗余过滤 <span class="tab-badge" data-page-node-id="fqA41T29ElDrlSxvqV1tYY">3层</span></div>
-        <div class="parse-tab" data-ptab="dataset" data-page-node-id="vHp0slPPxm9pSGjJuwv44D">要点编辑确认 <span class="tab-badge" data-page-node-id="2S6DtOXAOR6pxldi5RuzvA">可编辑</span></div>
       </div>
       <div class="parse-body" id="parseBody" data-page-node-id="NmUZBSPIw5csH84yp7MUYF"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;" data-page-node-id="XVm2F3gq0l3lBqgTavW4ct">
         <div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;" data-page-node-id="bwgGvnT9h9L90e1xnlPLmF">
           <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);" data-page-node-id="D1F37XbUtRYdbCnyxkXi1t"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-page-node-id="vcfs1VlTGjWITAxlpHSxpB"></path></svg>
-          解析完成 · 共识别42个实体，提取12条关键信息，过滤冗余内容23处
+          解析完成 · 共识别42个实体，提取12条关键信息
         </div>
         <div style="display:flex;gap:10px;" data-page-node-id="ZejxVGP8dfDAk8YhLAEqcm">
           <button class="btn btn-secondary" onclick="navigateTo(1)" data-page-node-id="zhAiiiyUhHDWerSk9wsEfY">
@@ -4039,75 +3984,75 @@ svg { display: block; }
               <button class="toolbar-btn" id="expandAllOutlineBtn" data-page-node-id="OsmVpR4wJyGj3Bl1o53THO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11l5-5 5 5M7 18l5-5 5 5"></path></svg> 全部收起</button>
             </div>
           </div>
-          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"><div class="tree-node" data-id="1" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第一章 项目背景与意义</div><div class="node-actions">
+          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"><div class="tree-node" data-id="1" data-is-chapter="1"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第一章 项目背景与意义</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div><div class="node-children"><div class="tree-node" data-id="11" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">政策背景：数字中国战略部署</div><div class="node-actions">
+  </div></div><div class="node-children"><div class="tree-node" data-id="11" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">政策背景：数字中国战略部署</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="12" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">现实需求：群众办事痛点分析</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="12" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">现实需求：群众办事痛点分析</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="13" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">建设目标：打造智慧政务新生态</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="13" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">建设目标：打造智慧政务新生态</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="2" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第二章 实施进展与成效</div><div class="node-actions">
+  </div></div></div></div></div><div class="tree-node" data-id="2" data-is-chapter="1"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第二章 实施进展与成效</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div><div class="node-children"><div class="tree-node" data-id="21" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">一网通办：政务服务线上线下融合</div><div class="node-actions">
+  </div></div><div class="node-children"><div class="tree-node" data-id="21" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">一网通办：政务服务线上线下融合</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="22" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据共享：打破信息孤岛成效显著</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="22" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据共享：打破信息孤岛成效显著</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="23" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">营商环境：审批流程优化提速</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="23" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">营商环境：审批流程优化提速</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="3" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第三章 典型案例与数据</div><div class="node-actions">
+  </div></div></div></div></div><div class="tree-node" data-id="3" data-is-chapter="1"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第三章 典型案例与数据</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div><div class="node-children"><div class="tree-node" data-id="31" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例一：不动产登记"一窗受理"</div><div class="node-actions">
+  </div></div><div class="node-children"><div class="tree-node" data-id="31" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例一：不动产登记"一窗受理"</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="32" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例二：企业开办"半日办结"</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="32" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">案例二：企业开办"半日办结"</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="4" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第四章 存在问题与不足</div><div class="node-actions">
+  </div></div></div></div></div><div class="tree-node" data-id="4" data-is-chapter="1"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第四章 存在问题与不足</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div><div class="node-children"><div class="tree-node" data-id="41" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据质量与标准化有待提升</div><div class="node-actions">
+  </div></div><div class="node-children"><div class="tree-node" data-id="41" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">数据质量与标准化有待提升</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="42" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">基层数字化能力参差不齐</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="42" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">基层数字化能力参差不齐</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="5" data-is-chapter="1" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第五章 下半年工作计划</div><div class="node-actions">
+  </div></div></div></div></div><div class="tree-node" data-id="5" data-is-chapter="1"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></div><div class="node-icon chapter"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg></div><div class="node-text">第五章 下半年工作计划</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div><div class="node-children"><div class="tree-node" data-id="51" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">深化"一网通办"全域覆盖</div><div class="node-actions">
+  </div></div><div class="node-children"><div class="tree-node" data-id="51" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">深化"一网通办"全域覆盖</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="52" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">推进公共数据有序开放</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="52" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">推进公共数据有序开放</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="53" data-is-chapter="0" draggable="true"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">强化网络安全保障体系</div><div class="node-actions">
+  </div></div></div><div class="tree-node" data-id="53" data-is-chapter="0"><div class="node-row"><div class="node-action drag-handle"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"></circle><circle cx="15" cy="6" r="1.5"></circle><circle cx="9" cy="12" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="9" cy="18" r="1.5"></circle><circle cx="15" cy="18" r="1.5"></circle></svg></div><div class="node-toggle leaf"></div><div class="node-icon"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg></div><div class="node-text">强化网络安全保障体系</div><div class="node-actions">
     <button class="node-action" title="添加子点" data-action="add"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
     <button class="node-action" title="编辑" data-action="edit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
     <button class="node-action delete" title="删除" data-action="delete"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg></button>
@@ -4173,7 +4118,7 @@ svg { display: block; }
     </div>
 
     <!-- ====== 屏幕6: 内容确认页 ====== -->
-    <div class="screen active" id="screen-6" data-page-node-id="5QMNnIymMOFNFJUSig0CQl">
+    <div class="screen" id="screen-6" data-page-node-id="5QMNnIymMOFNFJUSig0CQl">
       <div class="s3-header" data-page-node-id="2QrnFRTk9SLKFUFjHtBmEr">
         <h2 data-page-node-id="9iN8U4RYuzRVVI3ODXwhKS">内容确认</h2>
         
@@ -4211,10 +4156,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="0" value="居中大标题 + 金色装饰线 + 省政务服务中心标识" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="0" placeholder="输入演讲备注...">各位领导，现在汇报2026年上半年数字政府建设情况汇报。本次汇报围绕2026年半年度工作汇报展开，请各位领导审阅指导。</textarea>
@@ -4326,10 +4267,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="1" value="左侧编号列表 + 右侧金色竖线装饰" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="1" placeholder="输入演讲备注...">接下来汇报的主要内容分为以下几个部分：项目背景与意义；实施进展与成效；典型案例与数据；存在问题与不足；下半年工作计划。我们将依次进行详细汇报。</textarea>
@@ -4357,10 +4294,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="2" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="2" placeholder="输入演讲备注...">下面进入项目背景与意义部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
@@ -4457,10 +4390,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="3" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="3" placeholder="输入演讲备注...">本页汇报政策背景的相关内容。数字中国战略部署。主要要点包括：国家《数字中国建设整体布局规划》明确数字化发展方向；"十四五"规划提出加快数字政府建设；国务院推进"互联网+政务服务"系列部署；省委省政府将数字政府建设列入重点工程。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -4557,10 +4486,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="4" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="4" placeholder="输入演讲备注...">本页汇报现实需求的相关内容。群众办事痛点分析。主要要点包括：群众办事多头跑、反复跑问题突出；部门间数据壁垒导致"信息孤岛"；审批流程繁琐，企业开办周期长；线上线下服务标准不统一。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -4657,10 +4582,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="5" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="5" placeholder="输入演讲备注...">本页汇报建设目标的相关内容。打造智慧政务新生态。主要要点包括：实现政务服务"一网通办、一次办好"；构建全省统一的数据共享交换平台；推动营商环境进入全国第一方阵；建成高效协同的数字政府治理体系。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -4688,10 +4609,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="6" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="6" placeholder="输入演讲备注...">下面进入实施进展与成效部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
@@ -4788,10 +4705,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="7" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="7" placeholder="输入演讲备注...">本页汇报一网通办的相关内容。政务服务线上线下融合。主要要点包括：省级政务服务事项100%实现"一网通办"；建成全省统一政务服务门户和APP；累计办件量突破2,800万件；群众满意度达98.6%。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -4888,10 +4801,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="8" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="8" placeholder="输入演讲备注...">本页汇报数据共享的相关内容。打破信息孤岛成效显著。主要要点包括：归集57个省级部门共126亿条数据；建成人口、法人、电子证照等基础库；实现160类电子证照跨部门互认；数据调用次数超3.2亿次。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -4988,10 +4897,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="9" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="9" placeholder="输入演讲备注...">本页汇报营商环境的相关内容。审批流程优化提速。主要要点包括：企业开办压缩至半个工作日；工程建设项目审批减至60个工作日；不动产登记实现"一窗受理、并行办理"；"证照分离"改革覆盖全省。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -5019,10 +4924,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="10" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="10" placeholder="输入演讲备注...">下面进入典型案例与数据部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
@@ -5119,10 +5020,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="11" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="11" placeholder="输入演讲备注...">本页汇报存在问题的相关内容。需要持续改进的方面。主要要点包括：数据质量与标准化水平有待提升；基层数字化能力参差不齐；部分系统整合还不够深入；网络安全防护能力需持续加强。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -5150,10 +5047,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="12" value="大号编号 + 章节标题 + 英文副标题" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="12" placeholder="输入演讲备注...">下面进入下半年工作计划部分。这一章节主要汇报相关工作的推进情况和取得的成效。</textarea>
@@ -5250,10 +5143,6 @@ svg { display: block; }
             </div>
           </div>
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="13" value="标题 + 副标题 + 四宫格要点卡片" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="13" placeholder="输入演讲备注...">本页汇报重点任务的相关内容。深化推进数字政府建设。主要要点包括：深化"一网通办"全域覆盖，向基层延伸；推进公共数据有序开放与开发利用；强化网络安全保障体系建设；开展数字化能力提升专项培训。以上数据均来自实际工作统计，已核实确认。</textarea>
@@ -5281,10 +5170,6 @@ svg { display: block; }
           </div>
         
         
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="14" value="居中感谢语 + 金色装饰线 + 单位落款" placeholder="描述版式...">
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="14" placeholder="输入演讲备注...">以上是本次汇报的全部内容。感谢各位领导指导，恳请各位领导提出宝贵意见和指导建议。谢谢大家。</textarea>
@@ -6101,6 +5986,7 @@ function showNormalKnowledgeBase(callback) {
 /* ========== 页面导航 ========== */
 function navigateTo(step) {
   if (step === state.currentScreen) return;
+  try { if (dragState) dndCancel(); } catch (err) {}
   const current = document.querySelector('.screen.active');
   const next = document.getElementById('screen-' + step);
   if (!next) return;
@@ -6808,10 +6694,6 @@ function showProgress() {
 }
 
 /* ========== 屏幕2: 智能内容解析 ========== */
-const parseTabData = {
-  ner: null, keyinfo: null, filter: null, classify: null, dataset: null
-};
-
 function renderParsing() {
   renderParseNER();
   // 绑定Tab切换
@@ -6823,8 +6705,6 @@ function renderParsing() {
       const body = document.getElementById('parseBody');
       if (ptab === 'ner') renderParseNER();
       else if (ptab === 'keyinfo') renderParseKeyInfo();
-      else if (ptab === 'filter') renderParseFilter();
-      else if (ptab === 'dataset') renderParseDataset();
     };
   });
 }
@@ -6874,20 +6754,23 @@ function renderParseNER() {
 function renderParseKeyInfo() {
   const body = document.getElementById('parseBody');
   if (!state.deletedKeyInfos) state.deletedKeyInfos = [];
-  const keyInfos = [
-    {cat: '建设成果', text: '完成政务服务事项1,286项全流程数字化改造', source: '工作报告草案.pdf · 第3页'},
-    {cat: '核心数据', text: '累计办理业务3,542万件，同比增长23.7%', source: '工作报告草案.pdf · 第5页'},
-    {cat: '政策依据', text: '《数字政府建设三年行动方案》发布实施', source: '政策文件原文.docx · 第1页'},
-    {cat: '资金投入', text: '投入专项资金5.8亿元，建成全省统一政务云平台', source: '工作报告草案.pdf · 第7页'},
-    {cat: '组织架构', text: '省大数据局联合省发改委统筹推进数字政府建设', source: '会议纪要.txt · 第2页'},
-    {cat: '改革路径', text: '明确"一网通办"改革路径，系统升级投入2.3亿元', source: '会议纪要.txt · 第3页'},
-    {cat: '领导指示', text: '王建国主任要求加快政务服务数字化转型步伐', source: '讲话稿.docx · 第1页'},
-    {cat: '目标任务', text: '2026年底前实现省市县三级政务服务平台互联互通', source: '政策文件原文.docx · 第4页'},
-    {cat: '技术支撑', text: '建成全省统一政务云平台，支撑跨部门数据共享', source: '工作报告草案.pdf · 第8页'},
-    {cat: '民生服务', text: '"掌上办"服务覆盖率达87.3%，群众满意度94.6%', source: '工作报告草案.pdf · 第6页'},
-    {cat: '制度建设', text: '出台《政务服务数据管理办法》等3项制度文件', source: '政策文件原文.docx · 第6页'},
-    {cat: '下一步计划', text: '推进AI赋能政务服务，建设智能审批系统', source: '讲话稿.docx · 第3页'}
-  ];
+  if (!state.keyInfos) {
+    state.keyInfos = [
+      {cat: '建设成果', text: '完成政务服务事项1,286项全流程数字化改造', source: '工作报告草案.pdf'},
+      {cat: '核心数据', text: '累计办理业务3,542万件，同比增长23.7%', source: '工作报告草案.pdf'},
+      {cat: '政策依据', text: '《数字政府建设三年行动方案》发布实施', source: '政策文件原文.docx'},
+      {cat: '资金投入', text: '投入专项资金5.8亿元，建成全省统一政务云平台', source: '工作报告草案.pdf'},
+      {cat: '组织架构', text: '省大数据局联合省发改委统筹推进数字政府建设', source: '会议纪要.txt'},
+      {cat: '改革路径', text: '明确"一网通办"改革路径，系统升级投入2.3亿元', source: '会议纪要.txt'},
+      {cat: '领导指示', text: '王建国主任要求加快政务服务数字化转型步伐', source: '讲话稿.docx'},
+      {cat: '目标任务', text: '2026年底前实现省市县三级政务服务平台互联互通', source: '政策文件原文.docx'},
+      {cat: '技术支撑', text: '建成全省统一政务云平台，支撑跨部门数据共享', source: '工作报告草案.pdf'},
+      {cat: '民生服务', text: '"掌上办"服务覆盖率达87.3%，群众满意度94.6%', source: '工作报告草案.pdf'},
+      {cat: '制度建设', text: '出台《政务服务数据管理办法》等3项制度文件', source: '政策文件原文.docx'},
+      {cat: '下一步计划', text: '推进AI赋能政务服务，建设智能审批系统', source: '讲话稿.docx'}
+    ];
+  }
+  const keyInfos = state.keyInfos;
   const catColors = {
     '建设成果': {bg: '#d1fae5', text: '#065f46'},
     '核心数据': {bg: '#e6f2f5', text: '#0E4C92'},
@@ -6902,48 +6785,51 @@ function renderParseKeyInfo() {
     '制度建设': {bg: '#fee2e2', text: '#991b1b'},
     '下一步计划': {bg: '#fef3c7', text: '#92400e'}
   };
-  const activeItems = keyInfos.filter((_, i) => !state.deletedKeyInfos.includes(i));
-  const deletedItems = keyInfos.filter((_, i) => state.deletedKeyInfos.includes(i));
+  const activePairs = keyInfos.map((info, i) => ({ info, i })).filter(p => !state.deletedKeyInfos.includes(p.i));
+  const deletedPairs = keyInfos.map((info, i) => ({ info, i })).filter(p => state.deletedKeyInfos.includes(p.i));
   body.innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="section-title">关键信息提取 · 共${activeItems.length}条有效</div>
-        <span style="font-size:11px;color:var(--text-tertiary);">点击右侧删除按钮可移除不需要的条目</span>
+        <div class="section-title">关键信息提取 · 共${activePairs.length}条有效</div>
+        <span style="font-size:11px;color:var(--text-tertiary);">标签与内容点击即可编辑，支持新增 / 删除条目</span>
       </div>
       <div class="keyinfo-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
-        ${activeItems.map((info) => {
-          const realIdx = keyInfos.indexOf(info);
+        ${activePairs.map(({ info, i }) => {
           const c = catColors[info.cat] || {bg: '#f1f5f9', text: '#475569'};
           return `
-            <div class="keyinfo-item" data-idx="${realIdx}" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'">
-              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">${realIdx+1}</div>
+            <div class="keyinfo-item" data-idx="${i}" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">${i+1}</div>
               <div style="flex:1;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                  <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:${c.bg};color:${c.text};font-weight:500;">${info.cat}</span>
+                  <span class="keyinfo-cat" data-idx="${i}" contenteditable="true" spellcheck="false" title="点击编辑标签" style="font-size:10px;padding:2px 8px;border-radius:4px;background:${c.bg};color:${c.text};font-weight:500;outline:none;cursor:text;border:1px dashed transparent;transition:border-color .2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'">${info.cat}</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>标签可编辑</span>
                 </div>
-                <div style="font-size:13px;color:var(--text-primary);line-height:1.6;" contenteditable="true">${info.text}</div>
+                <div class="keyinfo-text-edit" data-idx="${i}" contenteditable="true" spellcheck="false" style="font-size:13px;color:var(--text-primary);line-height:1.6;">${info.text}</div>
                 <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">来源：${info.source}</div>
               </div>
-              <button class="keyinfo-delete-btn" data-idx="${realIdx}" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条">
+              <button class="keyinfo-delete-btn" data-idx="${i}" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
               </button>
             </div>
           `;
         }).join('')}
+        <button class="keyinfo-add-btn" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;border-radius:var(--radius-md);border:1.5px dashed var(--navy-300);background:var(--navy-50);color:var(--navy-600);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='var(--navy-100)';this.style.borderColor='var(--navy-500)'" onmouseout="this.style.background='var(--navy-50)';this.style.borderColor='var(--navy-300)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+          添加关键信息
+        </button>
       </div>
-      ${deletedItems.length > 0 ? `
+      ${deletedPairs.length > 0 ? `
         <div style="margin-top:8px;padding:8px 12px;background:#fef2f2;border-radius:var(--radius-md);border:1px dashed #fca5a5;">
           <div style="font-size:11px;color:#991b1b;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
-            已删除 ${deletedItems.length} 条 · 可恢复
+            已删除 ${deletedPairs.length} 条 · 可恢复
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
-            ${deletedItems.map(info => {
-              const realIdx = keyInfos.indexOf(info);
+            ${deletedPairs.map(({ info, i }) => {
               return `
                 <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
                   <span style="text-decoration:line-through;color:var(--text-tertiary);flex:1;">${info.text.substring(0,40)}...</span>
-                  <button class="keyinfo-restore-btn" data-idx="${realIdx}" style="font-size:11px;padding:2px 8px;border-radius:4px;background:#dcfce7;color:#166534;border:none;cursor:pointer;font-weight:500;">恢复</button>
+                  <button class="keyinfo-restore-btn" data-idx="${i}" style="font-size:11px;padding:2px 8px;border-radius:4px;background:#dcfce7;color:#166534;border:none;cursor:pointer;font-weight:500;">恢复</button>
                 </div>
               `;
             }).join('')}
@@ -6970,151 +6856,59 @@ function renderParseKeyInfo() {
       renderParseKeyInfo();
     };
   });
+  // 绑定标签编辑（点击标签文字可直接修改，失焦保存并按新标签配色）
+  body.querySelectorAll('.keyinfo-cat').forEach(el => {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+    el.addEventListener('blur', () => {
+      el.style.borderColor = 'transparent';
+      const idx = parseInt(el.dataset.idx);
+      const v = el.textContent.trim().replace(/\s+/g, ' ');
+      if (v && v !== state.keyInfos[idx].cat) {
+        state.keyInfos[idx].cat = v;
+        renderParseKeyInfo();
+      } else if (!v) {
+        renderParseKeyInfo();
+      }
+    });
+  });
+  // 绑定内容编辑（失焦保存，重渲染不丢失）
+  body.querySelectorAll('.keyinfo-text-edit').forEach(el => {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+    el.addEventListener('blur', () => {
+      const idx = parseInt(el.dataset.idx);
+      const v = el.textContent.trim();
+      if (v) state.keyInfos[idx].text = v;
+      else el.textContent = state.keyInfos[idx].text;
+    });
+  });
+  // 绑定添加按钮
+  const addBtn = body.querySelector('.keyinfo-add-btn');
+  if (addBtn) {
+    addBtn.onclick = () => {
+      state.keyInfos.push({cat: '自定义', text: '待补充的关键信息内容', source: '手动添加'});
+      renderParseKeyInfo();
+      const texts = document.querySelectorAll('#parseBody .keyinfo-text-edit');
+      const last = texts[texts.length - 1];
+      if (last) {
+        last.focus();
+        const range = document.createRange();
+        range.selectNodeContents(last);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    };
+  }
+  // 同步Tab角标数量
+  updateKeyInfoBadge();
 }
 
-function renderParseFilter() {
-  const body = document.getElementById('parseBody');
-  if (!state.restoredFilters) state.restoredFilters = [];
-  const layers = [
-    {
-      title: '第一层 · 剔除非正文区域',
-      desc: '识别并移除页眉页脚、页码、水印、签批栏等与正文无关的区域文字',
-      items: [
-        {text: '页眉："省政务服务中心 2026年半年度工作报告"', layer: 0, idx: 0},
-        {text: '页脚：第 1/15 页、第 2/15 页 ...', layer: 0, idx: 1},
-        {text: '水印：内部资料 请勿外传', layer: 0, idx: 2},
-        {text: '签批栏：拟稿人：张三 · 审核人：李四', layer: 0, idx: 3}
-      ]
-    },
-    {
-      title: '第二层 · 去除重复内容',
-      desc: '检测全文中高度相似或重复的段落与句子，只保留第一次出现的内容',
-      items: [
-        {text: '"深入推进数字政府建设" 重复出现4次 → 保留1次', layer: 1, idx: 0},
-        {text: '"持续优化营商环境" 重复出现3次 → 保留1次', layer: 1, idx: 1},
-        {text: '"以人民为中心的发展思想" 重复出现2次 → 保留1次', layer: 1, idx: 2}
-      ]
-    },
-    {
-      title: '第三层 · 删除低信息量表述',
-      desc: '识别并删掉过渡性引导语、空洞套话及纯格式说明文字',
-      items: [
-        {text: '过渡语："下面，我将从以下几个方面进行汇报..."', layer: 2, idx: 0},
-        {text: '套话："在上级党委政府的正确领导下..."', layer: 2, idx: 1},
-        {text: '格式说明："本报告共分四个部分，请审阅。"', layer: 2, idx: 2}
-      ]
-    }
-  ];
-  const allItems = layers.flatMap(l => l.items);
-  const restoredCount = state.restoredFilters.length;
-  const totalRemoved = allItems.length;
-  body.innerHTML = `
-    <div style="display:flex;flex-direction:column;height:100%;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="section-title">冗余内容过滤 · 三层筛选策略</div>
-        <span style="font-size:11px;padding:3px 10px;border-radius:4px;background:${restoredCount > 0 ? '#fef3c7' : '#f0fdf4'};color:${restoredCount > 0 ? '#92400e' : 'var(--green)'};font-weight:500;">${restoredCount > 0 ? `已恢复 ${restoredCount} 项` : `共清除${totalRemoved}处冗余`}</span>
-      </div>
-      <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
-        ${layers.map((layer, i) => `
-          <div class="filter-layer">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-              <div style="width:28px;height:28px;border-radius:50%;background:var(--navy-500);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">${i+1}</div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:600;color:var(--navy-700);">${layer.title}</div>
-                <div style="font-size:11px;color:var(--text-secondary);">${layer.desc}</div>
-              </div>
-              <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#fee2e2;color:#991b1b;font-weight:500;">已移除 ${layer.items.length} 处</span>
-            </div>
-            <div style="padding-left:38px;display:flex;flex-direction:column;gap:4px;">
-              ${layer.items.map(item => {
-                const filterKey = `${item.layer}-${item.idx}`;
-                const isRestored = state.restoredFilters.includes(filterKey);
-                return `
-                  <div style="font-size:12px;display:flex;align-items:center;gap:6px;padding:3px 0;">
-                    ${isRestored ? `
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" style="flex-shrink:0;"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                      <span style="color:var(--text-primary);">${item.text}</span>
-                      <button class="filter-unrestore-btn" data-key="${filterKey}" style="font-size:10px;padding:1px 6px;border-radius:3px;background:#fee2e2;color:#991b1b;border:none;cursor:pointer;margin-left:auto;">取消恢复</button>
-                    ` : `
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="flex-shrink:0;"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                      <span style="text-decoration:line-through;color:var(--text-tertiary);">${item.text}</span>
-                      <button class="filter-restore-btn" data-key="${filterKey}" style="font-size:10px;padding:1px 6px;border-radius:3px;background:#dcfce7;color:#166534;border:none;cursor:pointer;margin-left:auto;font-weight:500;">恢复</button>
-                    `}
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-  // 绑定恢复按钮
-  body.querySelectorAll('.filter-restore-btn').forEach(btn => {
-    btn.onclick = () => {
-      const key = btn.dataset.key;
-      if (!state.restoredFilters.includes(key)) state.restoredFilters.push(key);
-      renderParseFilter();
-    };
-  });
-  // 绑定取消恢复按钮
-  body.querySelectorAll('.filter-unrestore-btn').forEach(btn => {
-    btn.onclick = () => {
-      const key = btn.dataset.key;
-      state.restoredFilters = state.restoredFilters.filter(k => k !== key);
-      renderParseFilter();
-    };
-  });
-}
-
-function renderParseDataset() {
-  const body = document.getElementById('parseBody');
-  const dataset = [
-    {dimension: '工作成效', content: '完成政务服务事项1286项全流程数字化改造', editable: true},
-    {dimension: '工作成效', content: '累计办理业务3542万件，同比增长23.7%', editable: true},
-    {dimension: '工作成效', content: '掌上办服务覆盖率达87.3%，群众满意度94.6%', editable: true},
-    {dimension: '政策依据', content: '《数字政府建设三年行动方案》发布实施', editable: true},
-    {dimension: '政策依据', content: '国办发〔2025〕12号文件要求推进电子政务', editable: true},
-    {dimension: '组织保障', content: '省大数据局联合省发改委统筹推进', editable: true},
-    {dimension: '组织保障', content: '王建国主任带领团队推进数字政府建设', editable: true},
-    {dimension: '资金投入', content: '投入专项资金5.8亿元建设全省统一政务云平台', editable: true},
-    {dimension: '资金投入', content: '系统升级投入2.3亿元', editable: true},
-    {dimension: '下一步计划', content: '推进AI赋能政务服务，建设智能审批系统', editable: true}
-  ];
-  body.innerHTML = `
-    <div style="display:flex;flex-direction:column;height:100%;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="section-title">要点编辑确认</div>
-        <span style="font-size:11px;color:var(--text-tertiary);">点击文本可直接编辑，修改后同步至大纲生成</span>
-      </div>
-      <div style="flex:1;overflow:auto;background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);">
-        <table class="dataset-table" style="width:100%;border-collapse:collapse;font-size:12px;">
-          <thead>
-            <tr style="background:var(--navy-50);position:sticky;top:0;">
-              <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy-600);border-bottom:1px solid var(--border);width:100px;">维度</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy-600);border-bottom:1px solid var(--border);">要点文本（点击可编辑）</th>
-              <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--navy-600);border-bottom:1px solid var(--border);width:70px;">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${dataset.map(row => `
-              <tr style="border-bottom:1px solid var(--border-light);">
-                <td style="padding:8px 12px;"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:var(--navy-50);color:var(--navy-500);">${row.dimension}</span></td>
-                <td style="padding:8px 12px;color:var(--text-primary);" contenteditable="true">${row.content}</td>
-                <td style="padding:8px 12px;text-align:center;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" style="cursor:pointer;" onclick="this.closest('tr').querySelector('[contenteditable]').focus()"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-      <div style="font-size:11px;color:var(--text-tertiary);margin-top:8px;display:flex;align-items:center;gap:6px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        要点文本支持直接点击编辑，修改后将同步至大纲生成环节
-      </div>
-    </div>
-  `;
+function updateKeyInfoBadge() {
+  const badge = document.querySelector('.parse-tab[data-ptab="keyinfo"] .tab-badge');
+  if (badge && state.keyInfos) {
+    const active = state.keyInfos.filter((info, i) => !state.deletedKeyInfos.includes(i)).length;
+    badge.textContent = active;
+  }
 }
 
 /* ========== 屏幕6: 初版PPT文件生成 ========== */
@@ -7252,7 +7046,6 @@ function createTreeNode(node, isChapter) {
   nodeDiv.className = 'tree-node';
   nodeDiv.dataset.id = node.id;
   nodeDiv.dataset.isChapter = isChapter ? '1' : '0';
-  nodeDiv.draggable = true;
   
   const row = document.createElement('div');
   row.className = 'node-row';
@@ -7452,113 +7245,202 @@ function enableUndo() {
   saveHistory();
 }
 
-// 拖拽排序
-let dragSrc = null;
-function setupDragDrop(nodeDiv, row) {
-  // 查找节点在 state.outline 中的位置
-  function findNodeLocation(id) {
-    // 先查章节
-    for (let i = 0; i < state.outline.length; i++) {
-      if (state.outline[i].id === id) {
-        return { type: 'chapter', chapterIdx: i };
-      }
-      // 再查子节点
-      if (state.outline[i].children) {
-        for (let j = 0; j < state.outline[i].children.length; j++) {
-          if (state.outline[i].children[j].id === id) {
-            return { type: 'child', chapterIdx: i, childIdx: j };
-          }
-        }
+// ========== 拖拽排序（Pointer Events 实现） ==========
+let dragState = null;
+let _dndGlobalBound = false;
+
+function findNodeLocation(id) {
+  for (let i = 0; i < state.outline.length; i++) {
+    if (state.outline[i].id === id) return { type: 'chapter', chapterIdx: i };
+    if (state.outline[i].children) {
+      for (let j = 0; j < state.outline[i].children.length; j++) {
+        if (state.outline[i].children[j].id === id) return { type: 'child', chapterIdx: i, childIdx: j };
       }
     }
-    return null;
   }
+  return null;
+}
 
-  nodeDiv.addEventListener('dragstart', (e) => {
-    e.stopPropagation(); // 防止事件冒泡到父节点（子节点拖拽时被父节点覆盖）
-    dragSrc = nodeDiv;
-    row.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', nodeDiv.dataset.id);
-  });
+function scrollableAncestor(el) {
+  let p = el.parentElement;
+  while (p && p !== document.body) {
+    const st = getComputedStyle(p);
+    if (st.overflowY === 'auto' || st.overflowY === 'scroll') return p;
+    p = p.parentElement;
+  }
+  return null;
+}
 
-  nodeDiv.addEventListener('dragend', (e) => {
-    e.stopPropagation();
-    row.classList.remove('dragging');
-    document.querySelectorAll('.node-row').forEach(r => r.classList.remove('drop-target', 'drop-above'));
-    dragSrc = null;
-  });
-
-  nodeDiv.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation(); // 防止事件冒泡到父节点
-    e.dataTransfer.dropEffect = 'move';
-    document.querySelectorAll('.node-row').forEach(r => r.classList.remove('drop-target', 'drop-above'));
-    const rect = row.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
-    if (e.clientY < midY) {
-      row.classList.add('drop-above');
-    } else {
-      row.classList.add('drop-target');
+function setupDragDrop(nodeDiv, row) {
+  row.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    if (e.target.closest('.node-action, .node-toggle, .node-text.editing, [contenteditable="true"], input, textarea, button')) return;
+    if (dragState) return;
+    dragState = {
+      nodeDiv, row, pointerId: e.pointerId,
+      startX: e.clientX, startY: e.clientY,
+      started: false, ghost: null, gx: 0, gy: 0,
+      lastRow: null, lastAbove: false,
+      hoverTimer: null, hoverNodeDiv: null,
+      scroller: null
+    };
+    if (!_dndGlobalBound) {
+      _dndGlobalBound = true;
+      document.addEventListener('pointermove', dndPointerMove, { passive: false });
+      document.addEventListener('pointerup', dndPointerUp);
+      document.addEventListener('pointercancel', dndCancel);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dragState && dragState.started) dndCancel();
+      });
     }
-  });
-
-  nodeDiv.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!dragSrc || dragSrc === nodeDiv) return;
-
-    const srcId = parseInt(dragSrc.dataset.id);
-    const tgtId = parseInt(nodeDiv.dataset.id);
-    const srcIsChapter = dragSrc.dataset.isChapter === '1';
-    const tgtIsChapter = nodeDiv.dataset.isChapter === '1';
-
-    const srcLoc = findNodeLocation(srcId);
-    const tgtLoc = findNodeLocation(tgtId);
-    if (!srcLoc || !tgtLoc) return;
-
-    // 规则：章节只能和章节交换，子节点只能和子节点交换
-    if (srcLoc.type !== tgtLoc.type) return;
-
-    const rect = row.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
-    const dropAbove = e.clientY < midY;
-
-    // 从原位置移除
-    let movedNode;
-    if (srcLoc.type === 'chapter') {
-      movedNode = state.outline.splice(srcLoc.chapterIdx, 1)[0];
-    } else {
-      movedNode = state.outline[srcLoc.chapterIdx].children.splice(srcLoc.childIdx, 1)[0];
-    }
-
-    // 重新查找目标位置（因为移除后索引可能变了）
-    const newTgtLoc = findNodeLocation(tgtId);
-    if (!newTgtLoc) {
-      // 找不到目标了，放回原位
-      if (srcLoc.type === 'chapter') {
-        state.outline.splice(srcLoc.chapterIdx, 0, movedNode);
-      } else {
-        state.outline[srcLoc.chapterIdx].children.splice(srcLoc.childIdx, 0, movedNode);
-      }
-      return;
-    }
-
-    // 插入到目标位置
-    if (newTgtLoc.type === 'chapter') {
-      let insertIdx = newTgtLoc.chapterIdx;
-      if (!dropAbove) insertIdx += 1;
-      state.outline.splice(insertIdx, 0, movedNode);
-    } else {
-      let insertIdx = newTgtLoc.childIdx;
-      if (!dropAbove) insertIdx += 1;
-      state.outline[newTgtLoc.chapterIdx].children.splice(insertIdx, 0, movedNode);
-    }
-
-    saveHistory();
-    renderOutline();
   });
 }
+
+function dndStart(e) {
+  const s = dragState;
+  s.started = true;
+  s.scroller = scrollableAncestor(s.row);
+  try { s.row.setPointerCapture(s.pointerId); } catch (err) {}
+  s.row.classList.add('dragging');
+  document.body.classList.add('outline-dragging');
+  const rect = s.row.getBoundingClientRect();
+  const ghost = s.row.cloneNode(true);
+  ghost.className = 'node-row drag-ghost';
+  ghost.style.width = rect.width + 'px';
+  ghost.style.left = '0px';
+  ghost.style.top = '0px';
+  document.body.appendChild(ghost);
+  s.ghost = ghost;
+  s.gx = e.clientX - rect.left;
+  s.gy = e.clientY - rect.top;
+  dndMoveGhost(e.clientX, e.clientY);
+}
+
+function dndMoveGhost(x, y) {
+  const s = dragState;
+  s.ghost.style.left = (x - s.gx) + 'px';
+  s.ghost.style.top = (y - s.gy) + 'px';
+}
+
+function dndAutoScroll(y) {
+  const s = dragState;
+  if (!s.scroller) return;
+  const r = s.scroller.getBoundingClientRect();
+  const edge = 48, speed = 14;
+  if (y < r.top + edge) s.scroller.scrollTop -= speed;
+  else if (y > r.bottom - edge) s.scroller.scrollTop += speed;
+}
+
+function dndHoverChapter(nodeDiv) {
+  const s = dragState;
+  if (s.hoverNodeDiv === nodeDiv) return;
+  if (s.hoverTimer) { clearTimeout(s.hoverTimer); s.hoverTimer = null; }
+  s.hoverNodeDiv = nodeDiv;
+  if (!nodeDiv) return;
+  const children = nodeDiv.querySelector('.node-children');
+  if (!children || !children.classList.contains('collapsed')) return;
+  s.hoverTimer = setTimeout(() => {
+    if (dragState !== s || !s.started) return;
+    const ch = state.outline.find(c => c.id === parseInt(nodeDiv.dataset.id));
+    if (!ch) return;
+    ch.expanded = true;
+    children.classList.remove('collapsed');
+    const tog = nodeDiv.querySelector('.node-toggle');
+    if (tog) tog.classList.remove('collapsed');
+    updateExpandBtnState();
+    s.hoverTimer = null;
+    s.hoverNodeDiv = null;
+  }, 800);
+}
+
+function dndUpdateDrop(x, y) {
+  const s = dragState;
+  const el = document.elementFromPoint(x, y);
+  let row = el ? el.closest('.node-row') : null;
+  if (row && row.classList.contains('drag-ghost')) row = null;
+  if (row === s.row) row = null;
+  // 悬停折叠章节 800ms 自动展开（支持把子节点拖入其他章节）
+  dndHoverChapter(row ? row.parentElement : null);
+  // 仅允许同类型节点排序：章节↔章节 / 子节点↔子节点
+  if (row) {
+    const tgtNode = row.closest('.tree-node');
+    if (!tgtNode || tgtNode.dataset.isChapter !== s.nodeDiv.dataset.isChapter) row = null;
+  }
+  if (s.lastRow && s.lastRow !== row) {
+    s.lastRow.classList.remove('drop-target', 'drop-above');
+  }
+  if (!row) { s.lastRow = null; return; }
+  const rect = row.getBoundingClientRect();
+  const above = y < rect.top + rect.height / 2;
+  if (s.lastRow !== row || s.lastAbove !== above) {
+    row.classList.remove('drop-target', 'drop-above');
+    row.classList.add(above ? 'drop-above' : 'drop-target');
+    s.lastRow = row;
+    s.lastAbove = above;
+  }
+}
+
+function dndPointerMove(e) {
+  if (!dragState || e.pointerId !== dragState.pointerId) return;
+  const s = dragState;
+  if (!s.started) {
+    if (Math.hypot(e.clientX - s.startX, e.clientY - s.startY) < 5) return;
+    dndStart(e);
+  }
+  if (e.cancelable) e.preventDefault();
+  dndMoveGhost(e.clientX, e.clientY);
+  dndAutoScroll(e.clientY);
+  dndUpdateDrop(e.clientX, e.clientY);
+}
+
+function dndApplyMove(s, targetRow, dropAbove) {
+  const tgtNode = targetRow.closest('.tree-node');
+  if (!tgtNode || tgtNode === s.nodeDiv) return;
+  const srcId = parseInt(s.nodeDiv.dataset.id);
+  const tgtId = parseInt(tgtNode.dataset.id);
+  const srcLoc = findNodeLocation(srcId);
+  const tgtLoc = findNodeLocation(tgtId);
+  if (!srcLoc || !tgtLoc || srcLoc.type !== tgtLoc.type) return;
+  let moved;
+  if (srcLoc.type === 'chapter') moved = state.outline.splice(srcLoc.chapterIdx, 1)[0];
+  else moved = state.outline[srcLoc.chapterIdx].children.splice(srcLoc.childIdx, 1)[0];
+  const newLoc = findNodeLocation(tgtId);
+  if (!newLoc) {
+    if (srcLoc.type === 'chapter') state.outline.splice(srcLoc.chapterIdx, 0, moved);
+    else state.outline[srcLoc.chapterIdx].children.splice(srcLoc.childIdx, 0, moved);
+    return;
+  }
+  if (newLoc.type === 'chapter') {
+    state.outline.splice(newLoc.chapterIdx + (dropAbove ? 0 : 1), 0, moved);
+  } else {
+    state.outline[newLoc.chapterIdx].children.splice(newLoc.childIdx + (dropAbove ? 0 : 1), 0, moved);
+  }
+  saveHistory();
+  renderOutline();
+}
+
+function dndPointerUp(e) {
+  if (!dragState || e.pointerId !== dragState.pointerId) return;
+  const s = dragState;
+  const targetRow = s.lastRow;
+  const above = s.lastAbove;
+  dndCleanup();
+  if (s.started && targetRow) dndApplyMove(s, targetRow, above);
+}
+
+function dndCleanup() {
+  const s = dragState;
+  if (!s) return;
+  if (s.hoverTimer) clearTimeout(s.hoverTimer);
+  if (s.lastRow) s.lastRow.classList.remove('drop-target', 'drop-above');
+  if (s.ghost) s.ghost.remove();
+  s.row.classList.remove('dragging');
+  document.body.classList.remove('outline-dragging');
+  try { s.row.releasePointerCapture(s.pointerId); } catch (err) {}
+  dragState = null;
+}
+
+function dndCancel() { dndCleanup(); }
 
 // 页面预览（缩略图模块已移除，保留空实现防止历史调用点报错）
 let _previewNodeId = null;
@@ -7727,10 +7609,6 @@ function renderContentConfirm() {
             </div>
           </div>
         ` : ''}
-        <div class="cc-field">
-          <div class="cc-field-label">表现形式 <span class="cc-field-hint">（本页的视觉版式描述）</span></div>
-          <input class="cc-input" type="text" data-field="format" data-pidx="${pi}" value="${(page.format || '').replace(/"/g, '&quot;')}" placeholder="描述版式..." />
-        </div>
         <div class="cc-field cc-notes-field">
           <div class="cc-field-label">演讲备注 <span class="cc-field-hint">（演讲时参考的备注文字，可编辑）</span></div>
           <textarea class="cc-notes-textarea" data-field="note" data-pidx="${pi}" placeholder="输入演讲备注...">${page.note || ''}</textarea>
@@ -7739,7 +7617,7 @@ function renderContentConfirm() {
     `).join('')}
   `;
 
-  // 编辑 - 标题/副标题/表现形式（input blur）
+  // 编辑 - 标题/副标题（input blur）
   body.querySelectorAll('input.cc-input[data-field]').forEach(el => {
     el.addEventListener('blur', () => {
       const pi = parseInt(el.dataset.pidx);
