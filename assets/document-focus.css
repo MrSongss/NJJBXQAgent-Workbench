@@ -36,6 +36,15 @@
   border-color:#d8e0e4;
   box-shadow:0 8px 24px rgba(29,48,61,.08);
 }
+#view-chat.document-focus-mode .editor-paper.focus-current-editable {
+  border-color:#b8d5cc;
+  box-shadow:0 8px 24px rgba(29,48,61,.08),inset 0 0 0 1px rgba(8,117,93,.08);
+  cursor:text;
+}
+#view-chat.document-focus-mode .editor-paper.focus-current-editable:focus {
+  border-color:#4b9c85;
+  box-shadow:0 10px 28px rgba(29,48,61,.1),0 0 0 3px rgba(8,117,93,.09);
+}
 .focus-document-bar {
   grid-column:1;
   grid-row:1;
@@ -55,6 +64,12 @@
 .focus-mode-badge {
   padding:3px 7px;border-radius:5px;background:#e8f5f1;color:#08755d;font-size:10px;font-weight:800;
 }
+.focus-demo-notice {
+  display:flex;align-items:flex-start;gap:10px;margin:0 0 24px;padding:11px 13px;border:1px solid #b9d9ce;
+  border-radius:8px;background:#f0f8f5;color:#506b62;font-family:"PingFang SC","Microsoft YaHei",sans-serif;font-size:11px;line-height:1.55;
+}
+.focus-demo-notice b { flex:0 0 auto;padding:2px 7px;border-radius:5px;background:#08755d;color:#fff;font-size:10px;letter-spacing:.04em; }
+.focus-demo-notice span { min-width:0; }
 .focus-document-switch,.focus-mobile-tabs { display:flex;align-items:center;gap:4px;padding:3px;border:1px solid #dfe6e8;border-radius:7px;background:#f4f7f8; }
 .focus-document-switch button,.focus-mobile-tabs button {
   height:30px;padding:0 10px;border:0;border-radius:5px;background:transparent;color:#657984;font-size:11px;font-weight:750;cursor:pointer;

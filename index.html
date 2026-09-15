@@ -319,6 +319,37 @@
   .generated-file-card:hover .generated-file-download, .generated-file-download:focus-visible { opacity:1; transform:none; }
   .generated-file-card::after { content:"点击打开在线编辑"; position:absolute; right:15px; bottom:8px; color:#a1acb8; font-size:10.5px; opacity:0; transition:.16s ease; pointer-events:none; }
   .generated-file-card:hover::after { opacity:1; }
+  .review-history-card { margin-top:9px;padding:11px 12px;border:1px solid #dbe4e8;border-radius:10px;background:linear-gradient(180deg,#fff,#f9fbfc);box-shadow:0 3px 10px rgba(30,67,96,.04); }
+  .review-history-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;color:#405563; }
+  .review-history-head b { display:flex;align-items:center;gap:6px;font-size:12.5px; }.review-history-head b .svg-icon { color:#965024; }
+  .review-history-head span { min-width:22px;padding:2px 7px;border-radius:10px;background:#f3e9e2;color:#8a431d;font-size:10px;font-weight:800;text-align:center; }
+  .review-history-list { display:grid;gap:6px; }
+  .review-history-row { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 9px;border:1px solid #e4eaed;border-radius:7px;background:#fff; }
+  .review-history-copy { min-width:0; }.review-history-copy b { display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#304653;font-size:11.5px; }
+  .review-history-copy small { display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#83919a;font-size:10px; }
+  .review-history-actions { display:flex;align-items:center;gap:5px; }
+  .review-history-actions button { height:28px;padding:0 8px;border:1px solid #d6e0e4;border-radius:6px;background:#fff;color:#526975;font-size:10.5px;font-weight:750; }
+  .review-history-actions button:hover { border-color:#b77b57;background:#fff7f2;color:#87421d; }
+  .polish-history-card { margin-top:9px;padding:11px 12px;border:1px solid #d7e6e1;border-radius:10px;background:linear-gradient(180deg,#fff,#f7fbf9);box-shadow:0 3px 10px rgba(20,88,68,.04); }
+  .polish-history-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;color:#36594e; }.polish-history-head b { display:flex;align-items:center;gap:6px;font-size:12.5px; }.polish-history-head b .svg-icon { color:#08755d; }.polish-history-head span { min-width:22px;padding:2px 7px;border-radius:10px;background:#e5f4ef;color:#08715a;font-size:10px;font-weight:800;text-align:center; }
+  .polish-history-list { display:grid;gap:6px; }.polish-history-row { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 9px;border:1px solid #e0e9e6;border-radius:7px;background:#fff; }.polish-history-copy { min-width:0; }.polish-history-copy b { display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#304f45;font-size:11.5px; }.polish-history-copy small { display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#81928c;font-size:10px; }.polish-history-actions { display:flex;align-items:center;gap:5px; }.polish-history-actions button { height:28px;padding:0 8px;border:1px solid #d2e0dc;border-radius:6px;background:#fff;color:#4e6f64;font-size:10.5px;font-weight:750; }.polish-history-actions button:hover { border-color:#77ad9c;background:#f0f8f5;color:#08715a; }
+  .document-tool-task-card { width:min(620px,100%);overflow:hidden;border:1px solid #d7e2e8;border-radius:12px;background:linear-gradient(180deg,#fff 0%,#f8fbfc 100%);box-shadow:0 5px 18px rgba(30,67,96,.06); }
+  .document-tool-task-card[data-tool-kind="review"] { --tool-accent:#985027;--tool-soft:#fff4ec;--tool-border:#ead5c7; }
+  .document-tool-task-card[data-tool-kind="polish"] { --tool-accent:#08755d;--tool-soft:#eef8f4;--tool-border:#cfe5dd; }
+  .document-tool-task-head { display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:11px;align-items:center;padding:14px 15px 12px;border-bottom:1px solid #e7ecef; }
+  .document-tool-task-icon { width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--tool-border);border-radius:9px;background:var(--tool-soft);color:var(--tool-accent); }
+  .document-tool-task-icon .svg-icon { width:18px;height:18px; }
+  .document-tool-task-title { min-width:0; }.document-tool-task-title b { display:block;color:#263849;font-size:14px; }.document-tool-task-title small { display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8795a1;font-size:11px; }
+  .document-tool-task-state { height:24px;display:inline-flex;align-items:center;padding:0 9px;border-radius:999px;background:var(--tool-soft);color:var(--tool-accent);font-size:11px;font-weight:800;white-space:nowrap; }
+  .document-tool-task-card[data-task-state="processing"] .document-tool-task-state::before { content:"";width:6px;height:6px;margin-right:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 13%,transparent);animation:documentToolPulse 1.2s ease-in-out infinite; }
+  @keyframes documentToolPulse { 50% { opacity:.42;transform:scale(.78); } }
+  .document-tool-task-body { padding:13px 15px; }.document-tool-task-body p { margin:0;color:#526272;font-size:12.5px;line-height:1.65; }
+  .document-tool-task-stats { display:flex;flex-wrap:wrap;gap:8px;margin-top:10px; }.document-tool-task-stats span { min-height:30px;display:inline-flex;align-items:center;gap:4px;padding:0 10px;border:1px solid #e1e8ec;border-radius:7px;background:#fff;color:#667684;font-size:11.5px; }.document-tool-task-stats b { color:#2b4050;font-size:13px; }
+  .document-tool-result-document.generated-file-card { min-height:82px;margin-top:12px;box-shadow:0 3px 12px rgba(30,67,96,.05); }
+  .document-tool-result-document .generated-file-card-copy small { margin-top:5px; }
+  .document-tool-result-document .generated-file-card-copy em { display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tool-accent);font-size:10.5px;font-style:normal;font-weight:750; }
+  .document-tool-task-actions { display:flex;justify-content:flex-end;gap:7px;padding:10px 15px 13px;border-top:1px solid #e7ecef; }.document-tool-task-actions button { min-height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 11px;border:1px solid #d5e0e6;border-radius:7px;background:#fff;color:#405666;font-size:11.5px;font-weight:750; }.document-tool-task-actions button:hover { border-color:var(--tool-accent);color:var(--tool-accent); }.document-tool-task-actions button.primary { border-color:var(--tool-accent);background:var(--tool-accent);color:#fff; }.document-tool-task-actions .svg-icon { width:13px;height:13px; }
+  .document-tool-task-card > .review-history-card,.document-tool-task-card > .polish-history-card { margin:0 15px 13px;box-shadow:none; }
   .download-format-menu { position:fixed; z-index:520; width:214px; padding:6px; border:1px solid #d8e2ea; border-radius:8px; background:#fff; box-shadow:0 14px 34px rgba(25,51,74,.18); }
   .download-format-menu button { width:100%; min-height:44px; display:flex; align-items:center; gap:10px; padding:7px 9px; border:0; border-radius:6px; background:transparent; color:#334155; text-align:left; }
   .download-format-menu button:hover { background:#f2f7fa; color:var(--gov-700); }
@@ -332,7 +363,7 @@
   .draft-guidance strong { color:#172b46; }
   .draft-guidance-list { margin:8px 0 10px; padding-left:20px; }
   .draft-guidance-list li { margin:4px 0; }
-  @media (max-width:700px) { .generated-file-card { grid-template-columns:38px minmax(0,1fr); } .generated-file-download { grid-column:1/-1; opacity:1; transform:none; } }
+  @media (max-width:700px) { .generated-file-card { grid-template-columns:38px minmax(0,1fr); } .generated-file-download { grid-column:1/-1; opacity:1; transform:none; }.review-history-row,.polish-history-row{grid-template-columns:1fr}.review-history-actions button,.polish-history-actions button{flex:1}.review-history-actions,.polish-history-actions{width:100%}.document-tool-task-head{grid-template-columns:34px minmax(0,1fr)}.document-tool-task-icon{width:34px;height:34px}.document-tool-task-state{grid-column:2;justify-self:start}.document-tool-task-actions{justify-content:stretch;flex-wrap:wrap}.document-tool-task-actions button{flex:1;justify-content:center}.document-tool-task-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.document-tool-task-stats span{justify-content:center} }
   .reply-context { display:flex; align-items:center; gap:8px; min-width:0; margin:9px 12px 0; padding:7px 9px; border:1px solid #dce7ef; border-radius:8px; background:#f7fbfe; color:#536174; font-size:11.5px; }
   .reply-context .reply-context-copy { min-width:0; flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
   .reply-context .reply-context-label { color:var(--gov-700); font-weight:800; flex:none; }
@@ -993,6 +1024,9 @@
   .modal-body input[type=text], .modal-body input[type=date], .modal-body input[type=time], .modal-body input[type=number], .modal-body textarea, .modal-body select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; outline: none; background: #fff; }
   .modal-body textarea { min-height: 90px; resize: vertical; }
   .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); }
+  .document-version-choice { display:flex;gap:13px;align-items:flex-start;padding:14px;border:1px solid #d9e4e9;border-radius:10px;background:#f7fafc; }
+  .document-version-choice-icon { width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:9px;background:#e9f3f8;color:var(--gov-700); }.document-version-choice-icon .svg-icon { width:18px;height:18px; }
+  .document-version-choice-copy b { display:block;color:#294055;font-size:14px; }.document-version-choice-copy p { margin:5px 0 0;color:#647589;font-size:12px;line-height:1.7; }.document-version-choice-copy span { display:block;margin-top:8px;color:#8a98a6;font-size:11px; }
   .icon-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
   .icon-btn:hover { background: var(--gov-25); color: var(--gov-700); }
   .toast { position: fixed; right: 24px; top: 68px; z-index: 320; display: none; max-width: 380px; padding: 12px 15px; border-radius: 11px; color: #fff; background: rgba(23,32,51,.95); box-shadow: 0 16px 36px rgba(23,32,51,.22); font-size: 14px; }
@@ -3305,6 +3339,7 @@ let sidebarCollapsed = false;
     toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
   }
   let modalConfirmHandler = null;
+  let modalCancelHandler = null;
   function openModal(title, body, onOk, opts) {
     opts = opts || {};
     $$("#modalFoot button:not(#modalCancel):not(#modalOk)").forEach(b => b.remove());
@@ -3314,7 +3349,9 @@ let sidebarCollapsed = false;
     $("#modalBody").innerHTML = body;
     $("#modalFoot").style.display = opts.hideFooter ? "none" : "flex";
     $("#modalOk").textContent = opts.okText || "确认";
+    $("#modalCancel").textContent = opts.cancelText || "取消";
     modalConfirmHandler = onOk || closeModal;
+    modalCancelHandler = opts.onCancel || closeModal;
     $("#modalMask").classList.add("show");
   }
   function closeModal() {
@@ -3323,6 +3360,19 @@ let sidebarCollapsed = false;
     document.body.classList.remove("agent-confirming");
     structuredConfirmDraft = null;
     modalConfirmHandler = null;
+    modalCancelHandler = null;
+  }
+
+  function confirmDocumentToolVersion(options) {
+    const kind = options?.kind === "review" ? "合规审查" : "全文润色", changedCount = Number(options?.changedCount || 0);
+    const body = `<div class="document-version-choice"><span class="document-version-choice-icon">${svgi("i-file-check",18)}</span><div class="document-version-choice-copy"><b>当前稿已包含 ${changedCount} 处修改</b><p>退出${kind}前，请确认右侧编辑区继续使用原稿，还是使用当前修订稿。</p><span>未采纳、未处理和已忽略的内容均保持原文；手工编辑内容按当前稿保存。</span></div></div>`;
+    openModal("请选择使用原稿还是修订稿？", body, () => { closeModal(); options?.onUseRevision?.(); }, {
+      okText:"使用修订稿",
+      cancelText:"选择原稿",
+      onCancel:() => { closeModal(); options?.onUseOriginal?.(); },
+      width:"min(520px, calc(100vw - 32px))"
+    });
+    return true;
   }
 
   // ===== 视图切换 =====
@@ -3617,9 +3667,43 @@ let sidebarCollapsed = false;
   function renderMsg(m, i) {
     if (!m.createdAt) m.createdAt = Date.now();
     if (m.role === "user") return userBubble(m, i);
+    if (/^integrated-(review|polish)-(start|complete)$/.test(m.kind || "")) return "";
+    if (m.documentToolTask) return agentBubble(m.documentToolTask.kind, renderDocumentToolTaskCard(m, i), m, i);
     if (m.workbenchTask) return agentBubble(m.agent, renderWorkbenchTaskCard(m.workbenchTask), m, i);
     if (m.card) return agentBubble(m.agent, renderCard(m, i), m, i);
     return agentBubble(m.agent, m.html, m, i);
+  }
+
+  function documentToolTaskStateLabel(state) {
+    return ({ processing:"处理中",ready:"待处理",complete:"已完成",cancelled:"已取消" })[state] || "待处理";
+  }
+  function renderDocumentToolTaskCard(message, messageIndex) {
+    const task = message.documentToolTask || {}, isReview = task.kind === "review";
+    const meta = isReview
+      ? { title:"辅助文本合规审查",working:"正在识别文种并匹配适用规则。",resume:"继续审查",icon:"i-shield" }
+      : { title:"全文智能润色",working:"正在识别可优化内容并生成修改建议。",resume:"继续润色",icon:"i-wand" };
+    const state = task.state || "ready", total = Number(task.total || 0), pending = Number(task.pending || 0), accepted = Number(task.accepted || 0), ignored = Number(task.ignored || 0);
+    let description = task.stage || meta.working, stats = "", resultDocument = "";
+    if (state === "ready") {
+      description = task.stage || (isReview ? `初审发现 ${total} 项问题，请进入专注模式继续处理。` : `识别出 ${total} 项可优化内容，请进入专注模式继续处理。`);
+      stats = isReview
+        ? `<div class="document-tool-task-stats"><span><b>${total}</b>项问题</span><span><b>${accepted + ignored}</b>项已处理</span><span><b>${pending}</b>项待处理</span>${task.docType ? `<span>文种：<b>${esc(task.docType)}</b></span>` : ""}</div>`
+        : `<div class="document-tool-task-stats"><span><b>${total}</b>项建议</span><span><b>${accepted}</b>项采纳</span><span><b>${ignored}</b>项忽略</span><span><b>${pending}</b>项待处理</span></div>`;
+    } else if (state === "complete") {
+      description = task.stage || (isReview ? "合规审查已完成，结果和报告已保存。" : "全文智能润色已完成，结果和报告已保存。");
+      stats = isReview
+        ? `<div class="document-tool-task-stats"><span>初审 <b>${total}</b> 项</span><span>采纳 <b>${accepted}</b> 项</span><span>忽略 <b>${ignored}</b> 项</span><span>未处理 <b>${Number(task.remaining ?? pending)}</b> 项</span></div>`
+        : `<div class="document-tool-task-stats"><span>识别 <b>${total}</b> 项</span><span>采纳 <b>${accepted}</b> 项</span><span>忽略 <b>${ignored}</b> 项</span><span>未处理 <b>${pending}</b> 项</span></div>`;
+      const usesOriginal = task.selectedVersion === "original", documentTitle = task.documentTitle || message.materialTitle || "当前文稿";
+      resultDocument = `<div class="generated-file-card document-tool-result-document" role="button" tabindex="0" data-act="documentToolOpen" data-msg-index="${messageIndex}" aria-label="打开《${esc(documentTitle)}》在线编辑"><span class="generated-file-card-icon">${svgi("i-file",22)}</span><span class="generated-file-card-copy"><b>${esc(displayFileName(documentTitle))}</b><small>创建时间：${esc(formatDateTime(task.updatedAt || message.updatedAt || Date.now()))}</small><em>${usesOriginal ? "最终采用原稿，处理报告已保留" : task.manualEdited && !accepted ? "修改后的文稿 · 包含在线编辑内容" : isReview ? `修改后的文稿 · 已采纳 ${accepted} 项审查修改${task.manualEdited?"，含在线编辑":""}` : `修改后的文稿 · 已采纳 ${accepted} 项润色建议${task.manualEdited?"，含在线编辑":""}`}</em></span><button class="generated-file-download" type="button" data-act="generatedExport" data-msg-index="${messageIndex}">${svgi("i-download",13)} 下载</button></div>`;
+    }
+    const actionFooter = state === "complete" ? "" : `<footer class="document-tool-task-actions"><button class="primary" type="button" data-act="documentToolResume" data-msg-index="${messageIndex}">${svgi("i-arrow",13)}${state === "processing" ? (isReview ? "返回审查" : "返回润色") : meta.resume}</button></footer>`;
+    const history = state === "complete" ? (isReview ? reviewHistoryHTML(message,messageIndex) : polishHistoryHTML(message,messageIndex)) : "";
+    return `<section class="document-tool-task-card" data-tool-kind="${isReview ? "review" : "polish"}" data-task-state="${esc(state)}">
+      <header class="document-tool-task-head"><span class="document-tool-task-icon">${svgi(meta.icon,18)}</span><span class="document-tool-task-title"><b>${esc(meta.title)}${state === "processing" ? "进行中" : state === "ready" ? "待处理" : "已完成"}</b><small>${esc(task.documentTitle || message.materialTitle || "当前文稿")}</small></span><span class="document-tool-task-state">${documentToolTaskStateLabel(state)}</span></header>
+      <div class="document-tool-task-body"><p>${esc(description)}</p>${stats}${resultDocument}</div>
+      ${actionFooter}${history}
+    </section>`;
   }
 
   function workbenchTaskById(taskId) {
@@ -3702,17 +3786,39 @@ let sidebarCollapsed = false;
     const role = speechRoleForId(roleId) || activeSpeakerStyle();
     return `<button class="speech-style-switch" type="button" data-act="speechStyleSwitch" data-msg-index="${msgIndex == null ? "" : msgIndex}" data-style-id="${esc(role.id)}" data-style-source="${source || "direct"}" title="更换讲话人风格"><span data-speaker-style-label>讲话人风格—${esc(role.name)}</span><strong>更换</strong></button>`;
   }
+  function reviewHistoryHTML(message, messageIndex) {
+    const reports = Array.isArray(message?.reviewReports) ? message.reviewReports : [];
+    if (!reports.length) return "";
+    const rows = reports.map((report,index) => ({ report,index })).reverse().map(({report,index},position) => {
+      const time = report.time || formatDateTime(report.ts || Date.now());
+      const state = report.selectedVersion === "original" ? "已保留原稿" : report.applied ? "已应用修订稿" : "报告已生成";
+      return `<div class="review-history-row"><div class="review-history-copy"><b>${position===0?"最新":"历史"}审查报告 · ${esc(state)}</b><small>${esc(time)} · ${esc(report.summary || "审查问题、处理动作与复审结论已留痕")}</small></div><div class="review-history-actions"><button type="button" data-act="reviewReportView" data-msg-index="${messageIndex}" data-report-index="${index}">查看</button><button type="button" data-act="reviewReportDownload" data-msg-index="${messageIndex}" data-report-index="${index}">下载</button></div></div>`;
+    }).join("");
+    return `<section class="review-history-card" aria-label="历史审查报告"><header class="review-history-head"><b>${svgi("i-file-check",14)} 历史审查报告</b><span>${reports.length}</span></header><div class="review-history-list">${rows}</div></section>`;
+  }
+  function polishHistoryHTML(message, messageIndex) {
+    const reports = Array.isArray(message?.polishReports) ? message.polishReports : [];
+    if (!reports.length) return "";
+    const rows = reports.map((report,index)=>({report,index})).reverse().map(({report,index},position)=>{
+      const time=report.time || formatDateTime(report.ts || Date.now());
+      const state=report.selectedVersion==="original"?"已保留原稿":report.applied?"已应用润色稿":"报告已生成";
+      return `<div class="polish-history-row"><div class="polish-history-copy"><b>${position===0?"最新":"历史"}润色报告 · ${esc(state)}</b><small>${esc(time)} · ${esc(report.summary || "优化项、分类与修改说明已留痕")}</small></div><div class="polish-history-actions"><button type="button" data-act="polishReportView" data-msg-index="${messageIndex}" data-report-index="${index}">查看</button><button type="button" data-act="polishReportDownload" data-msg-index="${messageIndex}" data-report-index="${index}">下载</button></div></div>`;
+    }).join("");
+    return `<section class="polish-history-card" aria-label="历史润色报告"><header class="polish-history-head"><b>${svgi("i-file-check",14)} 历史润色报告</b><span>${reports.length}</span></header><div class="polish-history-list">${rows}</div></section>`;
+  }
   function messageMaterialAction(m, index) {
+    if (m && m.documentToolTask) return "";
     const material = messageMaterial(m); if (!material) return "";
     if (m.directGenerated) {
       const created = m.generationTime || formatDateTime(m.createdAt || Date.now());
       const displayName = displayFileName(material.name);
       const styleSwitch = m.agent === "speech" ? speechStyleSwitchHTML(index, "direct", m.speakerStyleId) : "";
+      const reports = `${reviewHistoryHTML(m,index)}${polishHistoryHTML(m,index)}`;
       return `<div class="generated-file-card ${styleSwitch ? "has-style" : ""}" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(displayName)}》在线编辑">
         <span class="generated-file-card-icon">${svgi("i-file",22)}</span>
         <span class="generated-file-card-copy"><b>${esc(displayName)}</b><small>创建时间：${esc(created)}</small>${styleSwitch}</span>
         <button class="generated-file-download" type="button" data-act="generatedExport" data-msg-index="${index}">${svgi("i-download",13)} 下载</button>
-      </div>`;
+      </div>${reports}`;
     }
     const savedKb = !!m.savedKnowledgeId;
     let backBtn = "";
@@ -4048,13 +4154,85 @@ let sidebarCollapsed = false;
       createdAt:message.createdAt || null
     };
   }
+  function updateDocumentToolTask(payload) {
+    const conversation = convs.find(item => item.id === payload?.conversationId) || cur();
+    const index = Number(payload?.messageIndex);
+    const message = conversation && Number.isInteger(index) ? conversation.msgs[index] : null;
+    if (!conversation || !message || !payload?.kind) return null;
+    const timestamp = Date.now(), previous = message.documentToolTask || {};
+    message.documentToolTask = {
+      id:previous.id || `${String(payload.kind).toUpperCase()}-TASK-${conversation.id}-${index}`,
+      ...previous,
+      ...payload,
+      messageIndex:index,
+      conversationId:conversation.id,
+      documentTitle:payload.documentTitle || previous.documentTitle || displayFileName(message.materialTitle || "当前文稿"),
+      updatedAt:timestamp
+    };
+    message.kind = "document-tool-task";
+    message.updatedAt = timestamp;
+    conversation.updatedAt = timestamp;
+    if (curId === conversation.id) { holdScroll(); renderChat(); }
+    renderSidebar();
+    return message.documentToolTask;
+  }
+  function resumeDocumentToolTask(messageIndex) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)], task = message?.documentToolTask;
+    if (!message || !task) { showToast("未找到可继续的处理任务"); return; }
+    openDocumentEditor(Number(messageIndex));
+    window.setTimeout(() => {
+      const pilot = task.kind === "review" ? window.JBAIReviewPilot : window.JBAIPolishPilot;
+      if (!pilot?.resumeFromTask?.()) showToast(task.state === "complete" ? "已打开处理后的文稿" : "任务状态已更新，请重新进入处理。");
+    }, 0);
+  }
+  function savePolishReport(payload) {
+    const conversation=cur(), message=conversation && conversation.msgs[Number(editorMessageIndex)];
+    if(!conversation || !message || !payload?.reportHTML)return null;
+    const timestamp=Date.now(), reports=Array.isArray(message.polishReports)?[...message.polishReports]:[];
+    let record=payload.reportId?reports.find(item=>item.id===payload.reportId):null;
+    const values={reportHTML:payload.reportHTML,summary:payload.summary||"优化项、分类与修改说明已留痕",totalCount:Number(payload.totalCount||0),acceptedCount:Number(payload.acceptedCount||0),ignoredCount:Number(payload.ignoredCount||0),pendingCount:Number(payload.pendingCount||0),categoryCount:Number(payload.categoryCount||0),selectedVersion:payload.selectedVersion||""};
+    if(record)Object.assign(record,values,{updatedAt:timestamp,time:formatDateTime(record.ts||timestamp)});
+    else{record={id:`POLISH-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),applied:false,...values};reports.push(record);}
+    message.polishReports=reports;message.latestPolishReportId=record.id;
+    if (!message.documentToolTask) message.html=record.selectedVersion==="original"
+      ? `<p>已完成全文智能润色分析并保留原稿，共识别 <b>${record.totalCount}</b> 处可优化项；润色报告已保存。</p>`
+      : `<p>已生成文本智能润色报告，共识别 <b>${record.totalCount}</b> 处可优化项，已采纳 <b>${record.acceptedCount}</b> 处；可在下方“历史润色报告”中查看或下载。</p>`;
+    message.updatedAt=timestamp;conversation.updatedAt=timestamp;
+    holdScroll();renderChat();renderSidebar();renderRail();
+    return record;
+  }
+  function polishReportAt(messageIndex,reportIndex){
+    const conversation=cur(),message=conversation&&conversation.msgs[Number(messageIndex)],reports=message?.polishReports,report=Array.isArray(reports)?reports[Number(reportIndex)]:null;
+    return message&&report?{message,report}:null;
+  }
+  function viewSavedPolishReport(messageIndex,reportIndex){
+    const found=polishReportAt(messageIndex,reportIndex);if(!found){showToast("未找到该润色报告");return;}
+    openModal("历史润色报告",found.report.reportHTML,null,{hideFooter:true,width:"min(1060px, calc(100vw - 32px))"});
+  }
+  function polishReportDownloadHTML(html){
+    return `<style>body{font-family:"Microsoft YaHei",sans-serif;color:#243e4c}.polish-report{max-width:940px;margin:0 auto}.polish-report header{text-align:center;border-bottom:1px solid #dce5e7;padding-bottom:18px}.polish-report header p{font-size:13px;color:#08755d;font-weight:700}.polish-report header h2{font-size:22px}.polish-report-kpis{display:table;width:100%;margin:20px 0;border-collapse:collapse}.polish-report-kpis>div{display:table-cell;width:25%;padding:12px;border:1px solid #dce5e7;text-align:center}.polish-report-kpis b,.polish-report-kpis span{display:block}.polish-report-kpis b{font-size:20px;color:#08755d}.polish-report h3{margin-top:22px;font-size:15px}.polish-report table{width:100%;border-collapse:collapse;font-size:12px}.polish-report th,.polish-report td{padding:8px;border:1px solid #dce5e7;vertical-align:top;line-height:1.6}.polish-report th{background:#f3f7f6}</style>${html}`;
+  }
+  function downloadSavedPolishReport(messageIndex,reportIndex){
+    const found=polishReportAt(messageIndex,reportIndex);if(!found){showToast("未找到该润色报告");return;}
+    const title=displayFileName(found.message.materialTitle||"政务文稿");
+    downloadDocumentByFormat(`${title}（文本润色报告-${String(Number(reportIndex)+1).padStart(2,"0")}）`,polishReportDownloadHTML(found.report.reportHTML),"word");
+  }
+  function downloadActivePolishReport(payload){
+    if(!payload?.html){showToast("未找到可下载的润色报告");return false;}
+    downloadDocumentByFormat(payload.title||"文本智能润色报告",polishReportDownloadHTML(payload.html),"word");return true;
+  }
   function commitPolishedDocument(payload) {
     const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
     if (!conversation || !message || !paper || !payload?.html) return false;
     const timestamp = Date.now();
     message.materialHTML = payload.html;
     message.polishVersion = Number(message.polishVersion || 0) + 1;
-    message.html = `<p>已完成全文智能润色并生成新版本，共采纳 ${Number(payload.acceptedCount || 0)} 处修改。润色前版本及修改说明已保留在历史记录中。</p>`;
+    const reports=Array.isArray(message.polishReports)?[...message.polishReports]:[];
+    let report=payload.reportId?reports.find(item=>item.id===payload.reportId):null;
+    if(report)Object.assign(report,{reportHTML:payload.reportHTML||report.reportHTML,summary:payload.summary||report.summary,selectedVersion:"polished",applied:true,appliedAt:timestamp});
+    else{report={id:`POLISH-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),reportHTML:payload.reportHTML||"",summary:payload.summary||"",totalCount:Number(payload.totalCount||0),acceptedCount:Number(payload.acceptedCount||0),ignoredCount:Number(payload.ignoredCount||0),pendingCount:Number(payload.pendingCount||0),categoryCount:Number(payload.categoryCount||0),selectedVersion:"polished",applied:true,appliedAt:timestamp};reports.push(report);}
+    message.polishReports=reports;message.latestPolishReportId=report.id;
+    if (!message.documentToolTask) message.html = `<p>已完成全文智能润色并生成新版本，共采纳 ${Number(payload.acceptedCount || 0)} 处修改。润色前版本及修改说明已保留在历史记录中。</p>`;
     message.updatedAt = timestamp; conversation.updatedAt = timestamp;
     ensureDocHistory(message);
     message.history.push({ ts:timestamp, time:formatDateTime(timestamp), type:"全文智能润色", html:message.materialHTML, note:payload.summary || "润色稿、修改痕迹及修改说明" });
@@ -4066,14 +4244,72 @@ let sidebarCollapsed = false;
     holdScroll(); renderChat(); renderSidebar(); renderRail();
     return true;
   }
+  function saveReviewReport(payload) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)];
+    if (!conversation || !message || !payload?.reportHTML) return null;
+    const timestamp = Date.now(), reports = Array.isArray(message.reviewReports) ? [...message.reviewReports] : [];
+    let record = payload.reportId ? reports.find(item => item.id === payload.reportId) : null;
+    const values = {
+      reportHTML:payload.reportHTML,
+      summary:payload.summary || "审查问题、处理动作与复审结论已留痕",
+      initialCount:Number(payload.initialCount || 0),
+      remainingCount:Number(payload.remainingCount || 0),
+      fixedCount:Number(payload.fixedCount || 0),
+      ignoredCount:Number(payload.ignoredCount || 0),
+      conclusion:payload.conclusion || "审查完成",
+      selectedVersion:payload.selectedVersion || ""
+    };
+    if (record) Object.assign(record,values,{ updatedAt:timestamp,time:formatDateTime(record.ts || timestamp) });
+    else {
+      record = { id:`REVIEW-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),applied:false,...values };
+      reports.push(record);
+    }
+    message.reviewReports = reports;
+    message.latestReviewReportId = record.id;
+    if (!message.documentToolTask) message.html = `<p>已生成辅助文本合规审查报告。初审发现 <b>${record.initialCount}</b> 项，复审遗留 <b>${record.remainingCount}</b> 项；报告已保存，可在下方“历史审查报告”中查看或下载。</p>`;
+    message.updatedAt = timestamp; conversation.updatedAt = timestamp;
+    holdScroll(); renderChat(); renderSidebar(); renderRail();
+    return record;
+  }
+  function reviewReportAt(messageIndex, reportIndex) {
+    const conversation = cur(), message = conversation && conversation.msgs[Number(messageIndex)], reports = message?.reviewReports;
+    const report = Array.isArray(reports) ? reports[Number(reportIndex)] : null;
+    return message && report ? { message,report } : null;
+  }
+  function viewSavedReviewReport(messageIndex, reportIndex) {
+    const found = reviewReportAt(messageIndex,reportIndex);
+    if (!found) { showToast("未找到该审查报告"); return; }
+    openModal("历史审查报告", found.report.reportHTML, null, { hideFooter:true, width:"min(1040px, calc(100vw - 32px))" });
+  }
+  function reviewReportDownloadHTML(html) {
+    return `<style>body{font-family:"Microsoft YaHei",sans-serif;color:#243c49}.review-report{max-width:920px;margin:0 auto}.review-report header{text-align:center;border-bottom:1px solid #dce4e6;padding-bottom:18px}.review-report header p{font-size:13px;color:#8a431d;font-weight:700}.review-report header h2{font-size:22px}.review-report-kpis{display:table;width:100%;margin:20px 0;border-collapse:collapse}.review-report-kpis>div{display:table-cell;width:25%;padding:12px;border:1px solid #dce4e6;text-align:center}.review-report-kpis b,.review-report-kpis span{display:block}.review-report-kpis b{font-size:20px;color:#8a431d}.review-report h3{margin-top:22px;font-size:15px}.review-report table{width:100%;border-collapse:collapse;font-size:12px}.review-report th,.review-report td{padding:8px;border:1px solid #dce4e6;vertical-align:top;line-height:1.6}.review-report th{background:#f3f6f8}</style>${html}`;
+  }
+  function downloadSavedReviewReport(messageIndex, reportIndex) {
+    const found = reviewReportAt(messageIndex,reportIndex);
+    if (!found) { showToast("未找到该审查报告"); return; }
+    const title = displayFileName(found.message.materialTitle || "政务文稿");
+    downloadDocumentByFormat(`${title}（合规审查报告-${String(Number(reportIndex)+1).padStart(2,"0")}）`,reviewReportDownloadHTML(found.report.reportHTML),"word");
+  }
+  function downloadActiveReviewReport(payload) {
+    if (!payload?.html) { showToast("未找到可下载的审查报告"); return false; }
+    downloadDocumentByFormat(payload.title || "辅助文本合规审查报告",reviewReportDownloadHTML(payload.html),"word");
+    return true;
+  }
   function commitReviewedDocument(payload) {
     const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
     if (!conversation || !message || !paper || !payload?.html) return false;
     const timestamp = Date.now();
     message.materialHTML = payload.html;
     message.reviewVersion = Number(message.reviewVersion || 0) + 1;
-    message.reviewReports = [...(message.reviewReports || []), { ts:timestamp, reportHTML:payload.reportHTML || "", summary:payload.summary || "" }];
-    message.html = `<p>已完成辅助文本合规审查并生成闭环报告。初审发现 <b>${Number(payload.initialCount || 0)}</b> 项，复审遗留 <b>${Number(payload.remainingCount || 0)}</b> 项，审查记录和原始问题快照已保留。</p>`;
+    const reports = Array.isArray(message.reviewReports) ? [...message.reviewReports] : [];
+    let report = payload.reportId ? reports.find(item => item.id === payload.reportId) : null;
+    if (report) Object.assign(report,{ reportHTML:payload.reportHTML || report.reportHTML,summary:payload.summary || report.summary,conclusion:payload.conclusion || report.conclusion,selectedVersion:"reviewed",applied:true,appliedAt:timestamp });
+    else {
+      report = { id:`REVIEW-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),reportHTML:payload.reportHTML || "",summary:payload.summary || "",initialCount:Number(payload.initialCount || 0),remainingCount:Number(payload.remainingCount || 0),fixedCount:Number(payload.fixedCount || 0),ignoredCount:Number(payload.ignoredCount || 0),conclusion:payload.conclusion || "审查完成",selectedVersion:"reviewed",applied:true,appliedAt:timestamp };
+      reports.push(report);
+    }
+    message.reviewReports = reports; message.latestReviewReportId = report.id;
+    if (!message.documentToolTask) message.html = `<p>已完成辅助文本合规审查并生成闭环报告。初审发现 <b>${Number(payload.initialCount || 0)}</b> 项，复审遗留 <b>${Number(payload.remainingCount || 0)}</b> 项，审查记录和原始问题快照已保留。</p>`;
     message.updatedAt = timestamp; conversation.updatedAt = timestamp;
     ensureDocHistory(message);
     message.history.push({ ts:timestamp, time:formatDateTime(timestamp), type:"合规审查", html:message.materialHTML, note:payload.summary || "问题整改、复审和闭环报告" });
@@ -4436,7 +4672,7 @@ let sidebarCollapsed = false;
     const tag = a ? `<span class="tag blue">${a.cat}</span>` : "";
     const isDirect = !!(m && m.directGenerated);
     const generatedClock = esc(responseStatusText(m, index));
-    const showActions = !m || (m.kind !== "task-progress" && m.kind !== "workbench-task");
+    const showActions = !m || (m.kind !== "task-progress" && m.kind !== "workbench-task" && m.kind !== "document-tool-task");
     const actionBtns = m && m.kind === "model-error"
       ? m.retryStartedAt
         ? `<button class="agent-response-action" type="button" disabled title="已发起继续执行">${svgi("i-check",14)}<span>已重试</span></button>`
@@ -4456,7 +4692,7 @@ let sidebarCollapsed = false;
     return `${seconds}秒`;
   }
   function responseStatusText(message) {
-    if (!message || message.kind === "task-progress" || message.kind === "workbench-task" || message.kind === "model-error") return "";
+    if (!message || message.kind === "task-progress" || message.kind === "workbench-task" || message.kind === "document-tool-task" || message.kind === "model-error") return "";
     const started = Number(message.startedAt || message.createdAt || Date.now());
     const completed = Number(message.completedAt || message.createdAt || Date.now());
     return `已完成 ${formatResponseDuration(Math.max(0, completed - started))}`;
@@ -12749,7 +12985,7 @@ function cfgRoleManagementHTML() {
 
    // 模态框
     $("#modalClose").onclick = closeModal;
-    $("#modalCancel").onclick = closeModal;
+    $("#modalCancel").onclick = () => { const handler = modalCancelHandler; if (handler) handler(); else closeModal(); };
     $("#modalMask").addEventListener("click", (e) => { if (e.target.id === "modalMask") closeModal(); });
     $("#modalBody").addEventListener("change", (e) => {
       const agentField = e.target.closest("[data-agent-confirm-field]");
@@ -13381,6 +13617,12 @@ function cfgRoleManagementHTML() {
       case "saveConversationKnowledge": saveConversationKnowledge(el.dataset.msgIndex); break;
       case "generatedExport": openDownloadFormatMenu(el,"conversation",el.dataset.msgIndex); break;
       case "generatedEdit": openDocumentEditor(el.dataset.msgIndex); break;
+      case "documentToolOpen": openDocumentEditor(el.dataset.msgIndex); break;
+      case "documentToolResume": resumeDocumentToolTask(el.dataset.msgIndex); break;
+      case "reviewReportView": viewSavedReviewReport(el.dataset.msgIndex,el.dataset.reportIndex); break;
+      case "reviewReportDownload": downloadSavedReviewReport(el.dataset.msgIndex,el.dataset.reportIndex); break;
+      case "polishReportView": viewSavedPolishReport(el.dataset.msgIndex,el.dataset.reportIndex); break;
+      case "polishReportDownload": downloadSavedPolishReport(el.dataset.msgIndex,el.dataset.reportIndex); break;
       case "v3OpenEditor": { if (agentV3Session) { const c = cur(); const a = c ? byId(c.agent) : null; if (a) v3OpenDocEditor(c, a); } break; }
       case "v3Download": { if (agentV3Session) v3DownloadDocument(); break; }
       case "generatedOpenWorkbench": openGeneratedResultWorkbench(el.dataset.msgIndex); break;
@@ -13692,7 +13934,13 @@ function cfgRoleManagementHTML() {
     preparePolishDocument,
     prepareReviewDocument,
     getActiveDocument: activePolishDocument,
+    updateDocumentToolTask,
+    confirmDocumentToolVersion,
     commitPolishedDocument,
+    savePolishReport,
+    downloadActivePolishReport,
+    saveReviewReport,
+    downloadActiveReviewReport,
     commitReviewedDocument,
     commitInlinePolish,
     quoteDocumentSelection

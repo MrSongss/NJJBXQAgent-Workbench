@@ -12,7 +12,7 @@
   function focusMeta(kind) {
     if (kind === "review") return { name:"合规审查", panel:"#integratedReviewPanel", current:"当前修订稿" };
     if (kind === "interpret") return { name:"政务文件解读", panel:"#planPilotPanel", current:"政策原文" };
-    return { name:"全文润色", panel:"#integratedPolishPanel", current:"当前润色稿" };
+    return { name:"全文润色", panel:"#integratedPolishPanel", current:"当前修订稿" };
   }
 
   function icon(name) { return `<svg class="svg-icon" aria-hidden="true"><use href="#${name}"></use></svg>`; }
@@ -88,7 +88,10 @@
     const paper = $("#editorPaper");
     if (!paper) return;
     paper.innerHTML = currentFocusHTML();
-    paper.contentEditable = "false";
+    const editable = focusState.view === "current" && focusState.canEditCurrent;
+    paper.contentEditable = editable ? "true" : "false";
+    paper.classList.toggle("focus-current-editable", !!editable);
+    paper.setAttribute("aria-readonly", String(!editable));
     focusBar?.querySelectorAll("[data-focus-document-view]").forEach(button => {
       const selected = button.dataset.focusDocumentView === focusState.view;
       button.classList.toggle("active", selected);
@@ -98,7 +101,16 @@
 
   function enterFocus(config) {
     ensureFocusUI(); ensureSelectionUI(); hideSelectionUI();
-    focusState = { kind:config.kind, title:config.title || "当前文稿", originalHTML:config.originalHTML || "", getCurrentHTML:config.getCurrentHTML, view:config.view || "original", paused:false };
+    focusState = {
+      kind:config.kind,
+      title:config.title || "当前文稿",
+      originalHTML:config.originalHTML || "",
+      getCurrentHTML:config.getCurrentHTML,
+      onCurrentChange:config.onCurrentChange,
+      canEditCurrent:!!config.canEditCurrent,
+      view:config.view || "original",
+      paused:false
+    };
     const chatView = $("#view-chat"), panel = $("#documentEditorPanel");
     chatView?.classList.add("document-focus-mode", "focus-pane-document");
     chatView?.classList.remove("focus-pane-results", "focus-question-mode");
@@ -125,7 +137,7 @@
     if (focusBar) focusBar.hidden=true;
     if (resumeBar) resumeBar.hidden=true;
     if (resumeFloat) resumeFloat.hidden=true;
-    if (paper) { paper.innerHTML=html; paper.contentEditable="true"; }
+    if (paper) { paper.innerHTML=html; paper.contentEditable="true"; paper.classList.remove("focus-current-editable"); paper.removeAttribute("aria-readonly"); }
     focusState=null;
   }
 
@@ -281,6 +293,11 @@
   }
 
   document.addEventListener("mouseup",()=>window.setTimeout(captureSelection,0));
+  document.addEventListener("input",event=>{
+    const paper=$("#editorPaper");
+    if(!focusState || focusState.paused || focusState.view!=="current" || !focusState.canEditCurrent || event.target!==paper)return;
+    focusState.onCurrentChange?.(paper.innerHTML);
+  });
   document.addEventListener("keyup",event=>{if(event.shiftKey || ["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key))window.setTimeout(captureSelection,0);});
   document.addEventListener("scroll",()=>{if(toolbar)toolbar.hidden=true;if(menu)menu.hidden=true;},true);
   window.addEventListener("resize",hideSelectionUI);

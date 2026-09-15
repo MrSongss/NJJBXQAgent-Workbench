@@ -69,6 +69,10 @@
     return candidates;
   }
   async function chooseSource(candidates,agentId) {
+    if((agentId==="polish" || agentId==="review") && !candidates.length) {
+      const key=agentId==="polish"?"polish":"review", demo=window.JBAIPilotContent?.examples?.[key];
+      if(demo?.text) return {id:`demo:${key}:${Date.now()}`,name:agentId==="polish"?"重点项目服务保障通知（演示文稿）":"安全生产检查通知（演示文稿）",type:"政务办公场景演示",text:demo.text,version:Date.now()};
+    }
     let source;
     let selectable=candidates;
     if(agentId==="polish" || agentId==="review") {
@@ -113,16 +117,18 @@
     const host=window.JBAITaskPilotHost;
     if(running.has(args.conversationId)) {host.toast("当前材料正在处理中，请稍候。");return;}
     running.add(args.conversationId);
-    const progress=host.progress(args.conversationId,"主智能体 · 已识别需求，正在核对材料来源",false);
+    const isDocumentTool=args.agentId==="polish"||args.agentId==="review";
+    const progress=isDocumentTool?null:host.progress(args.conversationId,"主智能体 · 已识别需求，正在核对材料来源",false);
+    const setProgress=(text,done)=>{if(progress!=null)host.progress(args.conversationId,text,done,progress);};
     try {
       const source=await chooseSource(args.sources||[],args.agentId);
-      if(!source){host.progress(args.conversationId,"已取消本次处理，未创建新任务。",true,progress);return;}
-      if(host.isCurrent&&!host.isCurrent(args.conversationId)){host.progress(args.conversationId,"已切换对话，本次确认已取消。返回原对话后可重新发起。",true,progress);return;}
+      if(!source){setProgress("已取消本次处理，未创建新任务。",true);return;}
+      if(host.isCurrent&&!host.isCurrent(args.conversationId)){setProgress("已切换对话，本次确认已取消。返回原对话后可重新发起。",true);return;}
       let meta=null;
-      if(args.agentId==="plan") {meta=await confirmPlan(args.values||{});if(!meta){host.progress(args.conversationId,"已取消信息确认，未创建新任务。",true,progress);return;}}
+      if(args.agentId==="plan") {meta=await confirmPlan(args.values||{});if(!meta){setProgress("已取消信息确认，未创建新任务。",true);return;}}
       const questionOnly=args.agentId==="interpret" && !/解读|生成.{0,8}报告|全面分析/.test(args.prompt) && /[？?]|哪些|如何|是否|什么|多久|谁/.test(args.prompt);
-      if(args.agentId==="interpret"&&!questionOnly){meta=await confirmInterpret(args.values);if(!meta){host.progress(args.conversationId,"已取消解读设置确认，未创建新任务。",true,progress);return;}}
-      host.progress(args.conversationId,questionOnly?"已识别为原文问答，正在定位相关内容。":args.agentId==="polish"?"已确认文稿，正在生成润色稿、修改痕迹和修改说明。":args.agentId==="review"?"已确认文稿，正在识别文种并匹配合规规则。":"已确认材料，正在提炼结构化内容。",false,progress);
+      if(args.agentId==="interpret"&&!questionOnly){meta=await confirmInterpret(args.values);if(!meta){setProgress("已取消解读设置确认，未创建新任务。",true);return;}}
+      setProgress(questionOnly?"已识别为原文问答，正在定位相关内容。":args.agentId==="polish"?"已确认文稿，正在生成润色稿、修改痕迹和修改说明。":args.agentId==="review"?"已确认文稿，正在识别文种并匹配合规规则。":"已确认材料，正在提炼结构化内容。",false);
       // 预留正式模型服务；静态试点采用可溯源的摘录与字段提取，不编造政策结论。
       const content=window.JBAIPilotContent;
       const interpreted=args.agentId==="interpret" ? (window.JBAIPilotServices?.interpret ? await window.JBAIPilotServices.interpret(source) : content.interpret(source,window.JBAIPilotServices?.terminology)) : null;
@@ -134,8 +140,8 @@
         const pilot=args.agentId==="plan"?window.JBAIPlanPilot:args.agentId==="interpret"?window.JBAIInterpretPilot:args.agentId==="review"?window.JBAIReviewPilot:window.JBAIPolishPilot;
         pilot.start({...args,source,meta,interpreted,newTask:true});
       }
-      host.progress(args.conversationId,questionOnly?"已完成原文定位与回答。":args.agentId==="polish"?"主智能体 · 识别完成，已进入全文智能润色":args.agentId==="review"?"主智能体 · 识别完成，已进入合规审查":"主智能体 · 识别完成，已进入任务处理",true,progress);
-    } catch(error) {host.progress(args.conversationId,`处理未完成：${error.message}。请检查材料后重新发送。`,true,progress);}
+      setProgress(questionOnly?"已完成原文定位与回答。":args.agentId==="polish"?"主智能体 · 识别完成，已进入全文智能润色":args.agentId==="review"?"主智能体 · 识别完成，已进入合规审查":"主智能体 · 识别完成，已进入任务处理",true);
+    } catch(error) {if(isDocumentTool)host.toast(`处理未完成：${error.message}。请检查材料后重新发送。`);else setProgress(`处理未完成：${error.message}。请检查材料后重新发送。`,true);}
     finally{running.delete(args.conversationId);}
   }
   window.JBAIPilotIntake={capture,run,request,confirmPlan,textFromHTML,pasted};
