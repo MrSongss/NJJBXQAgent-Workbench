@@ -96,8 +96,14 @@
     .hist-it:hover { background: var(--cyan-soft); color: #29344d; }
     .hist-it.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
     .hist-it .ht { overflow: hidden; text-overflow: ellipsis; }
-    .hist-it .hm { font-size: 11px; color: #a7b0c4; margin-top: 2px; }
+    .hist-it .hm { font-size: 11px; color: #a7b0c4; margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+    .hist-it .hm .hm-time { overflow: hidden; text-overflow: ellipsis; }
+    .hist-it .hm .st { flex: none; font-size: 10.5px; font-weight: 700; padding: 1.5px 8px; border-radius: 999px; line-height: 1.5; }
+    .hist-it .hm .st.run { color: #b26a00; background: #fff4e0; }
+    .hist-it .hm .st.done { color: #168447; background: #e5f4eb; }
     .hist-empty { padding: 22px 10px; text-align: center; color: #b3bccb; font-size: 12px; line-height: 1.7; }
+    /* 历史记录标题区分：左侧栏即「历史对话」 */
+    .hist-cap .tt { font-weight: 700; }
     /* 左下角：次要功能，压缩弱化 */
     .side-foot { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line-soft); }
     .side-save { display: flex; align-items: center; gap: 8px; width: 100%; height: 34px; padding: 0 10px; margin-top: 8px; border: 1px solid var(--line-soft); border-radius: 9px; background: #fff; color: #66738d; font-size: 12.5px; font-weight: 700; transition: .16s; }
@@ -418,6 +424,13 @@
     .parse-cta:hover:not([disabled]) { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 12px 26px rgba(22,132,71,.38); }
     .parse-cta[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; }
     .parse-cta-tip { font-size: 12px; color: var(--muted); }
+    /* 表单必填标记与选填提示 */
+    .field label .req { color: #d64541; font-style: normal; margin-left: 2px; }
+    .field label .opt-hint { color: #8b95a7; font-weight: 500; font-size: 12px; }
+    /* 模板卡片：自定义约束规则列表 */
+    .tpl-rules { display: flex; flex-direction: column; gap: 5px; }
+    .tpl-rules .rule-line { display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; color: #4a5674; line-height: 1.6; background: #fafbfd; border: 1px solid var(--line-soft); border-radius: 8px; padding: 6px 10px; }
+    .tpl-rules .rule-line .rk { color: var(--ai-cyan); font-weight: 700; flex: none; }
     .ptype-detail .pd-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
     .ptype-detail .pd-ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; font-size: 15px; background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan)); color: #fff; box-shadow: 0 6px 14px rgba(14,76,146,.22); }
     .ptype-detail .pd-title { font-size: 14.5px; font-weight: 800; color: #26365a; }
@@ -568,15 +581,15 @@
         <span data-page-node-id="yC5lj7AOxDQ4Wih2APRr26">工作计划编制智能生成<small data-page-node-id="ALivwmrQT5ep9ysQerzMjl">江北新区政务AI智能体 · 辅助起草</small></span>
       </div>
       <div class="top-actions" data-page-node-id="vUHBxUUXhBYlX9lrXhY7XC">
-        <button class="icon-btn" data-action="profile" title="账号" data-page-node-id="QNCyIQpYBFFhR0r3qayGeg" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"></circle><path d="M4.8 20c.8-3.4 3.4-5.2 7.2-5.2s6.4 1.8 7.2 5.2"></path></svg></button>
+        <button class="icon-btn" data-action="profile" title="账号" data-page-node-id="QNCyIQpYBFFhR0r3qayGeg" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="nS0krEjZMTUjMGKSMSW2gD"><circle cx="12" cy="8" r="3.4" data-page-node-id="T3PN3XCE44oJ2vip8RiBWC"></circle><path d="M4.8 20c.8-3.4 3.4-5.2 7.2-5.2s6.4 1.8 7.2 5.2" data-page-node-id="fZW2hdTfwAtrqYR1vlvGLl"></path></svg></button>
       </div>
     </header>
 
     <aside class="leftnav" data-page-node-id="TN8StwoF66RusYMB2kuo32">
-      <button class="new-btn" data-action="newTask" title="新建编制任务" data-page-node-id="4iy5UDgGEDLYLugit4cxg3" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span><span class="ic" data-page-node-id="r5ioVMVMnWmp3GrzmR4aKJ"></span><span class="tt" data-page-node-id="cSAKV7w2Qkbjop4hXBl7wC">新建</span></span></button>
-      <button class="nav-fold" data-action="toggleNav" title="收起历史记录栏" data-page-node-id="40ytJc66xRfp93xlEB0cIT" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"></path></svg></button>
+      <button class="new-btn" data-action="newTask" title="新建编制任务" data-page-node-id="4iy5UDgGEDLYLugit4cxg3" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="7l3gJJP9QewNplLpf2g2gS"><path d="M12 5v14M5 12h14" data-page-node-id="NKyuL8LA7yKZp48xryPMbm"></path></svg><span data-page-node-id="83pf75uTuD4k9mUA4UG9Y7"><span class="ic" data-page-node-id="r5ioVMVMnWmp3GrzmR4aKJ"></span><span class="tt" data-page-node-id="cSAKV7w2Qkbjop4hXBl7wC">新建</span></span></button>
+      <button class="nav-fold" data-action="toggleNav" title="收起历史记录栏" data-page-node-id="40ytJc66xRfp93xlEB0cIT" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="MrPejIYcVznURUrW4QP5Jx"><path d="m14 6-6 6 6 6" data-page-node-id="hQn1pbuEoKRYHhFvfCPhcF"></path></svg></button>
 
-      <div class="hist-cap" data-page-node-id="y5g2E25OhPGG2hS5EawSLM"><span class="tt" data-page-node-id="wXTyyMFlOzofLJP4Gz83mW">历史记录</span><button class="hist-all tt" data-action="gotoHistory" data-page-node-id="XpMI0C9gRSRx8vtwC8SHNn">全部</button></div>
+      <div class="hist-cap" data-page-node-id="y5g2E25OhPGG2hS5EawSLM"><span class="tt" data-page-node-id="wXTyyMFlOzofLJP4Gz83mW">历史对话</span><button class="hist-all tt" data-action="gotoHistory" data-page-node-id="XpMI0C9gRSRx8vtwC8SHNn">全部</button></div>
       <div class="hist-filter" data-page-node-id="4O1TDh7dY5ylsY9auZ2ce5">
         <input class="hist-search" id="histKeyword" type="search" placeholder="搜索标题或时间" aria-label="搜索历史记录" data-page-node-id="C4IkWwZnDoXHrMLysDMf1F" data-bound="1">
         <select class="hist-range" id="histRange" aria-label="快捷时间范围" data-page-node-id="BmKKOGw0WvNRfEMH0BAn0s">
@@ -591,15 +604,15 @@
         </div>
         <div class="hist-filter-foot" data-page-node-id="EjoTw6Hmn5F3f8rdA5yIRK"><span class="hist-result" id="histResult" data-page-node-id="uD6PAub2JmHAAPObGAN28f">共 0 条</span><button class="hist-clear" id="histClear" data-action="clearHistFilter" data-page-node-id="rAYaBjhiveKczdCMHkh4HA">清除筛选</button></div>
       </div>
-      <div class="hist-list" id="sideHist" data-page-node-id="5ZTCrHZzTEh11WWC5UKUAG"><div class="hist-empty">暂无历史记录<br>保存版本后在此查看</div></div>
+      <div class="hist-list" id="sideHist" data-page-node-id="5ZTCrHZzTEh11WWC5UKUAG"><div class="hist-empty" data-page-node-id="tJ2LKVbCl4AZAbcckGBwGE">暂无历史记录<br data-page-node-id="sXzDyMEivgxkrfCNPlu47n">保存版本后在此查看</div></div>
 
       <div class="side-foot" data-page-node-id="BdlFQ60b5AplYneHkrBv1r">
         <div class="foot-nav" data-page-node-id="QBkWFRv94XXtucaCa6J5RS">
-          <button class="foot-ic nav-item active" data-view="editor" data-tip="计划编制工作台" title="计划编制工作台" data-page-node-id="uKCv9wSEJ0RsgnchJkGHaQ" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M7 3.5h7l3 3V20.5H7z"></path><path d="M14 3.5v3h3M9.5 11h5M9.5 14.5h5"></path></svg></button>
-          <button class="foot-ic nav-item" data-view="templates" data-tip="模板库管理" title="模板库管理" data-page-node-id="8PDIjCIUdfGIGGqfGbG7jJ" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5h8v14H8z"></path><path d="M5 8H4v12h9v-1M10 9h4M10 13h4"></path></svg></button>
+          <button class="foot-ic nav-item active" data-view="editor" data-tip="计划编制工作台" title="计划编制工作台" data-page-node-id="uKCv9wSEJ0RsgnchJkGHaQ" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="IYDRNuZ7nEvNztxwrfWuhI"><path d="M7 3.5h7l3 3V20.5H7z" data-page-node-id="IxH26pr8tpU3WGNDNtDA7w"></path><path d="M14 3.5v3h3M9.5 11h5M9.5 14.5h5" data-page-node-id="92FJtEwweYXlxPWofYOL61"></path></svg></button>
+          <button class="foot-ic nav-item" data-view="templates" data-tip="模板库管理" title="模板库管理" data-page-node-id="8PDIjCIUdfGIGGqfGbG7jJ" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="eeNCMBGengRq2tgDhYwP77"><path d="M8 5h8v14H8z" data-page-node-id="K9UpCF2BoSL3OzAJpDubZ7"></path><path d="M5 8H4v12h9v-1M10 9h4M10 13h4" data-page-node-id="exG1ixfOzsBQYJi6QPlqlJ"></path></svg></button>
         </div>
         <div class="foot-mark tt" title="对应招标功能点：①工作内容智能结构化梳理 ②总体思路与目标自动凝练 ③重点任务与实施步骤拆解 ④模版化工作计划格式生成" data-page-node-id="zGGZffv563MrUiRkXRP48V">政务AI · 辅助起草</div>
-        <button class="side-save tt" data-action="saveVersion" title="保存版本 (Ctrl+S)" data-page-node-id="k9SDzBHmmePN2iBnsZsQc7" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5z"></path><path d="M8 4v5h8V4M8 20v-6h8v6"></path></svg><span><span class="save-ic" data-page-node-id="5AXd9wieSmyQvVI7TdnEeX"></span><span data-page-node-id="4MEAShLJSLsgJHBqAT1FJY">保存版本</span></span></button>
+        <button class="side-save tt" data-action="saveVersion" title="保存版本 (Ctrl+S)" data-page-node-id="k9SDzBHmmePN2iBnsZsQc7" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="Dr6XiIT1cZUTwFYhg0hStK"><path d="M5 4h12l2 2v14H5z" data-page-node-id="LtIwUTWa0IbddAxFHsDTNP"></path><path d="M8 4v5h8V4M8 20v-6h8v6" data-page-node-id="EWWeeuoZJd5m50dBxCu46a"></path></svg><span data-page-node-id="3WXwuKCNIn1JM4cCvdiNYm"><span class="save-ic" data-page-node-id="5AXd9wieSmyQvVI7TdnEeX"></span><span data-page-node-id="4MEAShLJSLsgJHBqAT1FJY">保存版本</span></span></button>
       </div>
     </aside>
 
@@ -608,57 +621,57 @@
       <main class="tool-main" data-page-node-id="hkcn3h6ewtxxSAFjWirpz3">
         
 
-        <section class="workspace" data-page-node-id="3qB0bElVseuAU3Yh9nNNVG"><div class="stepbar" id="stepbar" data-page-node-id="YrnwBwyeMXeG3R6Y5FwPmg"><div class="s active" data-action="gotoStep" data-step="1">
-        <span class="dot">1</span>
-        <span class="lb">结构化梳理<small>上传·解析·梳理</small></span></div><span class="bar "></span><div class="s locked" data-action="gotoStep" data-step="2">
-        <span class="dot">2</span>
-        <span class="lb">思路目标凝练<small>思路·量化目标</small></span></div><span class="bar "></span><div class="s locked" data-action="gotoStep" data-step="3">
-        <span class="dot">3</span>
-        <span class="lb">任务步骤拆解<small>子任务·实施步骤</small></span></div><span class="bar "></span><div class="s locked" data-action="gotoStep" data-step="4">
-        <span class="dot">4</span>
-        <span class="lb">格式生成<small>模板·成文·导出</small></span></div></div><div class="step-wrap" id="stepArea" data-page-node-id="Ri3CX4p4MdAlz9SkiRyjoc"><div class="step-intro"><h2><span class="step-intro-icon"><svg class="ui-icon lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5h8v14H8z"></path><path d="M5 8H4v12h9v-1M10 9h4M10 13h4"></path></svg></span><span class="ai-gradient-text">工作内容智能结构化梳理</span></h2><p>上传讲话、会议纪要等原始资料，智能解析摘录核心语句，归类形成结构化任务清单</p></div><div class="step1-page"><div class="step1-switch"><div></div></div>
-      <div class="card"><div class="card-body" id="uploadBody">
-        <div class="src-grid">
-          <div class="src-col">
-            <div class="src-label">上传附件（可选）</div>
-            <div class="drop" data-action="pickFile" id="dropZone">
-              <div class="di" data-icon-ready="1"><svg class="ui-icon lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20V9M8 13l4-4 4 4M5 4h14"></path></svg></div>
-              <div class="dt">点击或拖拽文件到此处</div>
-              <div class="ds">支持 Word / PDF / TXT 等原始文本资料</div>
+        <section class="workspace" data-page-node-id="3qB0bElVseuAU3Yh9nNNVG"><div class="stepbar" id="stepbar" data-page-node-id="YrnwBwyeMXeG3R6Y5FwPmg"><div class="s active" data-action="gotoStep" data-step="1" data-page-node-id="L2ewbTS3uh8vA0tF2700xi">
+        <span class="dot" data-page-node-id="VDSAut8vrEkBjPsUG5iIZ0">1</span>
+        <span class="lb" data-page-node-id="ryXexGTFL4QFDTrpkWv4FB">结构化梳理<small data-page-node-id="b28l6AgPHssq6n0BgbTMPm">上传·解析·梳理</small></span></div><span class="bar " data-page-node-id="Wr49AOG3ZJHw8L0pWC6lOv"></span><div class="s locked" data-action="gotoStep" data-step="2" data-page-node-id="TxzTdkRGkbGcFs4bif9WXe">
+        <span class="dot" data-page-node-id="ccboNNiFH2solnEfFOahLu">2</span>
+        <span class="lb" data-page-node-id="WTAdaQ6gVOlStne8us4wFb">思路目标凝练<small data-page-node-id="dgTw4sjC5u1p7ONvMpBOY5">思路·量化目标</small></span></div><span class="bar " data-page-node-id="OBI8qQs7IziIyb8V5bTAjn"></span><div class="s locked" data-action="gotoStep" data-step="3" data-page-node-id="zmCCOcyTHTJA2LaGDSytwW">
+        <span class="dot" data-page-node-id="onBwd6RdiciOvLq5oZ9i2h">3</span>
+        <span class="lb" data-page-node-id="OJDW9iPdGaNnqvqFPDuTrQ">任务步骤拆解<small data-page-node-id="gysd93Rwy8YoTsRpA72Df4">子任务·实施步骤</small></span></div><span class="bar " data-page-node-id="rRCG9fAgNd44wN2pxx9HE5"></span><div class="s locked" data-action="gotoStep" data-step="4" data-page-node-id="aWBhdg7Y092LAlXB1U1KGp">
+        <span class="dot" data-page-node-id="sx0Nuv66cD7TCUEoefUeLE">4</span>
+        <span class="lb" data-page-node-id="ElrnvD3UqrzU8F4TNBIUhY">格式生成<small data-page-node-id="QEsHgvZcXSQbay7CGElFwG">模板·成文·导出</small></span></div></div><div class="step-wrap" id="stepArea" data-page-node-id="Ri3CX4p4MdAlz9SkiRyjoc"><div class="step-intro" data-page-node-id="zOVi3AdjTNtCBYFzB6iOab"><h2 data-page-node-id="YhfV1uEVb837v8b3LzRGAa"><span class="step-intro-icon" data-page-node-id="Bt5dadgZQLkSLAcyPxR69E"><svg class="ui-icon lg" aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="jWzXsn0fts0dDegCxXHfVY"><path d="M8 5h8v14H8z" data-page-node-id="x76DAmbkuXtW2sG7eaeRXA"></path><path d="M5 8H4v12h9v-1M10 9h4M10 13h4" data-page-node-id="ZBiHlQGoAmekonr0WZNuFN"></path></svg></span><span class="ai-gradient-text" data-page-node-id="EhMmr0qBmQJr9XZMIXEekG">工作内容智能结构化梳理</span></h2><p data-page-node-id="1NfDdpujGuBppbOGvsHfDB">上传讲话、会议纪要等原始资料，智能解析摘录核心语句，归类形成结构化任务清单</p></div><div class="step1-page" data-page-node-id="ABwev7nAxGjUnNexFRDeUA"><div class="step1-switch" data-page-node-id="VqZDJ5B8HoFK4gIztBnDt4"><div data-page-node-id="Fk2yyEOr03lVD89jFSUjxm"></div></div>
+      <div class="card" data-page-node-id="djkCDIWWPVco1AFckwERVP"><div class="card-body" id="uploadBody" data-page-node-id="gl9mW78orglzqkhHeOibN6">
+        <div class="src-grid" data-page-node-id="mRY0UJl1ElY3WxqJvbcgfZ">
+          <div class="src-col" data-page-node-id="Q73TmshQ2JNx5db4SMzEID">
+            <div class="src-label" data-page-node-id="314uyzsCSDDqLuDHeqhdiN">上传附件（可选）</div>
+            <div class="drop" data-action="pickFile" id="dropZone" data-page-node-id="D1DXgQgjknjYDjjIrkUzXH">
+              <div class="di" data-icon-ready="1" data-page-node-id="DcHq9MY8gZg7ocjtBCpN7Y"><svg class="ui-icon lg" aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="CTcd05TDv5Qshb8GNaT2LO"><path d="M12 20V9M8 13l4-4 4 4M5 4h14" data-page-node-id="ndvHxmDJSHPaLkbgIzgFeL"></path></svg></div>
+              <div class="dt" data-page-node-id="112WQxVqmYpN5EobqPCDya">点击或拖拽文件到此处</div>
+              <div class="ds" data-page-node-id="moWRgJMTPGlu2YL1I2aEvT">支持 Word / PDF / TXT 等原始文本资料</div>
             </div>
           </div>
-          <div class="src-col">
-            <div class="src-label">粘贴文本（可选）</div>
-            <div class="paste-mod" id="pasteMod">
+          <div class="src-col" data-page-node-id="E1hEhGF3UtwJvU2edxn6KG">
+            <div class="src-label" data-page-node-id="u5e6iLTVnIqQyJNv2fsxYs">粘贴文本（可选）</div>
+            <div class="paste-mod" id="pasteMod" data-page-node-id="JICxkcm2TDawHTi6MpwYLS">
               <textarea class="paste-ta" id="pasteTa" placeholder="将讲话稿、会议纪要等文本直接粘贴到此处…" rows="4"></textarea>
-              <div class="paste-foot">
-                <span class="paste-count" id="pasteCount">0 字</span>
+              <div class="paste-foot" data-page-node-id="kLWnVRFItyA0KDUsDpHdZ1">
+                <span class="paste-count" id="pasteCount" data-page-node-id="C6AtXSMPuAPGcmWi7vUC5K">0 字</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="ptype-row">
-      <div class="ptype-sel-wrap">
-        <label class="ptype-sel-label" for="ptypeSelect">计划类型</label>
-        <div class="ptype-sel">
-          <select id="ptypeSelect" data-action="pickTypeSelect">
-            <option value="annual" selected="">年度工作总计划</option><option value="quarter">季度重点工作计划</option><option value="special">专项工作实施方案</option>
+        <div class="ptype-row" data-page-node-id="ZnRAoJu5xJt0gZT8UmSzFD">
+      <div class="ptype-sel-wrap" data-page-node-id="T0plVVybQxMjn3H3NGxhMM">
+        <label class="ptype-sel-label" for="ptypeSelect" data-page-node-id="5SyK7heAKbrVFO0m0Hh8QB">模板名称</label>
+        <div class="ptype-sel" data-page-node-id="yg7ptU5o70wwbTUChKy8TO">
+          <select id="ptypeSelect" data-action="pickTypeSelect" data-page-node-id="IBEqepcCEoylsOhosjKTY3">
+            <option value="annual" selected="" data-page-node-id="EroZxjTXTJcyKg9joJPpOs">年度工作总计划</option><option value="quarter" data-page-node-id="85vIqjr0Ob8NEkwWiTB6oo">季度重点工作计划</option><option value="special" data-page-node-id="VAUqWV69iXHB6ILB9WKY4V">专项工作实施方案</option>
           </select>
-          <span class="ptype-caret">▾</span>
+          <span class="ptype-caret" data-page-node-id="7ZID2usL5tdQH4ZFFnZRMw">▾</span>
         </div>
       </div>
-      <button class="mini-btn" data-action="gotoTplMgr">🗂 管理更多模板</button>
+      <button class="mini-btn" data-action="gotoTplMgr" data-page-node-id="fL8BP4m87Fc3Exn0wFsMvl">🗂 管理更多模板</button>
     </div>
-    <div class="ptype-detail" id="ptypeDetail">
-      <div class="pd-head"><span class="pd-ic">📅</span>
-        <span class="pd-title">年度工作总计划</span><span class="chip blue">年度</span></div>
-      <div style="font-size:12px;color:#6b7690;font-weight:700;margin:10px 0 6px;">章节结构</div>
-      <div class="tpl-secs"><span class="chip gray">一、指导思想</span><span class="chip gray">二、总体思路与工作目标</span><span class="chip gray">三、重点任务及推进举措</span><span class="chip gray">四、保障措施</span></div>
+    <div class="ptype-detail" id="ptypeDetail" data-page-node-id="zi6I5mUvJNk3ibBOZyfmU2">
+      <div class="pd-head" data-page-node-id="F2Xop6gGN3GqPFjXhDGWw7"><span class="pd-ic" data-page-node-id="U1OLAmjz4xW6TqTFURQK8G">📅</span>
+        <span class="pd-title" data-page-node-id="uFmDYdDmUNYGhHDIUiu2ho">年度工作总计划</span><span class="chip blue" data-page-node-id="hINNeBF23MDIVb3qm5vBDh">年度</span></div>
+      <div style="font-size:12px;color:#6b7690;font-weight:700;margin:10px 0 6px;" data-page-node-id="iHkoWOcrg3qieqSCTDFlBV">章节结构</div>
+      <div class="tpl-secs" data-page-node-id="tdXYLS5X7Tv0eUahZZHYRU"><span class="chip gray" data-page-node-id="6tK8AbzM51PBY02tPrxr0D">一、指导思想</span><span class="chip gray" data-page-node-id="z6CCmrPI0Ck3CdrQHLws84">二、总体思路与工作目标</span><span class="chip gray" data-page-node-id="SAD9jNBCudh6Nip5Vt9w8r">三、重点任务及推进举措</span><span class="chip gray" data-page-node-id="JB6JcfbDYWbJd1QAZXL9Jg">四、保障措施</span></div>
     </div>
         
-        <div class="parse-cta-wrap">
-          <button class="parse-cta" data-action="parse" disabled="" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7z"></path></svg><span>开始智能解析</span></button>
-          <div class="parse-cta-tip">上传或粘贴资料后即可开始</div>
+        <div class="parse-cta-wrap" data-page-node-id="eq5agebgdB2B5OdE0imivp">
+          <button class="parse-cta" data-action="parse" disabled="" data-icon-ready="1" data-page-node-id="HWp8onpTWnGmqgi5z5PRPl"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="R1XGCk56GFtDIC4IrixDSB"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7z" data-page-node-id="Z1VtodHs6aCfOrXMMDnT9E"></path></svg><span data-page-node-id="BRiQoypLFjMGvF7Lb8c4IP">开始智能解析</span></button>
+          <div class="parse-cta-tip" data-page-node-id="bEmTlFp9Z4XCDIRENS18BZ">上传或粘贴资料后即可开始</div>
         </div>
       </div></div></div></div></section>
       </main>
@@ -673,7 +686,7 @@
             <div class="page-sub" data-page-node-id="jGkBnGeJFhZqAdIX1mGASa">维护政务标准工作计划模板，定义章节结构与版式规范，供格式生成环节套用</div>
           </div>
           <div class="toolbar-inline" data-page-node-id="LXTCKRQS09BvmDUXiGyqGV">
-            <button class="primary-btn" data-action="addTpl" data-page-node-id="kMHwVCT4nAepdU9V9vjc4C" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span> 新建模板</span></button>
+            <button class="primary-btn" data-action="addTpl" data-page-node-id="kMHwVCT4nAepdU9V9vjc4C" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="HXv8h5pCQgIRDCW6JG0q6q"><path d="M12 5v14M5 12h14" data-page-node-id="B2tEbLWBJ2aWBGnErlbKhE"></path></svg><span data-page-node-id="wKNgXFXb7LnY6i5nq9yrAM"> 新建模板</span></button>
           </div>
         </div>
         <div id="tplMgrList" class="grid-2" style="align-items:start;" data-page-node-id="0zrK8dm4xqfGVSs9xrMhpA"></div>
@@ -688,7 +701,7 @@
             <div class="page-title" data-page-node-id="uBmRhcHpF2B7CjE5nfQKV8">历史版本与操作留痕</div>
             <div class="page-sub" data-page-node-id="W1iS58WO4Re8dDKHc3Ff9K">查看各版本存档与全流程操作日志，支持一键回滚，满足政务编制过程可追溯要求</div>
           </div>
-          <div class="toolbar-inline" data-page-node-id="uBHPo8snqnRUn9bMbxUpLT"><button class="btn" data-action="exportLog" data-page-node-id="MQ8vvQdhcrKdV3Wxmysnbk" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"></path></svg><span> 导出操作台账</span></button></div>
+          <div class="toolbar-inline" data-page-node-id="uBHPo8snqnRUn9bMbxUpLT"><button class="btn" data-action="exportLog" data-page-node-id="MQ8vvQdhcrKdV3Wxmysnbk" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="AZG5zqYY3REpRDNHqEIDvG"><path d="M12 4v11M8 11l4 4 4-4M5 20h14" data-page-node-id="loP8XgUA6CSMMhcEN86bKv"></path></svg><span data-page-node-id="oRpcFHuNIoEy2URsR2qvND"> 导出操作台账</span></button></div>
         </div>
         <div class="grid-2" style="align-items:start;" data-page-node-id="MoKovIWIlifhA7WEPutWlp">
           <div class="card" style="margin:0;" data-page-node-id="k4zF0mEKGXGu3SY86wl6yV">
@@ -713,7 +726,7 @@
   <!-- 右侧隐藏抽屉：要素提取 / 格式校验 -->
   <div class="drawer-mask" id="drawerMask" data-page-node-id="ejAcV2ptqdV8RnMZ43uxeQ"></div>
   <aside class="drawer" id="drawer" data-page-node-id="mEVQ5JjftDZaEWDdMawSPp">
-    <div class="drawer-head" data-page-node-id="tnfMTR04KoEIwfFTuq1CLo"><span class="drawer-title" data-page-node-id="iQBSs4EGplCbMAbs49Y484">智能分析</span><button class="icon-btn" data-action="closeDrawer" data-page-node-id="XfzyDDHPS6xOt18TY5QXEs" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div>
+    <div class="drawer-head" data-page-node-id="tnfMTR04KoEIwfFTuq1CLo"><span class="drawer-title" data-page-node-id="iQBSs4EGplCbMAbs49Y484">智能分析</span><button class="icon-btn" data-action="closeDrawer" data-page-node-id="XfzyDDHPS6xOt18TY5QXEs" data-icon-ready="1"><svg class="ui-icon " aria-hidden="true" viewBox="0 0 24 24" data-page-node-id="J2LUfAWOTyMbNVCv8RdMtt"><path d="m6 6 12 12M18 6 6 18" data-page-node-id="q0NrryLjIp4mFBr0ef3P4W"></path></svg></button></div>
     <div class="drawer-tabs" data-page-node-id="AcMB4B0sc4SQLZlxNG8evF">
       <button class="drawer-tab active" data-action="drawerTab" data-tab="extract" data-page-node-id="h5jyaEA06QgvNMDrWCkjv2">🔍 要素提取</button>
       <button class="drawer-tab" data-action="drawerTab" data-tab="check" data-page-node-id="pJ3Zr5DQAw1bGTjBudkd5X">✅ 格式校验</button>
@@ -744,7 +757,7 @@
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const deep = (o) => JSON.parse(JSON.stringify(o));
   let _uid = 1; const uid = (p) => (p || "id") + "_" + (_uid++);
-  const esc = (s) => (s == null ? "" : String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/><!--pnid:KxuHEOChkJZfUV8OHdcQMD-->/g, "&gt;"));
+  const esc = (s) => (s == null ? "" : String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
   const CN = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五"];
   const cn = (n) => CN[n] || String(n);
   const today = () => { const d = new Date(); return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; };
@@ -948,6 +961,7 @@
     genLoading: 0,
     genLoadingPct: 0,
     templates: deep(TEMPLATES),
+    convTasks: [],
     past: [], future: [],
     versions: [], logs: [],
     drawerTab: "extract", navCollapsed: false,
@@ -1030,12 +1044,27 @@
   }
   function renderSideHist() {
     const box = $("#sideHist"); if (!box) return;
-    const versions = histFilteredVersions();
-    const result = $("#histResult"); if (result) result.textContent = "共 " + versions.length + " 条";
-    box.innerHTML = versions.length
-      ? versions.map((v) => `<button class="hist-it" data-action="openHist" data-id="${v.id}" title="${esc(v.title)}">
-          <div class="ht">${esc(v.label)}　${esc(v.title)}</div><div class="hm">${esc(v.time)}</div></button>`).join("")
-      : `<div class="hist-empty">${state.versions.length ? "未找到匹配记录" : "暂无历史记录<br>保存版本后在此查看"}</div>`;
+    const f = state.histFilter;
+    const keyword = f.keyword.trim().toLowerCase();
+    const todayMs = new Date(); todayMs.setHours(0, 0, 0, 0);
+    let from = f.from ? new Date(f.from + "T00:00:00") : null;
+    let to = f.to ? new Date(f.to + "T23:59:59.999") : null;
+    if (f.range === "today") { from = new Date(todayMs); to = new Date(todayMs); to.setHours(23, 59, 59, 999); }
+    if (f.range === "7" || f.range === "30") { from = new Date(todayMs); from.setDate(from.getDate() - (+f.range - 1)); to = new Date(); }
+    /* 历史对话记录：以 convTasks 为主体（新建编制即产生记录，无需保存版本） */
+    const tasks = state.convTasks.filter((c) => {
+      const haystack = (c.title + " " + c.time).toLowerCase();
+      if (keyword && !haystack.includes(keyword)) return false;
+      const time = c.savedAt || Date.parse(c.time);
+      if (from && (!time || time < from.getTime())) return false;
+      if (to && (!time || time > to.getTime())) return false;
+      return true;
+    }).sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+    const result = $("#histResult"); if (result) result.textContent = "共 " + tasks.length + " 条";
+    box.innerHTML = tasks.length
+      ? tasks.map((c) => `<button class="hist-it" data-action="openHistConv" data-id="${c.id}" title="${esc(c.title)}">
+          <div class="ht">${esc(c.title)}</div><div class="hm"><span class="hm-time">${esc(c.time)}</span><span class="st ${c.status === "进行中" ? "run" : "done"}">${esc(c.status)}</span></div></button>`).join("")
+      : `<div class="hist-empty">${state.convTasks.length ? "未找到匹配记录" : "暂无历史对话<br>新建编制任务后在此查看"}</div>`;
   }
   function clearHistFilter() {
     state.histFilter = { keyword: "", range: "all", from: "", to: "" };
@@ -1057,10 +1086,24 @@
     if (state.logs.length > 200) state.logs.pop();
     if (state.view === "history") renderLogList();
   }
+  /* ============ 历史对话记录维护 ============ */
+  function touchConv(status) {
+    const title = state.doc.meta.title;
+    const now = Date.now();
+    const time = new Date(now).toLocaleString("zh-CN", { hour12: false });
+    const cur = state.convTasks.find((c) => c.title === title);
+    if (cur) { if (status && cur.status !== "完成") cur.status = status; cur.time = time; cur.savedAt = now; }
+    else state.convTasks.unshift({ id: uid("cv"), title, time, savedAt: now, status: status || "进行中", versionId: "" });
+    renderSideHist();
+  }
   function saveVersion() {
     const savedAt = Date.now();
     const v = { id: uid("v"), label: "V" + (state.versions.length + 1), time: new Date(savedAt).toLocaleString("zh-CN", { hour12: false }), savedAt: savedAt, sn: snapshot(), title: state.doc.meta.title };
     state.versions.unshift(v);
+    /* 左侧历史对话记录：同一任务沿用已有记录并刷新时间/状态，否则新建 */
+    touchConv(state.stepDone[3] ? "完成" : "进行中");
+    const curConv = state.convTasks.find((c) => c.title === state.doc.meta.title);
+    if (curConv) curConv.versionId = v.id;
     addLog("保存版本 " + v.label, "ok");
     updateToolbar();
     toast("版本 " + v.label + " 已保存");
@@ -1188,7 +1231,7 @@
     const tpl = state.templates.find((t) => t.id === sc.templateId);
     const typeHtml = `<div class="ptype-row">
       <div class="ptype-sel-wrap">
-        <label class="ptype-sel-label" for="ptypeSelect">计划类型</label>
+        <label class="ptype-sel-label" for="ptypeSelect">模板名称</label>
         <div class="ptype-sel">
           <select id="ptypeSelect" data-action="pickTypeSelect">
             ${Object.values(SCENARIOS).map((s) => `<option value="${s.key}" ${s.key === state.scenarioKey ? "selected" : ""}>${esc(s.label)}</option>`).join("")}
@@ -1338,6 +1381,7 @@
           $("#modalBox").classList.remove("parse-modal");
           closeModal();
           setStatus("智能解析完成，已归类形成 " + sc.clusters.length + " 个任务大类");
+          touchConv("进行中");
           renderStep();
           toast("智能解析完成，结构化任务清单已生成");
         }, 360);
@@ -1628,11 +1672,12 @@
   /* ============ 模板库管理视图 ============ */
   function renderTplMgr() {
     $("#tplMgrList").innerHTML = state.templates.map((t) => `<div class="card" style="margin:0;">
-      <div class="card-head"><div class="card-title"><span class="bar"></span>${esc(t.name)}</div>${t.custom ? '<span class="chip gold">自定义</span>' : '<span class="chip blue">标准</span>'}</div>
+      <div class="card-head"><div class="card-title"><span class="bar"></span>${esc(t.name)}</div>${t.custom ? '<span class="chip gold">自定义</span>' : ""}</div>
       <div class="card-body">
         <div style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:10px;">${esc(t.desc)}</div>
         <div style="font-size:12px;color:#6b7690;font-weight:700;margin-bottom:6px;">章节结构</div>
-        <div class="tpl-secs">${t.sections.map((s) => `<span class="chip gray">${esc(s)}</span>`).join("")}</div>
+        <div class="tpl-secs">${(t.sections || []).map((s) => `<span class="chip gray">${esc(s)}</span>`).join("") || '<span style="color:#9aa4b8;font-size:12px;">未定义章节</span>'}</div>
+        ${t.rules && t.rules.length ? `<div style="font-size:12px;color:#6b7690;font-weight:700;margin:12px 0 6px;">自定义约束规则</div><div class="tpl-rules">${t.rules.map((r) => `<div class="rule-line"><span class="rk">◈</span>${esc(r)}</div>`).join("")}</div>` : ""}
       </div></div>`).join("");
   }
 
@@ -1716,6 +1761,8 @@
     const blob = new Blob(["﻿", html], { type: "application/msword" });
     const url = URL.createObjectURL(blob); const a = document.createElement("a");
     a.href = url; a.download = state.doc.meta.title + ".doc"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    /* 导出即成稿：左侧历史对话记录状态置为「完成」 */
+    touchConv("完成");
     addLog("导出 Word 文档", "ok"); toast("已导出 Word 文档");
   }
   function exportPdf() { toast("已调起打印，请在窗口中选择「另存为 PDF」"); addLog("导出 PDF（打印）", "ok"); setTimeout(() => window.print(), 300); }
@@ -1737,6 +1784,13 @@
       case "clearHistFilter": clearHistFilter(); break;
       case "gotoHistory": switchView("history"); break;
       case "openHist": restoreVersion(el.dataset.id); break;
+      case "openHistConv": {
+        const cv = state.convTasks.find((c) => c.id === el.dataset.id);
+        if (!cv) break;
+        if (cv.versionId) { restoreVersion(cv.versionId); }
+        else { toast("该对话暂无已保存版本，可在历史版本页查看留痕"); switchView("history"); }
+        break;
+      }
       case "gotoStep": gotoStep(+el.dataset.step); break;
       case "toggleNav": toggleNav(); break;
       case "ddToggle": ddToggle(el.dataset.dd); break;
@@ -1784,13 +1838,15 @@
       case "uploadTpl": $("#tplInput").click(); break;
       case "exportWord": exportWord(); break;
       case "exportPdf": exportPdf(); break;
-      case "addTpl": openModal("新建模板", `<div class="field"><label>模板名称</label><input type="text" id="ntplName" placeholder="如：局机关年度计划模板"></div><div class="field"><label>模板描述</label><textarea id="ntplDesc" rows="3" placeholder="简述该模板的用途与适用编制情形…" style="width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;color:#33405c;font-size:13px;line-height:1.7;padding:9px 11px;font-family:inherit;outline:none;resize:vertical;"></textarea></div><div class="field"><label>章节结构</label><textarea id="ntplSecs" rows="4" placeholder="每行一个章节标题，如：&#10;一、工作思路&#10;二、工作目标&#10;三、重点任务&#10;四、保障措施" style="width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;color:#33405c;font-size:13px;line-height:1.7;padding:9px 11px;font-family:inherit;outline:none;resize:vertical;"></textarea></div>`, () => {
+      case "addTpl": openModal("新建模板", `<div class="field"><label>模板名称 <i class="req">*</i></label><input type="text" id="ntplName" placeholder="如：局机关年度计划模板"></div><div class="field"><label>模板描述 <i class="req">*</i></label><textarea id="ntplDesc" rows="3" placeholder="简述该模板的用途与适用编制情形…" style="width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;color:#33405c;font-size:13px;line-height:1.7;padding:9px 11px;font-family:inherit;outline:none;resize:vertical;"></textarea></div><div class="field"><label>章节结构 <i class="req">*</i></label><textarea id="ntplSecs" rows="4" placeholder="每行一个章节标题，如：&#10;一、工作思路&#10;二、工作目标&#10;三、重点任务&#10;四、保障措施" style="width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;color:#33405c;font-size:13px;line-height:1.7;padding:9px 11px;font-family:inherit;outline:none;resize:vertical;"></textarea></div><div class="field"><label>自定义约束规则 <span class="opt-hint">（选填）</span></label><textarea id="ntplRules" rows="3" placeholder="可自定义个性化编写规则，每行一条，如：&#10;每项任务须明确责任处室与完成时限&#10;量化指标须注明数据来源" style="width:100%;border:1px dashed var(--line);border-radius:9px;background:#fafbfd;color:#33405c;font-size:13px;line-height:1.7;padding:9px 11px;font-family:inherit;outline:none;resize:vertical;"></textarea></div>`, () => {
         const nm = ($("#ntplName").value || "").trim();
         if (!nm) { toast("请输入模板名称"); return; }
-        const desc = ($("#ntplDesc").value || "").trim() || "用户自定义政务公文模板。";
+        const desc = ($("#ntplDesc").value || "").trim();
+        if (!desc) { toast("请输入模板描述"); return; }
         const secs = ($("#ntplSecs").value || "").split("\n").map((s) => s.trim()).filter(Boolean);
         if (!secs.length) { toast("请至少填写一个章节标题"); return; }
-        state.templates.push({ id: uid("tpl"), name: nm + "（自定义）", scene: "自定义", desc, sections: secs, font: "仿宋_GB2312 三号", line: "固定值 28 磅", custom: true });
+        const rules = ($("#ntplRules").value || "").split("\n").map((s) => s.trim()).filter(Boolean);
+        state.templates.push({ id: uid("tpl"), name: nm + "（自定义）", scene: "自定义", desc, sections: secs, rules: rules, font: "仿宋_GB2312 三号", line: "固定值 28 磅", custom: true });
         renderTplMgr(); closeModal(); toast("模板已新建，可在计划类型中套用");
       }); break;
       /* 历史 */
@@ -1907,6 +1963,14 @@
 
   /* ============ 初始化 ============ */
   state.doc = blankDoc(SCENARIOS[state.scenarioKey]);
+  /* 预置历史对话演示记录（进行中/完成两种状态） */
+  if (!state.convTasks.length) {
+    const t0 = Date.now();
+    state.convTasks = [
+      { id: uid("cv"), title: "2026年全区数字政府建设工作要点", time: new Date(t0 - 86400000).toLocaleString("zh-CN", { hour12: false }), savedAt: t0 - 86400000, status: "完成", versionId: "" },
+      { id: uid("cv"), title: "三季度招商服务重点任务计划", time: new Date(t0 - 3600000).toLocaleString("zh-CN", { hour12: false }), savedAt: t0 - 3600000, status: "进行中", versionId: "" }
+    ];
+  }
   bindHistFilters();
   renderAll();
   setStatus("请点击「新建编制」或上传资料，开始工作计划编制");

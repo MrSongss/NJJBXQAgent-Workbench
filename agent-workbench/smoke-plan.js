@@ -16,6 +16,12 @@ const click = (el) => el.dispatchEvent(new window.MouseEvent("click", { bubbles:
 
 setTimeout(() => {
   try {
+    /* 0. 左侧历史对话记录：名称+时间+状态 */
+    const sideIt = document.querySelectorAll("#sideHist .hist-it");
+    t("0.1 预置 2 条历史对话记录", sideIt.length === 2);
+    t("0.2 记录含名称与时间", sideIt.length && !!sideIt[0].querySelector(".ht") && !!sideIt[0].querySelector(".hm-time"));
+    t("0.3 状态徽章（进行中+完成）", /进行中/.test(document.getElementById("sideHist").textContent) && /完成/.test(document.getElementById("sideHist").textContent));
+
     /* 1. 布局与样式结构 */
     t("1.1 页面无 rightbar 元素", !document.querySelector(".rightbar") && !document.getElementById("previewBody"));
     t("1.2 双列 src-col 结构", document.querySelectorAll("#uploadBody .src-col").length === 2);
@@ -34,6 +40,31 @@ setTimeout(() => {
     t("2.5 管理更多模板按钮存在", !!mgrBtn && /管理更多模板/.test(mgrBtn.textContent));
     t("2.6 解析主按钮为醒目样式 parse-cta 且居中", !!document.querySelector("#uploadBody .parse-cta-wrap .parse-cta") && !!document.querySelector(".parse-cta-wrap"));
     t("2.7 编制设置模块与入口已删除", !document.getElementById("view-settings") && !document.querySelector('[data-view="settings"]'));
+
+    /* 2.8 新建模板弹框：三必填 + 自定义约束规则选填 */
+    click(document.querySelector('.page-toolbar [data-action="addTpl"]') || document.querySelector('[data-action="addTpl"]'));
+    const ntplRules = document.getElementById("ntplRules");
+    t("2.8 新建模板弹框含自定义约束规则字段（选填）", !!ntplRules && /选填/.test((ntplRules.previousElementSibling || {}).textContent || document.getElementById("modalBox").innerHTML));
+    const reqCount = document.querySelectorAll("#modalBox .field label .req").length;
+    t("2.9 弹框三必填标记（模板名称/描述/章节结构）", reqCount === 3 && /模板名称/.test(document.querySelector("#modalBox .field label .req").closest("label").textContent));
+    t("2.10 空描述提交被拦截（必填校验）", (() => {
+      document.getElementById("ntplName").value = "测试模板";
+      document.getElementById("ntplDesc").value = "";
+      document.getElementById("ntplSecs").value = "一、测试章节";
+      document.getElementById("modalOk").click();
+      return (document.getElementById("modalMask") || {}).classList.contains("show") === true; /* 弹框仍开着 = 被拦截 */
+    })());
+    /* 补全描述 + 约束规则后提交成功 */
+    document.getElementById("ntplDesc").value = "用于冒烟测试的自定义模板";
+    document.getElementById("ntplRules").value = "每项任务须明确责任处室\n量化指标须注明数据来源";
+    document.getElementById("modalOk").click();
+    t("2.11 提交成功后弹框关闭", !(document.getElementById("modalMask") || {}).classList.contains("show"));
+    t("2.12 模板列表新增自定义模板卡片", /测试模板（自定义）/.test(document.body.innerHTML));
+    const newCard = [...document.querySelectorAll("#tplMgrList .card")].find((c) => /测试模板（自定义）/.test(c.textContent));
+    t("2.13 卡片展示章节结构", !!newCard && /一、测试章节/.test(newCard.textContent));
+    t("2.14 卡片展示自定义约束规则", !!newCard && /自定义约束规则/.test(newCard.textContent) && /每项任务须明确责任处室/.test(newCard.textContent) && /量化指标须注明数据来源/.test(newCard.textContent));
+    /* 切回编辑器视图继续原流程 */
+    click(document.querySelector('[data-view="editor"]'));
 
     /* 3. 类型切换：仅切元数据，不重置已传资料、不载入示例 */
     sel.value = "quarter";
@@ -54,6 +85,7 @@ setTimeout(() => {
     setTimeout(() => {
       try {
         t("4.1 解析后进入清单视图", !!document.querySelector(".cluster"));
+        t("4.1b 解析后左侧新增进行中对话记录（共3条）", document.querySelectorAll("#sideHist .hist-it").length === 3 && /进行中/.test(document.getElementById("sideHist").textContent));
         const nextBtn = document.querySelector('[data-action="nextStep"]');
         t("4.2 进入思路与目标凝练按钮存在", !!nextBtn && /进入思路与目标凝练/.test(nextBtn.textContent));
         click(nextBtn); /* → 步骤②，自动 genGoals(900ms) */
