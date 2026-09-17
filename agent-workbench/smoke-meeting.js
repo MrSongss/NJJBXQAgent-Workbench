@@ -165,6 +165,72 @@ setTimeout(() => {
         t("6.4 结果页无音频播放器（文本模式）", document.getElementById("audioPlayerBlock").classList.contains("hidden"));
         t("6.5 待办列表无信息来源列（v1.9.25 删除）", !document.getElementById("sourceColTitle") && !document.getElementById("todosBody").textContent.includes("信息来源"));
         t("6.6 无 JS 运行时错误", errors.length === 0);
+
+        /* ===== 需求11：概览版编辑态标题锁定+条目可编辑+可新增（v1.9.43） ===== */
+        const quickRegion = document.getElementById("quickEditableRegion");
+        const quickBtn = document.getElementById("quickEditBtn");
+        click(quickBtn); // 进入编辑
+        const sections = quickRegion.querySelectorAll(".quick-section");
+        t("11.1 概览版三个区块存在", sections.length === 3);
+        t("11.2 编辑态区块标题锁定（h4 显式不可编辑）", [...sections].every(s => {
+          const h4 = s.querySelector("h4");
+          return h4 && (h4.contentEditable === "false" || h4.getAttribute("contenteditable") === "false");
+        }));
+        t("11.3 编辑态区块整体不可编辑（父级拦截）", [...sections].every(s => s.contentEditable === "false" || s.getAttribute("contenteditable") === "false"));
+        t("11.4 编辑态条目列表可编辑", [...sections].every(s => {
+          const ul = s.querySelector("ul");
+          return ul && (ul.getAttribute("contenteditable") === "true" || ul.contentEditable === "true");
+        }));
+        t("11.5 每个区块有新增条目按钮", [...sections].every(s => {
+          const b = s.querySelector(".quick-add-item-btn");
+          return b && /添加条目/.test(b.textContent);
+        }));
+        // 新增条目（核心决议区块）
+        const sec1 = sections[0];
+        const before = sec1.querySelectorAll("ul li").length;
+        click(sec1.querySelector(".quick-add-item-btn"));
+        const afterLi = sec1.querySelectorAll("ul li");
+        t("11.6 点击新增追加条目", afterLi.length === before + 1);
+        t("11.7 新条目为占位样式", afterLi[afterLi.length - 1].classList.contains("quick-item-placeholder"));
+        // 编辑过的占位条目转正：修改文本后触发 input
+        const newLi = afterLi[afterLi.length - 1];
+        newLi.textContent = "新增的决议内容";
+        inputEvt(newLi);
+        t("11.8 占位条目编辑后转正", !newLi.classList.contains("quick-item-placeholder"));
+        // 关键行动区块新增带时限标签
+        const sec2 = sections[1];
+        click(sec2.querySelector(".quick-add-item-btn"));
+        const actLi = sec2.querySelectorAll("ul li");
+        const lastAct = actLi[actLi.length - 1];
+        t("11.9 关键行动新条目带时限标签", !!lastAct.querySelector(".quick-tag") && lastAct.querySelector(".quick-tag").textContent === "待定时限");
+        // 退出编辑：按钮移除、未编辑占位条目清除、编辑过的保留
+        click(quickBtn); // 退出并保存
+        t("11.10 退出后新增按钮已移除", !quickRegion.querySelector(".quick-add-item-btn"));
+        t("11.11 退出后未编辑占位条目被清除", !quickRegion.querySelector("li.quick-item-placeholder"));
+        t("11.12 退出后已编辑条目保留", [...quickRegion.querySelectorAll(".quick-section")][0].textContent.includes("新增的决议内容"));
+        t("11.13 退出后区块恢复不可编辑", [...quickRegion.querySelectorAll(".quick-section")].every(s => s.getAttribute("contenteditable") === "false" || s.contentEditable === "false"));
+        t("11.14 全程无 JS 错误（编辑链路）", errors.length === 0);
+        // 详细版行为不变：进入编辑仍为整区域可编辑
+        const detRegion = document.getElementById("detailedEditableRegion");
+        click(document.getElementById("detailedEditBtn"));
+        t("11.15 详细版编辑仍为整区域可编辑（不受影响）", detRegion.contentEditable === "true" && !detRegion.querySelector(".quick-add-item-btn"));
+        click(document.getElementById("detailedEditBtn")); // 退出
+        t("11.16 无 JS 运行时错误", errors.length === 0);
+
+        /* ===== 需求12：导出弹窗删除导出格式字段（v1.9.44） ===== */
+        ev("showExport()");
+        const modalExport = document.getElementById("modalExport");
+        t("12.1 导出弹窗可正常打开", modalExport.classList.contains("show"));
+        t("12.2 弹窗无 导出格式 字段", !modalExport.textContent.includes("导出格式"));
+        t("12.3 弹窗无 exportFormat 单选框", !modalExport.querySelector('input[name="exportFormat"]'));
+        t("12.4 选择导出内容区保留（5个复选项）", modalExport.querySelectorAll('input[type="checkbox"]').length === 5);
+        ev("hideModal('modalExport')");
+        // doExport 不再查询已删单选框，真实点击确认导出不抛错
+        ev("showExport()");
+        const exportBtn = modalExport.querySelector('[onclick="doExport()"]');
+        click(exportBtn);
+        t("12.5 确认导出无 JS 错误（不再读 exportFormat）", errors.length === 0);
+        t("12.6 导出后弹窗关闭", !modalExport.classList.contains("show"));
         // file 路径生成完成后回到创建页，验证删除恢复
         ev("switchView('viewCreate')");
         ev("uploadFiles.file = { name: 'x.docx', meta: '1 MB' }");

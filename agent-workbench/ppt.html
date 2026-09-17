@@ -6542,9 +6542,7 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   }
 });
 
-/* 一键生成：端到端生成动画（原 oneClickBtn 独立按钮逻辑迁移至此） */
-function startOneClickGeneration() {
-
+/* 高级生成：智能解析进度动画 */
 function showProgress() {
   const overlay = document.getElementById('progressOverlay');
   const circle = document.getElementById('progressCircle');
@@ -6593,7 +6591,8 @@ function showProgress() {
   steps[0].classList.add('active');
 }
 
-// 一键生成（入口已合并为第三个生成模式页签，由 startOneClickGeneration 调用）
+/* 一键生成：端到端生成动画（原 oneClickBtn 独立按钮逻辑迁移至此） */
+function startOneClickGeneration() {
   const oneClickSteps = [
     { name: '智能解析中...', start: 0, end: 12 },
     { name: '大纲生成中...', start: 12, end: 26 },
