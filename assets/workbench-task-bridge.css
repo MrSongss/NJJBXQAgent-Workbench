@@ -63,6 +63,13 @@
 .workbench-result-file:focus-visible { outline:3px solid rgba(21,152,189,.2);outline-offset:2px; }
 .workbench-result-files .generated-file-download { padding:0 9px;opacity:1;transform:none; }
 .workbench-result-files .generated-file-card::after { display:none; }
+.workbench-plan-result-heading { margin-bottom:9px; }
+.workbench-plan-result-files { grid-template-columns:1fr; }
+.workbench-plan-result-file { cursor:default;min-height:82px; }
+.workbench-plan-result-file:hover { transform:none;box-shadow:none; }
+.workbench-plan-result-note { display:block;margin-top:6px;color:#718697;font-size:11px;font-style:normal;font-weight:600; }
+.workbench-plan-result-actions { display:flex;align-items:center;gap:8px; }
+.workbench-plan-result-actions .workbench-task-btn { white-space:nowrap; }
 .workbench-result-overview { margin:0 19px 14px;padding:14px 15px;border:1px solid #c8e6d4;border-radius:12px;background:#f3fbf6; }
 .workbench-result-overview strong { display:block;color:#165f3a;font-size:14px; }
 .workbench-result-overview p { margin:5px 0 0;color:#4d7160;font-size:12px;line-height:1.55; }
@@ -105,5 +112,8 @@ body.in-wb .wb-back { border-color:#c9dadd;background:rgba(255,255,255,.96);colo
   .workbench-result-files { margin-left:14px;margin-right:14px;grid-template-columns:1fr; }
   .workbench-result-files .generated-file-card { grid-template-columns:38px minmax(0,1fr) auto; }
   .workbench-result-files .generated-file-download { grid-column:auto; }
+  .workbench-plan-result-file { grid-template-columns:38px minmax(0,1fr); }
+  .workbench-plan-result-actions { grid-column:1 / -1; }
+  .workbench-plan-result-actions .workbench-task-btn,.workbench-plan-result-actions .generated-file-download { flex:1; }
   .wb-task-context { padding-left:108px;padding-right:12px; }
 }
