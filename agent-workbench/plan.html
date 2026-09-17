@@ -321,6 +321,11 @@
     .format-panel-title .bar { width: 4px; height: 15px; border-radius: 2px; background: var(--primary); }
     .format-preview { display: flex; flex-direction: column; background: #eef1f5; flex: 1; }
     .format-preview .format-panel-head { background: #fff; }
+    /* 文稿在线编辑态 */
+    .paper.editing { outline: 2px dashed rgba(19,168,168,.45); outline-offset: 4px; cursor: text; }
+    .paper.editing:hover { outline-color: rgba(19,168,168,.8); }
+    .mini-btn.editing-on { color: #fff; background: var(--green); border-color: var(--green); }
+    .mini-btn.editing-on:hover { color: #fff; background: #12823f; }
     .format-preview-body { min-height: 0; flex: 1; overflow: auto; padding: 22px; }
     .format-preview-body .paper { width: min(100%, 820px); min-height: 760px; margin: 0 auto; padding: 42px 56px 54px; }
     @media (max-width: 1180px) {
@@ -912,7 +917,7 @@
     { icon: "①", t: "工作内容智能结构化梳理", s: "上传讲话、会议纪要等原始资料，智能解析摘录核心语句，归类形成结构化任务清单" },
     { icon: "②", t: "总体思路与目标自动凝练", s: "基于任务清单逆向概括升华总体工作思路，设定可量化、有时限、明责任的核心目标" },
     { icon: "③", t: "重点任务与实施步骤拆解", s: "将重点任务逐级细化为子任务与实施步骤，转化为清晰、可执行的行动指南" },
-    { icon: "④", t: "模版化工作计划格式生成", s: "套用政务标准或自定义模板，规范化组装成文，导出可呈报印发的正式工作计划" }
+    { icon: "④", t: "", s: "" }
   ];
   const FLOW = ["结构化梳理", "思路目标凝练", "任务步骤拆解", "格式生成"];
 
@@ -929,7 +934,7 @@
   function icon(name, cls) { return `<svg class="ui-icon ${cls || ""}" aria-hidden="true" viewBox="0 0 24 24">${ICONS[name] || ICONS.file}</svg>`; }
   function decorateIcons(root) {
     root = root || document;
-    const actions = { profile: "user", newTask: "plus", toggleNav: "chevronLeft", saveVersion: "save", ddToggle: "download", exportWord: "file", exportPdf: "file", undo: "undo", redo: "redo", openDrawer: "check", closeDrawer: "close", expandPreview: "expand", addTpl: "plus", exportLog: "download", parse: "spark", showUpload: "arrowLeft", reparse: "refresh", addCluster: "plus", genGoals: "refresh", addGoal: "plus", genTasks: "spark", addTask: "plus", moveUp: "arrowLeft", moveDown: "arrowRight", addStep: "plus", addSub: "plus", restoreVer: "refresh" };
+    const actions = { profile: "user", newTask: "plus", toggleNav: "chevronLeft", saveVersion: "save", ddToggle: "download", exportWord: "file", exportPdf: "file", undo: "undo", redo: "redo", openDrawer: "check", closeDrawer: "close", toggleDocEdit: "check", addTpl: "plus", exportLog: "download", parse: "spark", showUpload: "arrowLeft", reparse: "refresh", addCluster: "plus", genGoals: "refresh", addGoal: "plus", genTasks: "spark", addTask: "plus", moveUp: "arrowLeft", moveDown: "arrowRight", addStep: "plus", addSub: "plus", restoreVer: "refresh" };
     root.querySelectorAll("[data-action]").forEach((el) => {
       const name = actions[el.dataset.action]; if (!name || el.dataset.iconReady) return;
       el.dataset.iconReady = "1";
@@ -967,6 +972,8 @@
     drawerTab: "extract", navCollapsed: false,
     histFilter: { keyword: "", range: "all", from: "", to: "" }
   };
+  const PLAN_TASK_STATE_PREFIX = "JBAI_PLAN_TASK_STATE_V1:";
+  let planBridgeContext = {};
 
   function blankDoc(sc) {
     return { meta: deep(sc.meta), templateId: sc.templateId, sourceDocs: [], clusters: [], thinking: "", goals: [], tasks: [] };
@@ -975,6 +982,57 @@
   /* ============ 变更提交 / 撤销重做 ============ */
   function snapshot() {
     return { doc: deep(state.doc), stepDone: state.stepDone.slice(), loaded: state.loaded, parsed: state.parsed, step1View: state.step1View, step: state.step };
+  }
+  function currentConversationTaskId() {
+    return planBridgeContext.taskId || new URLSearchParams(location.search).get("taskId") || "";
+  }
+  function planTaskStateKey(taskId) { return PLAN_TASK_STATE_PREFIX + String(taskId || ""); }
+  function persistPlanBridgeState() {
+    const taskId = currentConversationTaskId();
+    if (!taskId || !state.doc) return;
+    try { localStorage.setItem(planTaskStateKey(taskId), JSON.stringify({ scenarioKey:state.scenarioKey,snapshot:snapshot(),savedAt:Date.now() })); } catch (error) {}
+  }
+  function notifyConversationTask(eventName, detail) {
+    const taskId = currentConversationTaskId();
+    if (!taskId) return;
+    const payload = { type:"JBAI_WORKBENCH_TASK_EVENT",event:eventName,taskId,agentId:"plan",...(detail || {}) };
+    try { parent.postMessage(payload,"*"); } catch (error) {}
+  }
+  function markPlanResultReady() {
+    const title = state.doc?.meta?.title || "工作计划";
+    document.body.classList.add("bridge-result-ready");
+    document.body.dataset.workbenchTaskState = "complete";
+    document.body.dataset.workbenchResultTitle = title;
+    document.body.dataset.workbenchResultVersion = String(Math.max(1,state.versions.length || 1));
+    persistPlanBridgeState();
+  }
+  function hydratePlanResult() {
+    const sc = SCENARIOS[state.scenarioKey];
+    if (!state.doc.sourceDocs.length) state.doc.sourceDocs = deep(sc.sourceDocs || []);
+    if (!state.doc.clusters.length) state.doc.clusters = deep(sc.clusters || []);
+    if (!state.doc.thinking) state.doc.thinking = sc.thinking || "";
+    if (!state.doc.goals.length) state.doc.goals = deep(sc.goals || []);
+    if (!state.doc.tasks.length) state.doc.tasks = deep(sc.tasks || []);
+    state.loaded = true; state.parsed = true; state.step1View = "list";
+    state.stepDone = [true,true,true,true]; state.step = 4;
+  }
+  function applyPlanBridgeContext(payload) {
+    if (!payload || payload.targetAgentId !== "plan") return;
+    planBridgeContext = { ...planBridgeContext,...payload };
+    const taskId = currentConversationTaskId();
+    let stored = null;
+    try { stored = taskId ? JSON.parse(localStorage.getItem(planTaskStateKey(taskId)) || "null") : null; } catch (error) {}
+    if (stored?.snapshot) {
+      if (stored.scenarioKey && SCENARIOS[stored.scenarioKey]) state.scenarioKey = stored.scenarioKey;
+      restore(stored.snapshot);
+    }
+    if (payload.resumeToResult) {
+      hydratePlanResult();
+      touchConv("完成");
+      markPlanResultReady();
+      switchView("editor"); renderAll();
+      setStatus("工作计划已生成，可继续编辑、保存版本或导出");
+    }
   }
   function restore(sn) {
     state.doc = deep(sn.doc); state.stepDone = sn.stepDone.slice();
@@ -987,6 +1045,7 @@
     mutate();
     if (logText) addLog(logText, kind);
     renderStep(); renderPreview(); renderFlow(); updateToolbar();
+    persistPlanBridgeState();
   }
   function undo() {
     if (!state.past.length) { toast("无可撤销的操作"); return; }
@@ -1213,7 +1272,7 @@
     const info = STEP_INFO[state.step - 1];
     $("#view-editor").classList.toggle("format-layout", state.step === 4);
     $("#stepArea").innerHTML =
-      `<div class="step-intro"><h2><span class="step-intro-icon">${icon(["files", "chart", "target", "file"][state.step - 1], "lg")}</span><span class="ai-gradient-text">${info.t}</span></h2><p>${info.s}</p></div>` +
+      `<div class="step-intro">${info.t ? `<h2><span class="step-intro-icon">${icon(["files", "chart", "target", "file"][state.step - 1], "lg")}</span><span class="ai-gradient-text">${info.t}</span></h2>` : ""}${info.s ? `<p>${info.s}</p>` : ""}</div>` +
       bodies[state.step - 1]();
     decorateIcons($("#stepArea"));
     if (state.step === 3) bindDnD();
@@ -1532,7 +1591,7 @@
         </header>
         <section class="format-panel format-preview" aria-label="正式文稿预览">
           <div class="format-panel-head"><div class="format-panel-title"><span class="bar"></span>正式文稿预览</div>
-            <button class="mini-btn" data-action="expandPreview" title="全屏查看">⤢</button></div>
+            <button class="mini-btn" data-action="toggleDocEdit" id="docEditBtn" title="在线编辑文稿">✎ 编辑</button></div>
           <div class="format-preview-body" id="formatPreviewBody"></div>
         </section>
       </div>`;
@@ -1606,7 +1665,128 @@
     if (state.step !== 4) return;
     const box = $("#formatPreviewBody");
     if (!box) return;
-    box.innerHTML = `<div id="printRegion"><div class="paper">${buildDocHtml()}</div></div>`;
+    box.innerHTML = `<div id="printRegion"><div class="paper ${state.docEditing ? "editing" : ""}" ${state.docEditing ? 'contenteditable="true" spellcheck="false"' : ""}>${buildDocHtml()}</div></div>`;
+    bindDocEdit();
+  }
+  /* ============ 文稿在线编辑 ============ */
+  function bindDocEdit() {
+    const paper = document.querySelector("#formatPreviewBody .paper");
+    if (!paper) return;
+    if (!state.docEditing) { state.docEdits = null; return; }
+    /* 每个块级元素分配索引，退出编辑时逐块回写 */
+    paper.__blocks = Array.from(paper.querySelectorAll(".p-title, .p-sub, h4, p")).filter((el) => !el.classList.contains("muted-line"));
+    paper.addEventListener("input", () => {}, false);
+  }
+  function blockText(el) { return (el.innerText !== undefined ? el.innerText : el.textContent).replace(/\n+/g, "\n").trim(); }
+  function toggleDocEdit() {
+    if (!state.docEditing) {
+      /* 进入编辑态 */
+      state.docEditing = true;
+      renderPreview();
+      const btn = $("#docEditBtn");
+      if (btn) { btn.innerHTML = "✓ 完成编辑"; btn.classList.add("editing-on"); btn.title = "保存并退出编辑"; }
+      toast("已进入编辑模式，点击文字直接修改");
+    } else {
+      /* 退出编辑态：逐块回写到数据源 */
+      const paper = document.querySelector("#formatPreviewBody .paper");
+      if (paper && paper.__blocks) applyDocEdits(Array.from(paper.__blocks).map(blockText));
+      state.docEditing = false;
+      persistPlanBridgeState();
+      renderPreview();
+      const btn = $("#docEditBtn");
+      if (btn) { btn.innerHTML = "✎ 编辑"; btn.classList.remove("editing-on"); btn.title = "在线编辑文稿"; }
+      toast("文稿已保存");
+    }
+  }
+  function applyDocEdits(texts) {
+    const d = state.doc;
+    const tpl = state.templates.find((t) => t.id === d.templateId) || state.templates[0];
+    const guideMap = {
+      "tpl-annual": { guide: "一、指导思想", think: "二、总体思路与工作目标", mergeGoals: true, tasks: "三、重点任务及推进举措", safe: "四、保障措施" },
+      "tpl-quarter": { goals: "一、季度工作目标", tasks: "二、重点任务清单", plan: "三、进度安排与责任分工" },
+      "tpl-special": { bg: "一、背景与意义", goals: "二、工作目标", tasks: "三、实施步骤与主要任务", safe: "四、组织保障", plan: "五、进度安排" },
+      "tpl-brief": { think: "一、工作思路", tasks: "二、主要任务" }
+    };
+    const m = guideMap[tpl.id] || {};
+    const heads = new Set(Object.values(m));
+    const before = snapshot();
+    let i = 0, touched = false;
+    const take = () => texts[i++];
+    /* 1. 标题与副标题 */
+    const t0 = take();
+    if (t0 && t0 !== d.meta.title) { d.meta.title = t0; touched = true; }
+    const t1 = take();
+    if (t1) {
+      const parts = t1.split("·").map((x) => x.trim());
+      if (parts[0] && parts[0] !== d.meta.unit) { d.meta.unit = parts[0]; touched = true; }
+      if (parts[1] && parts[1] !== d.meta.period) { d.meta.period = parts[1]; touched = true; }
+      /* parts[2] 为模板名，不回写 */
+    }
+    /* 2. 章节块：识别章节标题 h4，将其后段落按块类型回写 */
+    let curKey = null, paraIdx = 0;
+    const paraBuckets = {};
+    for (; i < texts.length; i++) {
+      const tx = texts[i];
+      if (!tx) continue;
+      if (heads.has(tx) || /^[一二三四五六七八九十]+、/.test(tx)) { curKey = tx; paraBuckets[curKey] = []; }
+      else if (curKey) paraBuckets[curKey].push(tx);
+    }
+    const keyOf = (name) => Object.keys(m).find((k) => m[k] === name);
+    const setGoalsFromParas = (paras) => {
+      const goals = [];
+      paras.forEach((p) => {
+        const mm = p.match(/^（(.+?)）(.*)$/);
+        if (!mm) return;
+        const content = mm[2].split("。")[0].trim();
+        if (!content) return;
+        const metric = (p.match(/量化指标：(.+?)；/) || [])[1] || "";
+        const deadline = (p.match(/完成时限：(.+?)；/) || [])[1] || "";
+        const owner = (p.match(/责任主体：(.+?)。/) || [])[1] || "";
+        goals.push({ id: uid("g"), content, metric, deadline, owner });
+      });
+      if (goals.length) { d.goals = goals; touched = true; }
+    };
+    const setTasksFromParas = (paras) => {
+      const tasks = [];
+      paras.forEach((p) => {
+        const mm = p.match(/^(.+?)、(.+?)\s+(.*)$/);
+        if (mm && !/^[·—]/.test(p)) {
+          tasks.push({ id: uid("t"), title: mm[2].trim(), desc: mm[3].trim(), collapsed: false, subtasks: [] });
+        } else if (tasks.length && /^(\d+\.\d+)\s/.test(p)) {
+          tasks[tasks.length - 1].subtasks.push({ id: uid("s"), title: p.replace(/^(\d+\.\d+)\s/, ""), steps: [] });
+        } else if (tasks.length && /^[—]\s/.test(p)) {
+          const st = tasks[tasks.length - 1].subtasks;
+          if (st.length) st[st.length - 1].steps.push({ id: uid("p"), text: p.replace(/^[—]\s/, "") });
+        }
+      });
+      if (tasks.length) { d.tasks = tasks; touched = true; }
+    };
+    const setThinkingFromParas = (paras) => {
+      const first = paras.find((p) => p && p !== "（待凝练）");
+      if (first && first !== d.thinking) { d.thinking = first; touched = true; }
+    };
+    Object.keys(paraBuckets).forEach((name) => {
+      const paras = paraBuckets[name];
+      const k = keyOf(name);
+      if (k === "think") setThinkingFromParas(paras);
+      else if (k === "goals" || (k === "guide" && false)) setGoalsFromParas(paras);
+      else if (k === "tasks") setTasksFromParas(paras);
+      /* guide/bg/safe/plan 为框架文案，允许就地展示但不回写结构化数据 */
+    });
+    /* mergeGoals 模式下“总体思路”章的目标段落也尝试回写 */
+    if (m.mergeGoals && paraBuckets[m.think]) {
+      const goalParas = paraBuckets[m.think].filter((p) => /^（.+）/.test(p));
+      if (goalParas.length) setGoalsFromParas(goalParas);
+    }
+    if (touched) {
+      state.past.push(before);
+      if (state.past.length > 60) state.past.shift();
+      state.future = [];
+      addLog("在线编辑文稿并保存", "info");
+      renderPreview();
+      updateToolbar();
+      persistPlanBridgeState();
+    }
   }
 
   /* ============ 编辑提交（contenteditable / input） ============ */
@@ -1641,6 +1821,7 @@
     if (_editSnapshot) { state.past.push(_editSnapshot); if (state.past.length > 60) state.past.shift(); state.future = []; _editSnapshot = null; }
     addLog(log, "info");
     renderPreview(); updateToolbar();
+    persistPlanBridgeState();
   }
 
   /* ============ 结构化清单 / 目标 / 任务 增删 ============ */
@@ -1798,12 +1979,16 @@
       case "closeDrawer": closeDrawer(); break;
       case "toggleDrawer": toggleDrawer(); break;
       case "drawerTab": openDrawer(el.dataset.tab); break;
-      case "expandPreview": openModal("工作计划全文预览", `<div style="background:#eef1f5;padding:16px;border-radius:10px;max-height:70vh;overflow:auto;"><div class="paper">${buildDocHtml()}</div></div>`, null, { wide: true, hideFooter: true }); break;
+      case "toggleDocEdit": toggleDocEdit(); break;
       case "prevStep": gotoStep(state.step - 1); break;
       case "nextStep":
         if (state.step === 1) { commit(() => { state.stepDone[0] = true; }, "完成结构化梳理"); gotoStep(2); }
         else if (state.step === 2) { commit(() => { state.stepDone[1] = true; }, "确认思路与目标"); gotoStep(3); }
-        else if (state.step === 3) { commit(() => { state.stepDone[2] = true; state.stepDone[3] = true; }, "确认任务拆解，进入成文与导出"); gotoStep(4); }
+        else if (state.step === 3) {
+          commit(() => { state.stepDone[2] = true; state.stepDone[3] = true; }, "确认任务拆解，进入成文与导出");
+          gotoStep(4); touchConv("完成"); markPlanResultReady();
+          notifyConversationTask("complete", { title:state.doc.meta.title || "工作计划",version:Math.max(1,state.versions.length || 1) });
+        }
         break;
       /* step1 */
       case "pickFile": $("#fileInput").click(); break;
@@ -1974,6 +2159,11 @@
   bindHistFilters();
   renderAll();
   setStatus("请点击「新建编制」或上传资料，开始工作计划编制");
+  window.addEventListener("message", (event) => {
+    if (event?.data?.type === "JBAI_WORKBENCH_CONTEXT") applyPlanBridgeContext(event.data.payload || {});
+  });
+  window.addEventListener("pagehide", persistPlanBridgeState);
+  try { parent.postMessage({ type:"JBAI_WORKBENCH_READY",targetAgentId:"plan",taskId:currentConversationTaskId() },"*"); } catch (error) {}
 })();
 
 </script>

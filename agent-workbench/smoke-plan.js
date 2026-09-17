@@ -111,6 +111,23 @@ setTimeout(() => {
                 t("5.4 进入步骤④直接展示导出按钮（导出 Word）", !!expBtn && /导出/.test(expBtn.textContent));
                 t("5.5 步骤③入口按钮名称为 生成工作计划", !/进入格式生成/.test(document.body.innerHTML) && !document.getElementById("view-settings"));
                 t("5.6 步骤④预览含落款单位与日期", !!fpb && /综合部|数据管理局|2026|20\d\d/.test(fpb.textContent));
+                t("5.7 步骤④介绍标题已删除", !/模版化工作计划格式生成/.test(document.getElementById("stepArea").innerHTML));
+                /* 在线编辑：进入编辑态 → 改标题 → 完成保存 → 回写数据 */
+                const editBtn = document.getElementById("docEditBtn");
+                t("5.8 预览区展示编辑按钮", !!editBtn && /编辑/.test(editBtn.textContent) && !document.querySelector('[data-action="expandPreview"]'));
+                click(editBtn);
+                const paperEl = document.querySelector("#formatPreviewBody .paper");
+                t("5.9 编辑态 paper 可编辑", paperEl && paperEl.getAttribute("contenteditable") === "true" && paperEl.classList.contains("editing"));
+                const titleEl = paperEl.querySelector(".p-title");
+                titleEl.innerText = "南京江北新区数据管理局2026年度工作计划（编辑版）";
+                click(document.getElementById("docEditBtn")); /* 完成编辑 */
+                const paperAfter = document.querySelector("#formatPreviewBody .paper");
+                t("5.10 完成后退出编辑态", paperAfter && !paperAfter.hasAttribute("contenteditable"));
+                t("5.11 编辑内容回写至文稿", /编辑版/.test(paperAfter.textContent));
+                console.log("---");
+                console.log("RESULT: " + passed + " passed, " + failed + " failed, JS errors: " + errors.length);
+                if (errors.length) console.log("ERRORS:", errors.join(" | "));
+                process.exit(failed || errors.length ? 1 : 0);
               } catch (e) { console.log("FATAL-3", e.message); process.exit(1); }
             }, 1800);
           } catch (e) { console.log("FATAL-2", e.message); process.exit(1); }
