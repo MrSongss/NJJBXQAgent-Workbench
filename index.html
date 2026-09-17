@@ -3714,11 +3714,11 @@ let sidebarCollapsed = false;
     return null;
   }
   function workbenchTaskLabel(state) {
-    return ({ recognizing:"识别意图中", parsing:"解析材料中", ready:"待进入工作台", working:"工作台处理中", complete:"已完成", failed:"处理失败" })[state] || "处理中";
+    return state === "complete" ? "已完成" : state === "failed" ? "处理失败" : "处理中";
   }
   function workbenchTaskDefinition(task) {
     const definitions = {
-      meeting:{ icon:"i-mic",desc:"已识别为会议纪要任务，将在独立工作台完成议题、结论和待办整理。",primary:"完整会议纪要",primaryDesc:"正式公文格式，可继续编辑、报审和导出",items:[["i-list","核心速览","会议决定与后续行动的一页式摘要","同步生成"],["i-check","待办事项","按责任主体和时限跟踪","结构化清单"],["i-mic","原始转写","保留时间戳和发言人，用于定位会议依据","依据材料"]]},
+      meeting:{ icon:"i-mic",desc:"已识别为会议纪要任务，将在独立工作台完成。",primary:"完整会议纪要",primaryDesc:"正式公文格式，可继续编辑、报审和导出",items:[["i-list","核心速览","会议决定与后续行动的一页式摘要","同步生成"],["i-check","待办事项","按责任主体和时限跟踪","结构化清单"],["i-mic","原始转写","保留时间戳和发言人，用于定位会议依据","依据材料"]]},
       plan:{ icon:"i-clipboard",desc:"已识别为工作计划编排任务，将在独立工作台完成任务归类、目标凝练和责任排期。",primary:"正式工作计划",primaryDesc:"可直接呈报或印发的规范文稿",items:[["i-list","结构化任务清单","工作部署、任务分类与来源依据","同步生成"],["i-check","责任分工表","责任单位、完成时限和实施步骤","结构化清单"],["i-file-check","格式校验结果","检查层级、序号和政务行文格式","校验附件"]]},
       contract:{ icon:"i-shield",desc:"已识别为合同生成及预审任务，将在独立工作台完成要素填充、条款匹配和风险核查。",primary:"合同草案",primaryDesc:"按当前模板生成的可编辑合同正文",items:[["i-shield","预审报告","汇总条款问题、建议与处理状态","同步生成"],["i-list","风险清单","按合同条款定位风险及依据","结构化清单"],["i-book","引用条款","保留模板与法规依据的来源记录","依据材料"]]},
       ppt:{ icon:"i-slides",desc:"已识别为PPT生成任务，将在独立工作台完成大纲确认、模板匹配和逐页生成。",primary:"汇报PPT",primaryDesc:"可在线预览、继续修改和导出的演示文件",items:[["i-list","内容大纲","章节与逐页核心要点","同步生成"],["i-file","素材引用","关联图片、数据和知识来源","来源清单"],["i-check","生成检查","字体、溢出、引用和版式一致性","校验附件"]]},
@@ -3727,14 +3727,24 @@ let sidebarCollapsed = false;
     return definitions[task.agentId] || definitions.meeting;
   }
   function workbenchTaskMilestones(task) {
-    const current = task.state === "recognizing" || task.state === "parsing" ? 0 : task.state === "ready" || task.state === "working" ? 1 : task.state === "complete" ? 3 : 1;
-    return ["材料接入","工作台处理","成果回流"].map((label,index) => {
-      const done = index < current || task.state === "complete", active = !done && index === current;
-      return `<span class="workbench-task-milestone ${done ? "done" : active ? "current" : ""}"><i>${done ? svgi("i-check",9) : index + 1}</i>${label}</span>`;
+    const complete = task.state === "complete";
+    return ["处理中","已完成"].map((label,index) => {
+      const done = complete, active = !complete && index === 0;
+      return `<span class="workbench-task-milestone ${done ? `done${index === 1 ? " final" : ""}` : active ? "current" : ""}"><i>${done ? svgi("i-check",9) : index + 1}</i>${label}</span>`;
     }).join("");
   }
   function renderWorkbenchResult(task) {
     const title = task.resultTitle || task.title || "任务成果", definition = workbenchTaskDefinition(task);
+    if (task.agentId === "meeting") {
+      const files = [
+        ["详细版会议纪要.docx","i-file","detailed","立即查看"],
+        ["概览版会议纪要.docx","i-file","quick","立即查看"],
+        ["议题结论清单.xlsx","i-list","topics","立即查看"],
+        ["待办事项清单.xlsx","i-check","todos","立即查看"]
+      ];
+      const fileCards = files.map(file => `<div class="generated-file-card workbench-result-file" role="button" tabindex="0" data-wb-task-action="open-artifact" data-task-id="${esc(task.id)}" data-artifact="${esc(file[0])}" data-artifact-tab="${esc(file[2])}" aria-label="${esc(file[3])}${esc(file[0])}"><span class="generated-file-card-icon">${svgi(file[1],22)}</span><span class="generated-file-card-copy"><b>${esc(file[0])}</b><em class="workbench-result-file-open">${esc(file[3])}${svgi("i-arrow",11)}</em></span><button class="generated-file-download" type="button" data-wb-task-action="download-artifact" data-task-id="${esc(task.id)}" data-artifact="${esc(file[0])}">${svgi("i-download",13)} 下载</button></div>`).join("");
+      return `<div class="workbench-result-heading"><div><strong>会议纪要成果</strong><p>已生成详细版、概览版、议题结论清单、待办事项清单，可分别查看或下载。</p></div><button class="workbench-task-btn primary" type="button" data-wb-task-action="download" data-task-id="${esc(task.id)}">${svgi("i-download",14)}下载成果包</button></div><div class="workbench-result-files">${fileCards}</div>`;
+    }
     const artifactRows = definition.items.map(item => `<div class="workbench-artifact-row"><span class="workbench-artifact-icon">${svgi(item[0],15)}</span><span class="workbench-artifact-copy"><b>${item[1]}</b><small>${item[2]}</small></span><span class="workbench-artifact-tag">${item[3]}</span></div>`).join("");
     const stats = task.agentId === "meeting" ? `<div class="workbench-result-stats"><span><b>${task.topicCount || 3}</b>项议题</span><span><b>${task.conclusionCount || 9}</b>项结论</span><span><b>${task.todoCount || 6}</b>项待办</span><span><b>${task.missingCount || 2}</b>项待补充</span></div>` : task.agentId === "interpret" ? `<div class="workbench-result-stats"><span><b>${task.summaryCount || 3}</b>项摘要</span><span><b>${task.pathCount || 3}</b>项路径</span><span><b>${task.termCount || 3}</b>项术语限制</span><span><b>${task.qaCount || 4}</b>项问答口径</span></div>` : "";
     return `<div class="workbench-result-overview"><strong>${svgi("i-check",15)} ${esc(title)}</strong><p>主成果和辅助结果已归入同一成果包，可统一查看、下载和继续修改。</p>${stats}</div>
@@ -3744,14 +3754,12 @@ let sidebarCollapsed = false;
   }
   function renderWorkbenchTaskCard(task) {
     const definition = workbenchTaskDefinition(task);
-    const sources = (task.sources || []).length ? task.sources : ["本次对话输入内容"];
-    const sourceHTML = sources.map(name => `<span class="workbench-source-chip">${svgi("i-file",13)}<span>${esc(name)}</span></span>`).join("");
     const complete = task.state === "complete";
-    const actionLabel = complete ? "查看成果" : task.state === "working" ? "返回工作台" : "进入工作台";
+    const actionLabel = complete ? "查看成果" : "前往工作台";
+    const completeTitle = task.agentId === "meeting" ? "已完成会议纪要生成，下面是生成的结果，可进行查看和下载" : `${task.title || "任务"}已完成，下面是生成的结果，可进行查看和下载`;
     return `<section class="workbench-task-card" data-state="${esc(task.state)}" data-workbench-task-card="${esc(task.id)}">
-      <header class="workbench-task-head"><span class="workbench-task-mark">${svgi(definition.icon,20)}</span><div class="workbench-task-copy"><h3>${esc(task.title || "智能体任务")}</h3><p>${complete ? `成果已回流当前对话 · V${task.version || 1}` : task.state === "recognizing" ? "主智能体正在判断任务类型、材料来源和适合的处理方式。" : definition.desc}</p></div><span class="workbench-task-state">${esc(workbenchTaskLabel(task.state))}</span></header>
-      ${complete ? `<div class="workbench-task-complete-track"><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div>${renderWorkbenchResult(task)}` : `<div class="workbench-task-source"><div class="workbench-task-source-label">${svgi("i-paperclip",13)}本次处理材料 · ${sources.length}份</div><div class="workbench-task-source-list">${sourceHTML}</div></div><div class="workbench-task-progress"><div class="workbench-task-progress-top"><b>${esc(task.stage || "正在创建任务")}</b><span>${Math.max(0,Math.min(100,Number(task.progress || 0)))}%</span></div><div class="workbench-task-track" style="--task-progress:${Math.max(0,Math.min(100,Number(task.progress || 0)))}%"><i></i></div><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div>`}
-      <footer class="workbench-task-actions">${complete ? `<button class="workbench-task-btn" type="button" data-wb-task-action="download" data-task-id="${esc(task.id)}">${svgi("i-download",14)}下载</button><button class="workbench-task-btn" type="button" data-wb-task-action="continue" data-task-id="${esc(task.id)}">${svgi("i-edit",14)}继续修改</button>` : ""}<button class="workbench-task-btn primary" type="button" data-wb-task-action="open" data-task-id="${esc(task.id)}">${svgi(complete ? "i-file" : "i-arrow",14)}${actionLabel}</button></footer>
+      <header class="workbench-task-head"><div class="workbench-task-copy">${complete ? `<h3>${esc(completeTitle)}</h3>` : `<h3 class="workbench-task-recognition">${esc(definition.desc)}</h3>`}</div><span class="workbench-task-state">${esc(workbenchTaskLabel(task.state))}</span></header>
+      ${complete ? `${renderWorkbenchResult(task)}<div class="workbench-task-complete-track"><div class="workbench-task-flow is-complete" role="progressbar" aria-label="任务执行进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="workbench-task-progress-meta"><span>执行进度</span><strong>100%</strong></div><span class="workbench-task-flow-rail"><i></i></span><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div></div>` : `<div class="workbench-task-progress"><div class="workbench-task-flow is-processing" role="progressbar" aria-label="任务执行进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><div class="workbench-task-progress-meta"><span>执行进度</span><strong>50%</strong></div><span class="workbench-task-flow-rail"><i></i></span><div class="workbench-task-milestones">${workbenchTaskMilestones(task)}</div></div></div><footer class="workbench-task-actions"><button class="workbench-task-btn primary" type="button" data-wb-task-action="open" data-task-id="${esc(task.id)}">${svgi("i-arrow",14)}${actionLabel}</button></footer>`}
     </section>`;
   }
   function userBubble(m, index) {
@@ -12479,6 +12487,7 @@ function cfgRoleManagementHTML() {
     const path = workbenchPath(agentId), params = new URLSearchParams({ t:String(Date.now()) });
     if (context?.taskId) params.set("taskId",context.taskId);
     if (context?.conversationId) params.set("conversationId",context.conversationId);
+    if (context?.resultView) params.set("resultView",context.resultView);
     return path + (path.includes("?") ? "&" : "?") + params.toString();
   }
   function postWorkbenchContext(targetWindow, agentId, context) {
@@ -12497,15 +12506,16 @@ function cfgRoleManagementHTML() {
     };
     conversation.msgs.push({ role:"agent",agent:agent.id,kind:"workbench-task",noTrust:true,workbenchTask:task,createdAt:Date.now() });
     conversation.updatedAt = Date.now();
-    TASK_INSTANCES.unshift({ id:taskId,name:agent.name,agent:agent.id,state:"运行中",node:"材料接入",idx:1,total:3,meta:"张敏 · 当前对话",eta:"正在接入任务材料",conversationId:conversation.id });
+    TASK_INSTANCES.unshift({ id:taskId,name:agent.name,agent:agent.id,state:"运行中",node:"处理中",idx:1,total:2,meta:"张敏 · 当前对话",eta:"处理中",conversationId:conversation.id });
     renderChat();renderSidebar();renderRail();scrollBottom();
     return task;
   }
   function syncWorkbenchTaskInstance(task) {
     const item = TASK_INSTANCES.find(entry => entry.id === task.id); if (!item) return;
     item.state = task.state === "complete" ? "已完成" : task.state === "failed" ? "异常" : "运行中";
-    item.node = task.state === "complete" ? "成果已回流" : task.state === "working" ? "工作台处理" : "材料接入";
-    item.idx = task.state === "complete" ? 3 : task.state === "working" ? 2 : 1;
+    item.node = task.state === "complete" ? "已完成" : "处理中";
+    item.idx = task.state === "complete" ? 2 : 1;
+    item.total = 2;
     item.eta = task.stage || "处理中";
   }
   function updateWorkbenchTask(taskId, patch) {
@@ -12518,19 +12528,20 @@ function cfgRoleManagementHTML() {
   function openWorkbenchTask(task, options) {
     if (!task) return;
     const found = workbenchTaskById(task.id), current = found ? found.task : task;
-    const workingStage = current.agentId === "interpret" ? "正在工作台中解析政策文件" : current.agentId === "meeting" ? "正在工作台中整理会议内容" : "正在工作台中处理任务";
-    if (current.state !== "complete") updateWorkbenchTask(current.id,{ state:"working",progress:100,stage:workingStage });
-    openWorkbench(current.agentId,{ ...(current.context || {}),title:current.resultTitle || current.title,taskId:current.id,conversationId:current.conversationId,sources:(current.sources || []).slice(),resumeToResult:current.state === "complete" || !!options?.resumeToResult,resultTitle:current.resultTitle || "",version:current.version || 1 });
+    if (current.state !== "complete") updateWorkbenchTask(current.id,{ state:"working",progress:100,stage:"处理中" });
+    openWorkbench(current.agentId,{ ...(current.context || {}),title:current.resultTitle || current.title,taskId:current.id,conversationId:current.conversationId,sources:(current.sources || []).slice(),resumeToResult:current.state === "complete" || !!options?.resumeToResult,resultView:options?.resultView || "",resultTitle:current.resultTitle || "",version:current.version || 1 });
   }
   function showWorkbenchTaskDownload(task) {
     const interpret = task.agentId === "interpret";
-    const options = interpret ? [["政策解读报告",true],["核心摘要",true],["实施路径清单",false],["术语限制与问答口径",false]] : [["完整会议纪要",true],["核心速览",true],["待办事项清单",false],["原始转写",false]];
+    const options = interpret ? [["政策解读报告",true],["核心摘要",true],["实施路径清单",false],["术语限制与问答口径",false]] : [["详细版会议纪要",true],["概览版会议纪要",true],["议题结论清单",true],["待办事项清单",true]];
     openModal(interpret ? "下载政策解读成果" : "下载会议成果", `<div class="workbench-download-list">${options.map(item => `<label><input type="checkbox" ${item[1] ? "checked" : ""}> ${item[0]}</label>`).join("")}</div><div class="panel-note" style="margin-top:12px">以上内容属于同一任务的 V${task.version || 1} 成果包，下载不会拆分为新的任务版本。</div>`, () => { closeModal();showToast(`已开始下载所选${interpret ? "政策解读" : "会议"}成果`); }, { okText:"开始下载" });
   }
   function handleWorkbenchTaskAction(button) {
     const found = workbenchTaskById(button.dataset.taskId);if(!found){showToast("未找到对应任务");return;}
     const action = button.dataset.wbTaskAction;
     if(action === "download") { showWorkbenchTaskDownload(found.task);return; }
+    if(action === "download-artifact") { showToast(`已开始下载${button.dataset.artifact || "所选成果"}`);return; }
+    if(action === "open-artifact") { openWorkbenchTask(found.task,{ resumeToResult:true,resultView:button.dataset.artifactTab || "detailed" });return; }
     if(action === "open" || action === "continue") openWorkbenchTask(found.task,{ resumeToResult:action === "open" && found.task.state === "complete" });
   }
   function syncWorkbenchCompletionFromFrame() {
@@ -12562,7 +12573,7 @@ function cfgRoleManagementHTML() {
       return;
     }
     if(data.type !== "JBAI_WORKBENCH_TASK_EVENT" || !data.taskId) return;
-    if(data.event === "progress") updateWorkbenchTask(data.taskId,{ state:"working",stage:data.stage || "工作台处理中",progress:Number(data.progress || 100) });
+    if(data.event === "progress") updateWorkbenchTask(data.taskId,{ state:"working",stage:"处理中",progress:Number(data.progress || 100) });
     if(data.event === "complete") {
       const found = workbenchTaskById(data.taskId), agentId = found?.task?.agentId || data.agentId;
       const patch = agentId === "interpret" ? { state:"complete",stage:"政策解读成果已生成并回流当前对话",progress:100,version:Number(data.version || 1),resultTitle:data.title || "政策文件解读报告",summaryCount:Number(data.summaryCount || 3),pathCount:Number(data.pathCount || 3),termCount:Number(data.termCount || 3),qaCount:Number(data.qaCount || 4),completedAt:Date.now() } : { state:"complete",stage:"会议成果已生成并回流当前对话",progress:100,version:Number(data.version || 1),resultTitle:data.title || "会议纪要",topicCount:Number(data.topicCount || 3),conclusionCount:Number(data.conclusionCount || 9),todoCount:Number(data.todoCount || 6),missingCount:Number(data.missingCount || 2),completedAt:Date.now() };
