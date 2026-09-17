@@ -1543,6 +1543,150 @@ body.outline-dragging * { cursor: grabbing !important; }
   color: var(--text-secondary);
 }
 
+/* ========== 屏幕4: 知识库调用页 ========== */
+#screen-4 {
+  padding: 20px 32px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.kb-header { margin-bottom: 16px; }
+.kb-header h2 {
+  font-family: var(--font-serif);
+  font-size: 20px; font-weight: 600; color: var(--navy-800);
+}
+.kb-header p { font-size: 12px; color: var(--text-secondary); }
+.kb-body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  flex: 1; overflow: hidden;
+}
+.kb-left-panel, .kb-right-panel {
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.kb-source-tabs {
+  display: flex; gap: 0; margin-bottom: 12px;
+  border-bottom: 1.5px solid var(--border);
+}
+.kb-source-tab {
+  padding: 8px 16px; font-size: 12px; color: var(--text-secondary);
+  border-bottom: 2px solid transparent; cursor: pointer;
+  transition: all .2s; display: flex; align-items: center; gap: 5px;
+}
+.kb-source-tab.active { color: var(--navy-700); border-color: var(--navy-600); font-weight: 500; }
+.kb-source-tab .badge {
+  font-size: 10px; padding: 1px 6px; border-radius: 10px;
+  background: var(--navy-100); color: var(--navy-600);
+}
+.kb-recall-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.kb-recall-card {
+  background: var(--card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 14px;
+  transition: all .25s; cursor: pointer;
+}
+.kb-recall-card:hover { border-color: var(--navy-300); box-shadow: var(--shadow-xs); }
+.kb-recall-card.selected { border-color: var(--blue, #2563eb); border-width: 2px; background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(37,99,235,.02)); box-shadow: 0 0 0 3px rgba(37,99,235,.18), 0 2px 8px rgba(37,99,235,.1); position: relative; }
+.kb-recall-card.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: 0 2px 6px rgba(37,99,235,.3); }
+.kb-recall-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.kb-type-tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 500;
+}
+.kb-type-tag.policy { background: #dbeafe; color: #1e40af; }
+.kb-type-tag.meeting { background: #fef3c7; color: #92400e; }
+.kb-type-tag.summary { background: #d1fae5; color: #065f46; }
+.kb-type-tag.report { background: #ede9fe; color: #5b21b6; }
+.kb-type-tag.data { background: #fce7f3; color: #9d174d; }
+.kb-type-tag.speech { background: #e0f2fe; color: #075985; }
+.kb-type-tag.other { background: #f1f5f9; color: #475569; }
+.kb-type-tag.active { box-shadow: 0 0 0 2px var(--navy-400); font-weight: 600; }
+.kb-recall-title { font-size: 13px; font-weight: 500; color: var(--navy-700); flex: 1; }
+.kb-recall-match {
+  font-size: 10px; font-family: var(--font-mono);
+  color: var(--green); font-weight: 600;
+}
+.kb-recall-content { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.kb-recall-source { font-size: 11px; color: var(--text-tertiary); margin-top: 6px; }
+
+.kb-enhance-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.kb-enhance-card {
+  background: var(--card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 14px;
+  border-left: 3px solid var(--gold);
+}
+.kb-enhance-chapter { font-size: 11px; color: var(--gold); font-weight: 500; margin-bottom: 4px; }
+.kb-enhance-title { font-size: 13px; font-weight: 600; color: var(--navy-700); margin-bottom: 4px; }
+.kb-enhance-content { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.kb-enhance-diff {
+  font-size: 11px; padding: 4px 8px; border-radius: 4px;
+  background: #f0fdf4; color: #166534; margin-top: 6px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+
+/* 标签匹配新样式 */
+.kb-funnel {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-tertiary);
+  margin-bottom: 12px; padding: 8px 12px;
+  background: var(--navy-50); border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+.kb-funnel svg { flex-shrink: 0; color: var(--navy-500); }
+.kb-funnel-step { font-weight: 500; color: var(--navy-600); }
+.kb-funnel-arrow { color: var(--navy-300); }
+.kb-funnel-result { color: var(--gold); font-weight: 600; }
+
+.kb-recall-tags {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+}
+.kb-relevance-tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.kb-relevance-tag.mid { background: #fffbeb; color: #d97706; }
+.kb-relevance-tag.low { background: #f0fdf4; color: #16a34a; }
+.kb-recall-source { display: flex; align-items: center; justify-content: space-between; }
+.kb-chapter-tag {
+  font-size: 10px; padding: 2px 6px; border-radius: 3px;
+  background: var(--navy-50); color: var(--navy-600);
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.kb-recall-content mark {
+  background: rgba(37,99,235,.12); color: var(--gold-dark);
+  padding: 0 2px; border-radius: 2px; font-weight: 500;
+}
+
+.kb-time-filters {
+  display: flex; gap: 4px; margin-left: auto;
+}
+.kb-time-filter {
+  font-size: 10px; padding: 2px 8px; border-radius: 4px; cursor: pointer;
+  color: var(--text-tertiary); border: 1px solid transparent; transition: all .2s;
+}
+.kb-time-filter.active {
+  color: var(--gold); border-color: var(--gold); font-weight: 500;
+  background: rgba(37,99,235,.04);
+}
+.kb-time-filter:hover { color: var(--navy-600); }
+
+.kb-enhance-source {
+  font-size: 10px; color: var(--text-tertiary); margin-top: 6px;
+  padding-top: 6px; border-top: 1px dashed var(--border);
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* 四类增强内容标签 */
+.kb-enhance-category {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
+  margin-bottom: 4px;
+}
+.kb-enhance-category.term { background: #dbeafe; color: #1e40af; }
+.kb-enhance-category.standard { background: #ede9fe; color: #5b21b6; }
+.kb-enhance-category.case { background: #fef3c7; color: #92400e; }
+.kb-enhance-category.data { background: #d1fae5; color: #065f46; }
+
 /* ========== 屏幕5: 模板匹配页 ========== */
 
 /* ========== 模板库弹窗 ========== */
@@ -3555,6 +3699,8 @@ svg { display: block; }
       <div class="step-item step-advanced-only" data-step="2" data-page-node-id="PTI6Vjtz8byNPh4Hao77v7"><div class="step-circle" data-page-node-id="Jj8yO5EqeGBQBIrz6CosCd">2</div><span class="step-label" data-page-node-id="2myGTdX0mvdFfXOjnzBy8Q">智能解析</span></div>
       <div class="step-connector step-advanced-only" data-page-node-id="w40BlMjEW43m8YLZAEtdhm"></div>
       <div class="step-item" data-step="3" data-page-node-id="230XAeDtCpgR2KabmhzFQn"><div class="step-circle" data-page-node-id="h9n6mbFhas7eUQrvYR8P13">2</div><span class="step-label" data-page-node-id="3p71EesUuKzPwWyFoNDk8k">大纲确认</span></div>
+      <div class="step-connector" data-page-node-id="Qw2xTdPmLk1fBnRcVz9jYhGm"></div>
+      <div class="step-item step-advanced-only" data-step="4" data-page-node-id="Rv3yUeQnMl2gCoSdWa0kZiHn"><div class="step-circle" data-page-node-id="Sw4zVfRoNm3hDpTeXa1lAjIo">4</div><span class="step-label" data-page-node-id="Tx5aWgSpOn4iEqUfYb2mBkJp">知识库</span></div>
       <div class="step-connector" data-page-node-id="pSp5CRvZ8q0eD79VlD6GKc"></div>
       <div class="step-item" data-step="6" data-page-node-id="b883kxyS7gJtiXhh8Nwa7H"><div class="step-circle" data-page-node-id="tA84DByAMu97kyIBxmHhZi">3</div><span class="step-label" data-page-node-id="1mgEi9wXOGNy4IGwselXHK">内容确认</span></div>
       <div class="step-connector" data-page-node-id="pU6K2RpaxzCBQsT75UT3uJ"></div>
@@ -3852,7 +3998,7 @@ svg { display: block; }
           </div><div class="s1-footer" data-page-node-id="aSRMx8k948ftWjUknzwXIH" style="">
             
             <button class="btn btn-gold btn-lg" id="submitBtn" data-page-node-id="AXrcSvtLCiTd9XDhW7l6rS">
-              <span id="submitBtnText" data-page-node-id="fJWLWWVF6UMzptJtiWB32k">提交并生成</span>
+              <span id="submitBtnText" data-page-node-id="fJWLWWVF6UMzptJtiWB32k">提交并开始解析</span>
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="u047G7uQOiTlrSItLjwQ3e"><path d="M5 12h14M12 5l7 7-7 7" data-page-node-id="A7m66NsU9IPpuMbNi8tm9c"></path></svg>
             </button>
           </div>
@@ -3933,10 +4079,205 @@ svg { display: block; }
         <p data-page-node-id="2tXyy2jVNqsOABy13Fw2I6">对核心信息与参考材料进行全方位智能解析，提取关键信息，支持标签与内容编辑</p>
       </div>
       <div class="parse-tabs" data-page-node-id="0ogj4RhoaBJaC1d5RHz6JB">
-        <div class="parse-tab active" data-ptab="ner" data-page-node-id="Udcn0Fpb1G4ktEM5vmxsRZ">文档解析 <span class="tab-badge" data-page-node-id="wfRrUZqh5g9IdKeid9UY6q">NER</span></div>
-        <div class="parse-tab" data-ptab="keyinfo" data-page-node-id="LSGtHDzsTC669TBJQTNchM">关键信息提取 <span class="tab-badge" data-page-node-id="miS8taQYSUTGGmXjezNsDW">12</span></div>
+        <div class="parse-tab" data-ptab="ner" data-page-node-id="Udcn0Fpb1G4ktEM5vmxsRZ">文档解析 <span class="tab-badge" data-page-node-id="wfRrUZqh5g9IdKeid9UY6q">NER</span></div>
+        <div class="parse-tab active" data-ptab="keyinfo" data-page-node-id="LSGtHDzsTC669TBJQTNchM">关键信息提取 <span class="tab-badge" data-page-node-id="miS8taQYSUTGGmXjezNsDW">12</span></div>
       </div>
-      <div class="parse-body" id="parseBody" data-page-node-id="NmUZBSPIw5csH84yp7MUYF"></div>
+      <div class="parse-body" id="parseBody" data-page-node-id="NmUZBSPIw5csH84yp7MUYF">
+    <div style="display:flex;flex-direction:column;height:100%;" data-page-node-id="0xscCjGIMX9Xao65XQo5fF">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;" data-page-node-id="SQOxqt01dYLhpxP6H2aMw4">
+        <div class="section-title" data-page-node-id="NPzHANZI9CTyQig5gOfDLn">关键信息提取 · 共12条有效</div>
+        <span style="font-size:11px;color:var(--text-tertiary);" data-page-node-id="Gd5Yv6Nlp35dzpF2O16qLv">标签与内容点击即可编辑，支持新增 / 删除条目</span>
+      </div>
+      <div class="keyinfo-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;" data-page-node-id="vZBsNB7P7C69MEmXPDTtrD">
+        
+            <div class="keyinfo-item" data-idx="0" style="background: var(--card); border-color: var(--border-light); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="eP8cdZyf5FiUpxG6hhEYby">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="3W03TvVtxD76K7eOXmoiFj">1</div>
+              <div style="flex:1;" data-page-node-id="4m0AJFhYWvOhfhnpEx72Qf">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="DcW5PGR12DBT3az6kNAt80">
+                  <span class="keyinfo-cat" data-idx="0" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(209, 250, 229); color: rgb(6, 95, 70); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="JL49a52qqvAxx8tej9qjvi">建设成果</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="bkqyG79uozVXlS9GxupBMX"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="6tc7TE4EiMOEh1xOhBqSno"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="UnCjYXcORfSpAEvv85mwso"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="mQZcPRc4RYmiaWre06Er1C"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="0" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="cr47WNvhBsCM8G7cejnt0T">完成政务服务事项1,286项全流程数字化改造</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="cQ1BbnHLVyPxdkJzlTdudD">来源：工作报告草案.pdf</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="0" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="xCTdHwabZmHJCedSTk577u">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="HABNrpDdfLlwMi9ilna9q8"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="onwF4IU7NMYDuFXfCaj1Bz"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="1" style="background: var(--card); border-color: var(--border-light); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="ESn5r7MOJGSJ2WHXFdpDAN">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="FLCI0METBY9yNyOEkBRNHd">2</div>
+              <div style="flex:1;" data-page-node-id="UwH5856fy7GjeAQoOjC2i8">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="nlL0eThj1hE1RvUfvBtuUK">
+                  <span class="keyinfo-cat" data-idx="1" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(230, 242, 245); color: rgb(14, 76, 146); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="prwp4io7Fy8EupWBuSf3sa">核心数据</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="GCPrZHTEN9LWEL89YQJMZf"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="RRiIvBlxPYBa8KnGBHStCv"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="QlFkMtVoHmIdYMqUKBuBId"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="YwlE7Z0w7i25fQ5pcnZGp7"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="1" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="AyJyLBskiPeQWfNEKlQXdC">累计办理业务3,542万件，同比增长23.7%</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="rONTLgfhpwbQXoLyRksn5x">来源：工作报告草案.pdf</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="1" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="0OGMtLA8XjZ9A8hikBsUDv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ESsl6CsXVZ1OSaJ2Irohrk"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="A5uaMsVHSjspjAiKyDDnw0"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="2" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="SmiGOcf09pNqFnNkb67PVV">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="Mjz0lSd4taQHm82eciysAO">3</div>
+              <div style="flex:1;" data-page-node-id="k6IAIxGTIlp1U4REiV7PKn">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="5FgHd6MOtQoA9obCuSr2wS">
+                  <span class="keyinfo-cat" data-idx="2" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(254, 226, 226); color: rgb(153, 27, 27); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="Uv4570GwkbNMuxZGuwIKg4">政策依据</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="sgLIiTlT0mqCYHE7kGps59"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="oxcRprX1dr0QRYC8ATFWz0"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="TErMq4APVW4RhxeQ0r6rh2"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="czakFgteTyr0kdztMHa1CF"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="2" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="iZ4GVEWHQNlOxzpd3umWpb">《数字政府建设三年行动方案》发布实施</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="22Gh9Zpq4EgyZWvrp0iEZX">来源：政策文件原文.docx</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="2" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="R3kYrCBKoMBJQKH9KoRvV0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ch9cwdZcKsmJrBrmGXUOIG"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="bL0e4KZyl6PJOMtodCKGCW"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="3" style="background: var(--card); border-color: var(--border-light); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="YZx7GMt60QRQiHAs1oN0jR">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="mOIQXzgtwNAH4rz3DO8xS2">4</div>
+              <div style="flex:1;" data-page-node-id="JYxS9s69mWmCB9TuD4qvJx">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="QT2OGLPdsNstk27Z32KkwB">
+                  <span class="keyinfo-cat" data-idx="3" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(254, 243, 199); color: rgb(146, 64, 14); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="uOJyRB7s1zIsmSNdHns8Mx">资金投入</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="90bfOH96fafGMayDEsqYYp"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="zOKTxhpIDIdeTuXf218eSs"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="AjhbA2slpTcSDXrdNs0UO8"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="oHbdxeAQTQEsvi2Hgr9H1L"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="3" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="87uuAu0FWtOYASG8lKQFyj">投入专项资金5.8亿元，建成全省统一政务云平台</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="n82TckErf8Pvws7ChNbl0O">来源：工作报告草案.pdf</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="3" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="xj1EpHtnxNZJIGsPoRzjvn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="VPiy5ftBDsaeRxm6QAPy0e"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="tjzJLBl7S58oB1L1e1JrsC"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="4" style="background: var(--card); border-color: var(--border-light); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="mSisrKtFxrHNQ6BIj7RImc">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="jczjowBXLKJcmGlpTQ7u2F">5</div>
+              <div style="flex:1;" data-page-node-id="wcZOb2Gvd4dc9A4lumKvft">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="TLC1Lb0cF7iKcDSjeNZhno">
+                  <span class="keyinfo-cat" data-idx="4" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(224, 231, 255); color: rgb(55, 48, 163); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="vItfRsqCeRfTjACRBfupHL">组织架构</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="iIlJNSE2kv7gwYI1T1ky5r"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="RdMJ9qAVKfZDJgG9P80ufq"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="oDYmBei9siiwv90JFP7xMR"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="qyWEA92zMl1qBRyDrOwPgJ"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="4" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="IXBZyBonQ0aO326wS1V5Si">省大数据局联合省发改委统筹推进数字政府建设</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="u5YOwl9zi8txgwQXCv9XT1">来源：会议纪要.txt</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="4" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="FzxWFvK8oyHRVC4hDiHMDq">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="za0ekwByOl3sKXDLsj2Dwp"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="8AZEcXs7CpUqbs8bKHJZVs"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="5" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="KVtXtUPyYLvhRAG7u6J9md">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="enYVYk8k3czUGAL3Q71z27">6</div>
+              <div style="flex:1;" data-page-node-id="tuvovwQ7lBnkEkSQfwAXPn">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="4vwEmkYK3Mlqg14LxfBHY3">
+                  <span class="keyinfo-cat" data-idx="5" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(243, 232, 255); color: rgb(107, 33, 168); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="vlhLNaLlHqQR11tzmPzJdp">改革路径</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="gF1M7JJRIzsJ13DATbWLMF"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ksM55nF8c0jj2h2ssucT9p"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="NXSOVhmYmp3FkyQJ5N4BgA"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="VtbALxUGm1LyLfvFcZmOpJ"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="5" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="nqeBddqRwz1mtszWFL9iE0">明确"一网通办"改革路径，系统升级投入2.3亿元</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="ot5tmqGFGexT3d9DDEFBNA">来源：会议纪要.txt</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="5" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="2d2lF38c6pcEEX75VycvZm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="5ITEkqbX9adQk0dKKzFyT7"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="UQtzTS5AzEvvchmL1LGApg"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="6" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="cXX3XTbczguYgBClHShfR8">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="OI1P1EHHiiB553rlUxg38v">7</div>
+              <div style="flex:1;" data-page-node-id="42qCf3TtZHZoJHAcfKZoyh">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="B79LKAMwALGOYVkEFKsPUT">
+                  <span class="keyinfo-cat" data-idx="6" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(252, 231, 243); color: rgb(157, 23, 77); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="I6rAzXfJG7tz2KF7im2V51">领导指示</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="Kg8fyHgb7033O1bCtqVfdu"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="dPZKh1YRnN1dPjbvXYw9TD"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="4WR4JjKRUUbYHS8TmVFgCE"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="hEYnoCB5DM0NT01ucSoH06"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="6" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="BhBs9mj5KsbGUe7pIzBQ7y">王建国主任要求加快政务服务数字化转型步伐</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="J6B87kBDbvdLJRl3GiqtBT">来源：讲话稿.docx</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="6" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="KcjUYBL5rFiakVzUsfl1oZ">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="KsFreb4WaUMmPKhDj4XsQc"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="3bnqusInZaD3D2Z3iGXhNI"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="7" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="Z12a4jX3A1QS3ZgE2zKWuq">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="806bEzVYHHpcipH0ZxIo7d">8</div>
+              <div style="flex:1;" data-page-node-id="bctyO8DxZ3zjDcM3XsV8Xl">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="61p5PH6ZcRAsa5eHg9Jmkw">
+                  <span class="keyinfo-cat" data-idx="7" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(204, 251, 241); color: rgb(17, 94, 89); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="Ei81unOmQsJrkO3UZZfrEA">目标任务</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="ABM2nYJGCkbSNgKTvItdlJ"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="1vm6fQiUxDbrq3f17IKrmU"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="9txHATy3gqBRU2Uig6WDsh"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="8xfwM4aSaXk3Rh8V67Nbcs"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="7" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="RvF2uIxypSb97EQ1W9Gb2Q">2026年底前实现省市县三级政务服务平台互联互通</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="ZaBLjd0nn6mMtbv2X7T72d">来源：政策文件原文.docx</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="7" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="meV3SClEnlhFW9akfETXKp">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="HYAjjkcZ3rpY9GmzK334rq"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="xmpoZFyAqzyLb85KUexSAV"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="8" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="PwJtXngL128jGmXy61GIRS">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="u1BH7hkvusbRlDwLVsApme">9</div>
+              <div style="flex:1;" data-page-node-id="AEyd42KjdbBocvI1cv73co">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="HpM01I2qheHy8G5eUPhNfy">
+                  <span class="keyinfo-cat" data-idx="8" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(230, 242, 245); color: rgb(14, 76, 146); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="naKFiYbe7Y74eWGRm6igg2">技术支撑</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="A2Wk49ZDF6jFvGiPveAQbs"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="RJCLv6CH3cVA0MJhndGsHo"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="CAVExurKTcQzhey3eZUo27"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="HCTvh3yHFuKSUtskxfI195"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="8" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="WzZ0E7mdn4aORj3tWvlS8R">建成全省统一政务云平台，支撑跨部门数据共享</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="ZIS9HwN7f6dj9TISEZvtIA">来源：工作报告草案.pdf</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="8" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="GanB6uYC3dTWy44OOKrpAK">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="DWaGc5MWNZgA0wOzCJPi0W"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="aCmc7LTqBPPypwS6gjd1iB"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="9" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="9uqcFBtTf1SFnPIAF7GBWi">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="suNN7iARCQHPiUjhJnMPGz">10</div>
+              <div style="flex:1;" data-page-node-id="5kimj0EY2J0J0jtr54Gyhq">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="vFlKw8hReH5TE921UZq2M6">
+                  <span class="keyinfo-cat" data-idx="9" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(209, 250, 229); color: rgb(6, 95, 70); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="znz5TRJAs9aq1k9Zw5KfnJ">民生服务</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="DhEVkUonr3ft4xaxC87Nf4"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ZJV8XOivBqCfT4lfWViBdq"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="GY9nXchX5FnFcpEXZs3faD"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="KQDy1t8LaIsBhg0QWCAH2e"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="9" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="y89a04aYzcnwuLbKMi4unM">"掌上办"服务覆盖率达87.3%，群众满意度94.6%</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="MfWGinChjAcYQtlJdwkrYC">来源：工作报告草案.pdf</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="9" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="HCYQGDnd6noi4hoefoXicB">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="i1eMVD9Gzbn6WWWu9mZZUf"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="qaBwgB5bbFlSnedHCI9i1e"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="10" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="5U3JJiG1viEGNiEzyOuH7I">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="B6C4UG3A0pctrWQtzWPfL0">11</div>
+              <div style="flex:1;" data-page-node-id="zVpwhQ93fhraNoU0Hp9rRF">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="DIzWCQgdI3looZBMbbzQ5t">
+                  <span class="keyinfo-cat" data-idx="10" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(254, 226, 226); color: rgb(153, 27, 27); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="PztMKScHHUENYqZLjm2VFC">制度建设</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="ITssPMffiPZ9KK15IE55XG"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="FrxBWqpa31oxlygW3TbtUT"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="dHd9UX6HIlMAzTsZ4nmqwE"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="MYvkRx0648rRnJGfTiHNFn"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="10" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="ii6NanyqCUxPQYDJyElRrW">出台《政务服务数据管理办法》等3项制度文件</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="PtfbYzWWbtBg4aBhezgZCU">来源：政策文件原文.docx</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="10" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="GxdLpcsi4v7FjZkFzYlOvy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="TtvBtYlKHbrXOy78WnEHDY"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="EU8XuPeAQBBSbVNnLwfeDm"></path></svg>
+              </button>
+            </div>
+          
+            <div class="keyinfo-item" data-idx="11" style="background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;" onmouseover="this.style.borderColor='var(--navy-300)'" onmouseout="this.style.borderColor='var(--border-light)'" data-page-node-id="kAJfRPG3ZP6WXidT9YD5Lc">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--navy-50);color:var(--navy-500);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" data-page-node-id="H0veAAbz9mSHWm5Fi3hKBY">12</div>
+              <div style="flex:1;" data-page-node-id="repgEGUOIFxPNc1VTQReqp">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;" data-page-node-id="UMUKvSjNkcfZHpEa0wXcBL">
+                  <span class="keyinfo-cat" data-idx="11" title="点击编辑标签" style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgb(254, 243, 199); color: rgb(146, 64, 14); font-weight: 500; cursor: text; border: 1px dashed transparent; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--navy-400)'" onblur="this.style.borderColor='transparent'" data-page-node-id="NVzwsxaQ4VdUA5fBOEORrk">下一步计划</span>
+                  <span style="font-size:10px;color:var(--gray-400);display:inline-flex;align-items:center;gap:3px;" data-page-node-id="a49vO3ytJh1ZJqmGk7AMZ0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="UPexQIb3l1H7HHANuB7BQF"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" data-page-node-id="HiZnXT9u3lyOJcPXmDBxFu"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="vTmSqyxndviL0vpi1TQLpT"></path></svg>标签可编辑</span>
+                </div>
+                <div class="keyinfo-text-edit" data-idx="11" style="font-size:13px;color:var(--text-primary);line-height:1.6;" data-page-node-id="uExWBAsiPnjklaStmdU3nD">推进AI赋能政务服务，建设智能审批系统</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;" data-page-node-id="U3MQ8jauYbtUYIei5BgcWP">来源：讲话稿.docx</div>
+              </div>
+              <button class="keyinfo-delete-btn" data-idx="11" style="flex-shrink:0;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="删除此条" data-page-node-id="65NhDa9cLBu2qCrwpLBI6f">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="KUgLExSQENB3NmDIm5Nb0x"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="PiYHewlKipJsriD0R9Vj73"></path></svg>
+              </button>
+            </div>
+          
+        <button class="keyinfo-add-btn" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;border-radius:var(--radius-md);border:1.5px dashed var(--navy-300);background:var(--navy-50);color:var(--navy-600);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='var(--navy-100)';this.style.borderColor='var(--navy-500)'" onmouseout="this.style.background='var(--navy-50)';this.style.borderColor='var(--navy-300)'" data-page-node-id="S1eUAjwDB041tjOis0yS2G">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="jHAZDolgAamcxNgCPB8nim"><path d="M12 5v14M5 12h14" data-page-node-id="l9pu9nU5ATqA68TYFDu9vW"></path></svg>
+          添加关键信息
+        </button>
+      </div>
+      
+    </div>
+  </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;" data-page-node-id="XVm2F3gq0l3lBqgTavW4ct">
         <div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;" data-page-node-id="bwgGvnT9h9L90e1xnlPLmF">
           <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);" data-page-node-id="D1F37XbUtRYdbCnyxkXi1t"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-page-node-id="vcfs1VlTGjWITAxlpHSxpB"></path></svg>
@@ -3981,81 +4322,81 @@ svg { display: block; }
                 <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tSSXUwntVI4p3HmeXXQvIT"><path d="M21 7v6h-6M3 17a9 9 0 019-9 9 9 0 017 3l2 2" data-page-node-id="J5wFKcoK5a3fBJdbgo5zMw"></path></svg>
                 恢复
               </button>
-              <button class="toolbar-btn" id="expandAllOutlineBtn" data-page-node-id="OsmVpR4wJyGj3Bl1o53THO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ToB87tIyePrfdIUMlmtKDU"><path d="M7 11l5-5 5 5M7 18l5-5 5 5" data-page-node-id="FrDLvzOHbnlaFfETDjUML3"></path></svg> 全部收起</button>
+              <button class="toolbar-btn" id="expandAllOutlineBtn" data-page-node-id="OsmVpR4wJyGj3Bl1o53THO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="1M4vuxbnnMTrSsfeQBWkAH"><path d="M7 11l5-5 5 5M7 18l5-5 5 5" data-page-node-id="aSC2JqteqBwp3ohFJnHaH8"></path></svg> 全部收起</button>
             </div>
           </div>
-          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"><div class="tree-node" data-id="1" data-is-chapter="1" data-page-node-id="ugkPkEneLCAg4YYFMfZ9Pl"><div class="node-row" data-page-node-id="UATtxnQQG3IyKKkq3yiRQJ"><div class="node-action drag-handle" data-page-node-id="gHVCMAYDKuFFT7FuUlAi0D"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="cYf39IVTySlcwbPMACchKC"><circle cx="9" cy="6" r="1.5" data-page-node-id="rEkftxWfach0COT6kHmO5C"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="hGhi3KbEYssMKPW7k0z0vY"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="xQrp0HHfSBhmlfa3UsRc0B"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="NrinUDW5WtAqMiCeAGF0bS"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="2Rxm7yEaoKft2PNvaTP925"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="xK68uGIfJoB9hPefkd0y70"></circle></svg></div><div class="node-toggle" data-page-node-id="jsPApreED7ppqGK8kSTeHs"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="F2Pw26H33bdE9FlI0OETbp"><path d="M6 9l6 6 6-6" data-page-node-id="8oaElekNRAcRcVsOxrBciR"></path></svg></div><div class="node-icon chapter" data-page-node-id="baPZMcu4c6r1zcMAoWJY8K"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="dFw5ALLJSHncL8xErJIfiF"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="0yk43YiB7WxXGeMDYOgm6N"></path></svg></div><div class="node-text" data-page-node-id="AbZkb9dg34r1Bey2PG6zzz">第一章 项目背景与意义</div><div class="node-actions" data-page-node-id="QYrKLeNyfmJH9ogOI23PCL">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="2P0c4CsTbf8FC0pTwDdRvw"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="7NU5Zct3u8cRGCWYm6jXEF"><path d="M12 5v14M5 12h14" data-page-node-id="dnAxC0Dffs4CIufkrTXJfS"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="w45O2mpGAKE8f7XojadccL"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="V9RKBWY46nD3DayggNFXm0"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="juFMY4hagUzKuu4A578GFl"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="FKNnGUCFKi5JM3yCQCgGTW"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="szQP0v2gKBEwFHaNuK70cc"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="P7akxNgfkaeoPYRmXLOCOJ"></path></svg></button>
-  </div></div><div class="node-children" data-page-node-id="34DDAoCa8NMD3y7O9eIeBI"><div class="tree-node" data-id="11" data-is-chapter="0" data-page-node-id="byMPHCtx6U3XSREtJj0ZkS"><div class="node-row" data-page-node-id="FMrRWzjCppjKyTfJiBCAOv"><div class="node-action drag-handle" data-page-node-id="icffq74KVdpmG0x1mQHsUb"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="2WQkPPCToBGE7FB7sJpJXC"><circle cx="9" cy="6" r="1.5" data-page-node-id="G1gck4MOaWTduHPKwHBN4S"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="41hDrJw9LANpkwh6nfHowt"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="iWWAOviKHMOb8T9nUTwlNi"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="OIYhUJfrZBTVESZduxfkLE"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="bXK36zX3INdDVYjqPem30Z"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="cKjYnvfeqpKMHo0LL0ORMS"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="Rlu9ISewHDdBomr68REPzB"></div><div class="node-icon" data-page-node-id="eTnoj8ErG8QgUACTBT4t4y"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="AW35v08vfALBG2N950OaaD"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="8WmEARUPv4IpYlABagLyhg"></path><path d="M14 2v6h6" data-page-node-id="gqxOdSxx4CCDcnFTZdHzEV"></path></svg></div><div class="node-text" data-page-node-id="GxhDXiFyPRd8fIj02irI17">政策背景：数字中国战略部署</div><div class="node-actions" data-page-node-id="6ZydohW0eZDWI6USYWqObC">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="9U0fFlo2WjINwCKj0Nujy5"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="sGACwFcRG3fuFYfE3OOJiy"><path d="M12 5v14M5 12h14" data-page-node-id="lvqZQEnYVJwiX32aa5sWzZ"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="8FX9g1IUtJ1g9XSalrcB3B"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="UGst7cKhL14HfHGXYHWjTk"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="r99mQKjUmCk3zESZTV1xCP"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="Rjkxsua8bgCaMGXAL39F4T"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="OCh1uCzHo2Bm6OvfAjAGXe"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="jHmBUNQTqAAtYYyZCWxQMM"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="12" data-is-chapter="0" data-page-node-id="ul98VHmWNv651Zejt4r7bg"><div class="node-row" data-page-node-id="b2XSRXCJ6Gn2Cp5YB43zpX"><div class="node-action drag-handle" data-page-node-id="CeTRAJU0LOlR9jfKY55FAE"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="VPqe6knE7Ksvv4Jgf6S9PH"><circle cx="9" cy="6" r="1.5" data-page-node-id="bdcz7E8j4R1JSldTBpHk3n"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="8vPYdbTfQNLRuMFbh88Tze"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="d6orosdgjzbgOMUiZzWnFA"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="ASXSAPrCsve8EVtThcWNwE"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="BFmnFrRL6wGLmqZeJEpxHN"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="A6hsor0CUOEm3HYYWOFhi5"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="OQJOLZxKnAIEcg5bADoA1m"></div><div class="node-icon" data-page-node-id="bkaKLguscWTOkGs2ER0xnQ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="VekFI1sPketGDjyycIw1fV"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="zLUiy2sJq20VlT9fa4Wnxq"></path><path d="M14 2v6h6" data-page-node-id="i1YmuHGgyBZCstrgX7d9xA"></path></svg></div><div class="node-text" data-page-node-id="fAkSE32sxWnq45l60SSzHy">现实需求：群众办事痛点分析</div><div class="node-actions" data-page-node-id="PXVmJxiWdiSkIv9ZNtyGG7">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="82qk5gOBqVy6m22BoJ8fTI"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="TkW724iu5EWxyt916zOHfd"><path d="M12 5v14M5 12h14" data-page-node-id="1R8r52tzJmsEkiKy29tkAp"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="o04MMyvOasjHUnkJNfB7v7"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="dh1l65sUoPrk5FQ604MLWn"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="AfseC3SSjXniQqXWplCrqk"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="TBl83FAhYjEZ6QRmQgks5D"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="yX59NvNQE1QUfCByXwC5ja"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="dsoOgDCeGEObvSyEXrNq9Z"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="13" data-is-chapter="0" data-page-node-id="6zYxIiSVSIk7Lye8Tf3hYK"><div class="node-row" data-page-node-id="k6RXWBJnDLsnOSxnNLQuLw"><div class="node-action drag-handle" data-page-node-id="Hnv6vlUPZU4pziQlfdDb5C"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="bAr7gQbaivJobIcXC0A1Je"><circle cx="9" cy="6" r="1.5" data-page-node-id="5r4cB0sFL4gE7gjwcq4w8o"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="QNeQpxmmrjNy0wXB1zGtRt"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="fcuCNG7YiNo8RG7A5u2kjs"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="TOgkxAGSDW0srKjtKp8q58"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="5tyI7UDinpH8NSnwxIpRZn"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="3vqumj0PxS7m2IhBfqtTcF"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="SHDUID5adN81MW125SaXxc"></div><div class="node-icon" data-page-node-id="Z4tLOwACBPBsIWzCm7og0A"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tyEEj2ubmgONgJRnAHDcga"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="ZIv79e1COVz541lPuIKMV5"></path><path d="M14 2v6h6" data-page-node-id="RxQCGmEKEnUFp2GQ2R5lo6"></path></svg></div><div class="node-text" data-page-node-id="SgVnYII9Hm65cxAZC6yroF">建设目标：打造智慧政务新生态</div><div class="node-actions" data-page-node-id="Ilz5deY3zmqaRIAYBTRV8G">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="QRjLXsvVjxUiegGLYJtICH"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="890vAiOe2J7V4e1gora2eB"><path d="M12 5v14M5 12h14" data-page-node-id="dXm8Rudk9CDdPOP0fIcVaP"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="Y09uQvIvEhXbaTBCWAk0vo"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="lgbzDh25dHdYTvQm4eOJCT"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="z3ZgxPh7e0GaVG01v2rMZQ"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="HOHU7izAfkC44Ekyy9EOH3"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="B6XBIygRNFImgwwMeezDgE"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="wWDhwKTgWeFKzCAiI7NDt7"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="2" data-is-chapter="1" data-page-node-id="LvdcDABc0IgTzMRAAdxCfq"><div class="node-row" data-page-node-id="iBexaJASHZfKTLvjJAC9nY"><div class="node-action drag-handle" data-page-node-id="wFA6iCP9hsx5ydmdak3NTN"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="4cLzCEYhD5CfDEIggo6Y48"><circle cx="9" cy="6" r="1.5" data-page-node-id="598nvfFb1DmeCHjIFBPKCU"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="CGzvUZT3VXZ70XrLWICfdP"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="ISMfAfEqsEZhQFMs3iDgqb"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="giFnZGUfaVHQSBUqNxrNld"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="yddijcWO1W81vGFA2GoDw1"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="1Gx1u3UkAcJ7E7BOclQ1Fl"></circle></svg></div><div class="node-toggle" data-page-node-id="pzbDDkfwGRVkt7oOlLW4YJ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tG7va3EkntVGLj8WkG8jks"><path d="M6 9l6 6 6-6" data-page-node-id="6OhLJDYgmgmOwJG2k6YS0D"></path></svg></div><div class="node-icon chapter" data-page-node-id="iehWXgSmYKXZH3W73IgjAk"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="8AvwoqLN4H9OBXJLnSKyTi"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="gfE1DlOisJgbhQLAZhALhe"></path></svg></div><div class="node-text" data-page-node-id="iIJrNezfGHBZe8Q9W8Dvam">第二章 实施进展与成效</div><div class="node-actions" data-page-node-id="Lq1FTsa9CbFDu66VxKN0tb">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="wdspZ5dD2xOefAoAGT2jmC"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="JD25QPm29pkMDeRFmdUoiu"><path d="M12 5v14M5 12h14" data-page-node-id="yugvmXHx6r3TZbvIJe6Me6"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="Hxlgi5IGSrvPifb5wyaCpk"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Dj63yDBSc2y6xJzdRwPxiO"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="yPwAL0XFp01GWxhG4FGCQ6"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="ZvBMeuvT2e4WCXXFS5BGuu"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="dbOhk30UfYVFH8dIODsDCj"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="GCXqFsOyLxTUARRimtrQ6E"></path></svg></button>
-  </div></div><div class="node-children" data-page-node-id="O1g6ucMq1BiRrOe9b86uJP"><div class="tree-node" data-id="21" data-is-chapter="0" data-page-node-id="qgSTFRyDDvpGiE9hoPSjrz"><div class="node-row" data-page-node-id="LdnbrHTFKQkOjHUdDzmkQH"><div class="node-action drag-handle" data-page-node-id="4V8deiqDPLZDMi6BXjGO3d"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="tbTXlpHxmOPCzytZoLNzlJ"><circle cx="9" cy="6" r="1.5" data-page-node-id="Af7u3VFCPpCGTaTKY4cNUj"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="ZoIDN3HAyF3SlEDEh9agGG"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="Axipo5rfrmNnW4RD6OMBvO"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="d6Y04yITiJdD2CeL8QjAJd"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="9ifljFnKzVElplQ8W71OA6"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="LrXSR9cqJ7Fy0pFJC3HE0i"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="jfggJFwDQ2SQCIPDGlqitX"></div><div class="node-icon" data-page-node-id="peJ2qdGuvaSXelNeMIBsNF"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="PZLYO0UAaN9scCowAkKEMB"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="MEju6yWWVSWRlQtnIMpEqE"></path><path d="M14 2v6h6" data-page-node-id="CMOXiYPIlKkehoxJzxzZmQ"></path></svg></div><div class="node-text" data-page-node-id="ZzKS1Ro9pPcFA9e0e2cEJ7">一网通办：政务服务线上线下融合</div><div class="node-actions" data-page-node-id="Rv2Ji23O06dDoFh5MBLC1Y">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="eD6zZ1CD0wQCDgN2V6gCIF"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Joi1EjacC0SEZfpm7HSnys"><path d="M12 5v14M5 12h14" data-page-node-id="JGZFUgBUygYB9P30ViaTt0"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="TSzr3hBohlV1ovSQgVEHcq"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="rXl4Fr8DG4lKRcbwSMRXFd"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="L4qUiFxQGqiRENHK5ZCVOq"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="9ZsF9xtKtHJNBoHpw7jZWL"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="sQT66mQpA2rFA6QfqLVpis"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="6tKmPUthoHmfVilMOpMWMp"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="22" data-is-chapter="0" data-page-node-id="Yt2K425JsJ630z7LUicasn"><div class="node-row" data-page-node-id="4esQ2iCtw1HUEBMsNEn3DL"><div class="node-action drag-handle" data-page-node-id="YuQMfMq6bBAWCXJ1Y9Vq1e"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="akyeIrgJ5EZR3XeTDIbVL6"><circle cx="9" cy="6" r="1.5" data-page-node-id="FwJJEPaWqD5lnZxhGw0MBE"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="OriAGZ89E3paz6UmpStBQj"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="0Mt8HiMwlrh35aXM4SXlzH"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="0r5fPDwyxZlvS2depKFHUP"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="zqtopxcs8KtxCM35DtN7Zw"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="4KDLJGqKguS9YaUQtwNhrp"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="0aCKCogmBwthEaEPcq3wSd"></div><div class="node-icon" data-page-node-id="XmOXxun0G1JRdnCk0nWUVN"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="FPE3GeMcK1HR6kVB0xHp6c"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="bGtdOg3VSaUvA9sfXhOprx"></path><path d="M14 2v6h6" data-page-node-id="iev7vhieMESymcYA7Le88K"></path></svg></div><div class="node-text" data-page-node-id="MOJOOSl3GURpzCgEmYnXrn">数据共享：打破信息孤岛成效显著</div><div class="node-actions" data-page-node-id="rkzP5Hm68IzhPxF3f5JY0M">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="EsD3cDsCSgjfSkCRNURssk"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="vaq1kBfverfNAnYFkCs749"><path d="M12 5v14M5 12h14" data-page-node-id="rukKLHEwjIhTed3hOU8xxp"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="yPTCicoLdx0RObadEQPz7C"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="WBXMCsn6dddxMnHnaEIJFG"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="ItbAalqlYwxBznUHf1I1UJ"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="do4RXQ5wzEP1jqFUDiMfrX"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="gncJiE5HGBECqxOeJPaICg"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="dlmaihCEAcdonMASeOf9l0"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="23" data-is-chapter="0" data-page-node-id="hUqTb0GALts7Dkh1zM9qt4"><div class="node-row" data-page-node-id="6COcq5pgHsjX24wIR06HJ9"><div class="node-action drag-handle" data-page-node-id="dATucQ2w3UKgFeMqwZD5ZE"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="lx3GNWhxCsa9lSbW39yMlP"><circle cx="9" cy="6" r="1.5" data-page-node-id="wUrCOqh6MZmMOnDrqw5h48"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="w1pf0sTyF8cRWq1k9pz4ei"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="lmWanxGAD8vf39dh32RSet"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="2OZLe7lX73ilwQCrquh5hc"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="r650kgMFOiQGClEQB6MGhT"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="hqO7fO9YdmlNtrHTcbbsIa"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="mypRtsc4YFFtHVyLaptXdH"></div><div class="node-icon" data-page-node-id="KiEv9ckKGCqDsyQcxSRA2S"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="5YqqBK3lIv3xRQx9Cp6L0p"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="Warvq1anBB4udnNlCszPxe"></path><path d="M14 2v6h6" data-page-node-id="G9e9dbgj0zr0syl5JfexQB"></path></svg></div><div class="node-text" data-page-node-id="dS7DiureID9BKtXh4UhLp4">营商环境：审批流程优化提速</div><div class="node-actions" data-page-node-id="QgftzHJBDD0f2CKMzT1CXb">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="4nkEbrm62h5nHM3i41fAIC"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Zd5IAvynwVpO9SjsWXmHTF"><path d="M12 5v14M5 12h14" data-page-node-id="QS8NTaoEDrEp8tgUBla92K"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="TDobObDfFrwEMeuNToGgs3"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="3g6wASg6y1LXEmNeieoLCf"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="aMUtRpww7xIrBrfIJHqmTI"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="PjKjhVxXVuX1P5vIyc3hKw"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="R9g2QJ1Dqbn3lCqSCPUVHc"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="F65w8eADFZA7dSu61elHht"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="3" data-is-chapter="1" data-page-node-id="E5V5KpBdczrWvuH9bwU6Zq"><div class="node-row" data-page-node-id="YClE1qrytFGso5D2l3yFHc"><div class="node-action drag-handle" data-page-node-id="jtaNlqjmsqACByUCHHMZXb"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="xgqzzwEleFeFqYF3UIvYXf"><circle cx="9" cy="6" r="1.5" data-page-node-id="WVO9GmHW5apMk7wQhIpmSj"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="tdqgP9MS13ulBeE3zVPIPY"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="nWH6Qf7v99VUvJACdMaZ1j"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="av70UruPqtNFnh9KZdw3Mq"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="OmwpWLGR5fYFEGL0rVAkTc"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="tv3y2UcdCiAWAIXqP14JYy"></circle></svg></div><div class="node-toggle" data-page-node-id="yVfrnhSS3oOPSAvB9mwB7L"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="b0EmNTMHnztJl9AudMPMP8"><path d="M6 9l6 6 6-6" data-page-node-id="fa8NDvD1Fg9J3Tbz95NMG4"></path></svg></div><div class="node-icon chapter" data-page-node-id="a04zsXq7XW8ixhZH2dIEg9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="1rWQIF3VF69HZk9G2Pq9Sn"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="Fz0a9QeQCij5xAaEYGh00v"></path></svg></div><div class="node-text" data-page-node-id="K2MweNhIRmJ8HCPDxwlfdw">第三章 典型案例与数据</div><div class="node-actions" data-page-node-id="BjYXvBMY1QCCtMkiHUxVmd">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="u0aWOnfh1kD7Yj9k6QJQpA"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="OOq7SQX4RsGC45QXsHMEXh"><path d="M12 5v14M5 12h14" data-page-node-id="EEm1aWMEHwqaKurUz9F5Hn"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="kBYqa4Yd7EPu4AbyWUXe8T"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="mMso5sSWaVUlurVJZUXLiF"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="tfGA0RrbYpU1jvvyjP3t5I"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="fx4yASV1gYCepoWM4TeQF9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="PkbSbnQ20S3UZ69QJ0gYIV"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="Z8c2i9JeZHQJZ19fDzuiZ3"></path></svg></button>
-  </div></div><div class="node-children" data-page-node-id="hyqle6dPgeE35mBTvfIN5Q"><div class="tree-node" data-id="31" data-is-chapter="0" data-page-node-id="XiR8hnbAgMlKHIBp2BSVSd"><div class="node-row" data-page-node-id="fOgC2dvn4dFaiOPHDh6HPj"><div class="node-action drag-handle" data-page-node-id="kgGrIbgw8FEuLxIBLJJUFD"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="GB5HhJCG93A2ASQZm0Cd48"><circle cx="9" cy="6" r="1.5" data-page-node-id="wZyEkROYr5cRZyMtp7XThU"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="DbplBRqvkaCEjR6TcxfVpr"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="NpRkdAbQbQTLzOfBguD62x"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="Eo8k04Xhe6iLgZLAlV46zX"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="hlKyNlWvXscUpjk0xQvZIy"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="3wYCopN3tGJsL3yOtCiwji"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="2tHY3S9BAOUUDxn6IL5DsE"></div><div class="node-icon" data-page-node-id="TrWdTXzl7gTFQa2m43WYZ7"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="dyoOhaG4pQbLO1lSGLaggq"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="c05AFzNGF5XIHPJnwdsDYp"></path><path d="M14 2v6h6" data-page-node-id="ROOvU2eEYLKJcV5xtNmO4p"></path></svg></div><div class="node-text" data-page-node-id="5AHFO41WdYFC91lgBux2YM">案例一：不动产登记"一窗受理"</div><div class="node-actions" data-page-node-id="hrQ6ZM6F57GdsIvkrQaZEE">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="MAD0lCCxEdGS2SNZXujlva"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="VVAraNJhTZhXBZpVrzPQJO"><path d="M12 5v14M5 12h14" data-page-node-id="xg5l7HOvQRiz4caDyw1ON8"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="itP6a2AQgbMNBZaipMkxJy"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="usl7qXK5MJiSBSTmMSQhem"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="9hF3fmkMhRqrNL5TzHvvvN"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="he15OPVoiUwc9BbZHt09xa"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="vkBrrCRSg0NldbJs5RqjMI"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="CjIEULB510m6htDs9ryGHU"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="32" data-is-chapter="0" data-page-node-id="2TAjVn6fHnQ6J6FwamfUDr"><div class="node-row" data-page-node-id="OEJZY0lLMHKQ8aQc7CkilY"><div class="node-action drag-handle" data-page-node-id="v3lEDb1XMG2DEJCcAWB8uP"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="LdW2dthySKcUwXwof5iFDG"><circle cx="9" cy="6" r="1.5" data-page-node-id="KIWSNVRNuSsgc3ytHFwWXb"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="WAYYwuksjPzDLBeCWKZgnY"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="DahTJbo5Uwz9WwvfBxjDDK"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="pu6MGbdnYMdHxEBYJlrgS5"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="VukvzATK3saROHf44PL8LQ"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="MECySY5qhWRETfkafpCd6p"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="ORzsc7NXyxDCPQ3WRJBke7"></div><div class="node-icon" data-page-node-id="9QA6FXidIGAIYI8zT2XliE"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="iXWyeihdNEuyydtWrS57vr"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="B1f5FmYgeecjA3FUAkIJad"></path><path d="M14 2v6h6" data-page-node-id="MDhCtnQCKoSyC5Xle7q1MD"></path></svg></div><div class="node-text" data-page-node-id="7a9TCFEhPGgwRPJaRBLhZC">案例二：企业开办"半日办结"</div><div class="node-actions" data-page-node-id="1mnJGbZ4kkz4B8k7mPXemY">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="HFCf98H93mjxaJV7Xy0vB4"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="guG9eqgcnVO6sXA08E9x4n"><path d="M12 5v14M5 12h14" data-page-node-id="CHiiZjQTvZklioURsbKa6v"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="cH7KYgQyXpTVfh7a7QCu3z"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="oGqa8XGyBm8sCJ4wB2PG56"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="cnZLmtxjz2zRyQDWRxcopk"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="V5Vvmq5u4DgeesUx2uWrpF"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="EBF0HwGn254rE3l4NnSwuY"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="70HScL9MDoVjGuweSC3Eda"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="4" data-is-chapter="1" data-page-node-id="gKWhWcNILUvbC6WOSU70rl"><div class="node-row" data-page-node-id="wTsLebDQyCKlpvTehGV1Ew"><div class="node-action drag-handle" data-page-node-id="ee4Te6HQyWUWuncXnVwgoK"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="PVZpMUKGRQLcFhW5ytvXVe"><circle cx="9" cy="6" r="1.5" data-page-node-id="LXll6np8l3uqI3BV6kC8CO"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="6HMcVukX0IqWr7U52mlGHo"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="Z5xdudvcz5BQ39EXFlZYul"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="7eY0mdDoh2bcPFQsbbCJ1I"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="ZSbT0yCRXNRkgp2cagVfHk"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="igaV0CuYHi2qEf1hhJDGXc"></circle></svg></div><div class="node-toggle" data-page-node-id="LvDQjufynUM0XdhpCFi1pP"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="oP6alxGqeQEL3lnJmxi5l1"><path d="M6 9l6 6 6-6" data-page-node-id="rsx7sellclR3v3WmCfs7nA"></path></svg></div><div class="node-icon chapter" data-page-node-id="Fz9aIRWcsFIAw9Caa2ngEb"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ePETCHbzgDEVNM761OZuWm"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="TeKFUK9tCwpTX5RoH0X90W"></path></svg></div><div class="node-text" data-page-node-id="fJhYwVhfQKgWfXVIEP60Ad">第四章 存在问题与不足</div><div class="node-actions" data-page-node-id="lvnGvOJi5cORbJekDs0wqV">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="5yDaTkRWqKPYoBkXAjmpG4"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="PMPcaZALM9c2RkrTFCDSz8"><path d="M12 5v14M5 12h14" data-page-node-id="SVS5hdOIvQbDqdgYRHwBJv"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="dKsvaOxA31PyWRWOGUTnqT"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="YY5PfaGOkutUbHAPEsn3wt"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="FZv1MnkfdURAq4VHy4iveN"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="pIY4c6qfgdec28CzWqzqBk"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="s1bYgEZQCBBFlNx4liJ5TZ"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="iyiMNrY1E2NsXeegFF5X7r"></path></svg></button>
-  </div></div><div class="node-children" data-page-node-id="IzKd7vy5uCvoceZZpDgX7d"><div class="tree-node" data-id="41" data-is-chapter="0" data-page-node-id="bfgKBzUvTmA2IuNPwTL3wd"><div class="node-row" data-page-node-id="mMkuhfmDhVsPAEGKmAtlOU"><div class="node-action drag-handle" data-page-node-id="lOqrAlAAGXS8GUmoxou9wX"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="ZV9f4wNxReBIlC5sH09bwa"><circle cx="9" cy="6" r="1.5" data-page-node-id="tmlM8ZTkFjyeewKL0cBqo2"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="MdjkVDZGdduHT3DiRI6Bl2"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="G2jFZ4moJqxavT2QzasLku"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="Sz3p5peNYTHY7ZZHXHQdFF"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="IzYv770rlNLDwNHhss4xVB"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="1lB2ZA6gN5CPH2QAtH2uMN"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="FIrtaKb8vbQyMLVJJ1rHpG"></div><div class="node-icon" data-page-node-id="tqVcZUJQvXha247w69H21v"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tbZdG9otAnWsgf0xmPMFZj"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="lg9UHlc41WYyGcii0AvZzf"></path><path d="M14 2v6h6" data-page-node-id="jGcgzklNaZ1wwHtDNYExTn"></path></svg></div><div class="node-text" data-page-node-id="GOtmSF3irvpJLSF5Fai4fE">数据质量与标准化有待提升</div><div class="node-actions" data-page-node-id="lrVDAHUkfkkIHym3na7BUe">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="ldCUOIfUOC8SMsBrjZMbOG"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="JynQwKGdVO3IVj8oTVvwgV"><path d="M12 5v14M5 12h14" data-page-node-id="S3NV6TlAIuXqkE5dmhP1Bu"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="wDnRNf0rSeDFbAqxogguF5"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="VDIcWs4txxJXPrezmTUBZE"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="OlPAtQrH3JBEGt4ISUGnlk"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="71AQkOrMF7KTB7GIDYticq"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="zaHhiYzCpC9H2xCENJxw5s"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="Qk94YzsRfGzVqe4EPmQ3MB"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="42" data-is-chapter="0" data-page-node-id="c6AIgjnSeTIocbgJm8v18P"><div class="node-row" data-page-node-id="6VknKaST2bC03lXOw9RCqZ"><div class="node-action drag-handle" data-page-node-id="85UksuvjeI7VzS1x1L5L8c"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="8u8E0P1wBx5N3v1hujCVkP"><circle cx="9" cy="6" r="1.5" data-page-node-id="TaMboT5nZNttNYWHmiKGAB"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="jNQAEVNGJhPnhhwTVIZz9M"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="wvttTYMJTD2N80HaA1vsQ6"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="WNJd6ZsO2nECgQ1Uq5KXZ1"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="OTtMRsJUq9ocIY2j0LkB1D"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="SOau4t9XsRABO4rNsBn4yY"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="vs0GvKmgdZDHcENSII0OPB"></div><div class="node-icon" data-page-node-id="GXVyZVA28jc3dWexCbH10c"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="iBAaUQ3UULuLm7bNT4mauu"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="4zzRsChk3ES7iVLrzgc3kD"></path><path d="M14 2v6h6" data-page-node-id="8i4H4gTh96HYNiuUx5BWKO"></path></svg></div><div class="node-text" data-page-node-id="QyAKIQROzx6n7GF4NCOTuO">基层数字化能力参差不齐</div><div class="node-actions" data-page-node-id="B8p30Vra2YsIXokARh8N4l">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="CJ3cfVcBhuHg1Sj2JKkCbw"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="J5wrNYt711g8CwiWse0SBR"><path d="M12 5v14M5 12h14" data-page-node-id="U3hq8MIl5eMvdZUvSNGHY8"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="cE6coA61R0zE8n5HNUEJ6E"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="OTI5XqJJ3q6RpmNr5BGt8s"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="DAYMCcrsqrL29xbfhYL6Au"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="rPradjCBKtIS8iHWXSGoyD"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="inzAZwOzJNm3aKWxoKQgPV"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="wlOoDxVJZpb7rjaqG4M5Jc"></path></svg></button>
-  </div></div></div></div></div><div class="tree-node" data-id="5" data-is-chapter="1" data-page-node-id="dW8S106wEFqxCOS2jVgdiL"><div class="node-row" data-page-node-id="w4SWJRbAqM9aFmNthubqkp"><div class="node-action drag-handle" data-page-node-id="WwYJRi0WBo8z3DwBUqM1AQ"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="7QjJX18BYADifcGdVRoQFs"><circle cx="9" cy="6" r="1.5" data-page-node-id="oAlCuTDfCtbX2oJQiwHE3j"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="3MurKyTE2ww4bIu3jNTPUy"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="FetjXLt7CscZ7m4jUBDdXG"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="JrDEZdxVGFbzRCuop5usVq"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="pKtwIVfmCEtyHZTG2hWK0B"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="lJIpTDaX3sSTkp4kSUqCe5"></circle></svg></div><div class="node-toggle" data-page-node-id="BTNI1WF0KH2M5JBBPU9uxw"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="qa0IJKnjWWfi1Y1ltkjSYF"><path d="M6 9l6 6 6-6" data-page-node-id="z1asSKJ3zCqE3fxbIfvOqv"></path></svg></div><div class="node-icon chapter" data-page-node-id="FcbdsUG73hSZcoN9lmpFWB"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="S7BtsqYizUJWjo37JRL5V8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="J76Cd3NPfRqxwn5BxdE6At"></path></svg></div><div class="node-text" data-page-node-id="nENdCGGmKKd54mJeHCzZfe">第五章 下半年工作计划</div><div class="node-actions" data-page-node-id="oCOIzP7IignVbeMGryItag">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="Blhfr2LHzfjPjhtBdTD78P"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Vi8oF10exwZlTLyDDogPSB"><path d="M12 5v14M5 12h14" data-page-node-id="kWerKRWRO7UzwBDVRPawqo"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="tSMgDQ23eilqiuePetLHpy"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ZSrEi7XQ2g7cNbXJIA0SoG"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="dnKk6PgJr7QZfqANkrz1zG"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="sY0eiwZbmGgfXeGfT4jbFO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="uLFHRFkyuT1OaqBTgqbrya"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="sbH8tdszYzcLT3WOQnOMES"></path></svg></button>
-  </div></div><div class="node-children" data-page-node-id="qm0DMg0T63F8lQWLbNKPCJ"><div class="tree-node" data-id="51" data-is-chapter="0" data-page-node-id="llciBvby7U4HkNFNE6HJp2"><div class="node-row" data-page-node-id="kZmOPgaKQzHC8ouc1zdRsY"><div class="node-action drag-handle" data-page-node-id="P8GNdpmInAJJT9RjDFDynd"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="DewU5QTQwOXtOqzIUlxagz"><circle cx="9" cy="6" r="1.5" data-page-node-id="5LH0kgOGt7taxwLxdHjvlO"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="cJdxA2o8wKv7pDjTbvDSYb"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="BctXHOryZZONAxZN8UCm5i"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="6ZO9H6YVcXPLLZU8TjZTci"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="JkAWJFs5NWllHeg1rYGaHr"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="tR9uBPvRGxdA3myNVLM4eP"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="JSMQ5LpfUbOnUJ4WQEwHbj"></div><div class="node-icon" data-page-node-id="mjz673RBTzgMPFz3FBieAU"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="XoKxGKeYjEWKaLvoJcRC1h"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="RGqlBukDhuejaDHo1gnPfo"></path><path d="M14 2v6h6" data-page-node-id="l4k5K9ymVtnq2HG0niMeAn"></path></svg></div><div class="node-text" data-page-node-id="hHnmVWi0KGqOd6a1Hd98aQ">深化"一网通办"全域覆盖</div><div class="node-actions" data-page-node-id="HR3yOHRhV2Wcb1xFKNoY5z">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="2UthY5IFX3DkIZamerwZ6y"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="jSJ2rdPjPe5EkP6VWObbkm"><path d="M12 5v14M5 12h14" data-page-node-id="lrlwYfKE1MPdb5EiFlHww4"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="V1FK4aNXGVExgpR4k7EFtv"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Oshyy2TgRHhyHMdy6VQbYV"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="cxhokDZpOTAoYNfL7HLBT3"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="dxWO2jlccKwPyHNstXLJYS"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="PpdnN4YbJcCjRIyfo8WP91"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="a58LFC3ADn0SldTvVJYUiX"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="52" data-is-chapter="0" data-page-node-id="PXQRWhP8C2NEDv4N0eXTkF"><div class="node-row" data-page-node-id="gAmyJmB3NpRZ7SRkR2ICO0"><div class="node-action drag-handle" data-page-node-id="6D5haOord9RFuKJnyv48Yb"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="Bsx7VzpcgenR97pAIREb1b"><circle cx="9" cy="6" r="1.5" data-page-node-id="IoYctjlqY2Kbss4cxLRec3"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="Lt8WNWf6bTIYn32ZEujDPz"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="PB3F6Ph4XLDBQhKNItOyZE"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="9WWDniCO9jl1cCJdUGznhC"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="KyWydhY0BPU6ZrUoqtuunA"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="DR4FeKIVxPvAGuCEHOMUXB"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="DPhrpMPYgw0lBrvfckWsYA"></div><div class="node-icon" data-page-node-id="NV0tGsEW9qMIxhagQR6VO9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="LHAFKfIhDMayBdp8p8vA45"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="XLwBXUtwV4Jg1oKHCgCMYm"></path><path d="M14 2v6h6" data-page-node-id="UwdAidCzcZ2WAuFg9dRu1w"></path></svg></div><div class="node-text" data-page-node-id="fBQ0eEyfniHCGIcg6k8flG">推进公共数据有序开放</div><div class="node-actions" data-page-node-id="Zm50ICZGh3M19P5GPeVivj">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="fGyoDLygfex1MVFEhAn143"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="8uxiw1JNQV8vR5Q6hE5OVP"><path d="M12 5v14M5 12h14" data-page-node-id="3KpleJP52BhFFAXHEADyL2"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="6F5HHldZ9ygvQB5ni0d37X"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Rg14MsDyUtJyPqyKnsDv7L"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="82hjlDe58E2tQZqEonQ0F8"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="TgMUrJTJxNTsM8AKadPcZG"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="bgsO5QPF6uIgAlPn81HGLo"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="VSSdLPNDpzlFUZ5OjuL50g"></path></svg></button>
-  </div></div></div><div class="tree-node" data-id="53" data-is-chapter="0" data-page-node-id="H9XQPgongTerUnM0JgJlDR"><div class="node-row" data-page-node-id="CaefSbYPdqmXphcOBDGv0b"><div class="node-action drag-handle" data-page-node-id="Lgfj2EaQz0NqCZvJscvHeE"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="PjvVnFZLvjI9eTcNHAUIFE"><circle cx="9" cy="6" r="1.5" data-page-node-id="oeBugVgf0eGtt7YZeD9UTZ"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="6xgiH1HnDVxtJCQ5ZqPd7f"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="PI49uRiZDk5icS9nh5tu6l"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="G5QKqMYOXHg9g3yST94HkO"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="U6YigApuSiDtaKCl9AFGHV"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="kJmWyKAWxOaeqdbW37RclG"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="xG7Bvsa5m0ZQbHydrDWidu"></div><div class="node-icon" data-page-node-id="sk0WywC1WZcALQiIJP1pxq"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="E5VQqjOSLvWx7LLhEtEZY2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="hrLMbH8yBvP1ASuUiUMum4"></path><path d="M14 2v6h6" data-page-node-id="TJc04CMAHjNmUN76CHuu2B"></path></svg></div><div class="node-text" data-page-node-id="de5pZZWcAx9BKp52Dv7C92">强化网络安全保障体系</div><div class="node-actions" data-page-node-id="jIADZWLgPB3cbwMcHHoks6">
-    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="RpHt6h31RJqmOQu8WH0Gc6"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="gcpVhiS5yOqCYZykG6VpIT"><path d="M12 5v14M5 12h14" data-page-node-id="ooVJdLBdyA8DwHFULjb0Ds"></path></svg></button>
-    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="DozoDC8KnpAWYnX99BdSuj"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="JniroHzZ4qfnb11zUcfI3N"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="qULPTR5KA7bQa5n7O0kbt2"></path></svg></button>
-    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="6iHDyxEgZkBYDXF9kycW7m"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="smgByH1IofQr7NlpDyMP9O"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="kv82M9u9kBC7B5YYIc6tfi"></path></svg></button>
+          <div class="outline-tree" id="outlineTree" data-page-node-id="sKaFfWyOYYHYNniyaPirSJ"><div class="tree-node" data-id="1" data-is-chapter="1" data-page-node-id="Duyrun9rH9NqUwHlByJQ1B"><div class="node-row" data-page-node-id="QJaKc6bF5IKrj6BHDlFqiw"><div class="node-action drag-handle" data-page-node-id="BalcQceXSugwLFvSrcAbIO"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="p0yYtJ3qwYrDN0JEZtgAAa"><circle cx="9" cy="6" r="1.5" data-page-node-id="t4mQbxxk94tPOkDUOhv44W"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="3QOhVOYZl6iK0DJHv7XMXX"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="PWpAbUbrtc5NgaZM8MHtVX"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="8bT5aK5B0aCAThtdCQkrq6"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="JlFGIGLQmTkGcGr3ziU8hH"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="oV9VUHEmRUhDFyaoy7Nqcj"></circle></svg></div><div class="node-toggle" data-page-node-id="mBvi28QORQsiQSuiVq4BNP"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tQGDXHwEQjO8lg4a80zrKY"><path d="M6 9l6 6 6-6" data-page-node-id="XQpTkzGLy8Tk2uHlKnxABj"></path></svg></div><div class="node-icon chapter" data-page-node-id="P399bBGl1hLqK6Csc8drhg"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="rKFHDECjMcwFnpdh4hkLBe"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="AEpsDkFyxewqwbIkqOoEgY"></path></svg></div><div class="node-text" data-page-node-id="ShEXkz8XEbD7KfeO9DezWd">第一章 项目背景与意义</div><div class="node-actions" data-page-node-id="FpIalqEZ5xBtd6VwYtrBrU">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="Igm7du11w6GQF5dIr0SHph"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ZgpejMVG65EKP1jNl5MOs1"><path d="M12 5v14M5 12h14" data-page-node-id="H8UYYRcotGyTlKid7Xz2Yo"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="vNjmpiOwSEBEjwlE7jrmRA"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="mDz2R5B7k0dQqhTdWo2xLy"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="kgMPRjCVdUhuU7lqH5LGip"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="w6ZEuCQJA61KTCKtILw3iR"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="p6mq3LwkWr4G2sUmP4FRco"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="kY1b4d9bEzfwiHbEHwHWEc"></path></svg></button>
+  </div></div><div class="node-children" data-page-node-id="hhBQ2WEJ5hjAWgVqZF9Byh"><div class="tree-node" data-id="11" data-is-chapter="0" data-page-node-id="0KWEqTv3CW6EvJXZJHpZ3A"><div class="node-row" data-page-node-id="fNkywmGGpsZUEKIKggAFTr"><div class="node-action drag-handle" data-page-node-id="zlhHToGCGkBH39sl0LvTtt"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="rmybEtAJjunOc8oemxDmxC"><circle cx="9" cy="6" r="1.5" data-page-node-id="4m8P6q6sFcjk03mmCgCBe2"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="YACOh7jHC0BQFjEjS5QLXC"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="TNKuwiXfUuQMiHl8JRwAoG"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="r5UiIwtEYPVE2Oa3A0tT3r"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="4qWsSLSMDIV6qmDAyB8JAr"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="r9oAwk2QWNs8mpYmQbDn3n"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="wTLR6LLTq8gOlq5g42LNWB"></div><div class="node-icon" data-page-node-id="deNXqLZAHvsitAq4zS4BRl"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="9Kxisatk4taxp7wcnwM45E"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="BHSRG99tRLgWJ1aMkRL911"></path><path d="M14 2v6h6" data-page-node-id="M3CcpUSDqdXIKegAAJosrm"></path></svg></div><div class="node-text" data-page-node-id="C5yEqveTVOuelQZ1ppE9WC">政策背景：数字中国战略部署</div><div class="node-actions" data-page-node-id="lSyLy0txZB1ZEf9yEHnOCZ">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="JY9hmHlX7s8zFrwnfGnTp4"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="M3D0mRHp7FTN6UfzQ63xY6"><path d="M12 5v14M5 12h14" data-page-node-id="zNjz7t1o0H0aujLscUbEqP"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="8g9W48HkOlSYpkY7jOLpEj"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="MlXozZHjTNwB5WR9dAUYlk"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="287HwhPsdLfSeuzqjn5YWp"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="efmDPrvltg6KtPzdBvkWR9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="jsMUbGLMeG9FCfl1VBfqO6"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="YLT3lNvERW7d60SpoqXQGt"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="12" data-is-chapter="0" data-page-node-id="sgBd26CtRa4ndRTeGnmHX8"><div class="node-row" data-page-node-id="n8K6pXWT9VS4DBoBjIOOk8"><div class="node-action drag-handle" data-page-node-id="LtDMDIcDfVUKYz6RiMvqT0"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="ZqJGcH9CAMS4rfF9k7Gl5h"><circle cx="9" cy="6" r="1.5" data-page-node-id="6jDmXbZ4FcOudSyoylsZTp"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="GzBCsUFGidutCICA8PGSTy"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="TLY8OD0nIORTlPAXqXChWS"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="bVheJDBrEhmeKGEvHCRqwc"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="LCWKyTs2EhNx2cPyJXu1Pt"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="PwYkzLT9FUepbvW0Ll2bnc"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="DY2LoYGMEAxrB8GMSrmMIA"></div><div class="node-icon" data-page-node-id="ZJvezPfK3k6tpmkYZWu699"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="xMX0QNllAfFy2jHbyiJ0QO"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="rQ07Laz187cCOtZwtsSnBi"></path><path d="M14 2v6h6" data-page-node-id="2fyrZJKk6PLvKCHva4hwMN"></path></svg></div><div class="node-text" data-page-node-id="FHcnkOcE7tEJ8flQBZVLap">现实需求：群众办事痛点分析</div><div class="node-actions" data-page-node-id="BE6qEVDpFWxfO5Y91naldE">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="GbpO7GmTuNr59Yq17tZE7I"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="HGSBP6NI7c8P5rMn8pu7A7"><path d="M12 5v14M5 12h14" data-page-node-id="5Ls2tbzPDsoDNO07A7FqDx"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="z3PT3VohAWXlWgQBHVWqXk"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="rLLg1ztNs36cETzK3sqFny"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="93I0hhZ8FxDf6mH9v6C1S0"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="d3GXBJmSdO0HZVwqKlzl0a"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="nDXiDCUIwFU47QyccHrup8"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="j4hp8CAzNeJYSkJjVBcPbp"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="13" data-is-chapter="0" data-page-node-id="JfU4dmR3BhlBjBsdcHj66z"><div class="node-row" data-page-node-id="G7DON4cU2oMAHxSRQPhlq7"><div class="node-action drag-handle" data-page-node-id="7Odjzl1MyVzOVlCvq2hCuw"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="VEcqqvj4tDxqNo1DDEwy8k"><circle cx="9" cy="6" r="1.5" data-page-node-id="tvTVwJU5Hi9Jmn8R4LJFGL"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="S38N0DXkJ9W5xlfL4AKGjA"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="Be4vsGQXDJvUWWO31l1nDc"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="8whCUjb52RpJvVzjw3LVAV"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="uueAKtLoRoMRs2xOVTHji5"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="40sfck6uOHNPNa6ZcCUUxs"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="9i6GjJk0ZBy3xqXX6sVRCH"></div><div class="node-icon" data-page-node-id="qmvEBV7K992h3lxvnHpPLG"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="AqkSF5r1AbzMzCBP2enqzR"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="9GlVxCGvsrmk0DeCbPO0uJ"></path><path d="M14 2v6h6" data-page-node-id="LTTzaQt7T0Humeqkk4614w"></path></svg></div><div class="node-text" data-page-node-id="5vE5EubcWUxvNAfPNAwDfL">建设目标：打造智慧政务新生态</div><div class="node-actions" data-page-node-id="nGYvXQrswf9TimHjuVpPMF">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="0TUP7DzoBjgOcAwu6zFKzO"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="aDYHoMi8GehzkPy11oL8Y6"><path d="M12 5v14M5 12h14" data-page-node-id="XI3kmERHXmfE8DMaB1YLbk"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="NCG8XOWuF0XX8RFtGy80yx"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="objjiReXlxE72GYnpyEqkz"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="uzprlR66Ix60QFsikXGIxL"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="j6dZ7oyygnD4f4MB8vw5nw"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="9YgSBDCFJRmjO50E5vtT0z"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="RB2O75NAFxvpNaIBZnxvRk"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="2" data-is-chapter="1" data-page-node-id="8BOqZt2fhehvuAuRXVzKtn"><div class="node-row" data-page-node-id="zhOf9kIBT8GFeEt55UQueT"><div class="node-action drag-handle" data-page-node-id="fKbsdFmF64jMbaCIEoEHtk"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="lSwdsit4hDNJBzSSYFgU0C"><circle cx="9" cy="6" r="1.5" data-page-node-id="uoOqGP2V93VG95gXmmFGCq"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="BVwDbIhwYbjaHf4b8Nh3xU"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="ZgQPqL98IcbxxS3gs6je1O"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="FHVa8NJ0HYRtqc3Xv2oRC5"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="AybTWC8H2iiGwQrXxi18j6"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="kCI2EBy7mze7DsXGpSvgYY"></circle></svg></div><div class="node-toggle" data-page-node-id="lZ3Pz2ujaIKFPpSLbwjZGV"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="CH2jVNyDB6yYYe1aYULbk9"><path d="M6 9l6 6 6-6" data-page-node-id="42dcvLsztlKJwNEqTIspA5"></path></svg></div><div class="node-icon chapter" data-page-node-id="DhG4kuh7beH9G7wwd3iEwp"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="eU4pNlK0l1kxNTgp23Lgwi"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="nKw8BXI1vQTrvUM2wuJZwX"></path></svg></div><div class="node-text" data-page-node-id="Yq7pxDN31KzPq3QAEozEHJ">第二章 实施进展与成效</div><div class="node-actions" data-page-node-id="r0yBagiJ6d9gyF4zcCdIL5">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="scT3ej144ECNjz4XEdF5Mt"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="GxGHPzHsGVJcZpjbFYHGDs"><path d="M12 5v14M5 12h14" data-page-node-id="v2OlSGsZFFtj5QEGQzkJJx"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="hVlZfFjcQxM6kBjA6DU2T0"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="f80AifDzmIbZgTZIzkaihD"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="vJdIMEKEQWEvkDPO8zYq65"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="w8atpbS7Ixg14lm0OEwdoq"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="mf2gY3qfo0L9s9BtFHaNbp"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="AEnBTKgp3cFOBO2kzke6hf"></path></svg></button>
+  </div></div><div class="node-children" data-page-node-id="BAr2XNi8qF64CpkuF65r6F"><div class="tree-node" data-id="21" data-is-chapter="0" data-page-node-id="oJPvKDlAB2yrcWcogQA54D"><div class="node-row" data-page-node-id="koLdpGMKApn0iHdYsMrxTl"><div class="node-action drag-handle" data-page-node-id="zqXMO1RCgd2ZXHoKhdDI5L"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="tFG3OZdcakz4JDs2yymjs4"><circle cx="9" cy="6" r="1.5" data-page-node-id="jGFTLpvVcVtGZK2gpGhMNL"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="TobFlAwW0zLHDKLYiHTKX8"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="D7p3LeL4AlqN5d2HarwTLB"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="IWnEFSeRv6jKln5InRH5GE"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="uxyh8lV60M3W1CvaUhxqUv"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="nriZX5WL3SSRoByQJYodVm"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="eS0mxJ4jxPReheEov44JHN"></div><div class="node-icon" data-page-node-id="w1egCy04lW055EA1X9mZlK"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="khtAJuKo8AGnRbUYvfzS6D"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="utvAaa6YLJo6EKdiIi2Y3N"></path><path d="M14 2v6h6" data-page-node-id="Oy6aWpWsMT10dtrNmDc1Px"></path></svg></div><div class="node-text" data-page-node-id="NImAKXqkxOlpd2uwXPAwBi">一网通办：政务服务线上线下融合</div><div class="node-actions" data-page-node-id="CV9jykoQ8EkdTC9BNzQ3LM">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="8bohfjP30QpVXGip5v8NKT"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="wrll5nEpXUwMFP7A71KFAX"><path d="M12 5v14M5 12h14" data-page-node-id="kIKgHHJjE5MEGkXIl0YRMR"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="azCZp244GKVIfcrshSKjCn"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="B8E6K47qKzgxbHzMYoVhFk"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="T6rn4m0JU7Lq4U6j16QbBl"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="85znUpGTzKCuLWHY68ybHJ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="LlGGvlPzgocdUTqTxAL6Fm"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="sYMJtd0aadNTEv5Y34rRQM"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="22" data-is-chapter="0" data-page-node-id="ArhwSBBUcFAZT9Li1zonu7"><div class="node-row" data-page-node-id="2KPb6SdwDjiXp8HMWCpx5B"><div class="node-action drag-handle" data-page-node-id="vmTLWGC7efzzgdNMLnTBQh"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="9Hea83dBC6JyOx6b6mAurZ"><circle cx="9" cy="6" r="1.5" data-page-node-id="ByqAioEPEZKNsGlJnV7eJ6"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="X9pC966hi1CfwCAYoqhEJ9"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="hoKnaXVGzrWFMRuk4rrTZG"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="QDr1cuymv9owKdWLRVjFdj"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="xLCvKAVtAeUcbw3O2FVHfm"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="MuZFmtyHsQaem7ooqHhGL6"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="u63NKYEuagmEBCkFwArczs"></div><div class="node-icon" data-page-node-id="8muNFBahkwSkM43J8e69AZ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="D0UJwRQ6twqO5tpQJgRG2G"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="ij2REi76Jl3xg9Q1Mlpqhz"></path><path d="M14 2v6h6" data-page-node-id="hez4H7Jr41NOTWmWl83IGL"></path></svg></div><div class="node-text" data-page-node-id="CHjeV4FTuHa4ZMSKrZWWqL">数据共享：打破信息孤岛成效显著</div><div class="node-actions" data-page-node-id="lFB81WT2BPyeEfR5FnZOZp">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="kfUDyUIgBWUUaam6X6sFw3"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="lRLAbVMsuMPw1aodPBJ1LB"><path d="M12 5v14M5 12h14" data-page-node-id="JEteXamLopwo8KTqCk2yUG"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="FHoIxfDWanV0MGWJhSxXes"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="zIPaXG3iNfk3kcv7uTeiEM"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="ADFFvPNEokyQmmDcNePfu2"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="8lPoa65hSsNAzD5fT8BOu9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="oPmRaevUgeFmqWcZhzirVL"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="DwrKJEAayKlDcnkXc1phDn"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="23" data-is-chapter="0" data-page-node-id="yg03Nd95ESL9iCec5iEAF3"><div class="node-row" data-page-node-id="VW7ZCF3BFVGyjCBfe56ttF"><div class="node-action drag-handle" data-page-node-id="5ROHI6aIGt3zBXDAlwK0u2"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="GDzLFByA5BWlRuI5ngGSQs"><circle cx="9" cy="6" r="1.5" data-page-node-id="wyG2fBEdnsyj3Lk30JkdKd"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="DHxvxkXyuWuwCcXIEz4fow"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="CWX9FYaaCq5um6F9DQS15v"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="vGkAstVPqR3IsISxgoEytm"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="U9VuWb9zZg4CNBK4TiiVtG"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="NoieHCBSKGU09lMV4BRclK"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="XZ28Pa0vlAV90mCRLbzdrY"></div><div class="node-icon" data-page-node-id="gyB6VKXeVzvX5mCXv8IMTD"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="2eO4E2GI6lBMFI9iIzUpXj"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="EeJmGWGeggActdrDkU712g"></path><path d="M14 2v6h6" data-page-node-id="4zwmZcoiNSCC3RIdVSS3Nz"></path></svg></div><div class="node-text" data-page-node-id="HOWKUSg4qiryooVgbXLvDR">营商环境：审批流程优化提速</div><div class="node-actions" data-page-node-id="OUSEUmcCm16lmzzRE0HDxY">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="u6OgQZshRK3RoC5vdQD7h5"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="GZxCOMo6ALwDSLIuDoCXBI"><path d="M12 5v14M5 12h14" data-page-node-id="v3GOraWDDYDM4SFBhBFPZl"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="zkxK6AMaKS2MeS6dh8Hp55"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Hk32SSfB5pUuRWKo5GY5Ga"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="H7WSkgbxxkQ0LyhFrTVVNz"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="UN6jJRMYKWj1YF9GtLvahp"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="jSNGZKGv2ItXgzbkSHamqv"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="jfPlLB5X9DWsxTndhnUWF2"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="3" data-is-chapter="1" data-page-node-id="wfgHTAFwajgEeJBn5q8QAI"><div class="node-row" data-page-node-id="qhRl1dt4Xu7bqePcMhvzcK"><div class="node-action drag-handle" data-page-node-id="pnyv0Ipghi5BJU1KCxcQCo"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="XwWaAkXzCl8yfgZoAnRGiu"><circle cx="9" cy="6" r="1.5" data-page-node-id="at4J09KN6C9AS6rcNnDlDh"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="YmoMFTNoljOphpj7JaLhoH"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="c0EMyE2lAmUrvUGgnCI7nm"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="pAStGCA3POKCaWQWhGNzwN"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="VQCUK0l2ZACsrRHHoTkBL1"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="pRr5GfzFtDZqldapZVixbx"></circle></svg></div><div class="node-toggle" data-page-node-id="3FiexwvrYFqqSBNDZF285n"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="wO4n6V50rcvILdXVeQ0Zat"><path d="M6 9l6 6 6-6" data-page-node-id="nS5HYnWICA4c719oW9l2co"></path></svg></div><div class="node-icon chapter" data-page-node-id="a4Tyxexv2g9TMLI98dY7qg"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="UEyUfG5PhdYInzcGBNK0JT"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="ECpCcGGZ0A9GWqXKUE8lPA"></path></svg></div><div class="node-text" data-page-node-id="GSf5RHum4CEpduTjrcFAGy">第三章 典型案例与数据</div><div class="node-actions" data-page-node-id="vw87ui1B9WJv7p73iPc9TJ">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="1sDwTpY2F45DKY3kB7Kf9j"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="93fXctQF4D9hoaQ1dQXydF"><path d="M12 5v14M5 12h14" data-page-node-id="dKAnMqxrmxpBAdLj3LdG2C"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="TvcWwnAyVa3a3d2ZD6T7cv"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="WNe6SJd68p2cHCpjKIAlHT"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="DZoCJJIyS0mC1ZtHD9Bz58"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="GLSvvZMGYF4Gvoj8aCeKDr"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tF492DGV3N2tY7meOr29gG"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="ez5f5oszFnHRa0Y2OXdhAr"></path></svg></button>
+  </div></div><div class="node-children" data-page-node-id="LAJInnOmHxcs2HjSfl8PPU"><div class="tree-node" data-id="31" data-is-chapter="0" data-page-node-id="oxqaUDTVOZsLs1Uc7ECPb8"><div class="node-row" data-page-node-id="UCWwBRSiZdvHDjrRkHK6ID"><div class="node-action drag-handle" data-page-node-id="mfIhEqLqqZvUN477fEbbKr"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="afsJJpWrqpwp9U98Th2Her"><circle cx="9" cy="6" r="1.5" data-page-node-id="qkSD0JL4EG3sgjCWxLPuld"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="ps5zI5FXqQDjQZiazZ1ery"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="7cDPlY8lWLXWc781NxuUWq"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="cRlZEDaW2S7BZsGfXi1GnG"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="BGgp6t5Qzbw3tUmjBzvsci"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="W1MkerDlZZUpsPMucsi7PJ"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="BxOwGHKAi7nnozza30g0hD"></div><div class="node-icon" data-page-node-id="VRcLCpLaItGNJR4CTLqFmE"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="5PGR6NLwJIZ4KGFapU2ZCv"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="4mxqZxou7teivOOkQRv3zj"></path><path d="M14 2v6h6" data-page-node-id="IBohs9JeLapXQNAVe2FVzs"></path></svg></div><div class="node-text" data-page-node-id="Tyn90GWLRheYHU6M3rj9Ux">案例一：不动产登记"一窗受理"</div><div class="node-actions" data-page-node-id="zICzhR7W1D9fLlUhtSxhx9">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="WMDfJgOXDt6uHN3S3mizpo"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="29TckBdQEN2rvEnk3mAkGD"><path d="M12 5v14M5 12h14" data-page-node-id="b3Cr1EdNZldYhQgBF4YVGX"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="3OXewiKinGIu5fsSi1jrbY"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="SOmNXZfVLqnX85ihbdsNne"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="YpOQfZPwOs5mjOSLfNrb4k"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="B9z2DMgzQuvnXrdBqFIyGB"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="I3X51BE7HGW5DBt9YmpWE9"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="jRvfPes1FTaN5uo3druaA0"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="32" data-is-chapter="0" data-page-node-id="09QPBYWnmccvtrJeW3ICpG"><div class="node-row" data-page-node-id="EYmzAW8bdb0W69Cz9EKQyH"><div class="node-action drag-handle" data-page-node-id="6F7TpuDXxMW5guISrgPlFm"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="FCn0LAEMokYJVsM1qdIdEk"><circle cx="9" cy="6" r="1.5" data-page-node-id="IyHbrTGx5b5nEGtxuZ7zwJ"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="UvmEMpdrFPsffhaHNPvF84"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="tVceTC0V9EwHHU0LCk90p4"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="p2TPWwInAUOm0mTtrQoYlA"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="Iv8B3S4fIpe7ukQBL07vlx"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="AC70INyfivAKXpBE7Cuuay"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="14FwOL0qeCv5bOl9aT4Nar"></div><div class="node-icon" data-page-node-id="xU2g4jQJcyIzWLEZJAYwNG"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="CQjlq0Y4TIgMyNIZ0sZUAO"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="vJSuxzXI6NjMLWcpVvWTlm"></path><path d="M14 2v6h6" data-page-node-id="T0lJGE14VjBbfmMmJpMvfj"></path></svg></div><div class="node-text" data-page-node-id="EteHT0deLCV81zQYCz938S">案例二：企业开办"半日办结"</div><div class="node-actions" data-page-node-id="i4UVPOKTxc0TNLIQMaySOm">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="WKFM4kvSKRhrBMGEtRhUJQ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tv6AUSi7O3GbA97ASOiOyt"><path d="M12 5v14M5 12h14" data-page-node-id="axBswDDo2OEPFJ6y6Y5dVG"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="7AgOYUejkSGlTAhpgGoNX9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="F1ENZQtIYWIEw50GwScL6g"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="TuCQHGOC0GKvVuxFQ1j5rG"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="DIIB1DvwrrjnZMlVlucS5D"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="LwaduvMoM3yMILWBvE7AAh"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="fUziciFWR96gKDceSZANWz"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="4" data-is-chapter="1" data-page-node-id="al3alFDY9ZXI9DRBnCM5rv"><div class="node-row" data-page-node-id="NfEh5ciM9uMiNvZoTkI3Ur"><div class="node-action drag-handle" data-page-node-id="6UoKTV8oUvFZ7YT6DCbWq8"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="WpqZPNdbi1RjBVGfS8EpW9"><circle cx="9" cy="6" r="1.5" data-page-node-id="FfbUma8gE6GrF2W0U9jEEt"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="VGwwCbYi4QJko0URuqCGvP"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="SxtiaBSxIoKAtAcmxiCcnA"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="f5NGDHBXvAPF6WoaGYbT1A"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="oNqK29r1Nccd9xdNBvRP43"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="7MUCxK5iKjMgH6OfTaGiMW"></circle></svg></div><div class="node-toggle" data-page-node-id="J8HMkcj4gNHCDSfbaUHtC3"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="zHynJVWbYokmeG15PFMHmh"><path d="M6 9l6 6 6-6" data-page-node-id="zmeQOLbX5Bbs0kN6SS5GIB"></path></svg></div><div class="node-icon chapter" data-page-node-id="Bv3VA2q7CDiTZCUHkfcIP9"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="cZ1WwDpfoFNQ4Nom1v7otX"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="S1acQ3k9hjGqZB6hIAUGh2"></path></svg></div><div class="node-text" data-page-node-id="T4JqH27322uhK9mHnSCQNV">第四章 存在问题与不足</div><div class="node-actions" data-page-node-id="qQXpfG2XV6MaVqZmrgxz0E">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="QCJ95z3fe6j2hJAno4Hfrc"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="OCjqECkM9N3smWhmvClyMV"><path d="M12 5v14M5 12h14" data-page-node-id="dKuEFqfLS3KWc6E8XRy4Wc"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="WccT8n6kkqfoIZ4IN2ldjU"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="b2GJMwH0Ttls70kLKuMGcg"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="nmu5bu0rquaOtoXg6f2u4O"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="KKYHveEJC3VUFCeBBTyAYd"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ferShI3xT2dvQ5sY1jeziA"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="tpXzWBRFiAgmiQmqqu9iEB"></path></svg></button>
+  </div></div><div class="node-children" data-page-node-id="beB4haE5AXBYAMip7MVvNn"><div class="tree-node" data-id="41" data-is-chapter="0" data-page-node-id="ZILcSM3x0RGEWWTjFfdypJ"><div class="node-row" data-page-node-id="yAEfelzuWO7lJop3vuHZO3"><div class="node-action drag-handle" data-page-node-id="jQB5O1ZneBJJDvjz6Cx8Vh"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="CgPOogpIXKmLF0rNQUDOEA"><circle cx="9" cy="6" r="1.5" data-page-node-id="6Eyl5KM49NUNcCEGE6NJTY"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="ZJHv3NMvMirjqLcF8JeyHM"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="32UQYsY2jtHJjgs5q15Qa9"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="mKMc5YfsDkS1nKLZO2KLxf"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="ANvFH5MxHlrbeQ9e2I09sS"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="XVa9jFCxIUOQQYGzuw2kGC"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="MqmbivyvVLD3uONGdHmJHE"></div><div class="node-icon" data-page-node-id="oXrHB3DZCJG6uyv3oFVqZB"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="mfzXuuvBv0iYvvLmho0OlV"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="Ch0b7reSnGrRhoiW1egtY8"></path><path d="M14 2v6h6" data-page-node-id="aA3vDQ3xnlms5i8SuFHUV8"></path></svg></div><div class="node-text" data-page-node-id="XlRdCKrs5rbimpxcnqYhtT">数据质量与标准化有待提升</div><div class="node-actions" data-page-node-id="2PeVwTaLFQ26pYdmW6QwjV">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="khKEtieHUsdHBLsccDUam0"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ysPENbAPnuwwb831ygLBrj"><path d="M12 5v14M5 12h14" data-page-node-id="a2HTA2AWe5Wz57iThfFnxv"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="oRvcsXO929FjWn2IWcL3SN"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="gsGhI5JRZFkUJAqNcSocaT"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="xDovneAJZyuiQTjrPA9KQL"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="RhlYTAPFM7PtTtEQhHhwxU"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="4PIpNqbmmA0FMhEdoJztgB"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="rDES9sPStJyaXpBpEv65Rq"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="42" data-is-chapter="0" data-page-node-id="fZBZIcmU5V6XR7QTj1sRk9"><div class="node-row" data-page-node-id="8WIEeqeVwr4nYPWQTCwm5q"><div class="node-action drag-handle" data-page-node-id="ChYDapF7LUxNpkTgjJyEPz"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="IywREp7t1Oe6IILwQP61B8"><circle cx="9" cy="6" r="1.5" data-page-node-id="SFGUI5JTcReE6y827MkUiX"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="t5jyNMwqb7XJCLO4K8F2vD"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="aJowyUzmDijsn8lS6rDCfh"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="NFDDs43dAJ0p4a8Pe1Op5m"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="9zj1FOLw2RVOfHyVZ4KGBQ"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="te0L6JT9t44SBZwwHFt1ay"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="zxFSvV2CiGYKDHoPuh5vTv"></div><div class="node-icon" data-page-node-id="1nrxtkFQBT4fi4dldQdnfF"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Pcc8FcYxkJQXhR1WQqqJnr"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="9AeHIWRJfDAvHHsQZHwXXg"></path><path d="M14 2v6h6" data-page-node-id="BJo3JsZ7nlfPjGNOqTtdyu"></path></svg></div><div class="node-text" data-page-node-id="XPloDOz2zW6MjLjcplTMYJ">基层数字化能力参差不齐</div><div class="node-actions" data-page-node-id="kBE0AcSQjLxgwG1Y9bOBCm">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="zL3ESkLnzvFvHTlkwTLtHU"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Lr5P7KYoOQsyy8tgIkSrf4"><path d="M12 5v14M5 12h14" data-page-node-id="D5QB5RaRbMcnF8gUT87rI7"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="lwEgFHN3Dejzc3fziEu8sJ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="zNqB6WxRvmqsIsM00rw93D"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="e06EeN0GR32146XwOZcxkC"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="HelktIAn5DYvjlnlo0vHTf"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="isykaibjbm3qGFlfaYRIwb"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="hDLnJO83HI2kNqB4LCmuH1"></path></svg></button>
+  </div></div></div></div></div><div class="tree-node" data-id="5" data-is-chapter="1" data-page-node-id="A5JJ23KnzD0z6LEMVlDDup"><div class="node-row" data-page-node-id="CgxVrFcaClMS4UCV5aDETq"><div class="node-action drag-handle" data-page-node-id="G4ZlBwUkbYUcGCd81MQoPA"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="CqUA9RXKPGD5iEpjTNxG8e"><circle cx="9" cy="6" r="1.5" data-page-node-id="MQ7vTPg1IY2DtxK1GShrFt"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="Ghbh5Tfv3QOef49RMPhluE"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="zMklEniGqRJVIL5QCRWQ6G"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="eCiAEZiA17mMHaggEb1QNf"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="Pix0ynDevTlUlxDuwLnUdM"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="MzAjZNqJBEFixtGImfJS04"></circle></svg></div><div class="node-toggle" data-page-node-id="WwXN3LO0H30nbGFkb59eih"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="u88zo23GkFn641XNQcuA5C"><path d="M6 9l6 6 6-6" data-page-node-id="DSVGTKLbxpOY4X2Ku8SB3v"></path></svg></div><div class="node-icon chapter" data-page-node-id="eE9KAFmLDF87hyuGbVJ6SZ"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="tlSLfOBSuPDFox7mfIKwLK"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" data-page-node-id="kxaNWuVffxteI8ATbouC1s"></path></svg></div><div class="node-text" data-page-node-id="oGFzfTNYH18tQYG4rOxbgA">第五章 下半年工作计划</div><div class="node-actions" data-page-node-id="hxubvLsH8yFFKbbxsxjTTA">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="ZRta8LS28mfuARqv2qJoHu"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="qx7LZb6Z7nejLk9AfKs3HP"><path d="M12 5v14M5 12h14" data-page-node-id="EekU9BKRLeTL7GdIvoGN86"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="hG3wpVDWk8e9LE09FKLaAU"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="HclkMHsBhF4ulCzh34xMTY"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="NM3BNr18bDFXfAHSDHr8FR"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="DcFPlm8rFhSU0rkOfbj6I4"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="RAhnCXkJrZzeAFSSMLyXSR"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="psdCBeOkJhp3SwTP6ocuP0"></path></svg></button>
+  </div></div><div class="node-children" data-page-node-id="9TZEnyIZIgPmhLfQCYGEnS"><div class="tree-node" data-id="51" data-is-chapter="0" data-page-node-id="enEc4lWmAHXyiNVCkgHI5p"><div class="node-row" data-page-node-id="e6xGGkzVzRDYrZdIa1DB73"><div class="node-action drag-handle" data-page-node-id="P09yqoe5wmg6vHJUQ4dJzs"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="Q1ms3iTEDYhZX8DAV47l1S"><circle cx="9" cy="6" r="1.5" data-page-node-id="BtDVECH8jIBA45ZNTA8e8t"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="CybXAjITkhQKGcop8k1XKE"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="OrLsDAqD2T1dUuwCEDrNFD"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="GdlrZmhGB8IA1uMiPFuu9H"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="NukklChca1gZijS2740xWi"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="PLfcPEBhdaKdVHPuWztDbx"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="SUP9wAhgSHRuLkiDrdDo7H"></div><div class="node-icon" data-page-node-id="JgqjIf08LiAQQiU83vebKM"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="abgRU4kWnrAqZDzs24l07H"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="kV5AoUpqX5DcJSQmsjl89p"></path><path d="M14 2v6h6" data-page-node-id="GoYrfofr6vuSXs72XdTdEA"></path></svg></div><div class="node-text" data-page-node-id="s8L8vZH6vFQc27AUMc8rB3">深化"一网通办"全域覆盖</div><div class="node-actions" data-page-node-id="n9DCTVnpx7b6HjERr5lBAr">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="67vizdQpZT7dQdahTcCP8v"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="cOamaTpVATlgHsgFTCIFE0"><path d="M12 5v14M5 12h14" data-page-node-id="N6eHVctKSI86XyRE0sEoaJ"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="QiN6u8kouj237IsFQ86tEd"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="cQqchpgmX9yhHMF6TuoWGF"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="IxIQLJDJxuxKMk2uok6iq8"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="Q6XJ7mL5AQmnCE8qyEo2Z5"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="xEV7tWkiJ3tUxUmCe0lQEr"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="YmqAbflZ1e09mg5L7YR8jA"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="52" data-is-chapter="0" data-page-node-id="W6Fa6AUvtNVhrP0oEXKzG6"><div class="node-row" data-page-node-id="uuIJr1GtQGkjsTWOU3ieQG"><div class="node-action drag-handle" data-page-node-id="WgKtbHbP8Nj9DU7iKthWKf"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="wnzqJj0ZSnmVmFCMJwuhfn"><circle cx="9" cy="6" r="1.5" data-page-node-id="TRYFqOG2CQlkGaD0OYRlGi"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="8Cy4WMeHKI4EZspVJydRCl"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="XXrbxGbuNLA9kgCOt07BW3"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="Gt4FGMyt2YvDWij0uBFna2"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="fIGwuih7LVIMLKJBq6OA04"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="pfQKXGmlW23roOC8PYAals"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="AYZyn4niyL5xBVG2XLJYrG"></div><div class="node-icon" data-page-node-id="gIEiSq9NBm4FvognYH2ZOC"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="0DH7pmZQ2f00OgXhi7TRae"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="zTOZh4RSeGIWDmku7sOFbV"></path><path d="M14 2v6h6" data-page-node-id="twAwLoloCcvzfMAkbim3Ze"></path></svg></div><div class="node-text" data-page-node-id="jmxbAcKeRTDSUib4zbX3fk">推进公共数据有序开放</div><div class="node-actions" data-page-node-id="T0sfX7BqnHxhSsFt8fKlvF">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="QGFBomMb3g528LCDFSAEAu"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="aWI6n40JEoifEKTqF2tjfu"><path d="M12 5v14M5 12h14" data-page-node-id="wF8zkL936RjPzBNxWglNpn"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="IApCJz8mXy6utp3c6ZaFJH"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="3Ys7Q9IZbFUGBZiW58X7g8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="4MqDjUDPx5jT9godGGlqx0"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="eTHe6Q8nRBV8r02yvOU52L"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="ZHype3zmMoPqL4Z5P6o8Du"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="em0zydIbQsvU5A1Y412np0"></path></svg></button>
+  </div></div></div><div class="tree-node" data-id="53" data-is-chapter="0" data-page-node-id="fwXoJg1F0QbbDGQQE1MuGV"><div class="node-row" data-page-node-id="uTzeJSCZNqHow864vQK8NL"><div class="node-action drag-handle" data-page-node-id="SMXPrD4LXV8CPh5zi5AEJH"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="tXAURMVN8jmZPqyi5UR9on"><circle cx="9" cy="6" r="1.5" data-page-node-id="Yw2XPxICGdPAsfSVfXdp4D"></circle><circle cx="15" cy="6" r="1.5" data-page-node-id="3jEsAdC9PG18Iit0xH3XA8"></circle><circle cx="9" cy="12" r="1.5" data-page-node-id="pd6kkXF43ud4tAlHRwe2rM"></circle><circle cx="15" cy="12" r="1.5" data-page-node-id="PviCtWWuOGa5H5FlxvIt3H"></circle><circle cx="9" cy="18" r="1.5" data-page-node-id="6uhNZgiVoiMX9LC8ATxUpm"></circle><circle cx="15" cy="18" r="1.5" data-page-node-id="DGYmivIuiF7sY3YGbnVThD"></circle></svg></div><div class="node-toggle leaf" data-page-node-id="bSl7tzABynXHkH7SlEj8Yh"></div><div class="node-icon" data-page-node-id="NFQrEZdtENNjqioiI6xIuy"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="bRYB5EOSMVXVvN5zycOvAn"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" data-page-node-id="tRblFxMe6uGJPlT0eR1E4H"></path><path d="M14 2v6h6" data-page-node-id="gNVjGgHCkzqiR8uVLk5OPF"></path></svg></div><div class="node-text" data-page-node-id="P77jAf1msvLXIYKqOXjn3C">强化网络安全保障体系</div><div class="node-actions" data-page-node-id="SrglBbEexJujhFCYUs8z8A">
+    <button class="node-action" title="添加子点" data-action="add" data-page-node-id="AvnoNYdr76ImWIpcoely3F"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="2sG9UiXWgmdyTSrLUW992S"><path d="M12 5v14M5 12h14" data-page-node-id="x3ps18fr5YWwGD436YA13e"></path></svg></button>
+    <button class="node-action" title="编辑" data-action="edit" data-page-node-id="QTQlt0ZlU1FROf6QjnSuwC"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="cIsTYgCkBbGahFQ22TOk6N"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" data-page-node-id="uz53qFfJMYaveAB6vT7jxF"></path></svg></button>
+    <button class="node-action delete" title="删除" data-action="delete" data-page-node-id="MWMjRjAPbdKgKqRVLOxpCj"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="MMEb3nL0rTnSb2x9paQeoR"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" data-page-node-id="Tg4ZuCesDGe3CHAePqswrf"></path></svg></button>
   </div></div></div></div></div></div>
         </div>
       </div>
@@ -4070,8 +4411,200 @@ svg { display: block; }
             上一步
           </button>
           <button class="btn btn-primary btn-lg" onclick="navigateForwardFromOutline()" data-page-node-id="0Gy75SkaM2RcqKbVBKu4ev">
-            <span id="outlineNextText" data-page-node-id="F5Uz0Y9RH2kani8opw8kwf">下一步：内容确认</span>
+            <span id="outlineNextText" data-page-node-id="F5Uz0Y9RH2kani8opw8kwf">下一步：知识库调用</span>
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="uFkkEfEsGmFeXiIBHpl4lO"><path d="M5 12h14M12 5l7 7-7 7" data-page-node-id="Gx9yE6XsslpPQTlnYugOgo"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== 屏幕4: 知识库调用页 ====== -->
+    <div class="screen" id="screen-4" data-page-node-id="Kb4ScReNwPt7vXyZaQm2LoRd">
+      <div class="kb-header" data-page-node-id="Hd7vXcQwNp3rTyZaJs6LmKb">
+        <h2 data-page-node-id="Tt3kRmWvQx8nScVdEp4vJqXb">知识库调用</h2>
+        <p data-page-node-id="Bs2wNcXdUp5wQzRnWr7tYbNc">根据大纲核心主题与章节要点，从专属知识库与通用知识库智能召回专业内容，深度融合提升专业性</p>
+      </div>
+      <div class="kb-funnel" data-page-node-id="Nt6kRmWvQw9nTcVdSp4vKcXb">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Ex0kRtNwDw7nTcQvFv5kPmNw"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-page-node-id="Ar8kPmNsVe3kPmQwXz6nRtWq"></path></svg>
+        <span class="kb-funnel-step" data-page-node-id="Kj4mVbXcPq8sRtNwEy6uIoPz">专属知识库9篇 + 通用知识库156篇</span>
+        
+        
+        
+        
+      </div>
+      <div class="kb-body" data-page-node-id="Ux9rAgChVv3xWySbJd1zNuVe">
+        <!-- 左侧：多路召回 -->
+        <div class="kb-left-panel" data-page-node-id="Vy0sBhDiWw4yXzTcKe2aOvWf">
+          <div class="kb-source-tabs" data-page-node-id="Wz1tChEjXx5yZaUdLe3bNvXg">
+            <div class="kb-source-tab active" data-kbtab="exclusive" data-page-node-id="Xa2uDiFkYy6zAbVeMf4cOwYh">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Yb3vEjGlZz7aBcWfNg5dPxZi"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" data-page-node-id="Zc4wFkHmAa8bCdXgOh6eQyAj"></path></svg>
+              专属知识库 <span class="badge" data-page-node-id="Ad5xGlInBb9cDeYhPi7fRzBk">28</span>
+            </div>
+            <div class="kb-source-tab" data-kbtab="general" data-page-node-id="Be6yHmJoCc0dEfZiQj8gSaCl">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Cf7zInKpDd1eFgAjRk9hTbDm"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" data-page-node-id="Dg8aJoLqEe2fGhBkSl0iUcEn"></path></svg>
+              通用知识库 <span class="badge" data-page-node-id="Eh9bKpMrFf3gHiClTm1jVdFo">156</span>
+            </div>
+          </div>
+          
+          <div class="kb-recall-list" id="kbRecallList" data-page-node-id="Ru2oXcZeSs6tUvPyGz4vIqSb">
+    <div class="kb-recall-card selected" data-type="policy" data-year="2024" onclick="this.classList.toggle('selected')" data-page-node-id="0yx4wCl0EJZDRMWC5KwUBX">
+      <div class="kb-recall-header" data-page-node-id="hg2OFsVyn0uEQO1siI00cB">
+        <div class="kb-recall-title" data-page-node-id="0WuIZxNtEoGrrsDQJvQeeE">《国务院关于加强数字政府建设的指导意见》</div>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="5P0CQ3ZwUeWwXfpm1YVRF1">明确数字政府建设总体框架，要求2025年基本建成协同高效的数字政府体系，全面提升政务服务"<mark data-page-node-id="BUQL2wIxxRBuc7DeAYBi8i">一网通办</mark>"能力，推动<mark data-page-node-id="keL3vHzDnO9NRQDVH8rVDx">数据共享</mark>是数字政府建设的核心基础，持续优化<mark data-page-node-id="yihEsKcTV3ye7Xwo8eohEZ">营商环境</mark>...</div>
+      <div class="kb-recall-source" data-page-node-id="mJpB7kmh6mnLSIHvppaCY8">
+        <span data-page-node-id="m7gm3GJYDsdzHaMdjzEeih">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="CJC7zQYCKBRQrhLrJgVmJe"></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card selected" data-type="policy" data-year="2025" onclick="this.classList.toggle('selected')" data-page-node-id="WrNkQmPURtvXsvCvIcGVeC">
+      <div class="kb-recall-header" data-page-node-id="9kiIBLJGfZjEjzsJNA1X3k">
+        <div class="kb-recall-title" data-page-node-id="DqZQ0GVOX3tqFUQG4MxRfI">《政务服务"一网通办"工作规范》</div>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="wdK639lGuevdOzNrtZIpzh">规范<mark data-page-node-id="4laVhAXAWougAssaf5Tzj9">政务服务</mark>事项全流程网上办理标准，明确<mark data-page-node-id="QvcBH3hDUr1A51a2U0YbSz">一网通办</mark>办事指南、在线申办、审批等要求，实现<mark data-page-node-id="FkFDDfmp8SqSUQ7Kcl7dQp">政务服务</mark>统一入口、统一办理...</div>
+      <div class="kb-recall-source" data-page-node-id="ddbgM7DDa4CinsHzFz97ej">
+        <span data-page-node-id="0cdcFSj2VOSyzGGLJWG97Q">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="9W1xqrxlyPxrZGkpv0IiZi"></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card selected" data-type="policy" data-year="2023" onclick="this.classList.toggle('selected')" data-page-node-id="CG5ryekcQG5iDcb5xLedDA">
+      <div class="kb-recall-header" data-page-node-id="Bi4bKhDWOyReweR4JMwNUq">
+        <div class="kb-recall-title" data-page-node-id="kotdFm1qlvCCKf4t4zuk1v">《政务数据共享交换管理细则》</div>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="UUzbULMngcsEKGoYrfh2Xx">明确跨部门<mark data-page-node-id="Ft3PXtN4UfFbf7Eixvy06p">数据共享</mark>目录、交换流程、安全保障和监督考核机制，规范政务<mark data-page-node-id="7GldeYQvuDbhwQDJ9pBrnI">数据共享</mark>交换的全流程管理...</div>
+      <div class="kb-recall-source" data-page-node-id="0cAzyacRM9kjCeGrGxTiLw">
+        <span data-page-node-id="D3L8v8UEsKfD8Ythaz4IGu">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="KRFkbjKqNge3GBvxHFZzLy"></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card selected" data-type="meeting" data-year="2025" onclick="this.classList.toggle('selected')" data-page-node-id="TXqfXe6S9tOZo6aaZgsPaS">
+      <div class="kb-recall-header" data-page-node-id="HJWt0kYtJMD8q0qJIRJOvJ">
+        <span class="kb-type-tag meeting" data-page-node-id="DEARjqhq1OfEvx92oL4eNC">会议纪要</span>
+        <div class="kb-recall-title" data-page-node-id="Z37ahG3DxjlPAYr6P7BF2G">全省数字政府建设推进会会议纪要</div>
+      </div>
+      <div class="kb-recall-tags" data-page-node-id="Gy0WEyXakJprCtYoVmMDdC">
+        <span class="kb-relevance-tag mid" data-page-node-id="mNx8cHhbNy7YE27wxPO9DZ">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="cZsKAEgnSPHaHBf2DF3ynO"><circle cx="12" cy="12" r="6" stroke-dasharray="4 2" data-page-node-id="4inDqSKR8HAVjgPXqcY6MC"></circle></svg>
+          相关
+        </span>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="8UOaA9McWKYZi9Sro5rkfl">会议传达了国务院指导意见精神，部署下半年<mark data-page-node-id="0hUGrMeHMMOZm2Uhl6RGmQ">一网通办</mark>重点工作，要求各部门按时完成数据共享对接任务...</div>
+      <div class="kb-recall-source" data-page-node-id="kAEaKlDwSvvBYG8CAaj9DP">
+        <span data-page-node-id="NbBNtRgklzZPd82u0TB1Bf">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="HMECPnv7dPGONK390FlA51"><span class="kb-chapter-tag" data-page-node-id="1Hc9WiucYvLB1AaOiIKhVq"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="D6ZL7BbqXsxYNBMbo9jypK"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" data-page-node-id="h1chUNQXjqGSYqlBfaCbuy"></path></svg>第四章·组织保障</span></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card selected" data-type="summary" data-year="2026" onclick="this.classList.toggle('selected')" data-page-node-id="IaVsCa01CuUntGs6LLHKLk">
+      <div class="kb-recall-header" data-page-node-id="0TtBH7i97qNmiOdaqpVhoD">
+        <span class="kb-type-tag summary" data-page-node-id="v4MtAEAcrcar3mN1WIttay">工作总结</span>
+        <div class="kb-recall-title" data-page-node-id="BMcDVBwQKxlbVvsEWjKCpe">2025年度政务服务工作总结</div>
+      </div>
+      <div class="kb-recall-tags" data-page-node-id="Sw5BZ1MGvdcKAB1itFYLdT">
+        <span class="kb-relevance-tag mid" data-page-node-id="h2ovsnOrfxGtaeAKGt9ju5">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="eveiF9snGmvDlXFIIjayIK"><circle cx="12" cy="12" r="6" stroke-dasharray="4 2" data-page-node-id="L4BJn8RzIbbeMHpZRmX3qx"></circle></svg>
+          相关
+        </span>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="tp9eiYPjwDHAmNoU7BVaDR">全年完成<mark data-page-node-id="8AnkhZoF3ryg0r0SQ7Bolk">政务服务</mark>事项1286项数字化改造，掌上办覆盖率达87.3%，群众满意度94.6%，<mark data-page-node-id="tQegKdDq7AQtQaMSTrzhCF">政务服务</mark>能力显著提升...</div>
+      <div class="kb-recall-source" data-page-node-id="0SBOiv1Raeja0SKNjlkzFX">
+        <span data-page-node-id="ZlT2J1bCXgigEBnzVcUhAN">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="7I0PmPMBYHONOuksM1YkDN"><span class="kb-chapter-tag" data-page-node-id="So2HWHOYk6M2wMwdz6IpaS"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="nQyWwOLSX1D7Pe1K96HZdB"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" data-page-node-id="hU1nROoJUbOGDIz7XfoayZ"></path></svg>第二章·建设成效</span></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card " data-type="summary" data-year="2025" onclick="this.classList.toggle('selected')" data-page-node-id="4yaCKuikcCWN6CLEDvCYuQ">
+      <div class="kb-recall-header" data-page-node-id="l4QjJidCucC5M3PFHooYK7">
+        <span class="kb-type-tag summary" data-page-node-id="GSlW1Yxr02t87j5YvNFBHY">工作总结</span>
+        <div class="kb-recall-title" data-page-node-id="yNFTT7QKvuWoBvTRBRqBFx">政务数据共享工作阶段性总结</div>
+      </div>
+      <div class="kb-recall-tags" data-page-node-id="3SqpmSgwYSVVx2JXVvV4S5">
+        <span class="kb-relevance-tag mid" data-page-node-id="jBTV90JmnAZbC2EIL2LwzF">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="YGAj0pFm7moRHwuVEploXe"><circle cx="12" cy="12" r="6" stroke-dasharray="4 2" data-page-node-id="ICfLwtrteQ1W2BcctMgH7g"></circle></svg>
+          相关
+        </span>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="HzydWuww4V074gaaLIzFPJ">已完成省级<mark data-page-node-id="RbQJV6sSBOV9ZDfFzKr2SW">数据共享</mark>交换平台建设，归集各部门数据23亿条，<mark data-page-node-id="yI0bV32O8YPwSi9GOG7W4Q">数据共享</mark>调用量同比增长156%...</div>
+      <div class="kb-recall-source" data-page-node-id="ZcefDM31lw8sizUOpK25kk">
+        <span data-page-node-id="PYjx43ScDd50dRKlYa3LKB">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="dJ5U3MWUS7XBKisxCMn5ay"></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card " data-type="report" data-year="2024" onclick="this.classList.toggle('selected')" data-page-node-id="KSdX4CDF378xGfq9lx3XEi">
+      <div class="kb-recall-header" data-page-node-id="i0r6qT3O8BYL2jIiAAVrPw">
+        <span class="kb-type-tag report" data-page-node-id="KubzdWppgAc8L5RUlldhsR">调研报告</span>
+        <div class="kb-recall-title" data-page-node-id="s3PSHVfwVHGCg9GtCANPB5">营商环境数字化评估专题调研报告</div>
+      </div>
+      <div class="kb-recall-tags" data-page-node-id="J80wvLEajDTkzZfT8bmsz3">
+        <span class="kb-relevance-tag mid" data-page-node-id="xHvi28bFReRCHwjoLpRK44">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="XSb32ArbLjiKxPEAxxGg4H"><circle cx="12" cy="12" r="6" stroke-dasharray="4 2" data-page-node-id="SjWG1lbBgvSlFSiDVLoWa1"></circle></svg>
+          相关
+        </span>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="KnuEHNnOMGXohE0v1gTRJ2">对全省<mark data-page-node-id="SAF02QNBGK39BHxTksapBX">营商环境</mark>数字化水平进行评估，建议从审批流程优化、数据共享、政务服务三个维度持续改进...</div>
+      <div class="kb-recall-source" data-page-node-id="EtvowOrp4SlEBQHjkxKCrh">
+        <span data-page-node-id="PxHScjSZXcqOvrQ8FTYkEp">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="PDIoz2yoFekckLYAlnDQO0"><span class="kb-chapter-tag" data-page-node-id="FmrV6hcTmusDURa3cgA9pW"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="2SCZuiElG04ulj4kfbzQ5S"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" data-page-node-id="1xtMqDNgXnFFP5oRhqfGUF"></path></svg>第三章·营商环境</span></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card " data-type="data" data-year="2025" onclick="this.classList.toggle('selected')" data-page-node-id="PhkqlayvMF7F6dgpUrqBpq">
+      <div class="kb-recall-header" data-page-node-id="ytr7OzynM8nrnIXDAT95hC">
+        <span class="kb-type-tag data" data-page-node-id="3zOPp4QXB7acXliGxfB9HN">数据报表</span>
+        <div class="kb-recall-title" data-page-node-id="ZDsL8zSHwyaFxpwtN60TDr">2025年1-6月政务服务运行数据月报</div>
+      </div>
+      <div class="kb-recall-tags" data-page-node-id="rQX7pREldle2fnvilVgVza">
+        <span class="kb-relevance-tag low" data-page-node-id="hYsJJkA3O29w4iKdWkHFKy">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" data-page-node-id="6GgCBAfqEKwwNCFlCEhM8E"><circle cx="12" cy="12" r="8" stroke-dasharray="2 3" data-page-node-id="fgfCoQSaOMOdYlF1brL5Dv"></circle></svg>
+          可参考
+        </span>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="6itwIcu0zR8NUvpEnjBHrs">上半年全省政务服务平台累计办理业务3542万件，同比增长23.7%，日均办件量19.5万件，系统可用率99.92%...</div>
+      <div class="kb-recall-source" data-page-node-id="zflsxP7TwLxykoiOJJ882O">
+        <span data-page-node-id="zFMa3GCNA1WQKO3TB0kZZV">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="CqtB3mSD1ax13hTRFXyTVn"><span class="kb-chapter-tag" data-page-node-id="SJMuXdwkEVaGKMCNXenYKi"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="9C7tWQW9oCEMq4kQluBuxn"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" data-page-node-id="oX5BhXnNeHSp3Quj1M45Fy"></path></svg>第二章·建设成效</span></span>
+      </div>
+    </div>
+    
+    <div class="kb-recall-card " data-type="speech" data-year="2025" onclick="this.classList.toggle('selected')" data-page-node-id="1MWqPTCVI7qKhZ4JO3x5rN">
+      <div class="kb-recall-header" data-page-node-id="LkORfv7612Dx40qnE2xemL">
+        <span class="kb-type-tag speech" data-page-node-id="IGzdgdraxf3JFYNIQsxSgY">讲话稿</span>
+        <div class="kb-recall-title" data-page-node-id="iIdwpMoEoqt6CrJZR1yE7F">王省长在数字政府建设电视电话会议上的讲话</div>
+      </div>
+      <div class="kb-recall-content" data-page-node-id="k6nyRu1yTb4d7mQBxEywci">要以<mark data-page-node-id="Q9a4PfqFKQtBraug3aJDiq">一网通办</mark>为抓手，持续优化<mark data-page-node-id="1IOsBfqrsIOsacKO7u9AZg">营商环境</mark>，让数据多跑路、群众少跑腿。各级部门要高度重视数字政府建设...</div>
+      <div class="kb-recall-source" data-page-node-id="C1imzOsBUxf3QQiud68t9A">
+        <span data-page-node-id="HxkZiiaG1mVjvdY8B1GVYJ">来源：专属知识库</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;" data-page-node-id="Idp3vj0xX4TWl1ZNm1qG0o"><span class="kb-chapter-tag" data-page-node-id="7RonlgK8EUyX4oz1fxUQDj"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="x2NaHRjJtkRTvwjS2jSbCx"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" data-page-node-id="ltVPdJbmwVkY7XdiLsq7b7"></path></svg>第三章·营商环境</span></span>
+      </div>
+    </div>
+    </div>
+        </div>
+        <!-- 右侧：内容质量增强 -->
+        <div class="kb-right-panel" data-page-node-id="SABBScxCKHBgYBGwdrazubVS">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;" data-page-node-id="lQsdLZaKuUiDrtqdDHmcMqtj">
+            <div class="section-title" data-page-node-id="XRAOWtoGozilryiVPBDDwcSp">内容质量增强</div>
+            <span style="font-size:11px;color:var(--gold);font-weight:500;" data-page-node-id="OqHWGwMHSCVjPszhfKvbIgyu">已融合 8 条增强内容</span>
+          </div>
+          <div class="kb-enhance-list" id="kbEnhanceList" data-page-node-id="Rb9uXcZeSs6tUvPyGz4vIqTc"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;" data-page-node-id="Xz8uDiFkYy3zAbVeMe5cOwYh">
+        <div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;" data-page-node-id="Ya9vEjGlZz2aBcWfNf6dPxZi">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);" data-page-node-id="Zb0wFkHmAa1bCdXgOg7eQyAj"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-page-node-id="Ac1xGlInBb2cDeYhPh8fRzBk"></path></svg>
+          知识库内容已与大纲要点深度融合，形成候选补充素材
+        </div>
+        <div style="display:flex;gap:10px;" data-page-node-id="Bd2yHmJoCc3dEfZiQf9gSaCl">
+          <button class="btn btn-secondary" onclick="navigateTo(3)" data-page-node-id="Ce3zInKpDd4eFgAjRg0hTbDm">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Df4aJoLqEe5fGhBkSh1iUcEn"><path d="M19 12H5M12 19l-7-7 7-7" data-page-node-id="Eg5bKpMrFf6gHiClTi2jVdFo"></path></svg>
+            上一步
+          </button>
+          <button class="btn btn-primary btn-lg" onclick="navigateTo(6)" data-page-node-id="Fh6cLqNsGg7hIjDmUj3kWeGp">
+            下一步：内容确认
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-page-node-id="Gi7dMrOtHh8iJkEnVk4lXfHq"><path d="M5 12h14M12 5l7 7-7 7" data-page-node-id="Hj8eNsPuIi9jKlFoWl5mYgIr"></path></svg>
           </button>
         </div>
       </div>
@@ -5407,19 +5940,19 @@ svg { display: block; }
     <div class="progress-ring" data-page-node-id="YVi7GO8Iy00pLLgYk4tMz3">
       <svg width="80" height="80" data-page-node-id="BiSFG6NF5pjsifbtt1m2Up">
         <circle class="bg" cx="40" cy="40" r="35" data-page-node-id="7AnbovWS7mbISV3FAH3Tcu"></circle>
-        <circle class="fg" id="progressCircle" cx="40" cy="40" r="35" data-page-node-id="rWtYBXjQgV0vRJjXicQeWo"></circle>
+        <circle class="fg" id="progressCircle" cx="40" cy="40" r="35" data-page-node-id="rWtYBXjQgV0vRJjXicQeWo" style="stroke-dashoffset: 0;"></circle>
       </svg>
-      <div class="progress-percent" id="progressPercent" data-page-node-id="L58aL8KPcDdc4YRNdq2yGS">0%</div>
+      <div class="progress-percent" id="progressPercent" data-page-node-id="L58aL8KPcDdc4YRNdq2yGS">100%</div>
     </div>
     <div class="progress-title" data-page-node-id="GDBUCTBtqFmeEFmAXNlNnd">正在智能解析</div>
     <div class="progress-desc" data-page-node-id="oBmPo34rGNqB1WefXvwDsC">AI正在分析您的需求与参考资料...</div>
     <div class="progress-steps" id="progressSteps" data-page-node-id="0ZMrwpz5fQgnzHDnNOIuVs">
-      <div class="progress-step" data-step="0" data-page-node-id="ZOCw7cRlUg5lX1xVeLoqoh"><div class="ps-icon" data-page-node-id="iki1zp2IlXiJjqn3ajH9pa"></div>解析参考资料内容</div>
-      <div class="progress-step" data-step="1" data-page-node-id="k6ixvOAav1ECl7GXLdWqiM"><div class="ps-icon" data-page-node-id="42t2juMZDEfP9JWMGfOmEd"></div>提取核心主题与关键词</div>
-      <div class="progress-step" data-step="2" data-page-node-id="UBng39yYss8LHMVN5VGery"><div class="ps-icon" data-page-node-id="h6wA9UNe3Cb7mAO679tTF4"></div>意图分类与任务标签生成</div>
-      <div class="progress-step" data-step="3" data-page-node-id="lGREATxhRhvlkEsupW4eg4"><div class="ps-icon" data-page-node-id="G851BZl1whL10Dwpc5xZvJ"></div>生成大纲结构框架</div>
+      <div class="progress-step done" data-step="0" data-page-node-id="ZOCw7cRlUg5lX1xVeLoqoh"><div class="ps-icon" data-page-node-id="iki1zp2IlXiJjqn3ajH9pa"></div>解析参考资料内容</div>
+      <div class="progress-step done" data-step="1" data-page-node-id="k6ixvOAav1ECl7GXLdWqiM"><div class="ps-icon" data-page-node-id="42t2juMZDEfP9JWMGfOmEd"></div>提取核心主题与关键词</div>
+      <div class="progress-step done" data-step="2" data-page-node-id="UBng39yYss8LHMVN5VGery"><div class="ps-icon" data-page-node-id="h6wA9UNe3Cb7mAO679tTF4"></div>意图分类与任务标签生成</div>
+      <div class="progress-step done" data-step="3" data-page-node-id="lGREATxhRhvlkEsupW4eg4"><div class="ps-icon" data-page-node-id="G851BZl1whL10Dwpc5xZvJ"></div>生成大纲结构框架</div>
     </div>
-    <div id="taskTagsDisplay" style="display:none;margin-top:16px;padding:12px 16px;background:var(--navy-50);border-radius:var(--radius-md);border:1px solid var(--navy-100);" data-page-node-id="UhJ8fZEvO4Y09VAOGBtAKc">
+    <div id="taskTagsDisplay" style="display: block; margin-top: 16px; padding: 12px 16px; background: var(--navy-50); border-radius: var(--radius-md); border: 1px solid var(--navy-100);" data-page-node-id="UhJ8fZEvO4Y09VAOGBtAKc">
       <div style="font-size:11px;color:var(--navy-600);margin-bottom:6px;font-weight:500;" data-page-node-id="CEpANE57mS8cvyEWwxfX6w">已生成任务标签</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;" data-page-node-id="gGXjCC5OfMYFUTyGbdTKHN">
         <span style="font-size:11px;padding:3px 10px;background:var(--navy-600);color:#fff;border-radius:20px;" data-page-node-id="EGR3vrXFkYEccwuA6cdOec">数字政府</span>
@@ -5723,6 +6256,55 @@ const state = {
   ccExpanded: null,
 };
 
+/* ========== 对话框成果回流桥接 ========== */
+let pptBridgeContext = {};
+let pptBridgeRestoring = false;
+
+function currentPptTaskId() {
+  return pptBridgeContext.taskId || new URLSearchParams(window.location.search).get('taskId') || '';
+}
+
+function currentPptResultTitle() {
+  const savedTitle = String(pptBridgeContext.resultTitle || '').trim();
+  const coverTitle = String((state.slides && state.slides[0] && state.slides[0].title) || '').trim();
+  const inputTitle = String(document.getElementById('filenameInput')?.value || '').trim();
+  return (savedTitle || coverTitle || inputTitle || '政务汇报').replace(/\.pptx?$/i, '').replace(/\s+/g, ' ');
+}
+
+function markPptResultReady(options = {}) {
+  const title = currentPptResultTitle();
+  const version = Number(pptBridgeContext.version || 1);
+  const slideCount = Number((state.slides && state.slides.length) || pptBridgeContext.slideCount || 15);
+  document.body.classList.add('bridge-result-ready');
+  document.body.dataset.workbenchTaskState = 'complete';
+  document.body.dataset.workbenchResultTitle = title;
+  document.body.dataset.workbenchResultVersion = String(version);
+  document.body.dataset.workbenchSlideCount = String(slideCount);
+  if (options.notify === false || !currentPptTaskId()) return;
+  window.parent.postMessage({
+    type: 'JBAI_WORKBENCH_TASK_EVENT',
+    event: 'complete',
+    taskId: currentPptTaskId(),
+    agentId: 'ppt',
+    title,
+    version,
+    slideCount
+  }, '*');
+}
+
+function applyPptBridgeContext(payload) {
+  if (!payload || payload.targetAgentId !== 'ppt') return;
+  pptBridgeContext = { ...pptBridgeContext, ...payload };
+  if (!payload.resumeToResult) return;
+  pptBridgeRestoring = true;
+  state.needGenerate = false;
+  if (!state.slides || !state.slides.length) state.slides = generateSlides();
+  if (state.currentScreen !== 7) navigateTo(7);
+  else renderSlide();
+  markPptResultReady({ notify: false });
+  pptBridgeRestoring = false;
+}
+
 /* ========== 幻灯片数据 ========== */
 const slideTitles = [
   '封面页', '目录页', '项目背景', '政策背景', '现实需求', '建设目标',
@@ -5933,23 +6515,23 @@ function navigateBackFromOutline() {
 }
 function navigateForwardFromOutline() {
   // From 大纲确认 (screen-3)
-  if (state.generationMode === 'normal') {
+  if (state.generationMode === 'normal' || state.generationMode === 'oneclick') {
     // Auto-process knowledge base then go to 内容确认
     showNormalKnowledgeBase(() => navigateTo(6));
   } else {
-    navigateTo(6); // To 内容确认
+    navigateTo(4); // To 知识库调用
   }
 }
 function navigateBackFromContent() {
   // From 内容确认 (screen-6)
-  if (state.generationMode === 'normal') {
+  if (state.generationMode === 'normal' || state.generationMode === 'oneclick') {
     navigateTo(3); // Back to 大纲确认
   } else {
-    navigateTo(3); // Back to 大纲确认
+    navigateTo(4); // Back to 知识库
   }
 }
 function showNormalKnowledgeBase(callback) {
-  // Brief AI processing overlay (知识库步骤已移除，仅保留过渡动画)
+  // Brief AI processing overlay (普通/一键模式：知识库自动调用过渡动画)
   const overlay = document.createElement('div');
   overlay.className = 'normal-processing-overlay';
   overlay.innerHTML = `
@@ -5958,8 +6540,8 @@ function showNormalKnowledgeBase(callback) {
         <div style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--navy-600),var(--navy-500));margin-bottom:10px;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
-        <div style="font-size:16px;font-weight:700;color:var(--navy-800);">AI 智能处理中</div>
-        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">正在准备进入内容确认...</div>
+        <div style="font-size:16px;font-weight:700;color:var(--navy-800);">知识库智能调用中</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">AI正在召回相关专业内容...</div>
       </div>
       <div style="height:6px;background:var(--navy-100);border-radius:3px;overflow:hidden;">
         <div id="kbProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--navy-500),var(--navy-400));border-radius:3px;transition:width .3s;"></div>
@@ -5967,7 +6549,7 @@ function showNormalKnowledgeBase(callback) {
     </div>
   `;
   document.body.appendChild(overlay);
-  
+
   let progress = 0;
   const interval = setInterval(() => {
     progress += 5;
@@ -6004,6 +6586,7 @@ function navigateTo(step) {
   updateStepsNav(step);
   if (step === 2) renderParsing();
   if (step === 3) renderOutline();
+  if (step === 4) renderKnowledge();
   if (step === 5) renderTemplates();
   if (step === 6) renderContentConfirm();
   if (step === 7) {
@@ -6014,9 +6597,10 @@ function navigateTo(step) {
     } else {
       state.slides = generateSlides();
       renderSlide();
+      markPptResultReady({ notify: !pptBridgeRestoring });
     }
   }
-  if (step === 8) { syncSlideNotesToContent(); state.slides = generateSlides(); renderExportSlide(); }
+  if (step === 8) { syncSlideNotesToContent(); state.slides = generateSlides(); renderExportSlide(); markPptResultReady({ notify: !pptBridgeRestoring }); }
 }
 
 /* 将预览页(slide)备注同步回内容确认(confirmedContent)，防止重新生成时丢失 */
@@ -6079,6 +6663,7 @@ function playGenerationAnimation() {
           if (overlay.parentNode) overlay.remove();
           state.slides = generateSlides();
           renderSlide();
+          markPptResultReady();
         }, 400);
       }, 300);
       return;
@@ -6399,14 +6984,15 @@ function selectMode(mode) {
 
 function updateStepNumbers(mode) {
   if (mode === 'advanced') {
-    // Advanced mode: restore original numbers (7 steps)
+    // Advanced mode: restore original numbers (7 steps, incl. 知识库调用)
     const advSteps = [
       { step: 1, num: 1 },
       { step: 2, num: 2 },
       { step: 3, num: 3 },
-      { step: 6, num: 4 },
-      { step: 5, num: 5 },
-      { step: 7, num: 6 },
+      { step: 4, num: 4 },
+      { step: 6, num: 5 },
+      { step: 5, num: 6 },
+      { step: 7, num: 7 },
     ];
     advSteps.forEach(({ step, num }) => {
       const item = document.querySelector('.step-item[data-step="' + step + '"]');
@@ -6437,7 +7023,7 @@ function updateStepNumbers(mode) {
 function updateNavLabels(mode) {
   const outlineNextText = document.getElementById('outlineNextText');
   if (outlineNextText) {
-    outlineNextText.textContent = mode === 'normal' ? '下一步：内容确认' : '下一步：内容确认';
+    outlineNextText.textContent = mode === 'normal' || mode === 'oneclick' ? '下一步：内容确认' : '下一步：知识库调用';
   }
   // In normal mode, change "内容确认" step label position etc.
   // Labels stay the same, just visibility changes via CSS
@@ -6448,7 +7034,7 @@ function getNormalModeSequence() {
 }
 
 function getAdvancedModeSequence() {
-  return [1, 2, 3, 6, 5, 7];
+  return [1, 2, 3, 4, 6, 5, 7];
 }
 
 function getActiveSequence() {
@@ -6908,6 +7494,152 @@ function updateKeyInfoBadge() {
     const active = state.keyInfos.filter((info, i) => !state.deletedKeyInfos.includes(i)).length;
     badge.textContent = active;
   }
+}
+
+/* ========== 屏幕4: 知识库调用 ========== */
+function renderKnowledge() {
+  // 大纲关键词（检索查询条件）
+  const outlineKeywords = ['一网通办','数据共享','营商环境','政务服务'];
+
+  // 左侧召回列表（标签匹配+关键词命中）
+  const recallList = document.getElementById('kbRecallList');
+  const recalls = [
+    {type: 'policy', typeLabel: '', title: '《国务院关于加强数字政府建设的指导意见》', level: 'high', hitCount: 3, totalKeywords: 4, hitKeywords: ['一网通办','数据共享','营商环境'], source: '专属知识库', content: '明确数字政府建设总体框架，要求2025年基本建成协同高效的数字政府体系，全面提升政务服务"一网通办"能力，推动数据共享是数字政府建设的核心基础，持续优化营商环境...', chapters: [], year: 2024},
+    {type: 'policy', typeLabel: '', title: '《政务服务"一网通办"工作规范》', level: 'high', hitCount: 2, totalKeywords: 4, hitKeywords: ['一网通办','政务服务'], source: '专属知识库', content: '规范政务服务事项全流程网上办理标准，明确一网通办办事指南、在线申办、审批等要求，实现政务服务统一入口、统一办理...', chapters: [], year: 2025},
+    {type: 'policy', typeLabel: '', title: '《政务数据共享交换管理细则》', level: 'high', hitCount: 2, totalKeywords: 4, hitKeywords: ['数据共享','政务服务'], source: '专属知识库', content: '明确跨部门数据共享目录、交换流程、安全保障和监督考核机制，规范政务数据共享交换的全流程管理...', chapters: [], year: 2023},
+    {type: 'meeting', typeLabel: '会议纪要', title: '全省数字政府建设推进会会议纪要', level: 'mid', hitCount: 1, totalKeywords: 4, hitKeywords: ['一网通办'], source: '专属知识库', content: '会议传达了国务院指导意见精神，部署下半年一网通办重点工作，要求各部门按时完成数据共享对接任务...', chapters: ['第四章·组织保障'], year: 2025},
+    {type: 'summary', typeLabel: '工作总结', title: '2025年度政务服务工作总结', level: 'mid', hitCount: 1, totalKeywords: 4, hitKeywords: ['政务服务'], source: '专属知识库', content: '全年完成政务服务事项1286项数字化改造，掌上办覆盖率达87.3%，群众满意度94.6%，政务服务能力显著提升...', chapters: ['第二章·建设成效'], year: 2026},
+    {type: 'summary', typeLabel: '工作总结', title: '政务数据共享工作阶段性总结', level: 'mid', hitCount: 1, totalKeywords: 4, hitKeywords: ['数据共享'], source: '专属知识库', content: '已完成省级数据共享交换平台建设，归集各部门数据23亿条，数据共享调用量同比增长156%...', chapters: [], year: 2025},
+    {type: 'report', typeLabel: '调研报告', title: '营商环境数字化评估专题调研报告', level: 'mid', hitCount: 1, totalKeywords: 4, hitKeywords: ['营商环境'], source: '专属知识库', content: '对全省营商环境数字化水平进行评估，建议从审批流程优化、数据共享、政务服务三个维度持续改进...', chapters: ['第三章·营商环境'], year: 2024},
+    {type: 'data', typeLabel: '数据报表', title: '2025年1-6月政务服务运行数据月报', level: 'low', hitCount: 0, totalKeywords: 4, hitKeywords: [], source: '专属知识库', content: '上半年全省政务服务平台累计办理业务3542万件，同比增长23.7%，日均办件量19.5万件，系统可用率99.92%...', chapters: ['第二章·建设成效'], year: 2025},
+    {type: 'speech', typeLabel: '讲话稿', title: '王省长在数字政府建设电视电话会议上的讲话', level: 'high', hitCount: 2, totalKeywords: 4, hitKeywords: ['一网通办','营商环境'], source: '专属知识库', content: '要以一网通办为抓手，持续优化营商环境，让数据多跑路、群众少跑腿。各级部门要高度重视数字政府建设...', chapters: ['第三章·营商环境'], year: 2025}
+  ];
+
+  // 关键词高亮函数
+  function highlightContent(text, keywords) {
+    let result = text;
+    keywords.forEach(kw => {
+      result = result.replace(new RegExp(kw, 'g'), `<mark>${kw}</mark>`);
+    });
+    return result;
+  }
+
+  // 相关度标签（high 档已按需求删除，保留 mid/low 两档）
+  const levelMap = {
+    mid:  { label: '相关',     class: 'mid',  icon: '<circle cx="12" cy="12" r="6" stroke-dasharray="4 2"/>' },
+    low:  { label: '可参考',   class: 'low',  icon: '<circle cx="12" cy="12" r="8" stroke-dasharray="2 3"/>' }
+  };
+
+  recallList.innerHTML = recalls.map((r, i) => {
+    const lv = levelMap[r.level];
+    const highlighted = highlightContent(r.content, r.hitKeywords);
+    const chapterTags = r.chapters.map(ch => `<span class="kb-chapter-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>${ch}</span>`).join(' ');
+    return `
+    <div class="kb-recall-card ${i < 5 ? 'selected' : ''}" data-type="${r.type}" data-year="${r.year}" onclick="this.classList.toggle('selected')">
+      <div class="kb-recall-header">
+        ${r.typeLabel ? `<span class="kb-type-tag ${r.type}">${r.typeLabel}</span>` : ''}
+        <div class="kb-recall-title">${r.title}</div>
+      </div>
+      ${lv ? `<div class="kb-recall-tags">
+        <span class="kb-relevance-tag ${lv.class}">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">${lv.icon}</svg>
+          ${lv.label}
+        </span>
+      </div>` : ''}
+      <div class="kb-recall-content">${highlighted}</div>
+      <div class="kb-recall-source">
+        <span>来源：${r.source}</span>
+        ${chapterTags ? `<span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">${chapterTags}</span>` : ''}
+      </div>
+    </div>
+    `;
+  }).join('');
+
+  // 知识库Tab切换
+  document.querySelectorAll('.kb-source-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.kb-source-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    };
+  });
+
+  // 分类筛选
+  document.querySelectorAll('#kbTypeFilters .kb-type-tag').forEach(tag => {
+    tag.onclick = () => {
+      document.querySelectorAll('#kbTypeFilters .kb-type-tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+      const filterType = tag.dataset.kbtype;
+      document.querySelectorAll('#kbRecallList .kb-recall-card').forEach(card => {
+        if (filterType === 'all' || card.dataset.type === filterType) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    };
+  });
+
+  // 时间筛选
+  document.querySelectorAll('.kb-time-filter').forEach(tf => {
+    tf.onclick = () => {
+      document.querySelectorAll('.kb-time-filter').forEach(t => t.classList.remove('active'));
+      tf.classList.add('active');
+      const filterTime = tf.dataset.time;
+      const currentYear = 2026;
+      document.querySelectorAll('#kbRecallList .kb-recall-card').forEach(card => {
+        const cardYear = parseInt(card.dataset.year);
+        let show = false;
+        if (filterTime === 'all') {
+          show = true;
+        } else if (filterTime === '1y') {
+          show = cardYear >= currentYear - 1;
+        } else if (filterTime === '3y') {
+          show = cardYear >= currentYear - 3;
+        }
+        // 只在类型筛选也通过的情况下才显示
+        if (show) {
+          const activeTypeTag = document.querySelector('#kbTypeFilters .kb-type-tag.active');
+          const filterType = activeTypeTag ? activeTypeTag.dataset.kbtype : 'all';
+          if (filterType !== 'all' && card.dataset.type !== filterType) {
+            show = false;
+          }
+        }
+        card.style.display = show ? '' : 'none';
+      });
+    };
+  });
+
+  // 右侧增强列表（增加来源片段标注）
+  const enhanceList = document.getElementById('kbEnhanceList');
+  const enhances = [
+    {category: 'term', categoryLabel: '专业术语', icon: '📖', chapter: '第一章 · 工作概述', title: '补充专业术语定义', content: '对"一网通办""数字政府"等核心概念进行规范化定义，确保表述准确', diff: '新增3处术语解释', source: '通用知识库·术语库', segment: '"一网通办"概念定义'},
+    {category: 'standard', categoryLabel: '行业规范', icon: '📋', chapter: '第一章 · 工作概述', title: '补充政策依据与规范引用', content: '在"数字政府建设"部分补充国务院指导意见原文表述，增强政策权威性', diff: '新增2条政策引用', source: '《国务院关于加强数字政府建设的指导意见》', segment: '第1段·第3行'},
+    {category: 'case', categoryLabel: '历史案例', icon: '📁', chapter: '第二章 · 建设成效', title: '补充历史案例佐证', content: '引用浙江省"最多跑一次"改革案例，佐证我省政务服务改革成效', diff: '新增1个典型案例', source: '浙江省"最多跑一次"改革实践案例', segment: '第2段·成效数据'},
+    {category: 'data', categoryLabel: '数据支撑', icon: '📊', chapter: '第二章 · 建设成效', title: '补充行业数据对比', content: '补充广东省数字平台注册用户超1.5亿的行业对比数据，突出成效亮点', diff: '新增1组对比数据', source: '广东省数字政府改革建设经验', segment: '第3段·数据部分'},
+    {category: 'standard', categoryLabel: '行业规范', icon: '📋', chapter: '第三章 · 资金投入', title: '补充建设规范引用', content: '在资金投入部分补充政务平台建设规范要求，论证资金使用合理性', diff: '新增1条规范引用', source: '政务服务平台建设与运维管理规范', segment: '第5章·建设标准'},
+    {category: 'data', categoryLabel: '数据支撑', icon: '📊', chapter: '第四章 · 组织保障', title: '补充数据共享运行数据', content: '补充省级数据共享平台归集数据23亿条、调用量增长156%的运行数据', diff: '新增2项运行数据', source: '政务数据共享工作阶段性总结', segment: '第1段·数据统计'},
+    {category: 'case', categoryLabel: '历史案例', icon: '📁', chapter: '第五章 · 下一步计划', title: '补充改革路径参考', content: '引用广东省"粤省事"平台经验，为智能审批系统建设提供参考路径', diff: '新增1个参考路径', source: '广东省数字政府改革建设经验', segment: '第4段·平台建设'},
+    {category: 'term', categoryLabel: '专业术语', icon: '📖', chapter: '第五章 · 下一步计划', title: '补充行业术语标准', content: '在AI赋能计划中补充政务数据安全相关行业术语和标准要求', diff: '新增2条标准引用', source: '通用知识库·术语库', segment: '"数字政府"核心内涵'}
+  ];
+  enhanceList.innerHTML = enhances.map(e => `
+    <div class="kb-enhance-card">
+      <div class="kb-enhance-chapter">${e.chapter}</div>
+      <div class="kb-enhance-category ${e.category}">
+        <span>${e.icon}</span>
+        <span>${e.categoryLabel}</span>
+      </div>
+      <div class="kb-enhance-title">${e.title}</div>
+      <div class="kb-enhance-content">${e.content}</div>
+      <div class="kb-enhance-diff">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        ${e.diff}
+      </div>
+      <div class="kb-enhance-source">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        来源：${e.source} · ${e.segment}
+      </div>
+    </div>
+  `).join('');
 }
 
 /* ========== 屏幕6: 初版PPT文件生成 ========== */
@@ -9753,6 +10485,19 @@ function submitUploadTpl(publishPublic) {
   adminToast(isPublic ? '公共模板「' + name + '」已创建，系统所有用户可用' : '模板「' + name + '」已上传成功');
 }
 
+window.addEventListener('message', event => {
+  const data = event && event.data;
+  if (data?.type === 'JBAI_WORKBENCH_CONTEXT') applyPptBridgeContext(data.payload || {});
+});
+
+try {
+  window.parent.postMessage({
+    type: 'JBAI_WORKBENCH_READY',
+    targetAgentId: 'ppt',
+    taskId: currentPptTaskId()
+  }, '*');
+} catch (error) {}
+
 console.log('模板管理模块已加载');
 </script>
 
@@ -9790,6 +10535,7 @@ console.log('模板管理模块已加载');
 .admin-scope-badge.dept { background: rgba(14,76,146,.85); color: #fff; }
 .admin-scope-badge.global { background: rgba(19,168,168,.85); color: #fff; }
 </style>
+
 
 
 
