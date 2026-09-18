@@ -231,6 +231,48 @@ setTimeout(() => {
         click(exportBtn);
         t("12.5 确认导出无 JS 错误（不再读 exportFormat）", errors.length === 0);
         t("12.6 导出后弹窗关闭", !modalExport.classList.contains("show"));
+
+        /* ===== 需求13：五种模板合入原型（v1.9.45） ===== */
+        // 主下拉含 6 个选项（auto+5模板），调度模板排在部门会商前
+        const tplSel = document.getElementById("template");
+        const optVals = [...tplSel.options].map(o => o.value);
+        t("13.1 主下拉含工作调度会议模板(value=5)", optVals.includes("5"));
+        t("13.2 调度模板排在部门会商模板之前", optVals.indexOf("5") < optVals.indexOf("4"));
+        t("13.3 主下拉共 6 个选项（auto+5）", tplSel.options.length === 6);
+        // templateContentMap 含 5 个模板定义
+        t("13.4 模板映射含调度模板定义", !!ev("templateContentMap['5']") && ev("templateContentMap['5'].name") === "工作调度会议模板");
+        t("13.5 调度模板含序时进度/调度机制章节", ev("templateContentMap['5'].sections").some(s => s.includes("序时进度")) && ev("templateContentMap['5'].sections").some(s => s.includes("报送/通报/约谈")));
+        // 会议类型→模板映射：4工作调度→5，5部门会商→4
+        ev("document.getElementById('meetingType').value = '4'; autoSelectTemplate();");
+        t("13.6 工作调度会议自动带出调度模板", tplSel.value === "5");
+        ev("document.getElementById('meetingType').value = '5'; autoSelectTemplate();");
+        t("13.7 部门会商会议自动带出会商模板", tplSel.value === "4");
+        ev("document.getElementById('meetingType').value = '1'; autoSelectTemplate();");
+        t("13.8 工作例会映射不变", tplSel.value === "1");
+        // 预览弹框：下拉含调度模板，切换后渲染调度模板结构
+        ev("openTemplatePreview()");
+        const modalTpl = document.getElementById("modalTemplate");
+        t("13.9 查看模板弹窗可打开", modalTpl.classList.contains("show"));
+        const prevSel = document.getElementById("templatePreviewSelect");
+        const prevVals = [...prevSel.options].map(o => o.value);
+        t("13.10 预览下拉含全部 6 个选项", prevVals.includes("auto") && prevVals.includes("5") && prevSel.options.length === 6);
+        ev("document.getElementById('templatePreviewSelect').value = '5'; renderTemplatePreview();");
+        const prevHtml = document.getElementById("templatePreviewContent").innerHTML;
+        t("13.11 预览渲染调度模板名称", prevHtml.includes("工作调度会议模板"));
+        t("13.12 预览渲染调度模板结构（标题+四章节）", prevHtml.includes("××工作调度会议纪要") && prevHtml.includes("序时进度对标") && prevHtml.includes("报送/通报/约谈机制"));
+        // 使用该模板：预览选择同步到主下拉
+        ev("applyTemplatePreview()");
+        t("13.13 使用该模板后主下拉同步为 5", tplSel.value === "5");
+        t("13.14 应用后弹窗关闭", !modalTpl.classList.contains("show"));
+        // 微调模板结构验证：协调模板含分歧点+督办、推进模板含会议要求、会商模板拆分结论/落实
+        t("13.15 协调模板含分歧点与督办章节", ev("templateContentMap['2'].sections").some(s => s.includes("分歧点")) && ev("templateContentMap['2'].sections").some(s => s.includes("跟踪督办")));
+        t("13.16 推进模板含量化进度与会议要求", ev("templateContentMap['3'].sections").some(s => s.includes("量化进度")) && ev("templateContentMap['3'].sections").some(s => s.includes("会议要求")));
+        t("13.17 会商模板结论区分一致通过/暂缓再议", ev("templateContentMap['4'].sections").some(s => s.includes("一致通过/暂缓再议")));
+        // 全程无 JS 错误
+        t("13.18 模板链路无 JS 错误", errors.length === 0);
+        // 恢复默认状态
+        ev("document.getElementById('template').value = 'auto'");
+
         // file 路径生成完成后回到创建页，验证删除恢复
         ev("switchView('viewCreate')");
         ev("uploadFiles.file = { name: 'x.docx', meta: '1 MB' }");
