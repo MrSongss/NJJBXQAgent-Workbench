@@ -6,7 +6,8 @@
   const esc = value => String(value == null ? "" : value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   let focusState = null;
   let selectionState = null;
-  let lastInlineChange = null;
+  let proposalState = null;
+  let polishRequestId = 0;
   let toolbar, menu, actionCard, focusBar, resumeBar, resumeFloat;
 
   function focusMeta(kind) {
@@ -64,7 +65,9 @@
     menu.id = "selectionPolishMenu";
     menu.className = "selection-polish-menu";
     menu.hidden = true;
-    menu.innerHTML = `<header>选择本段的润色方式</header><div class="selection-polish-options">
+    menu.setAttribute("role", "dialog");
+    menu.setAttribute("aria-label", "选择润色方式");
+    menu.innerHTML = `<header><b>选择润色方式</b><span>模型将生成建议，采纳后才写入文稿</span></header><div class="selection-polish-options">
       <button type="button" data-selection-style="快速润色">快速润色</button><button type="button" data-selection-style="更正式">更正式</button>
       <button type="button" data-selection-style="更精炼">更精炼</button><button type="button" data-selection-style="更严谨">更严谨</button>
       <button type="button" data-selection-style="政务公文风">政务公文风</button><button type="button" data-selection-style="更通顺">更通顺</button>
@@ -75,6 +78,8 @@
     actionCard.id = "selectionActionCard";
     actionCard.className = "selection-action-card";
     actionCard.hidden = true;
+    actionCard.setAttribute("role", "status");
+    actionCard.setAttribute("aria-live", "polite");
     document.body.append(actionCard);
   }
 
@@ -100,7 +105,7 @@
   }
 
   function enterFocus(config) {
-    ensureFocusUI(); ensureSelectionUI(); hideSelectionUI();
+    ensureFocusUI(); ensureSelectionUI(); discardProposalSilently(); hideSelectionUI({includeProposal:true});
     focusState = {
       kind:config.kind,
       title:config.title || "当前文稿",
@@ -130,7 +135,7 @@
   function refreshFocus() { renderFocusDocument(); }
 
   function exitFocus(options) {
-    ensureFocusUI(); hideSelectionUI();
+    ensureFocusUI(); discardProposalSilently(); hideSelectionUI({includeProposal:true});
     const paper=$("#editorPaper"), html=options?.html != null ? options.html : (focusState?.originalHTML || paper?.innerHTML || "");
     $("#view-chat")?.classList.remove("document-focus-mode", "focus-pane-document", "focus-pane-results", "focus-question-mode");
     $("#documentEditorPanel")?.classList.remove("focus-task-paused");
@@ -217,14 +222,32 @@
     const box=node.getBoundingClientRect(), x=Math.max(10,Math.min(left,window.innerWidth-box.width-10)), y=Math.max(10,Math.min(top,window.innerHeight-box.height-10));
     node.style.left=`${x}px`;node.style.top=`${y}px`;
   }
-  function hideSelectionUI() {
+  function hideSelectionUI(options) {
     if(toolbar) toolbar.hidden=true;
     if(menu) menu.hidden=true;
-    if(actionCard) actionCard.hidden=true;
+    if(actionCard && (options?.includeProposal || !proposalState)) actionCard.hidden=true;
+  }
+  function discardProposalSilently() {
+    if(!proposalState)return;
+    polishRequestId+=1;
+    const anchor=proposalState.anchor;
+    if(anchor?.isConnected){const parent=anchor.parentNode;anchor.replaceWith(document.createTextNode(proposalState.original));parent?.normalize?.();}
+    proposalState=null;selectionState=null;
+    if(actionCard)actionCard.hidden=true;
+    if(menu)menu.hidden=true;
   }
   function captureSelection() {
     ensureSelectionUI();
     if(toolbar?.contains(document.activeElement) || menu?.contains(document.activeElement)) return;
+    if(proposalState && !proposalState.anchor?.isConnected){
+      proposalState=null;
+      if(actionCard)actionCard.hidden=true;
+    }
+    if(proposalState){
+      if(toolbar) toolbar.hidden=true;
+      positionProposalBubble();
+      return;
+    }
     const found=validSelection();
     if(!found){ if(!menu || menu.hidden) toolbar.hidden=true; return; }
     selectionState=found;
@@ -253,26 +276,161 @@
     return value;
   }
 
-  function showActionCard(change,rect) {
-    lastInlineChange=change;
-    actionCard.innerHTML=`<div class="selection-action-head"><b>已按“${esc(change.style)}”替换选中文字</b><button type="button" data-selection-action="undo">撤销</button><button type="button" data-selection-action="compare">查看对比</button></div><div class="selection-action-compare" hidden><div><small>修改前</small>${esc(change.original)}</div><div><small>修改后</small>${esc(change.replacement)}</div></div>`;
+  function positionProposalBubble() {
+    if(!proposalState?.anchor?.isConnected || !actionCard || actionCard.hidden)return;
+    const rect=proposalState.anchor.getBoundingClientRect();
     place(actionCard,rect.left,rect.bottom+8);
   }
 
-  function applySelectionPolish(style,custom) {
-    if(!selectionState?.sameBlock){host()?.toast?.("请在同一段内选择需要润色的文字。");return;}
-    const paper=$("#editorPaper"), range=selectionState.range;
-    if(!paper || !paper.contains(range.commonAncestorContainer)){host()?.toast?.("选区已失效，请重新选择文字。");hideSelectionUI();return;}
-    const replacement=rewrite(selectionState.text,style,custom);
-    if(!replacement || replacement===selectionState.text){host()?.toast?.("这段文字未发现可确定的表达问题，请换一种方式或输入自定义要求。");return;}
-    const beforeHTML=paper.innerHTML, mark=document.createElement("mark");
-    mark.className="inline-polish-change";mark.dataset.inlinePolish="true";mark.dataset.original=selectionState.text;mark.textContent=replacement;
-    range.deleteContents();range.insertNode(mark);
-    const afterHTML=paper.innerHTML;
-    host()?.commitInlinePolish?.({html:afterHTML,original:selectionState.text,replacement,style:custom?`自定义：${custom}`:style});
-    hideSelectionUI();
-    showActionCard({beforeHTML,afterHTML,original:selectionState.text,replacement,style:custom?`自定义：${custom}`:style},mark.getBoundingClientRect());
+  function showProposalCard(message) {
+    if(!proposalState)return;
+    actionCard.classList.remove("is-loading","is-error");
+    actionCard.innerHTML=`<div class="selection-action-head"><span class="selection-action-copy"><b>${esc(message || "已生成润色建议")}</b><small>确认采纳后才会写入文稿与版本记录</small></span><span class="selection-action-buttons"><button type="button" class="primary" data-selection-action="accept">采纳</button><button type="button" data-selection-action="reject">不采纳</button><button type="button" data-selection-action="retry">重新润色</button></span></div>`;
+    actionCard.hidden=false;
+    positionProposalBubble();
+  }
+
+  function showLoadingCard(style) {
+    actionCard.classList.remove("is-error");
+    actionCard.classList.add("is-loading");
+    actionCard.innerHTML=`<div class="selection-action-loading"><span class="selection-loading-mark" aria-hidden="true"></span><span><b>正在调用模型润色</b><small>${esc(style)} · 原文暂未写入修改记录</small></span></div>`;
+    actionCard.hidden=false;
+    positionProposalBubble();
+  }
+
+  function showProposalError(message) {
+    if(!proposalState)return;
+    actionCard.classList.remove("is-loading");
+    actionCard.classList.add("is-error");
+    const canAccept=proposalState.replacement && proposalState.replacement!==proposalState.original;
+    actionCard.innerHTML=`<div class="selection-action-head"><span class="selection-action-copy"><b>本次润色未完成</b><small>${esc(message || "模型暂时不可用，原文未受影响")}</small></span><span class="selection-action-buttons">${canAccept?'<button type="button" class="primary" data-selection-action="accept">采纳</button>':''}<button type="button" data-selection-action="reject">不采纳</button><button type="button" data-selection-action="retry">重新润色</button></span></div>`;
+    actionCard.hidden=false;
+    positionProposalBubble();
+  }
+
+  function proposalPreviewClass(replacement,original) {
+    if(!replacement)return "inline-polish-anchor";
+    return "inline-polish-change";
+  }
+
+  async function requestSelectionPolish(payload) {
+    const provider=window.JBAISelectionPolishProvider;
+    const providerRun=typeof provider==="function"?provider:provider?.polish;
+    const hostRun=host()?.polishSelection;
+    if(typeof providerRun==="function"){
+      const result=await providerRun.call(provider,payload);
+      return typeof result==="string"?result:String(result?.text||result?.replacement||"");
+    }
+    if(typeof hostRun==="function"){
+      const result=await hostRun(payload);
+      return typeof result==="string"?result:String(result?.text||result?.replacement||"");
+    }
+    // 静态原型兜底：保留异步模型调用节奏；正式环境由上方 provider/host 适配器接管。
+    await new Promise(resolve=>window.setTimeout(resolve,520));
+    return rewrite(payload.text,payload.style,payload.custom);
+  }
+
+  function ensureProposalAnchor() {
+    if(proposalState?.anchor?.isConnected)return proposalState.anchor;
+    if(!selectionState?.sameBlock){host()?.toast?.("请在同一段内选择需要润色的文字。");return null;}
+    const paper=$("#editorPaper"),range=selectionState.range;
+    if(!paper || !paper.contains(range.commonAncestorContainer)){host()?.toast?.("选区已失效，请重新选择文字。");hideSelectionUI({includeProposal:true});return null;}
+    const anchor=document.createElement("mark");
+    anchor.className="inline-polish-anchor";
+    anchor.dataset.inlinePolish="preview";
+    anchor.dataset.original=selectionState.text;
+    anchor.contentEditable="false";
+    anchor.textContent=selectionState.text;
+    range.deleteContents();range.insertNode(anchor);
+    proposalState={anchor,original:selectionState.text,replacement:"",style:"",loading:false};
     window.getSelection()?.removeAllRanges();
+    return anchor;
+  }
+
+  async function applySelectionPolish(style,custom) {
+    const anchor=ensureProposalAnchor();
+    if(!anchor)return;
+    const requestId=++polishRequestId;
+    const displayStyle=custom?`自定义：${custom}`:style;
+    const previous={text:anchor.textContent,replacement:proposalState.replacement,style:proposalState.style};
+    proposalState.loading=true;
+    proposalState.style=displayStyle;
+    anchor.className="inline-polish-anchor is-loading";
+    anchor.setAttribute("aria-busy","true");
+    if(menu)menu.hidden=true;
+    if(toolbar)toolbar.hidden=true;
+    toolbar?.querySelector('[data-selection-action="polish"]')?.setAttribute("aria-expanded","false");
+    showLoadingCard(displayStyle);
+    try{
+      const replacement=(await requestSelectionPolish({text:proposalState.original,style,custom:custom||"",document:selectionState?.documentInfo||null})).trim();
+      if(requestId!==polishRequestId || !anchor.isConnected)return;
+      if(!replacement){
+        anchor.textContent=previous.replacement?previous.text:proposalState.original;
+        anchor.className=proposalPreviewClass(previous.replacement,proposalState.original);
+        proposalState.replacement=previous.replacement;
+        proposalState.style=previous.style;
+        proposalState.loading=false;
+        anchor.removeAttribute("aria-busy");
+        showProposalError("模型没有生成有效的新版本，请更换润色方式后重试");
+        return;
+      }
+      if(replacement===proposalState.original){
+        anchor.textContent=proposalState.original;
+        anchor.className="inline-polish-change";
+        anchor.removeAttribute("aria-busy");
+        proposalState.replacement=proposalState.original;
+        proposalState.style=displayStyle;
+        proposalState.loading=false;
+        showProposalCard(`已按“${displayStyle}”生成建议`);
+        return;
+      }
+      anchor.textContent=replacement;
+      anchor.className="inline-polish-change";
+      anchor.removeAttribute("aria-busy");
+      proposalState.replacement=replacement;
+      proposalState.style=displayStyle;
+      proposalState.loading=false;
+      showProposalCard(`已按“${displayStyle}”生成建议`);
+    }catch(error){
+      if(requestId!==polishRequestId || !anchor.isConnected)return;
+      anchor.textContent=previous.replacement?previous.text:proposalState.original;
+      anchor.className=proposalPreviewClass(previous.replacement,proposalState.original);
+      anchor.removeAttribute("aria-busy");
+      proposalState.replacement=previous.replacement;
+      proposalState.style=previous.style;
+      proposalState.loading=false;
+      showProposalError(error?.message || "模型服务暂时不可用，原文未受影响");
+    }
+  }
+
+  function acceptProposal() {
+    const paper=$("#editorPaper"),proposal=proposalState;
+    if(!paper || !proposal?.anchor?.isConnected || !proposal.replacement || proposal.loading)return;
+    const text=document.createTextNode(proposal.replacement),parent=proposal.anchor.parentNode;
+    proposal.anchor.replaceWith(text);parent?.normalize?.();
+    const saved=host()?.commitInlinePolish?.({html:paper.innerHTML,original:proposal.original,replacement:proposal.replacement,style:proposal.style});
+    proposalState=null;selectionState=null;actionCard.hidden=true;
+    if(saved===false)host()?.toast?.("修改未能保存，请稍后重试。");
+    else host()?.toast?.("已采纳润色建议并保存到当前文稿。");
+  }
+
+  function rejectProposal() {
+    const proposal=proposalState;
+    if(!proposal?.anchor?.isConnected)return;
+    polishRequestId+=1;
+    const parent=proposal.anchor.parentNode;
+    proposal.anchor.replaceWith(document.createTextNode(proposal.original));parent?.normalize?.();
+    proposalState=null;selectionState=null;actionCard.hidden=true;if(menu)menu.hidden=true;
+    host()?.toast?.("已不采纳本次润色，正文已恢复。");
+  }
+
+  function reopenPolishMenu() {
+    if(!proposalState?.anchor?.isConnected || proposalState.loading)return;
+    const rect=proposalState.anchor.getBoundingClientRect();
+    menu.dataset.retry="true";
+    place(menu,rect.left,rect.bottom+8);
+    actionCard.hidden=true;
+    menu.querySelector("button")?.focus();
   }
 
   function askSelection() {
@@ -282,16 +440,6 @@
     hideSelectionUI();
   }
 
-  function undoInlineChange() {
-    const paper=$("#editorPaper");
-    if(!paper || !lastInlineChange)return;
-    if(paper.innerHTML!==lastInlineChange.afterHTML){host()?.toast?.("文稿已继续修改，不能直接撤销该次局部润色。");return;}
-    paper.innerHTML=lastInlineChange.beforeHTML;
-    host()?.commitInlinePolish?.({html:lastInlineChange.beforeHTML,original:lastInlineChange.replacement,replacement:lastInlineChange.original,style:"撤销局部润色"});
-    actionCard.hidden=true;lastInlineChange=null;
-    host()?.toast?.("已撤销本次局部润色。");
-  }
-
   document.addEventListener("mouseup",()=>window.setTimeout(captureSelection,0));
   document.addEventListener("input",event=>{
     const paper=$("#editorPaper");
@@ -299,8 +447,13 @@
     focusState.onCurrentChange?.(paper.innerHTML);
   });
   document.addEventListener("keyup",event=>{if(event.shiftKey || ["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key))window.setTimeout(captureSelection,0);});
-  document.addEventListener("scroll",()=>{if(toolbar)toolbar.hidden=true;if(menu)menu.hidden=true;},true);
-  window.addEventListener("resize",hideSelectionUI);
+  document.addEventListener("scroll",()=>{if(toolbar)toolbar.hidden=true;if(menu)menu.hidden=true;positionProposalBubble();},true);
+  window.addEventListener("resize",()=>{if(toolbar)toolbar.hidden=true;if(menu)menu.hidden=true;positionProposalBubble();});
+  document.addEventListener("keydown",event=>{
+    if(event.key!=="Escape")return;
+    if(menu&&!menu.hidden){menu.hidden=true;if(proposalState)showProposalCard("当前润色建议待确认");return;}
+    if(toolbar&&!toolbar.hidden)toolbar.hidden=true;
+  });
   document.addEventListener("click",event=>{
     ensureFocusUI();ensureSelectionUI();
     const pane=event.target.closest("[data-focus-pane]");
@@ -311,10 +464,11 @@
     const action=event.target.closest("[data-selection-action]");
     if(action){
       const type=action.dataset.selectionAction;
-      if(type==="polish"){const rect=toolbar.getBoundingClientRect();action.setAttribute("aria-expanded",String(menu.hidden));if(menu.hidden)place(menu,rect.left,rect.bottom+6);else menu.hidden=true;return;}
+      if(type==="polish"){const rect=toolbar.getBoundingClientRect();menu.dataset.retry="false";action.setAttribute("aria-expanded",String(menu.hidden));if(menu.hidden)place(menu,rect.left,rect.bottom+6);else menu.hidden=true;return;}
       if(type==="ask"){askSelection();return;}
-      if(type==="undo"){undoInlineChange();return;}
-      if(type==="compare"){const compare=actionCard.querySelector(".selection-action-compare");compare.hidden=!compare.hidden;return;}
+      if(type==="accept"){acceptProposal();return;}
+      if(type==="reject"){rejectProposal();return;}
+      if(type==="retry"){reopenPolishMenu();return;}
     }
     const style=event.target.closest("[data-selection-style]");
     if(style){applySelectionPolish(style.dataset.selectionStyle);return;}
@@ -324,4 +478,5 @@
 
   ensureFocusUI();ensureSelectionUI();
   window.JBAIDocumentFocus={enter:enterFocus,refresh:refreshFocus,exit:exitFocus,pauseForQuestion,resume:resumeFocus,locateText,showPane,isActive:()=>!!focusState&&!focusState.paused,getState:()=>focusState?{kind:focusState.kind,view:focusState.view,paused:focusState.paused}:null,hideSelectionUI};
+  window.JBAISelectionTools={getState:()=>proposalState?{original:proposalState.original,replacement:proposalState.replacement,style:proposalState.style,loading:proposalState.loading}:null};
 })();
