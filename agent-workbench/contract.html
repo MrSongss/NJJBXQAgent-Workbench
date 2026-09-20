@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="VSDEAo78XCxfq550bpnCEt">
-<head data-page-node-id="9RDe22KEYxqz3hBaIsD67Q">
+<html lang="zh-CN" data-page-node-id="VSDEAo78XCxfq550bpnCEt" data-dm-ref="1"><head data-page-node-id="9RDe22KEYxqz3hBaIsD67Q">
   <meta charset="UTF-8" data-page-node-id="b9RddywXYFWcJgwTEWV2bb">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="DT8iH67QV5OOs6pFqGNIdb">
-  <title>合同智能生成及预审 · 智能拟制系统 - 江北新区政务AI智能体</title>
+  <title>合同智能生成 · 智能拟制系统 - 江北新区政务AI智能体</title>
   <style>
     /* ==========================================================================
        设计规范：政务系统简洁庄重风格（蓝色主色 + 中性灰底），与「辅助文本合规审查」
@@ -91,6 +90,9 @@
     .history-status.s-submitted { background: #e6f4ff; color: #0958d9; }
     .history-status.s-review { background: #fff2e8; color: #d46b08; }
     .history-status.s-exported { background: #f6ffed; color: #2e7d32; }
+    .history-status.s-done { background: #f6ffed; color: #2e7d32; }
+    .history-status.s-generating { background: #e6f4ff; color: #0958d9; animation: pulseGen 1.4s ease-in-out infinite; }
+    @keyframes pulseGen { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
     .history-step { display: inline-block; padding: 1px 5px; background: #f0f2f5; border-radius: 3px; font-size: 10px; color: #909399; }
     .history-time { font-size: 11px; color: var(--muted); margin-left: auto; }
     .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 10px; }
@@ -121,22 +123,20 @@
     /* ============ 视图容器 ============ */
     .view { display: none; min-height: 0; height: 100%; grid-column: 2; }
     .view.active { display: block; }
-    #view-editor.active { display: grid; grid-template-columns: 1fr 400px; }
+    #view-editor.active { display: block; }
     .page-scroll { height: 100%; overflow: auto; padding: 22px 26px 40px; }
     .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
     .page-title { font-size: 21px; font-weight: 800; color: #16233f; }
     .page-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
 
     /* ============ 编辑器：中间工作区 ============ */
-    .tool-main { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto auto 1fr 32px; background: #eaf0f8; }
+    .tool-main { min-width: 0; min-height: 0; height: 100%; display: grid; grid-template-rows: auto auto 1fr 32px; background: #eaf0f8; }
     .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 16px; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
     .toolbar-left, .toolbar-right, .tool-group { display: flex; align-items: center; gap: 7px; min-width: 0; }
 
     /* 流程步骤条（来源于业务流程图泳道） */
     .flowbar { display: flex; align-items: center; gap: 0; padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
     .flow-step { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .review-disclaimer { padding:9px 12px;border-bottom:1px solid #f0d8a7;background:#fffaf0;color:#765315;font-size:12px;line-height:1.6; }
-    .issue-source { display:inline-flex;align-items:center;margin-left:6px;padding:2px 7px;border-radius:999px;background:#eef4ff;color:#315f9c;font-size:10px;font-weight:700; }
     .flow-node { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 12px; font-weight: 700; cursor: pointer; transition: .16s; border: 1px solid transparent; }
     .flow-node .n { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; background: #cfd8ea; color: #fff; font-size: 10px; }
     .flow-node:hover { background: var(--primary-soft); color: var(--primary); }
@@ -148,7 +148,39 @@
     .flow-arrow::after { content: "›"; position: absolute; right: -3px; top: -10px; color: #b6c1d8; }
 
     .workspace { min-height: 0; overflow: auto; padding: 20px 24px 36px; }
+    .workspace.with-panel { display: flex; gap: 18px; align-items: flex-start; justify-content: center; }
+    .workspace.with-panel .doc-wrap { margin: 0; flex: none; }
+    /* 合规校验结果侧板 */
+    .cpc-panel { width: 348px; flex: none; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 24px rgba(18,25,97,.06); position: sticky; top: 0; display: flex; flex-direction: column; max-height: calc(100vh - 210px); }
+    .cpc-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
+    .cpc-head .t { font-size: 15px; font-weight: 800; color: #1b2947; display: flex; align-items: center; gap: 8px; }
+    .cpc-head .s { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .cpc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+    .cpc-stats .cs { text-align: center; padding: 6px 2px; background: #fbfcff; border-radius: 8px; }
+    .cpc-stats .cs .k { font-size: 11px; color: var(--muted); }
+    .cpc-stats .cs .v { font-size: 15px; font-weight: 800; color: #1b2947; margin-top: 1px; }
+    .cpc-stats .cs .v small { font-size: 10px; color: var(--muted); font-weight: 500; }
+    .cpc-bulk { display: flex; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+    .cpc-bulk .btn { flex: 1; height: 30px; font-size: 12px; }
+    .cpc-list { flex: 1; overflow-y: auto; padding: 10px 12px; }
+    .cpc-item { border: 1px solid var(--line); border-left: 4px solid #d24640; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; background: #fff; }
+    .cpc-item.sev-mid { border-left-color: #d07a00; }
+    .cpc-item .ci-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .cpc-item .ci-loc { font-size: 12.5px; font-weight: 700; color: #1b2947; }
+    .cpc-item .ci-desc { font-size: 12.5px; color: #46536e; line-height: 1.65; margin-bottom: 7px; }
+    .cpc-item .ci-fix { font-size: 12.5px; color: #37425c; line-height: 1.65; background: #f2f9f5; border: 1px solid #d8eee2; border-radius: 6px; padding: 7px 9px; margin-bottom: 8px; }
+    .cpc-item .ci-act { display: flex; gap: 8px; }
+    .cpc-item .ci-act .btn { height: 26px; font-size: 12px; padding: 0 10px; }
+    .cpc-item.ignored { opacity: .5; }
+    .cpc-item.accepted { border-left-color: #00653C; }
+    .cpc-item.accepted .ci-act { display: none; }
+    .cpc-item.accepted::after { content: "已采纳"; display: inline-block; font-size: 11px; color: #00653C; font-weight: 700; }
+    .cpc-item.ignored .ci-act { display: none; }
+    .cpc-item.ignored::after { content: "已忽略"; display: inline-block; font-size: 11px; color: #8b95a7; font-weight: 700; }
+    .cpc-close { position: absolute; top: 10px; right: 12px; cursor: pointer; font-size: 16px; color: #8b95a7; line-height: 1; padding: 4px; }
+    .cpc-close:hover { color: #1b2947; }
     .doc-wrap { width: 800px; min-height: 1040px; margin: 0 auto; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow); position: relative; }
+
     .page-tools { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px 0; background: #fff; }
     .page-tools .hint { color: #9aa4b8; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .doc-page { min-height: 980px; padding: 48px 66px 66px; outline: none; line-height: 2; color: #1f2937; font-family: "FangSong", "仿宋", "SimSun", serif; font-size: 18px; }
@@ -158,76 +190,19 @@
     .doc-page .no-indent { text-indent: 0; }
     .doc-page .clause-h { text-indent: 0; font-family: "SimHei", "黑体", sans-serif; font-weight: 700; margin-top: 12px; }
     .doc-page .right { text-align: right; text-indent: 0; }
-    .mark { border-radius: 2px; cursor: pointer; padding: 0 1px; border-bottom: 2px solid currentColor; transition: background .15s; }
-    .mark-high { color: var(--red); background: #fdefec; }
-    .mark-mid { color: var(--orange); background: #fff6e6; }
-    .mark-low { color: var(--primary); background: #eef4ff; }
-    .mark.resolved { color: #9aa4b8; background: transparent; border-bottom: 1px dashed #c3cbdb; }
-    .ins-clause { display: block; margin: 6px 0; padding: 8px 12px; border-left: 3px solid var(--green); background: var(--green-soft); border-radius: 0 8px 8px 0; color: #146a53; font-size: 15.5px; text-indent: 0; }
     .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-top: 1px solid var(--line); background: #fff; color: #7b8496; font-size: 12px; }
 
-    /* ============ 编辑器：右侧预审面板 ============ */
-    .rightbar { min-height: 0; overflow: hidden; background: #fff; border-left: 1px solid var(--line); display: flex; flex-direction: column; }
-    .pf-results { min-height: 0; flex: 1; display: none; flex-direction: column; }
-    .pf-results.show { display: flex; }
-    .pf-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line-soft); }
-    .pf-head-top { display: flex; align-items: center; justify-content: space-between; }
-    .pf-count { font-size: 17px; font-weight: 800; }
-    .pf-count b { color: var(--red); }
-    .pf-score { display: inline-flex; align-items: baseline; gap: 4px; padding: 3px 10px; border-radius: 9px; background: var(--primary-soft); color: var(--primary); font-weight: 800; }
-    .pf-score b { font-size: 18px; }
-    .pf-score span { font-size: 11px; font-weight: 700; }
-    .pf-links { display: flex; gap: 12px; color: #6a7690; font-size: 13px; margin-top: 8px; }
-    .pf-links a { display: inline-flex; align-items: center; gap: 4px; }
-    .pf-links a:hover { color: var(--primary); }
-    .pf-cats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin-top: 12px; }
-    .pf-cat { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #47536c; cursor: pointer; user-select: none; }
-    .pf-cat .cbx { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #c4cde0; display: grid; place-items: center; color: #fff; font-size: 11px; transition: .15s; }
-    .pf-cat.on .cbx { background: var(--primary); border-color: var(--primary); }
-    .pf-cat .cnt { margin-left: auto; font-weight: 800; color: #2a3550; }
-    .pf-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
-    .pf-actions .primary-btn, .pf-actions .btn { height: 36px; flex: 1; }
-    .pf-progress { padding: 10px 16px; border-bottom: 1px solid var(--line-soft); display: none; }
-    .pf-progress.show { display: block; }
-    .pf-bar { height: 8px; border-radius: 999px; background: #eef2f9; overflow: hidden; }
-    .pf-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--cyan)); transition: width .2s; }
-    .pf-progress .lbl { display: flex; justify-content: space-between; font-size: 12px; color: #6a7690; margin-bottom: 6px; }
-    .pf-list { min-height: 0; overflow: auto; padding: 12px; display: grid; gap: 10px; align-content: start; }
+    /* ============ 生成结果展示区 ============ */
 
-    /* 空状态 / 预审前状态 */
-    .pf-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 26px; text-align: center; }
-    .pf-empty.hide { display: none; }
-    .pf-empty .eic { width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; font-size: 26px; background: var(--primary-soft); color: var(--primary); }
-    .pf-empty .et { font-size: 15px; font-weight: 800; color: #33405c; }
-    .pf-empty .es { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 250px; }
-    .pf-empty .primary-btn { height: 44px; padding: 0 32px; margin-top: 6px; font-size: 15px; }
+    /* ============ 空状态 ============ */
     .doc-empty { min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; text-align: center; padding-top: 64px; }
     .doc-empty .eic { width: 74px; height: 74px; border-radius: 18px; display: grid; place-items: center; font-size: 34px; background: var(--primary-soft); color: var(--primary); }
     .doc-empty .et { font-size: 18px; font-weight: 800; color: #33405c; }
     .doc-empty .es { font-size: 13px; color: var(--muted); line-height: 1.75; max-width: 360px; }
     .doc-empty .primary-btn { height: 44px; padding: 0 30px; margin-top: 8px; }
-
-    .pf-card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 11px 12px; background: #fbfcff; transition: .16s; }
-    .pf-card:hover, .pf-card.active { border-color: rgba(36, 85, 230, 0.4); box-shadow: var(--shadow-sm); }
-    .pf-card.resolved { opacity: .58; }
-    .pf-c-head { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
-    .pf-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-    .pf-dot.high { background: var(--red); } .pf-dot.mid { background: var(--orange); } .pf-dot.low { background: var(--primary); }
-    .pf-cat-name { font-size: 13px; font-weight: 700; color: #33405c; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .pf-badge-dim { flex: none; display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 700; background: #eef2fb; color: #6b7690; }
-    .pf-c-ops { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6a7690; flex: none; }
-    .pf-c-ops a:hover { color: var(--primary); }
-    .pf-c-ops a.rep { color: var(--primary); font-weight: 700; }
-    .pf-line { display: flex; align-items: flex-start; gap: 7px; margin-top: 6px; font-size: 13.5px; line-height: 1.6; }
-    .pf-badge { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 700; margin-top: 1px; }
-    .pf-badge.orig { background: var(--red-soft); color: var(--red); }
-    .pf-badge.sugg { background: var(--green-soft); color: var(--green); }
-    .pf-txt { color: #37425c; word-break: break-all; }
-    .pf-txt .del { color: var(--red); }
-    .pf-txt .ins { color: var(--green); font-weight: 700; }
-    .pf-model { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; margin-left: 6px; border-radius: 5px; font-size: 11px; font-weight: 700; background: var(--purple-soft); color: var(--purple); vertical-align: middle; }
-    .pf-note { margin-top: 8px; padding: 7px 9px; border-radius: 8px; background: #f3f7ff; color: #4a597a; font-size: 12.5px; line-height: 1.55; display: none; }
-    .pf-note.show { display: block; }
+    .ph-edit { color: #2455e6; background: #f0f5ff; border-bottom: 1px dashed #8fb0ff; cursor: text; padding: 0 2px; border-radius: 2px 2px 0 0; font-weight: 600; }
+    .ph-edit:hover { background: #e3edff; }
+    .ph-edit::before { content: "✎ "; font-size: 11px; }
     .empty { padding: 40px 16px; text-align: center; color: #9aa4b8; font-size: 13px; }
 
     /* ============ 卡片 / 通用内容 ============ */
@@ -265,15 +240,42 @@
     .row-act a:hover { text-decoration: underline; }
     .row-act a.danger { color: var(--red); }
 
-    /* 资料库左侧分类导航 */
-    .rule-layout { display: grid; grid-template-columns: 220px 1fr; gap: 16px; }
-    .rule-nav { display: grid; gap: 4px; align-content: start; }
-    .rule-nav button { text-align: left; padding: 11px 12px; border-radius: 10px; color: #46536e; font-weight: 700; transition: .16s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .rule-nav button:hover { background: #fff; color: var(--primary); }
-    .rule-nav button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
-    .rule-nav button .badge { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: #eef2fb; color: #6b7690; }
-    .rule-nav button.active .badge { background: rgba(255,255,255,0.24); color: #fff; }
-    .rule-nav button span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ============ 左侧"合同模板管理"入口 ============ */
+    .tpl-entry { margin: 8px 12px 10px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: flex; align-items: center; gap: 9px; cursor: pointer; transition: .16s; flex: none; }
+    .tpl-entry:hover { border-color: rgba(36,85,230,.45); background: var(--primary-soft); transform: translateY(-1px); }
+    .tpl-entry .tpl-entry-ic { width: 30px; height: 30px; border-radius: 8px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; font-size: 15px; flex: none; }
+    .tpl-entry .tpl-entry-t { flex: 1; font-size: 13px; font-weight: 700; color: #33405c; }
+    .tpl-entry .tpl-entry-arrow { color: var(--muted); font-size: 16px; transition: transform .16s; }
+    .tpl-entry:hover .tpl-entry-arrow { transform: translateX(2px); color: var(--primary); }
+
+    /* ============ 模板管理页：分类导航 + 内容区 ============ */
+    .lib-body { display: grid; grid-template-columns: 200px 1fr; gap: 14px; align-items: start; }
+    .lib-nav { display: grid; gap: 4px; align-content: start; }
+    .lib-nav button { text-align: left; padding: 10px 12px; border: none; border-radius: 10px; background: transparent; color: #46536e; font-weight: 700; font-size: 13px; cursor: pointer; transition: .15s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .lib-nav button:hover { background: #f2f5fa; color: var(--primary); }
+    .lib-nav button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
+    .lib-nav button .badge { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #eef2fb; color: #6b7690; }
+    .lib-nav button.active .badge { background: rgba(255,255,255,0.24); color: #fff; }
+    .lib-nav button span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lib-main { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+    .lib-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .lib-toolbar .note-strip { margin-bottom: 0; }
+    .btn.sm { height: 30px; padding: 0 12px; font-size: 13px; border-radius: 7px; }
+
+    /* ============ 模板解析流程弹框 ============ */
+    .parse-sum { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 14px; }
+    .parse-sum .ps { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcff; }
+    .parse-sum .ps .k { font-size: 12px; color: var(--muted); }
+    .parse-sum .ps .v { font-size: 16px; font-weight: 800; color: #1b2947; margin-top: 2px; }
+    .parse-sum .ps .v small { font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 4px; }
+    .field-map { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcff; margin-bottom: 4px; }
+    .field-map .fm { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #46536e; }
+    .field-map .fm .fm-k { color: var(--muted); flex: none; }
+    .field-map .fm .fm-v { font-weight: 700; color: #1b2947; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .field-map .fm .fm-tag { flex: none; }
+
+    /* 资料库左侧分类导航（模板/条款库共用） */
     .toolbar-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .note-strip { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; background: var(--orange-soft); color: #9a6a00; font-size: 13px; margin-bottom: 12px; }
 
@@ -330,7 +332,7 @@
     .up-or { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; margin: 14px 0 12px; }
     .up-or::before, .up-or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 
-    /* 查看与导出弹框：协议草案 / 预审校验报告 选项卡 */
+    /* 查看与导出弹框 */
     .primary-btn.sm { height: 30px; padding: 0 12px; font-size: 13px; }
     .tab-bar { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 14px; flex-wrap: wrap; }
     .tab-btn { height: 38px; padding: 0 16px; border-radius: 8px 8px 0 0; color: #6a7690; font-weight: 700; border-bottom: 2px solid transparent; }
@@ -392,8 +394,8 @@
     ::-webkit-scrollbar-thumb { background: #cfd8e8; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #b7c2d8; }
   </style>
-</head>
-<body data-page-node-id="4sHcw7wyM1byA6AALvADgf">
+<style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
+<body data-page-node-id="4sHcw7wyM1byA6AALvADgf" style="position: relative;">
   <div class="app" data-page-node-id="MNzhpOJWnEQsqiOhiPu433">
     <!-- ===================== 左侧菜单（全局） ===================== -->
     <aside class="sidebar" data-page-node-id="VlefGJnsYFrEOtImiOCaSj">
@@ -402,7 +404,7 @@
         <button class="btn-new" data-action="newTask" data-page-node-id="y70rzg36CkouWWFZHJ3SMD"><span data-page-node-id="YoNpzprHmFoFY93PdGLYnL">+</span><span class="btn-text" data-page-node-id="vE3pSsE0Bg7OWv6gKEDAqy">新建合同</span></button>
       </div>
       <div class="filter-box" data-page-node-id="9zOAVNJTjamxXAj1ooIj7Q">
-        <div class="search-wrap" data-page-node-id="JA8t6kMLJG8ESqr3f1PHoH"><span class="search-icon" data-page-node-id="2SfbhelHlGeO48hGZj5doZ">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索草稿..." data-page-node-id="lfq9YKIXC98zenqhpmxm1A" /><span class="search-clear" id="searchClear" style="display:none;" data-page-node-id="ZFscM38rqsuB7kk915drgC">✕</span></div>
+        <div class="search-wrap" data-page-node-id="JA8t6kMLJG8ESqr3f1PHoH"><span class="search-icon" data-page-node-id="2SfbhelHlGeO48hGZj5doZ">🔍</span><input type="text" class="search-input" id="historySearch" placeholder="搜索草稿..." data-page-node-id="lfq9YKIXC98zenqhpmxm1A"><span class="search-clear" id="searchClear" style="display:none;" data-page-node-id="ZFscM38rqsuB7kk915drgC">✕</span></div>
         <div class="time-filter-row" id="timeFilterRow" data-page-node-id="yZd8hUU9Qs7heomIBTZfGp">
           <span class="time-chip active" data-range="all" data-page-node-id="Apf47sv0SSFPyJNRc3iggF">全部</span>
           <span class="time-chip" data-range="7d" data-page-node-id="PrGFWfF6BT6M1pYXrE7oTr">近7天</span>
@@ -412,15 +414,20 @@
         <div class="custom-range" id="customRange" data-page-node-id="RHj21mTH8ohDLZubnUtuou">
           <span class="custom-range-label" data-page-node-id="pSrFcAhuW9dR9jUaEjfpMJ">选择起止日期</span>
           <div class="custom-range-inputs" data-page-node-id="fR3XnuukpEk4ooQ8Pkwf67">
-            <input type="date" id="dateStart" data-page-node-id="E84Nt70a1tzs3EwHjWsiok" />
+            <input type="date" id="dateStart" data-page-node-id="E84Nt70a1tzs3EwHjWsiok">
             <span class="custom-range-sep" data-page-node-id="oUguwiYkzhRtwm8SxSHujJ">~</span>
-            <input type="date" id="dateEnd" data-page-node-id="waId0jZehvQuu0dJNpgkjU" />
+            <input type="date" id="dateEnd" data-page-node-id="waId0jZehvQuu0dJNpgkjU">
           </div>
         </div>
       </div>
       <div class="sidebar-section-title" data-page-node-id="UL7BDdrVzqpgcYt6S5HkB2"><span data-page-node-id="AFqi0ISif7uP1beV4MTqsN">合同历史记录</span><span class="record-count" id="recordCount" data-page-node-id="zyPaPC0zYySAZ1wAwZlCGL">0 条</span></div>
       <div class="history-list" id="historyList" data-page-node-id="Iwo4NkKkpTcMvPs1b1szBP"></div>
-      <div class="sidebar-footer" data-page-node-id="aHpElKPDIFeaT9CoRlBsQk"><div class="user-avatar" data-page-node-id="tGxiFkJYg4bcLHqLRpTRmO">政</div><div class="user-info" data-page-node-id="IANUr68wBmYR9AWA3xdbaM"><div class="user-name" data-page-node-id="7XstFx8oyrVC1aehDMplFT">政务用户</div><div class="user-dept" data-page-node-id="ixX7iWBcKdIu8CgGDFfFe4">南京江北新区管委会</div></div></div>
+      <div class="tpl-entry" data-view="templates" title="管理合同模板库与条款库：分类、版本、上传解析" data-page-node-id="YbiHw8Zk0gLEu44Vs5ljcl">
+        <span class="tpl-entry-ic" data-page-node-id="obkxF09QBFwZhpkPUebVa9">📁</span>
+        <span class="tpl-entry-t" data-page-node-id="DtHikW28xyYxolwwvdp18j">合同模板管理</span>
+        <span class="tpl-entry-arrow" data-page-node-id="uCe0UZry9MUZfhJDdhHJZz">›</span>
+      </div>
+      
     </aside>
 
     <!-- ===================== 视图：合同智能生成 ===================== -->
@@ -430,9 +437,11 @@
           <div class="toolbar-left" data-page-node-id="GDmOgTO3I9jWwyOXrhh0mD">
             <button class="btn" data-action="save" data-page-node-id="jZyz3epqBN2U1YGdMtoJ7E">💾 保存版本</button>
             <button class="btn" data-action="versions" data-page-node-id="PMNvoTLYGq58TXQBmdGekc">🕒 合同版本记录</button>
+            <button class="btn" data-action="compliance" data-page-node-id="Comp1iance20260920a">🛡 合规智能校验</button>
+            <button class="btn" data-action="export" data-page-node-id="S5SN73IGyXGJ3uRcgXEBFZ" style="">⬆ 导出​</button>
           </div>
           <div class="toolbar-right" data-page-node-id="Ya3DibyQ54UmCeAXshlBVB">
-            <span class="hint" id="taskMeta" style="color:#8b95a7;font-size:13px;" data-page-node-id="DBZKbKPowFgMJRGAjYW0RV">未创建拟制任务</span>
+            
           </div>
         </section>
 
@@ -442,30 +451,42 @@
           <div class="flow-arrow" data-page-node-id="5Gm1kuf51yqmzhXGlJ4yND"></div>
           <div class="flow-step" data-page-node-id="n34pez70YBOVLkTSiLKJCF"><button class="flow-node" data-flow="2" title="后台自动匹配已生效模板和标准条款，生成协议初稿" data-page-node-id="o0cFykT2AYBgbMrXvE3yiA"><span class="n" data-page-node-id="VqE9X87OPsGGMlaBd88Y4O">2</span>生成草案</button></div>
           <div class="flow-arrow" data-page-node-id="5zr2hwcx16sLzUWuwD08Yq"></div>
-          <div class="flow-step" data-page-node-id="MenU4R0vScrTA6Ii5Gw3gY"><button class="flow-node" data-flow="3" title="智能预审、人工确认、在线修订和版本留痕" data-page-node-id="RQGFUysY4k7UEZFmHCz4oO"><span class="n" data-page-node-id="HQ8LTqYsKAM3C377ovjPPP">3</span>预审修订</button></div>
+          <div class="flow-step" data-page-node-id="MenU4R0vScrTA6Ii5Gw3gY"><button class="flow-node" data-flow="3" title="在线编辑协议正文，保存版本并留痕" data-page-node-id="RQGFUysY4k7UEZFmHCz4oO"><span class="n" data-page-node-id="HQ8LTqYsKAM3C377ovjPPP">3</span>编辑完善</button></div>
           <div class="flow-arrow" data-page-node-id="g8TDEPAbVfpBNpSRQJGPHN"></div>
-          <div class="flow-step" data-page-node-id="1cZQ5Dbhm2wTvqcjCqjEu9"><button class="flow-node" data-flow="4" title="导出草案和预审报告，提交法务复核或归档" data-page-node-id="iQXaXR9FZwbLCKC35siM0W"><span class="n" data-page-node-id="CjR0zqbTfdaYqyhXcLfIbm">4</span>导出提交</button></div>
+          <div class="flow-step" data-page-node-id="1cZQ5Dbhm2wTvqcjCqjEu9"><button class="flow-node" data-flow="4" title="导出协议草案，提交法务复核或归档" data-page-node-id="iQXaXR9FZwbLCKC35siM0W"><span class="n" data-page-node-id="CjR0zqbTfdaYqyhXcLfIbm">4</span>导出提交</button></div>
         </section>
 
-        <section class="workspace" data-page-node-id="kfFXE0YVQyaKwLXOAJ8q22">
+        <section class="workspace" id="cpcWorkspace" data-page-node-id="kfFXE0YVQyaKwLXOAJ8q22">
           <div class="doc-wrap" data-page-node-id="1ZtDYGxC4L5QxcQOQdSsAu">
             <div class="page-tools" data-page-node-id="QBEqdLlLE1olRWqKV5WAT5">
-              <span class="hint" id="docHint" data-page-node-id="0S3a7mGzhSwNjWX6LaDs4y">请新建合同拟制任务，录入合作要素后生成协议初稿</span>
+              
               <div style="display:flex;gap:8px;" data-page-node-id="heaBoOPdyi5Q6T1DZ08M8s">
                 <button class="mini-btn" data-action="zoomOut" data-page-node-id="wnxPh5Vozz66ZdavLSXR32">A-</button>
                 <button class="mini-btn" data-action="zoomIn" data-page-node-id="YUwK49uKmgAVk8RtvOIHCE">A+</button>
-                <button class="mini-btn" data-action="locateFirst" data-page-node-id="RHieMTyLINubLgctwwaVjG">定位首个问题</button>
               </div>
             </div>
             <article class="doc-page" id="docPage" data-page-node-id="4VuG6LFJyeOGKfQbDbAP5c">
-              <div class="doc-empty" data-page-node-id="eCVPDBvzQ6k52aNeZRAbzy">
-                <div class="eic" data-page-node-id="qhfDJq9lSCbCxrFqOKZZi8">📄</div>
-                <div class="et" data-page-node-id="GJwZTwF7IHJqnBbGeO1SDX">暂无协议草案</div>
-                <div class="es" data-page-node-id="MJQC5WvU4xaLNfZXeUu39F">点击「新建合同拟制」，选择协议类型并录入合作背景、合作单位、权责划分、合规及风控要求，系统将智能匹配模板与条款并生成协议初稿。</div>
-                <button class="primary-btn" data-action="newTask" data-page-node-id="DZ4R7WfuCLRVPUFDptMqxn">＋ 新建合同拟制</button>
+              <div class="doc-empty">
+                <div class="eic">📄</div>
+                <div class="et">暂无协议草案</div>
+                <div class="es">点击下方按钮新建合同：选择协议类型、录入合作要素，系统智能匹配模板与条款生成初稿。</div>
+                <button class="primary-btn" data-action="newTask">＋ 新建合同</button>
               </div>
             </article>
           </div>
+          <aside class="cpc-panel" id="cpcPanel" style="display:none;" data-page-node-id="CpcPanel20260920x">
+            <span class="cpc-close" data-action="cpcClose" title="收起校验结果">×</span>
+            <div class="cpc-head">
+              <div class="t">🛡 合规校验结果</div>
+              <div class="s" id="cpcSub">四维度逐句校验 · <span id="cpcTime">刚刚</span></div>
+            </div>
+            <div class="cpc-stats" id="cpcStats"></div>
+            <div class="cpc-bulk">
+              <button class="btn sm primary-btn" type="button" data-action="cpcAcceptAll">✓ 全部采纳</button>
+              <button class="btn sm" type="button" data-action="cpcIgnoreAll">✕ 全部忽略</button>
+            </div>
+            <div class="cpc-list" id="cpcList"></div>
+          </aside>
         </section>
 
         <footer class="statusbar" data-page-node-id="WIqgMJpiQsEpSaVwQutFHr">
@@ -473,45 +494,68 @@
           <span id="statusMeta" data-page-node-id="xtccvGYDtiTfP5DWe2cd3w">尚未生成草案</span>
         </footer>
       </main>
+    </div>
 
-      <!-- 右侧：多维预审结果面板 -->
-      <aside class="rightbar" data-page-node-id="bhB7vLYBLk0znRMrRt22Fh">
-        <div class="pf-empty" id="pfEmpty" data-page-node-id="VxztbFkILNJ5Y60yAognb7">
-          <div class="eic" id="pfEmptyIc" data-page-node-id="0dCzCVuUKju6HWvBht3NWQ">🗂</div>
-          <div class="et" id="pfEmptyTitle" data-page-node-id="JqSgghFHpj61NuaLl04Ear">暂无预审结果</div>
-          <div class="es" id="pfEmptySub" data-page-node-id="i2492BEwqGKyuVaMtgEiMZ">请先新建合同拟制任务并生成协议初稿，随后可在此发起多维合规预审。</div>
-          <button class="primary-btn" data-action="precheck" id="startPrecheckBtn" style="display:none;" data-page-node-id="dVdyEZtxQjHNK07cEc1DVu">开始预审校验</button>
+    <!-- ===================== 视图：合同模板管理 ===================== -->
+    <div class="view" id="view-templates" data-page-node-id="qK9exDl2Q1mvA7wmwe1LcB">
+      <div class="page-scroll" data-page-node-id="xqSe7OTtcAgxzVCHykoF3s">
+        <div class="page-head" data-page-node-id="3GmP0YnXDMcuoSNfVGYuw8">
+          <div data-page-node-id="sdByHq47mO8n594Bf347GM">
+            <div class="page-title" data-page-node-id="EHy96h765Yq5yMB3ZBGH6U">合同模板管理</div>
+            <div class="page-sub" data-page-node-id="0cUhfNbpZ3SNmTPGZ4QxuU">统一管理合同模板库与条款库：分类标签、版本管控、上传解析、生效与下架，为智能生成供给可信内容</div>
+          </div>
+          <div class="toolbar-inline" data-page-node-id="vBuaXGBayjLXpgiUd7lil0">
+            <button class="btn" data-action="exportLib" data-lib="tpl" data-page-node-id="384l3RaiFJHMe7ZAd6Pbnt">⬇ 导出清单</button>
+            <button class="primary-btn" data-action="addLib" data-lib="tpl" data-page-node-id="KAkgHi83YSDOvYc0zHUBNh">＋ 上传合同模板</button>
+          </div>
         </div>
-        <div class="pf-results" id="pfResults" data-page-node-id="Yk0d1Chod0rJMe7ckzlgMI">
-          <div class="review-disclaimer" data-page-node-id="oXn5veW14Z0kAVjw9pLzTn"><b data-page-node-id="PpNg6j06PeHsaEe9JTuCey">智能预审提示：</b>结果用于辅助发现条款风险，不替代法务审核。高风险建议必须逐条确认，忽略时需填写原因并留痕。</div>
-          <div class="pf-head" data-page-node-id="Kfj6Rqdizu8B7uHN1qHawO">
-            <div class="pf-head-top" data-page-node-id="kUPK7xyZuAFOlPX74RdBWV">
-              <div class="pf-count" data-page-node-id="m8EvLZHwGeX54ooOf55V2q">共检出 <b id="pfTotal" data-page-node-id="VuCVhXSwrnPBj8Y6UZkOwA">0</b> 项问题</div>
-              <div class="pf-score" data-page-node-id="QB5KtJTnHKGMOsggd9Qfkm"><b id="pfScore" data-page-node-id="boAqYFStg5FptAOghIy4AZ">—</b><span data-page-node-id="FcfizZdpnrDZOkBJvytLhc">已处理</span></div>
-            </div>
-            <div class="pf-links" data-page-node-id="6xGpiyYKl6P2wogCUjtYnn">
-            </div>
-            <div class="pf-cats" id="pfCats" data-page-node-id="VuLdzKDpZLdb1Ehl9BWTYU">
-              <label class="pf-cat on" data-bucket="完整" data-page-node-id="Vqz3JcZWjWGmYFGAogl0VZ"><span class="cbx" data-page-node-id="WGaUvWzsOMDzth0WBDQ30u">✓</span>条款完整性<span class="cnt" id="cnt-完整" data-page-node-id="BuUJaWimtkWImU4ZQF8NkD">0</span></label>
-              <label class="pf-cat on" data-bucket="逻辑" data-page-node-id="Cp0Bw0GKyXmr6MI6BxnqjW"><span class="cbx" data-page-node-id="4B5VSyxclX6YobSAAHkSFs">✓</span>逻辑一致性<span class="cnt" id="cnt-逻辑" data-page-node-id="BnWPNXE2jI1NLNYliNfU4e">0</span></label>
-              <label class="pf-cat on" data-bucket="权责" data-page-node-id="Pet2XCzK1BQVMmmWk68qrI"><span class="cbx" data-page-node-id="KWlFgCKUBJwz4P2215HfHY">✓</span>权责对等性<span class="cnt" id="cnt-权责" data-page-node-id="J0Zxcn2cE8AtO1eNQW4wzn">0</span></label>
-              <label class="pf-cat on" data-bucket="合规" data-page-node-id="EAP7OIqoHr3mLuYEyDviY6"><span class="cbx" data-page-node-id="5E1EQze2QgbGppgBBcxZwC">✓</span>法律合规性<span class="cnt" id="cnt-合规" data-page-node-id="OVipEEKQj0zCM1M1cx6FXY">0</span></label>
+
+        <div class="card" style="margin-bottom:16px;" data-page-node-id="enWfV1AWkebLYFQd2OQr8x">
+          <div class="card-body lib-body" data-page-node-id="MXvSptMzXBrmS6O9G2OWaG">
+            <div class="lib-nav" id="tplNav" data-page-node-id="fcXe5sJrAwWS7h0kmq989N"><button data-lib-cat="政企合作" data-lib="tpl" class="active">
+          <span>🏢 政企合作</span><span class="badge">3</span></button><button data-lib-cat="战略合作" data-lib="tpl" class="">
+          <span>🤝 战略合作</span><span class="badge">2</span></button><button data-lib-cat="项目共建" data-lib="tpl" class="">
+          <span>🏗 项目共建</span><span class="badge">2</span></button><button data-lib-cat="服务委托" data-lib="tpl" class="">
+          <span>📦 服务委托</span><span class="badge">2</span></button><button data-lib-cat="联合运营" data-lib="tpl" class="">
+          <span>⚙ 联合运营</span><span class="badge">1</span></button><button data-lib-cat="配套服务合同" data-lib="tpl" class="">
+          <span>🛰 配套服务合同</span><span class="badge">2</span></button></div>
+            <div class="lib-main" data-page-node-id="zM5fdS0SZgo1xyfGKnrur5">
+              <div class="lib-toolbar" data-page-node-id="H05WuYYqk52DYCnxbIHzef">
+                <div class="lib-cat-title" id="tplCatTitle" style="font-weight:800;font-size:15px;color:#16233f;" data-page-node-id="xEF68y5PGyKQFK1oR3fCLC">政企合作</div>
+                <div class="note-strip" id="tplNote" style="margin-bottom:0;" data-page-node-id="HVTffanFOFSFlvtHSNH684">ℹ 政企合作类模板适用于政府与企业的产业落地、平台共建等场景，风险等级默认为「中」。</div>
+                <div style="display:flex;gap:8px;align-items:center;margin-left:auto;" data-page-node-id="w6wL4yU4TKgvXChcRhZuf3">
+                  <button class="btn sm" data-action="batchDelLib" data-lib="tpl" data-page-node-id="eRyKs08hfQEnufLHOjuMRj">批量下架</button>
+                  <button class="btn sm" data-action="addLib" data-lib="tpl" data-page-node-id="2BTipd05A05eLny6Su6Py3">＋ 上传模板</button>
+                </div>
+              </div>
+              <div class="tbl-wrap" data-page-node-id="mLwDlgcBAOqo987iuzk1Cx"><table class="tbl" id="tplTable" data-page-node-id="PxxFRAH56YZsRCB4Rhz5cL"><thead><tr><th style="width:34px;"><input type="checkbox" data-action="checkAllLib" data-lib="tpl"></th><th>模板名称</th><th>风险等级</th><th>版本</th><th>状态</th><th>更新时间</th><th style="width:150px;">操作</th></tr></thead><tbody><tr><td><input type="checkbox" class="lib-row-chk"></td><td>政企合作协议模板</td><td><span class="tag mid">中</span></td><td>v2.3</td><td><span class="tag done">生效</span></td><td>2026-06-20</td>
+          <td class="row-act"><a data-action="tplDetail" data-lib="tpl" data-ri="0">查看</a><a data-action="editLib" data-lib="tpl" data-ri="0">编辑</a><a data-action="tplVersion" data-lib="tpl" data-ri="0">版本</a><a class="danger" data-action="delLib" data-lib="tpl" data-ri="0">下架</a></td></tr><tr><td><input type="checkbox" class="lib-row-chk"></td><td>政企合作补充协议模板</td><td><span class="tag mid">中</span></td><td>v1.1</td><td><span class="tag done">生效</span></td><td>2026-06-12</td>
+          <td class="row-act"><a data-action="tplDetail" data-lib="tpl" data-ri="1">查看</a><a data-action="editLib" data-lib="tpl" data-ri="1">编辑</a><a data-action="tplVersion" data-lib="tpl" data-ri="1">版本</a><a class="danger" data-action="delLib" data-lib="tpl" data-ri="1">下架</a></td></tr><tr><td><input type="checkbox" class="lib-row-chk"></td><td>政企合作意向书模板</td><td><span class="tag low">低</span></td><td>v1.0</td><td><span class="tag doing">草稿</span></td><td>2026-07-05</td>
+          <td class="row-act"><a data-action="tplDetail" data-lib="tpl" data-ri="2">查看</a><a data-action="editLib" data-lib="tpl" data-ri="2">编辑</a><a data-action="tplVersion" data-lib="tpl" data-ri="2">版本</a><a class="danger" data-action="delLib" data-lib="tpl" data-ri="2">下架</a></td></tr></tbody></table></div>
             </div>
           </div>
-          <div class="pf-actions" data-page-node-id="Z81ui1YEHLDqRDVXDdaXyL">
-            <button class="primary-btn" data-action="precheck" id="recheckBtn" data-page-node-id="94C8GatvbXxSadU9Fi4ovy">重新预审</button>
-            <button class="btn" data-action="applyAll" data-page-node-id="plDifSud6gCpQ1cqR5nlEk">全部采纳</button>
-            <button class="btn" data-action="ignoreAll" data-page-node-id="sUQDJ3PdFOGZGsyy1RyLub">全部忽略</button>
-            <button class="btn" data-action="compare" data-page-node-id="ggY00dl8Jo2KSpfOi2jth8">修订对比</button>
-            <button class="btn" data-action="export" data-page-node-id="S5SN73IGyXGJ3uRcgXEBFZ">导出</button>
-          </div>
-          <div class="pf-progress" id="pfProgress" data-page-node-id="4GY8sj7qApQ3fQS1jtE5bi">
-            <div class="lbl" data-page-node-id="YkR0H8zuFgEaikCwTIB2kn"><span id="pfProgLbl" data-page-node-id="sXCJLbIJBz5GvrhyShC4C7">正在进行多维预审…</span><span id="pfProgPct" data-page-node-id="BcE2pkVAMEzejlwPvEgWHU">0%</span></div>
-            <div class="pf-bar" data-page-node-id="sKMS8LFIaNhIgBYfeOZTd5"><i id="pfProgBar" data-page-node-id="FgNc6gtfnhvBmehKUQsOj1"></i></div>
-          </div>
-          <div class="pf-list" id="pfList" data-page-node-id="65PqaWPFAnvvW9qE8Fz0kQ"></div>
         </div>
-      </aside>
+
+        <div class="card" data-page-node-id="bccaBFcwBHg54L6dAax8bH">
+          <div class="card-head" data-page-node-id="07FOHBBteTC5bs3kRgFvT5">
+            <div class="card-title" data-page-node-id="DjDignHn3pBRD5UJzCQjwr">合同条款库 <span style="color:var(--muted);font-weight:600;font-size:13px;" data-page-node-id="5vTeDYwturj9lfauhp4UXa">（模板引用的标准条款，可独立维护）</span></div>
+            <div style="display:flex;gap:8px;align-items:center;" data-page-node-id="GUbQsQHlDvCafGoLuaG2RG">
+              <button class="btn sm" data-action="exportLib" data-lib="clause" data-page-node-id="FZGJhjuSiDQbh6TPgKCv8b">⬇ 导出清单</button>
+              <button class="btn sm" data-action="addLib" data-lib="clause" data-page-node-id="kNfSJME4Y1z553HB46MEbW">＋ 新增条款</button>
+            </div>
+          </div>
+          <div class="card-body lib-body" style="padding:12px;" data-page-node-id="prF67hxY29ZJAKDjtq43YH">
+            <div class="lib-nav" id="clauseNav" data-page-node-id="t8GuGo0YNRloBSrja86AI5"></div>
+            <div class="lib-main" data-page-node-id="6bw5gqKwanviaJ4JFuAsTA">
+              <div class="lib-toolbar" data-page-node-id="z44ozIQzYylfS2DZyGToHe">
+                <div class="lib-cat-title" id="clauseCatTitle" style="font-weight:800;font-size:15px;color:#16233f;" data-page-node-id="4GBB4VU5Oj51g0fMhdCJAo"></div>
+                <div class="note-strip" id="clauseNote" style="margin-bottom:0;" data-page-node-id="DzJu57lJkczh1z9SEFapXH"></div>
+              </div>
+              <div class="tbl-wrap" style="max-height:360px;" data-page-node-id="w7tWfcIRFfcM63AOx3jB9R"><table class="tbl" id="clauseTable" data-page-node-id="ArH6ifE5kl5Cno9RiyAvKA"></table></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ===================== 视图：历史与版本 ===================== -->
@@ -530,7 +574,6 @@
           <div class="card-body" style="padding:14px 16px;" data-page-node-id="R45jsNpCFq5b7EXClm6m2l">
             <div class="toolbar-inline" data-page-node-id="TiUfYAqLyx1VmGpsn7KnZg">
               <select class="select" id="hFilterType" data-page-node-id="oL5Fgu2NtA9PfkHElk0RS6"><option data-page-node-id="JmSldzsodqK3E0JyQzM60A">全部类型</option><option data-page-node-id="yQM2PqzbWr7ftDEKFcSRPi">政企合作</option><option data-page-node-id="ze9gsSEizMrGLGEZjd3UNm">战略合作</option><option data-page-node-id="qYkRX3ndnOyBdiKVY0mVzd">项目共建</option><option data-page-node-id="cBgBwg68JAcz9dgHrZBn8H">服务委托</option><option data-page-node-id="WOhI7LidpXSEwnd0CsBcU3">联合运营</option><option data-page-node-id="e9F5c2Gujs2hyxhi2lUeqP">工程监理</option><option data-page-node-id="lRnwxM3UzLph6adlZBME4n">第三方测试</option></select>
-              <select class="select" id="hFilterStatus" data-page-node-id="X4shgAHMdhdU5r4PJT4emj"><option data-page-node-id="x1oy7LM6LgDdU9GB3zO0dZ">全部状态</option><option data-page-node-id="8CL4lxfUnPG1Tq3bhrD4Iv">通过</option><option data-page-node-id="qUHQkm8ze2V7n0DNg0lvWO">待复核</option><option data-page-node-id="ikqeLs3NCXlDDsrOqot2Lc">预审中</option></select>
               <select class="select" id="hFilterRange" data-page-node-id="7Yo5fpmUUWQ7OAq6i6mMqi"><option data-page-node-id="JiRK6slyRiFE2ZxXrsfttc">近7天</option><option data-page-node-id="uRpO9I5u5l8Am52VsMlQfH">近30天</option><option data-page-node-id="bx4NE6ZYTGE6z1j5mOtiYc">近90天</option><option data-page-node-id="UUPv9gpXgBhEUgS76QbK3O">全部</option></select>
               <div class="search" data-page-node-id="jjNPSclF7NZzy51ClgY6FL"><input class="select" id="hSearch" type="text" placeholder="🔍 搜索合同名称 / 经办人" style="width:240px;" data-page-node-id="JWfBACO9pXWuTEgQprbRNJ"></div>
               <button class="btn" data-action="historyFilter" data-page-node-id="VituhHEXajCyVCQdkfBmzP">筛选</button>
@@ -550,7 +593,7 @@
         <div class="page-head" data-page-node-id="b1dfcBZcs7EDoHOtdFEJVU">
           <div data-page-node-id="QDWvzojDqb7c9LYdBe49rp">
             <div class="page-title" data-page-node-id="bTAuo2eEpi1mqMerpNeeA1">统计报表</div>
-            <div class="page-sub" data-page-node-id="R9NiQ7NBgb8m1IRt4s8OBp">合同智能生成及预审运行概况 · 统计周期：2026-04-01 至 2026-07-13</div>
+            <div class="page-sub" data-page-node-id="R9NiQ7NBgb8m1IRt4s8OBp">合同智能生成运行概况 · 统计周期：2026-04-01 至 2026-07-13</div>
           </div>
           <div class="toolbar-inline" data-page-node-id="oarV0GbI5S0tflai8gWvPR">
             <select class="select" id="statRange" data-page-node-id="TforD6y37FAOFRd9qlU10k"><option data-page-node-id="PlAg34QTQM2ijmwWqL9mzc">本季度</option><option data-page-node-id="CH5tKBv4Ia4qBalA2Rkcm7">本月</option><option data-page-node-id="D0oIIVGowIpoNT7EKUdzFO">本年</option></select>
@@ -560,27 +603,27 @@
 
         <div class="grid-4" style="margin-bottom:16px;" data-page-node-id="FtQi8HO4Y1gYJVTbkS2EPr">
           <div class="kpi" data-page-node-id="i5F4JDVtN7HkBJS8CZWBPm"><div class="k-ico" style="background:var(--primary-soft);color:var(--primary);" data-page-node-id="ZlLV5BKB1Gxx2OlNH3f3BS">📄</div><div class="k-label" data-page-node-id="NTvTSNe07wmhanJpktImjM">累计拟制合同</div><div class="k-value" data-page-node-id="Dn0QnLFkTQApjRrcHaD2Kv">386</div><div class="k-delta up" data-page-node-id="1m3jFlNeBetvhBE25gRr1X">▲ 18.2% 环比</div></div>
-          <div class="kpi" data-page-node-id="Xc3RGASvqgPZB8ZUVBjI3p"><div class="k-ico" style="background:var(--red-soft);color:var(--red);" data-page-node-id="i3xeqJ5n7Zn1TzHv13LFpg">⚠</div><div class="k-label" data-page-node-id="tcjVn4B7tM1MK6HXXVruzj">累计预审问题</div><div class="k-value" data-page-node-id="8FJgo21RG4R7BNznoxFhjf">2,148</div><div class="k-delta up" data-page-node-id="03IsLvtlARKcVQzeiSSevo">▲ 9.5% 环比</div></div>
-          <div class="kpi" data-page-node-id="BzRI8WG8W2W7DNBdedk2ZC"><div class="k-ico" style="background:var(--green-soft);color:var(--green);" data-page-node-id="thxzhs74aIuyPcncXJb4G0">✓</div><div class="k-label" data-page-node-id="wDfa9Aift0AlGkhCxtr4N4">建议采纳率</div><div class="k-value" data-page-node-id="zDRLxzSKnG9MiiSuQrfSf8">88.2%</div><div class="k-delta up" data-page-node-id="IXhfJrmZ5Fh8WVRI3jm424">▲ 4.3% 环比</div></div>
+          <div class="kpi" data-page-node-id="Xc3RGASvqgPZB8ZUVBjI3p"><div class="k-ico" style="background:var(--green-soft);color:var(--green);" data-page-node-id="thxzhs74aIuyPcncXJb4G0">✓</div><div class="k-label" data-page-node-id="wDfa9Aift0AlGkhCxtr4N4">模板匹配命中率</div><div class="k-value" data-page-node-id="zDRLxzSKnG9MiiSuQrfSf8">98.6%</div><div class="k-delta up" data-page-node-id="IXhfJrmZ5Fh8WVRI3jm424">▲ 2.1% 环比</div></div>
           <div class="kpi" data-page-node-id="eDMZdeithWZDogBdI3PeIL"><div class="k-ico" style="background:var(--orange-soft);color:var(--orange);" data-page-node-id="PaFmoT7Sp8Alvy1keqDeiv">⏱</div><div class="k-label" data-page-node-id="oT90EtQvIdyIifM8a7Mvjl">平均拟制时长</div><div class="k-value" data-page-node-id="HVFTtHbx5PkjWAqZtvT5te">6.4<span style="font-size:15px;" data-page-node-id="CMDPPFoFsdPyXUoCGkE2iG">分/份</span></div><div class="k-delta down" data-page-node-id="DUhAkhW2OLDf78RsZvFaOY">▼ 62% 更快</div></div>
+          <div class="kpi" data-page-node-id="BzRI8WG8W2W7DNBdedk2ZC"><div class="k-ico" style="background:var(--purple-soft);color:var(--purple);" data-page-node-id="PaFmoT7Sp8Alvy1keqDeiv">👥</div><div class="k-label" data-page-node-id="tcjVn4B7tM1MK6HXXVruzj">活跃使用部门</div><div class="k-value" data-page-node-id="8FJgo21RG4R7BNznoxFhjf">23<span style="font-size:15px;" data-page-node-id="03IsLvtlARKcVQzeiSSevo">个</span></div><div class="k-delta up" data-page-node-id="03IsLvtlARKcVQzeiSSevo">▲ 5 个新增</div></div>
         </div>
 
         <div class="grid-2" style="margin-bottom:16px;align-items:start;" data-page-node-id="4Vvm9KHRJGiMrMjdWSFGkl">
           <div class="card" data-page-node-id="eD0t4o47qgb1HQCJtpyfCL">
-            <div class="card-head" data-page-node-id="NFHIc7DDtmELdL70Y3SHnk"><div class="card-title" data-page-node-id="DlDWbZelj70h1TmxAx3OnA">预审问题维度分布</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="lFmXYceDIREIJV59wP45nr">近90天</span></div>
+            <div class="card-head" data-page-node-id="NFHIc7DDtmELdL70Y3SHnk"><div class="card-title" data-page-node-id="DlDWbZelj70h1TmxAx3OnA">协议类型生成分布</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="lFmXYceDIREIJV59wP45nr">近90天</span></div>
             <div class="card-body" data-page-node-id="2DIYBNzMhFryKtaNj2VRpQ"><div class="bars" id="statBars" data-page-node-id="WMYy9b3OBwuTz4ODNICxKJ"></div></div>
           </div>
           <div class="card" data-page-node-id="vRtMhPAwZKB4jMB7WLqRqG">
-            <div class="card-head" data-page-node-id="D8xBq78MTtnCh1za29TWlC"><div class="card-title" data-page-node-id="tGo4qhtKFFRl8uJTlJlEcN">风险等级占比</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="j75Zqy3h7lYJKZDtDYCfSl">按问题数</span></div>
+            <div class="card-head" data-page-node-id="D8xBq78MTtnCh1za29TWlC"><div class="card-title" data-page-node-id="tGo4qhtKFFRl8uJTlJlEcN">模板类型使用占比</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="j75Zqy3h7lYJKZDtDYCfSl">按生成份数</span></div>
             <div class="card-body" data-page-node-id="y4MqIqPcPJ5ISq8hwiID2O">
               <div class="donut-wrap" data-page-node-id="WL9Mw0ynFcl24dmBnW9KOb">
                 <div class="donut" id="statDonut" data-page-node-id="Pz3X37HlaTQfuwS3k8uITT">
-                  <div class="c" data-page-node-id="9M987avU9vquvloeOnb71S"><div data-page-node-id="tqyvbdgzvf8hl5CIXda93M"><b data-page-node-id="Quz3hRXswe7DCqB9oj9xTa">2,148</b><br data-page-node-id="CTiYXmHRt917XaonBoH9cF"><span data-page-node-id="1zrbTU6VOnirb5klwF9KSH">问题总数</span></div></div>
+                  <div class="c" data-page-node-id="9M987avU9vquvloeOnb71S"><div data-page-node-id="tqyvbdgzvf8hl5CIXda93M"><b data-page-node-id="Quz3hRXswe7DCqB9oj9xTa">386</b><br data-page-node-id="CTiYXmHRt917XaonBoH9cF"><span data-page-node-id="1zrbTU6VOnirb5klwF9KSH">生成总数</span></div></div>
                 </div>
                 <div class="legend" style="flex-direction:column;gap:10px;" data-page-node-id="f1Cn1x0sDxjJcsjzAg5T4H">
-                  <div data-page-node-id="n7abJC3D218pRJO7BDVEmX"><i style="background:var(--red);" data-page-node-id="nXX4ELAl38ruuKIgCaTXva"></i>高风险　515 项（24%）</div>
-                  <div data-page-node-id="L6ZZwNlcEh6ErQAkSxcYZO"><i style="background:var(--orange);" data-page-node-id="LuRxLRmER6JWD00TQXatU1"></i>中风险　924 项（43%）</div>
-                  <div data-page-node-id="bDHo0V0KfBWmX6moVzalMt"><i style="background:var(--primary);" data-page-node-id="9BceJAyvqAXOLpGNwqlJxX"></i>一般问题　709 项（33%）</div>
+                  <div data-page-node-id="n7abJC3D218pRJO7BDVEmX"><i style="background:var(--primary);" data-page-node-id="nXX4ELAl38ruuKIgCaTXva"></i>政企合作类　152 份（39%）</div>
+                  <div data-page-node-id="L6ZZwNlcEh6ErQAkSxcYZO"><i style="background:var(--orange);" data-page-node-id="LuRxLRmER6JWD00TQXatU1"></i>配套服务类　96 份（25%）</div>
+                  <div data-page-node-id="bDHo0V0KfBWmX6moVzalMt"><i style="background:var(--green);" data-page-node-id="9BceJAyvqAXOLpGNwqlJxX"></i>其他类型　138 份（36%）</div>
                 </div>
               </div>
             </div>
@@ -593,7 +636,7 @@
             <div class="card-body" data-page-node-id="jh4D4RcGdRt7pPz0x5Sv3G"><div id="statTrend" data-page-node-id="6LZMVxriyvyfViuF4B3DyC"></div></div>
           </div>
           <div class="card" data-page-node-id="YnIwCrolq9TZmxsyIv7IXc">
-            <div class="card-head" data-page-node-id="8NIDabQFsXkFHfh0MMUy4S"><div class="card-title" data-page-node-id="TVBX4LvVQqlrftXyqVzCKY">高频预审问题 Top 8</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="uaEd4Zacj6XP23lMR6r1V8">出现次数</span></div>
+            <div class="card-head" data-page-node-id="8NIDabQFsXkFHfh0MMUy4S"><div class="card-title" data-page-node-id="TVBX4LvVQqlrftXyqVzCKY">高频使用模板 Top 8</div><span style="color:var(--muted);font-size:12px;" data-page-node-id="uaEd4Zacj6XP23lMR6r1V8">生成次数</span></div>
             <div class="card-body" data-page-node-id="3jpf2EJZdAmXfyuX7hlCER"><div class="bars" id="statTop" data-page-node-id="d2GvHxgOf5GHKA4I0kG8Gy"></div></div>
           </div>
         </div>
@@ -603,21 +646,22 @@
 
   <!-- ===================== 共享 UI ===================== -->
   <input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf,.txt,.wps,.ofd" data-page-node-id="nYKGPoUSSoU4kueRGJGWUW">
-  <div class="toast" id="toast" data-page-node-id="FmqoTXOiFELwblm7pRTvr3"></div>
+  <div class="toast" id="toast" data-page-node-id="FmqoTXOiFELwblm7pRTvr3">请先生成协议初稿</div>
   <div class="modal-mask" id="modalMask" data-page-node-id="zdAHYhDKBKWeP9zqGcTUVH">
-    <div class="modal" id="modalBox" data-page-node-id="xq8dgYiH53NPyM7mtYDGRP">
-      <div class="modal-head" data-page-node-id="u4lbnguARW4vwAXLmTODDt"><span id="modalTitle" data-page-node-id="Yh2HCPB7zzNAvbQsfUjWlZ">提示</span><button class="icon-btn" id="modalClose" data-page-node-id="SUCtdtXLfhcTzRgg6RkKfh">×</button></div>
-      <div class="modal-body" id="modalBody" data-page-node-id="3SmRpp25fhOgxMUa4Z9Gg3"></div>
-      <div class="modal-foot" id="modalFoot" data-page-node-id="jc3qTxjAouc0iLILjLtTJ7">
+    <div class="modal wide" id="modalBox" data-page-node-id="xq8dgYiH53NPyM7mtYDGRP">
+      <div class="modal-head" data-page-node-id="u4lbnguARW4vwAXLmTODDt"><span id="modalTitle" data-page-node-id="Yh2HCPB7zzNAvbQsfUjWlZ">新建合同拟制 · 选择协议类型</span><button class="icon-btn" id="modalClose" data-page-node-id="SUCtdtXLfhcTzRgg6RkKfh">×</button></div>
+      <div class="modal-body" id="modalBody" data-page-node-id="3SmRpp25fhOgxMUa4Z9Gg3">
+      </div>
+      <div class="modal-foot" id="modalFoot" data-page-node-id="jc3qTxjAouc0iLILjLtTJ7" style="display: flex;">
         <button class="btn" id="modalCancel" data-page-node-id="1VGcE5BqcXhhm9mPsyUxQB">取消</button>
-        <button class="primary-btn" id="modalOk" data-page-node-id="cP29Z6bOtBjbWiBrTDbCRv">确认</button>
+        <button class="primary-btn" id="modalOk" data-page-node-id="cP29Z6bOtBjbWiBrTDbCRv">下一步：录入要素</button>
       </div>
     </div>
   </div>
 
   <!-- ==========================================================================
        JavaScript（原生，无框架）：视图切换、拟制向导、表单校验、智能匹配动画、
-       多维预审、问题采纳/忽略、模板/条款/规则库 CRUD、历史筛选、统计渲染、弹窗与提示。
+       模板/条款库 CRUD、历史筛选、统计渲染、弹窗与提示。
        ========================================================================== -->
   <script>
   (function () {
@@ -668,81 +712,43 @@
       { key: "第三方测试", icon: "🧪", d: "信息化项目第三方测试技术服务（对齐中心第三方测试技术服务合同模板）", tpl: "第三方测试技术服务合同模板 v2023.9" }
     ];
 
-    // 预审问题清单（buckets：完整/逻辑/权责/合规；level：high/mid/low；带正文定位 del/ins）
-    const issues = [
-      { id: "3", bucket: "逻辑", dim: "逻辑一致性", level: "high", cat: "合作期限起止日期矛盾", llm: false,
-        del: "自2026年8月1日起至2026年7月31日止", ins: "自2026年8月1日起至2028年7月31日止",
-        note: "系统识别到合作期限的终止日期早于起始日期，存在明显逻辑冲突。结合正文「期满后另行协商续签」的表述，判断终止年份应为2028年，请核实合作年限。" },
-      { id: "4", bucket: "权责", dim: "权责对等性", level: "high", cat: "权利义务失衡：仅约束乙方", llm: true,
-        del: "乙方应严格履行保密义务、按期交付并承担全部实施风险", ins: "甲乙双方应各自履行相应义务；实施风险按双方过错程度与约定比例合理分担",
-        note: "本条仅列明乙方义务且要求乙方「承担全部实施风险」，甲方对应义务缺失，权责显著失衡。依据《民法典》公平原则，建议补充甲方义务并合理划分风险承担。" },
-      { id: "5", bucket: "合规", dim: "法律合规性", level: "high", cat: "违约金约定过高", llm: true,
-        del: "按合同总金额的50%向对方支付违约金", ins: "按实际损失赔偿；约定违约金的，不超过合同总金额的30%",
-        note: "约定违约金为合同总金额的50%，明显过高。依据《民法典》第五百八十五条，违约金过分高于实际损失的可请求调减，建议以实际损失为基础并设置合理上限。" },
-      { id: "6", bucket: "合规", dim: "法律合规性", level: "mid", cat: "绝对化承诺用语", llm: true,
-        del: "确保项目零风险、零失误", ins: "有效防控项目风险、持续提升实施质量",
-        note: "「零风险、零失误」属结果性绝对化承诺，实际难以兑现且存在履约与舆情风险，建议改为过程性、闭环性表述。" },
-      { id: "7", bucket: "逻辑", dim: "逻辑一致性", level: "mid", cat: "金额大小写不一致", llm: false,
-        del: "人民币800万元（捌佰陆拾万元）", ins: "人民币800万元（捌佰万元整）",
-        note: "经费金额的小写「800万元」与大写「捌佰陆拾万元」不一致（860≠800），存在金额表述冲突，须以实际约定金额为准并统一大小写。" },
-      { id: "8", bucket: "合规", dim: "法律合规性", level: "mid", cat: "争议解决条款表述模糊", llm: true,
-        del: "由双方友好协商解决", ins: "协商不成的，任何一方均可向甲方所在地人民法院提起诉讼",
-        note: "争议解决仅约定「友好协商」，未明确协商不成时的救济途径与管辖，条款可执行性不足。建议补充诉讼或仲裁及管辖地约定。" },
-      { id: "9", bucket: "合规", dim: "法律合规性", level: "low", cat: "落款机关名称不规范", llm: true,
-        del: "江北新区综合办公室", ins: "南京江北新区城市数字治理中心",
-        note: "落款签约主体应使用规范全称，系统在机构知识库中未匹配到「综合办公室」这一规范称谓，建议核实并使用规范全称。" }
-    ];
-    // 结构性问题（缺失必备条款，无正文定位，由补全建议给出）
-    const structIssues = [
-      { id: "s1", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：知识产权归属", llm: true,
-        tip: "本协议涉及平台建设与模型成果，但全文未约定知识产权及成果归属。", ins: "建议补充「知识产权与成果归属」条款，明确开发成果、数据成果的权属与使用许可。" },
-      { id: "s2", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：数据安全与个人信息保护", llm: true,
-        tip: "涉及政务数据合作，缺少数据安全与个人信息保护约定。", ins: "建议补充「数据安全与个人信息保护」条款，明确数据分级、使用边界、留存与销毁要求。" },
-      { id: "s3", bucket: "完整", dim: "条款完整性", level: "high", cat: "缺失必备条款：考核等级与支付比例挂钩", llm: false,
-        tip: "参照中心 2023 版监理/测试合同模板，服务类合同须约定「考核等级→支付比例」条款（优秀100% / 良好95% / 合格90% / 不合格不予支付剩余款项）。", ins: "建议补充「考核评价与费用支付」条款：考核得分85分及以上为优秀，支付合同总额100%；70-85分为良好，支付95%；60-70分为合格，支付90%；60分以下为不合格，依据验收意见整改后复评，复评仍不合格的不予支付剩余款项。" },
-      { id: "s4", bucket: "完整", dim: "条款完整性", level: "mid", cat: "缺失必备条款：付款节点与发票要求", llm: false,
-        tip: "参照客户合同模板，须明确分期付款节点（如签订后30日内预付50%、终验后支付尾款）及等额发票要求。", ins: "建议补充「付款节点」约定：合同签订生效后30个工作日内支付合同总金额的50%作为预付款；项目终验完成并确定考核等级后支付剩余款项；每笔付款前乙方应开具符合国家规定的等额发票。" },
-      { id: "s5", bucket: "合规", dim: "法律合规性", level: "mid", cat: "缺失必备条款：争议解决途径（仲裁/诉讼）", llm: true,
-        tip: "参照客户合同模板，争议解决应明确协商不成时的仲裁机构（南京市/南京仲裁委员会）或管辖法院。", ins: "建议补充：协商不成的，双方同意由南京仲裁委员会按其仲裁规则申请仲裁（或向甲方所在地人民法院提起诉讼）。" }
-    ];
-
     // 协议初稿正文模板（__PARTYB__ 为乙方占位符，生成时按录入替换）
     // 结构对齐客户 2023 版合同模板：合同编号 → 标题 → 封面要素（项目编号/名称/甲乙方/签订日期）→ 正文条款 → 规范落款
     function contractHtml(partyB) {
       partyB = partyB || "江苏智数科技有限公司";
       const el = state.elements || {};
-      const no = el.contractNo || "宁新区合〔2026〕拟-0713";
-      const pn = el.projNo || "（待定）";
+      const no = el.contractNo || "";
+      const pn = el.projNo || "";
       const projName = el.projName || "数字政务能力平台建设项目";
       const signDate = el.signDate || "2026-07-13";
       return `
       <h1>南京江北新区数字政务能力平台建设战略合作框架协议</h1>
-      <div class="sub-head">合同编号：${no}　　密级：内部</div>
-      <p class="no-indent">项目编号：${pn}</p>
+      <div class="sub-head">合同编号：${no || '<span class="ph-edit">单击此处直接编辑</span>'}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn || '<span class="ph-edit">单击此处直接编辑</span>'}</p>
       <p class="no-indent">项目名称：${projName}</p>
       <p class="no-indent">采购人（甲方）：南京江北新区城市数字治理中心</p>
       <p class="no-indent">供应商（乙方）：${partyB}</p>
       <p class="no-indent">签订日期：${signDate}</p>
       <p>根据《中华人民共和国民法典》及国家、省市有关规定，甲乙双方本着平等自愿、优势互补、合作共赢的原则，就共建数字政务能力平台相关事宜，经友好协商，达成如下协议：</p>
       <p class="clause-h">第一条　合作背景与目标</p>
-      <p>为推进新区政务数字化转型，双方拟围绕政务大模型、智能体应用及数据治理等领域开展战略合作，<span class="mark mark-mid" data-issue-id="6">确保项目零风险、零失误</span>，共同打造区域数字政务标杆。</p>
+      <p>为推进新区政务数字化转型，双方拟围绕政务大模型、智能体应用及数据治理等领域开展战略合作，共同打造区域数字政务标杆。</p>
       <p class="clause-h">第二条　合作期限</p>
-      <p>本协议合作期限<span class="mark mark-high" data-issue-id="3">自2026年8月1日起至2026年7月31日止</span>，期满后双方可另行协商续签。</p>
+      <p>本协议合作期限自2026年8月1日起至2028年7月31日止，期满后双方可另行协商续签。</p>
       <p class="clause-h">第三条　合作内容与分工</p>
       <p>1. 甲方负责统筹协调、场景开放及必要的政务数据支持；2. 乙方负责平台建设、模型训练、系统集成与运维保障。</p>
       <p class="clause-h">第四条　合作经费</p>
-      <p>本项目合作经费总额为<span class="mark mark-mid" data-issue-id="7">人民币800万元（捌佰陆拾万元）</span>，按建设、验收、运维三个阶段分期支付。</p>
+      <p>本项目合作经费总额为人民币800万元（捌佰万元整），按建设、验收、运维三个阶段分期支付。</p>
       <p class="clause-h">第五条　双方权利义务</p>
-      <p><span class="mark mark-high" data-issue-id="4">乙方应严格履行保密义务、按期交付并承担全部实施风险</span>，乙方不得擅自转委托或披露合作过程中获取的政务信息。</p>
+      <p>甲乙双方应各自履行相应义务，实施风险按双方过错程度与约定比例合理分担。乙方应严格履行保密义务、按期交付，不得擅自转委托或披露合作过程中获取的政务信息。</p>
       <p class="clause-h">第六条　违约责任</p>
-      <p>任何一方违反本协议约定，给对方造成损失的，应<span class="mark mark-high" data-issue-id="5">按合同总金额的50%向对方支付违约金</span>。</p>
+      <p>任何一方违反本协议约定，给对方造成损失的，应按实际损失赔偿；约定违约金的，不超过合同总金额的30%。</p>
       <p class="clause-h">第七条　争议解决</p>
-      <p>本协议在履行过程中发生争议的，<span class="mark mark-mid" data-issue-id="8">由双方友好协商解决</span>。</p>
+      <p>本协议在履行过程中发生争议的，由双方友好协商解决；协商不成的，任何一方均可向甲方所在地人民法院提起诉讼。</p>
       <p class="clause-h">第八条　其他</p>
       <p>本协议一式肆份，甲乙双方各执贰份，自双方法定代表人或委托代理人签字并盖章之日起生效。</p>
-      <p class="right" style="margin-top:28px;">甲方（盖章）：<span class="mark mark-low" data-issue-id="9">江北新区综合办公室</span></p>
+      <p class="right" style="margin-top:28px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
       <p class="right">乙方（盖章）：${partyB}</p>
-      <p class="right">法定代表人/委托代理人（签字）：</p>
+      <p class="right">法定代表人/委托代理人（签字）：<span class="ph-edit">单击此处直接编辑</span></p>
       <p class="right">${signDate}</p>`;
     }
 
@@ -751,20 +757,20 @@
       partyB = partyB || "江苏信安工程监理有限公司";
       const el = state.elements || {};
       const no = el.contractNo || "JBXQ-JL-2026-001";
-      const pn = el.projNo || "JBXQ-XM-2026-018";
+      const pn = el.projNo || "";
       const projName = el.projName || "政务AI智能体平台建设项目";
       const signDate = el.signDate || "2026-09-10";
       return `
       <h1>南京江北新区城市数字治理中心项目监理服务合同</h1>
-      <div class="sub-head">合同编号：${no}　　密级：内部</div>
-      <p class="no-indent">项目编号：${pn}</p>
+      <div class="sub-head">合同编号：${no || '<span class="ph-edit">单击此处直接编辑</span>'}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn || '<span class="ph-edit">单击此处直接编辑</span>'}</p>
       <p class="no-indent">项目名称：${projName} 项目监理服务</p>
       <p class="no-indent">采购人（委托方）：南京江北新区城市数字治理中心</p>
       <p class="no-indent">供应商（监理方）：${partyB}</p>
       <p class="no-indent">签订日期：${signDate}</p>
       <p class="clause-h">第一部分　信息系统工程监理合同协议书</p>
       <p>委托人南京江北新区城市数字治理中心（以下简称委托方）与受托人（以下简称监理方）经双方协商一致，签订本信息系统咨询监理合同。</p>
-      <p>一、本工程概况：项目名称 ${projName}；实施地点：南京江北新区；监理服务时间：<span class="mark mark-high" data-issue-id="3">本合同签订生效之日起至2026年8月31日止</span>（模板要求：至本监理服务通过验收时止，请核实表述）。</p>
+      <p>一、本工程概况：项目名称 ${projName}；实施地点：南京江北新区；监理服务时间：本合同签订生效之日起至本监理服务通过验收时止。</p>
       <p>二、下列文件均为本合同的组成部分：监理服务采购文件、招标响应文件；合同附件1-4；实施过程中双方共同签署的补充与修正文件。</p>
       <p class="clause-h">第二部分　标准条件（摘要）</p>
       <p>第一条　词语定义：工程/委托方/监理方/监理机构/总监理工程师/承建方等，按国家信息系统工程监理规范界定。</p>
@@ -774,7 +780,7 @@
       <p>第三十三条　本合同经双方法定代表人或其授权代理人签字并加盖公章或合同专用章后生效。</p>
       <p class="clause-h">第三部分　专用条件</p>
       <p>1、本合同适用的法律及监理依据：GB/T19668-2005《信息化工程监理规范》、GB 50319-2000《建设工程监理规范》及承建方的相关图纸和技术要求。</p>
-      <p>7、监理方失职赔偿：累计赔偿额不超过监理费用总数（扣税），<span class="mark mark-high" data-issue-id="5">赔偿额＝直接损失额×3%</span>，请核实赔偿计算口径与违约金上限的合规性。</p>
+      <p>7、监理方失职赔偿：累计赔偿额不超过监理费用总数（扣税），赔偿额＝直接损失额×3%。</p>
       <p>10、监理费用：本工程监理费费率按专用条件约定，具体付款方式、时间、金额见合同附件2。</p>
       <p class="clause-h">合同附件2　监理费用的支付</p>
       <p>第一次付款：合同签订生效之日起30个工作日内，委托方支付合同总金额的50%作为预付款。</p>
@@ -795,13 +801,13 @@
       partyB = partyB || "江苏赛信测评技术有限公司";
       const el = state.elements || {};
       const no = el.contractNo || "JBXQ-CS-2026-001";
-      const pn = el.projNo || "JBXQ-XM-2026-018";
+      const pn = el.projNo || "";
       const projName = el.projName || "政务AI智能体平台建设项目";
       const signDate = el.signDate || "2026-09-10";
       return `
       <h1>南京江北新区城市数字治理中心第三方测试技术服务合同</h1>
-      <div class="sub-head">合同编号：${no}　　密级：内部</div>
-      <p class="no-indent">项目编号：${pn}</p>
+      <div class="sub-head">合同编号：${no || '<span class="ph-edit">单击此处直接编辑</span>'}　　密级：内部</div>
+      <p class="no-indent">项目编号：${pn || '<span class="ph-edit">单击此处直接编辑</span>'}</p>
       <p class="no-indent">项目名称：${projName} 第三方测试服务</p>
       <p class="no-indent">采购人（甲方）：南京江北新区城市数字治理中心</p>
       <p class="no-indent">供应商（乙方）：${partyB}</p>
@@ -811,13 +817,13 @@
       <p>定义：通用条款、专用条款、合同、测试服务合同、技术成果、合同价格等用语按行业惯例与本条约定界定。</p>
       <p>合同的变更与解除：合同一经生效，双方均不得擅自对合同内容（包括附件）作任何单方面修改。</p>
       <p>不可抗力：不能预见、不能避免并不能克服的客观情况；受影响一方应尽快通知另一方并提供证明。</p>
-      <p>合同争议的解决：适用中华人民共和国法律；<span class="mark mark-mid" data-issue-id="8">协商调解不成的，按专用条件约定处理</span>（模板要求明确南京仲裁委员会仲裁，请补充）。</p>
+      <p>合同争议的解决：适用中华人民共和国法律；协商调解不成的，由南京仲裁委员会按其仲裁规则申请仲裁。</p>
       <p class="clause-h">二、合同专用条款</p>
       <p>技术服务的目标、内容：${projName} 第三方测试服务；履约地点：南京江北新区；履约期限：本合同签订生效之日起至本测试服务通过验收时止。</p>
       <p>双方的权利和义务：甲方负责督促、检查及测试工作的验收，提供办公场所与上网条件，按时支付测试服务费用；乙方具备履行合同所需的技能及相应资质，按职业准则完成全部职责。</p>
       <p>保密：根据国家认可实验室要求，乙方对甲方的软件、代码、技术资料、技术数据和测试结果均负有保密责任。</p>
-      <p>交付和验收：在项目初验、终验等阶段提供测试服务；每轮测试完成提交测试报告，待承建单位修复问题后进行回归测试；<span class="mark mark-mid" data-issue-id="6">测试全程确保系统零缺陷、零风险上线</span>（绝对化承诺表述，建议改为过程性表述）；工作成果包括测试方案、测试计划、测试风险分析、测试报告等。</p>
-      <p>合同金额及结算方式：本合同计收总费用（大写）按专用条件约定；付款方式为电汇，支付货币为人民币。<span class="mark mark-high" data-issue-id="5">甲方逾期付款的，按合同总金额的50%支付违约金</span>（违约金比例过高，建议调整）。</p>
+      <p>交付和验收：在项目初验、终验等阶段提供测试服务；每轮测试完成提交测试报告，待承建单位修复问题后进行回归测试；工作成果包括测试方案、测试计划、测试风险分析、测试报告等。</p>
+      <p>合同金额及结算方式：本合同计收总费用（大写）按专用条件约定；付款方式为电汇，支付货币为人民币。甲方逾期付款的，按实际损失赔偿。</p>
       <p>付款节点：（1）签订合同后三十天内，甲方支付合同金额的50%；（2）项目终验完成、确定验收考核等级后，甲方一次性支付合同剩余款项。</p>
       <p class="clause-h">附件　第三方测评机构服务效能考核评价表</p>
       <p>考核维度：基本要求（10分）、功能测试（30分）、性能测试（30分）、安全测试（20分）、服务响应（10分）、保密（单项否决）。</p>
@@ -829,7 +835,7 @@
       <p class="right">${signDate}</p>`;
     }
 
-    /* ------- 资料库（模板库 / 条款库 / 规则库）统一数据结构 ------- */
+    /* ------- 资料库（模板库 / 条款库）统一数据结构 ------- */
     const LIBS = {
       tpl: {
         title: "合同模板库", searchId: "tplSearch", navId: "tplNav", tableId: "tplTable", titleId: "tplCatTitle", noteId: "tplNote",
@@ -866,214 +872,379 @@
           { key: "配套服务条款", name: "配套服务条款", icon: "🛰", note: "ℹ 对齐中心 2023 版监理/测试合同模板的核心条款：考核评价与支付比例挂钩、分期付款与发票要求、保密与单项否决。",
             rows: [["考核评价与费用支付（等级挂钩）", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["付款节点与等额发票", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["监理义务与成果验收", "工程监理", "必备", "v2023.9", "生效"], ["测试交付与回归测试", "第三方测试", "必备", "v2023.9", "生效"], ["保密责任（单项否决）", "第三方测试", "必备", "v2023.9", "生效"]] }
         ]
-      },
-      rule: {
-        title: "预审规则库", searchId: "ruleSearch", navId: "ruleNav", tableId: "ruleTable", titleId: "ruleCatTitle", noteId: "ruleNote",
-        cols: ["规则名称", "风险级别", "说明", "状态"],
-        cats: [
-          { key: "条款完整性", name: "条款完整性", icon: "🧩", note: "ℹ 完整性规则用于检查必备条款是否齐备，命中后归类为「条款完整性」。",
-            rows: [["必备条款齐备性（依协议类型）", "高", "校验知识产权、保密、争议解决等必备条款", "启用"], ["签约主体与落款完整性", "中", "校验甲乙双方名称、盖章与日期", "启用"], ["经费与支付要素完整性", "中", "校验金额、支付节点与账户信息", "启用"], ["考核支付条款齐备性（配套服务类）", "高", "校验监理/测试类合同的考核等级与支付比例挂钩条款", "启用"], ["封面要素完整性", "中", "校验合同编号、项目编号、项目名称、签订日期等封面字段", "启用"]] },
-          { key: "逻辑一致性", name: "逻辑一致性", icon: "🔄", note: "ℹ 逻辑规则用于识别前后矛盾、日期冲突与金额不一致，归类为「逻辑一致性」。",
-            rows: [["合作期限起止逻辑校验", "高", "终止日期须晚于起始日期", "启用"], ["金额大小写一致性", "中", "小写金额须与大写金额一致", "启用"], ["条款前后引用一致性", "中", "校验条款编号与交叉引用", "启用"]] },
-          { key: "权责对等性", name: "权责对等性", icon: "⚖", note: "ℹ 权责规则用于识别权利义务失衡与风险分担不当，归类为「权责对等性」。",
-            rows: [["双方义务对等性校验", "高", "识别仅约束单方的失衡条款", "启用"], ["风险与责任分担合理性", "高", "识别一方承担全部风险的约定", "启用"], ["违约责任对等性", "中", "校验双方违约责任是否对等", "启用"]] },
-          { key: "法律合规性", name: "法律合规性", icon: "🛡", note: "ℹ 合规规则依据法律法规核验条款效力与表述，归类为「法律合规性」。",
-            rows: [["违约金上限合规（民法典585条）", "高", "违约金不得过分高于实际损失", "启用"], ["绝对化用语识别", "中", "识别零风险、万无一失等承诺", "启用"], ["争议解决与管辖有效性", "中", "校验救济途径与管辖约定", "启用"], ["机构名称规范性", "低", "校验签约主体规范全称", "启用"]] },
-          { key: "敏感与风控", name: "敏感与风控", icon: "🚩", note: "ℹ 敏感风控规则用于识别涉密、廉政与舆情风险表述，命中后提示人工复核。",
-            rows: [["涉密与数据出域风险", "高", "识别涉密信息与数据出域约定", "启用"], ["廉政与利益冲突提示", "中", "识别利益输送与关联交易风险", "启用"]] }
-        ]
       }
     };
 
-    // 历史台账
-    const history = [
-      ["数字政务能力平台建设战略合作框架协议", "战略合作", "内部", "2026-07-13 10:20", 9, 4, "待复核", "wait"],
-      ["政务AI智能体平台建设项目监理服务合同", "工程监理", "内部", "2026-09-10 09:15", 8, 5, "待复核", "wait"],
-      ["政务AI智能体平台第三方测试技术服务合同", "第三方测试", "非涉密", "2026-09-08 14:30", 7, 7, "通过", "done"],
-      ["智慧园区综合运营服务委托协议", "服务委托", "非涉密", "2026-07-11 15:30", 5, 5, "通过", "done"],
-      ["政务大数据联合实验室共建协议", "项目共建", "内部", "2026-07-10 09:12", 7, 7, "通过", "done"],
-      ["新区产业投资基金战略合作协议", "战略合作", "秘密", "2026-07-08 14:05", 11, 6, "待复核", "wait"],
-      ["政务云资源服务采购协议", "服务委托", "非涉密", "2026-07-05 11:20", 4, 4, "通过", "done"],
-      ["智慧交通项目联合运营协议", "联合运营", "内部", "2026-07-03 16:48", 8, 0, "预审中", "doing"],
-      ["新区人才公寓建设政企合作协议", "政企合作", "非涉密", "2026-07-02 10:33", 6, 6, "通过", "done"],
-      ["区块链政务服务平台共建协议", "项目共建", "内部", "2026-06-30 15:10", 10, 10, "通过", "done"]
-    ];
+    /* =========================================================================
+       模板 — 条款 引用关系（多对多）
+       模板名（不含版本号）→ 引用的条款库名称数组；同名不同版本模板共享引用结构
+       （版本演进不改变条款引用关系）；新上传入库的模板初始无引用，可在模板编辑中维护
+       ========================================================================= */
+    const TPL_REFS = {
+      "政企合作协议模板": ["法律适用与合规声明", "廉政与合规经营条款", "数据安全与个人信息保护", "甲乙双方权利义务", "违约责任", "争议解决与管辖", "保密义务与范围", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
+      "政企合作补充协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "违约责任", "保密义务与范围", "协议生效与份数"],
+      "政企合作意向书模板": ["保密义务与范围", "合作主体与联系方式", "协议生效与份数"],
+      "战略合作框架协议模板": ["法律适用与合规声明", "廉政与合规经营条款", "甲乙双方权利义务", "风险分担与责任划分", "违约责任", "争议解决与管辖", "保密义务与范围", "保密期限与解除", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
+      "项目共建合作协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "风险分担与责任划分", "知识产权与成果归属", "违约责任", "争议解决与管辖", "保密义务与范围", "合作期限", "经费与支付", "协议生效与份数"],
+      "联合实验室共建协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "知识产权与成果归属", "违约责任", "保密义务与范围", "保密期限与解除", "合作期限", "经费与支付", "协议生效与份数"],
+      "服务委托协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "知识产权与成果归属", "违约责任", "争议解决与管辖", "不可抗力", "保密义务与范围", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
+      "政务云资源服务采购协议模板": ["法律适用与合规声明", "数据安全与个人信息保护", "甲乙双方权利义务", "违约责任", "保密义务与范围", "合作期限", "经费与支付", "协议生效与份数"],
+      "联合运营协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "风险分担与责任划分", "知识产权与成果归属", "违约责任", "争议解决与管辖", "保密义务与范围", "保密期限与解除", "合作期限", "经费与支付", "协议生效与份数"],
+      "项目监理服务合同模板": ["考核评价与费用支付（等级挂钩）", "付款节点与等额发票", "监理义务与成果验收", "保密义务与范围", "违约责任", "争议解决与管辖", "协议生效与份数"],
+      "第三方测试技术服务合同模板": ["考核评价与费用支付（等级挂钩）", "付款节点与等额发票", "测试交付与回归测试", "保密责任（单项否决）", "违约责任", "争议解决与管辖", "协议生效与份数"]
+    };
 
-    // 运行状态
-    const state = { view: "editor", docLoaded: false, prechecked: false, partyB: "", taskName: "", scene: "战略合作",
-      activeCats: new Set(["完整", "逻辑", "权责", "合规"]),
-      versions: [], verSeq: 0,
-      viewingVersions: [], viewingLive: false, viewingName: "", docReportLive: false,
-      lib: "tpl", libCat: { tpl: "政企合作", clause: "合规条款", rule: "条款完整性" } };
+    // 模板名归一：去掉版本号后缀（如 "战略合作框架协议模板 v3.1" → "战略合作框架协议模板"）
+    function tplBaseName(n) { return String(n || "").replace(/\s*v[\d.]+$/i, ""); }
+    // 编辑弹框表格删行后重排 data-fi / data-refi 序号
+    function renumRows(tb) {
+      if (!tb) return;
+      Array.from(tb.children).forEach((tr, i) => {
+        if (tr.dataset.fi !== undefined) { tr.dataset.fi = i; const a = tr.querySelector("a[data-action=tplEditFieldDel]"); if (a) a.dataset.fi = i; }
+        if (tr.dataset.refi !== undefined) { tr.dataset.refi = i; const a = tr.querySelector("a[data-action=tplEditRefDel]"); if (a) a.dataset.refi = i; }
+      });
+    }
+    // 按条款名跨分类定位条款行：返回 { cat, ri } 或 null
+    function findClauseRow(name) {
+      for (const c of LIBS.clause.cats) {
+        const ri = c.rows.findIndex(r => r[0] === name);
+        if (ri >= 0) return { cat: c, ri };
+      }
+      return null;
+    }
+    // 按模板名跨分类定位模板行（生效版本优先）：返回 { cat, ri, row } 或 null
+    function findTplRow(name) {
+      let hit = null;
+      for (const c of LIBS.tpl.cats) {
+        c.rows.forEach((r, ri) => { if (r[0] === name && (!hit || (r[3] === "生效" && hit.row[3] !== "生效"))) hit = { cat: c, ri, row: r }; });
+      }
+      return hit;
+    }
+    // 反查：条款被哪些模板引用（遍历模板库全部行，含作废版本）
+    function clauseRefBy(clauseName) {
+      const out = [];
+      LIBS.tpl.cats.forEach(c => c.rows.forEach(r => {
+        if ((TPL_REFS[r[0]] || []).indexOf(clauseName) >= 0) out.push({ cat: c.name, row: r });
+      }));
+      return out;
+    }
+    /* =========================================================================
+       模板可配置字段（AI 解析提取，用于生成时要素填充）
+       模板名 → [字段名, 类型, 必填性, 取值来源, 默认值]
+       ========================================================================= */
+    const TPL_FIELDS = {
+      "政企合作协议模板": [["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZQ-2026-"], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作项目名称", "文本", "必填", "要素录入", ""], ["合作期限", "日期区间", "必填", "要素录入", ""], ["经费总额", "金额", "必填", "要素录入", ""], ["付款方式", "下拉", "必填", "预置选项", "分期支付"], ["保密等级", "下拉", "必填", "密级管理", "非涉密"], ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"], ["违约金比例", "百分比", "可选", "要素录入", "0.5%"], ["联系人", "文本", "可选", "要素录入", ""], ["签署日期", "日期", "必填", "系统默认", "2026-09-20"]],
+      "战略合作框架协议模板": [["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZL-2026-"], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作领域", "文本", "必填", "要素录入", ""], ["战略期限", "日期区间", "必填", "要素录入", "3 年"], ["保密期限", "年数", "必填", "预置选项", "5 年"], ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"], ["联系人", "文本", "可选", "要素录入", ""]]
+    };
+    // 未配置明细的模板按通用字段展示
+    const TPL_FIELDS_DEFAULT = [["合同编号", "文本", "必填", "系统自动编号", ""], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作期限", "日期区间", "必填", "要素录入", ""], ["经费/费用总额", "金额", "必填", "要素录入", ""], ["保密等级", "下拉", "可选", "密级管理", "非涉密"], ["签署日期", "日期", "必填", "系统默认", ""]];
+    function tplFieldsOf(name) { return TPL_FIELDS[name] || (TPL_FIELDS[name] = TPL_FIELDS_DEFAULT.slice()); }
 
     /* =========================================================================
-       渲染：预审问题卡片
+       模板编辑弹框（与查看信息一致 + 可编辑字段 + 引用条款增删）
        ========================================================================= */
-    function allIssues() { return issues.concat(structIssues); }
-    function issueSource(it) {
-      if (it.source) return it.source;
-      if (it.del === undefined) return "标准条款库 · 生效版本";
-      if (it.bucket === "合规") return "法务审查规则库 · 当前版本";
-      if (it.bucket === "权责") return "权责条款规则 · 当前版本";
-      return "合同预审规则库 · 当前版本";
-    }
-    function updateCatCounts() {
-      const buckets = { 完整: 0, 逻辑: 0, 权责: 0, 合规: 0 };
-      allIssues().forEach(it => { if (!it.resolved) buckets[it.bucket]++; });
-      Object.keys(buckets).forEach(b => { const el = $("#cnt-" + b); if (el) el.textContent = buckets[b]; });
-      const total = allIssues().filter(it => !it.resolved).length;
-      $("#pfTotal").textContent = total;
-      // 已处理进度（已采纳/忽略 / 总数）
-      const _all = allIssues();
-      $("#pfScore").textContent = _all.filter(it => it.resolved).length + "/" + _all.length;
-    }
-    function issueCard(it) {
-      const model = it.llm ? '<span class="pf-model">大模型</span>' : "";
-      const body = it.del !== undefined
-        ? `<div class="pf-line"><span class="pf-badge orig">原文</span><span class="pf-txt"><span class="del">${it.del}</span></span></div>
-           <div class="pf-line"><span class="pf-badge sugg">建议</span><span class="pf-txt"><span class="ins">${it.ins}</span>${model}</span></div>`
-        : `<div class="pf-line"><span class="pf-badge orig">提示</span><span class="pf-txt">${it.tip || ""}</span></div>
-           <div class="pf-line"><span class="pf-badge sugg">补全</span><span class="pf-txt"><span class="ins">${it.ins}</span>${model}</span></div>`;
-      const repTxt = it.del !== undefined ? "替换" : "补全";
-      return `<article class="pf-card ${it.resolved ? "resolved" : ""}" data-issue-id="${it.id}" data-bucket="${it.bucket}">
-        <div class="pf-c-head">
-          <span class="pf-dot ${it.level}"></span>
-          <span class="pf-cat-name">${it.cat}</span>
-          <span class="pf-badge-dim">${it.dim}</span>
-          <span class="issue-source">${issueSource(it)}</span>
-          <span class="pf-c-ops">
-            <a data-action="ignore" data-issue-id="${it.id}">忽略</a><span style="color:#d3dbea;">|</span><a class="rep" data-action="accept" data-issue-id="${it.id}">${repTxt}</a>
-          </span>
-        </div>
-        ${body}
-        <div class="pf-note" data-note="${it.id}">${it.note || ""}</div>
-        ${it.note ? '<div style="margin-top:7px;"><a style="color:var(--primary);font-size:12.5px;font-weight:700;" data-action="basis" data-issue-id="' + it.id + '">查看预审依据 ›</a></div>' : ""}
-      </article>`;
-    }
-    function renderIssues() {
-      const list = allIssues().filter(it => state.activeCats.has(it.bucket));
-      $("#pfList").innerHTML = list.length ? list.map(issueCard).join("") : '<div class="empty">当前筛选条件下暂无问题项</div>';
-      updateCatCounts();
-    }
-
-    /* =========================================================================
-       渲染：资料库（模板 / 条款 / 规则）—— 三库共用
-       ========================================================================= */
-    function tagFor(col, v) {
-      if (/风险|级别/.test(col)) { const m = { 高: "high", 中: "mid", 低: "low" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
-      if (/状态/.test(col)) { const m = { 生效: "done", 启用: "done", 现行有效: "done", 草稿: "doing", 作废: "off", 停用: "off", 下架: "off" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
-      if (/必备/.test(col)) { return v === "必备" ? `<span class="tag high">必备</span>` : `<span class="tag low">${v}</span>`; }
-      return v;
-    }
-    function renderLibNav(libKey) {
-      const lib = LIBS[libKey];
-      const nav = $("#" + lib.navId);
-      if (!nav) return;
-      nav.innerHTML = lib.cats.map(c =>
-        `<button data-lib-cat="${c.key}" data-lib="${libKey}" class="${c.key === state.libCat[libKey] ? "active" : ""}">
-          <span>${c.icon} ${c.name}</span><span class="badge">${c.rows.length}</span></button>`).join("");
-    }
-    function renderLibTable(libKey) {
-      const lib = LIBS[libKey];
-      const title = $("#" + lib.titleId);
-      const note = $("#" + lib.noteId);
-      const table = $("#" + lib.tableId);
-      if (!title || !note || !table) return;
-      const c = lib.cats.find(x => x.key === state.libCat[libKey]);
-      title.textContent = c.name;
-      note.innerHTML = c.note;
-      const head = "<thead><tr><th style='width:34px;'><input type='checkbox' data-action='checkAllLib' data-lib='" + libKey + "'></th>" +
-        lib.cols.map(col => `<th>${col}</th>`).join("") + "<th style='width:150px;'>操作</th></tr></thead>";
-      const bodyRows = c.rows.map((r, ri) => {
-        const cells = r.map((v, i) => `<td>${tagFor(lib.cols[i], v)}</td>`).join("");
-        const extra = libKey === "tpl"
-          ? `<a data-action="tplVersion" data-lib="tpl" data-ri="${ri}">版本</a>`
-          : "";
-        return `<tr><td><input type='checkbox' class='lib-row-chk'></td>${cells}
-          <td class="row-act"><a data-action="editLib" data-lib="${libKey}" data-ri="${ri}">编辑</a>${extra}<a class="danger" data-action="delLib" data-lib="${libKey}" data-ri="${ri}">${libKey === "rule" ? "停用" : (libKey === "tpl" ? "下架" : "删除")}</a></td></tr>`;
-      }).join("");
-      table.innerHTML = head + "<tbody>" + bodyRows + "</tbody>";
-    }
-    function renderLib(libKey) { renderLibNav(libKey); renderLibTable(libKey); }
-
-    /* =========================================================================
-       渲染：历史台账
-       ========================================================================= */
-    function renderHistory(rows) {
-      rows = rows || history;
-      $("#hCount").textContent = rows.length;
-      const head = "<thead><tr><th>合同名称</th><th>协议类型</th><th>密级</th><th>生成时间</th><th>问题数</th><th>已处理</th><th>预审结论</th><th style='width:190px;'>操作</th></tr></thead>";
-      const body = rows.map(r => `<tr>
-        <td style="font-weight:700;color:#28324c;">${r[0]}</td><td>${r[1]}</td>
-        <td><span class="tag ${r[2] === "非涉密" ? "off" : "mid"}">${r[2]}</span></td>
-        <td>${r[3]}</td><td><b style="color:var(--red);">${r[4]}</b></td><td>${r[5]}/${r[4]}</td>
-        <td><span class="tag ${r[7]}">${r[6]}</span></td>
-        <td class="row-act"><a data-action="viewReport" data-doc="${r[0]}">查看</a><a data-action="fileVersions" data-doc="${r[0]}">版本(${verCountFor(r[7])})</a><a data-action="recheckHistory" data-doc="${r[0]}">复审</a></td>
+    function tplEditModal(name, catKey, ri) {
+      const c = LIBS.tpl.cats.find(x => x.key === catKey), row = c.rows[ri];
+      const fields = tplFieldsOf(name).map((f, fi) => `<tr data-fi="${fi}">
+        <td><input type="text" class="ef-name" value="${f[0]}"></td>
+        <td><select class="ef-type">${["文本", "日期区间", "日期", "金额", "百分比", "下拉"].map(x => `<option ${x === f[1] ? "selected" : ""}>${x}</option>`).join("")}</select></td>
+        <td><select class="ef-req">${["必填", "可选"].map(x => `<option ${x === f[2] ? "selected" : ""}>${x}</option>`).join("")}</select></td>
+        <td><input type="text" class="ef-src" value="${f[3]}"></td>
+        <td><input type="text" class="ef-def" value="${f[4] || ""}"></td>
+        <td><a class="danger" data-action="tplEditFieldDel" data-fi="${fi}">删除</a></td>
       </tr>`).join("");
-      $("#historyTable").innerHTML = head + "<tbody>" + body + "</tbody>";
+      const refs = (TPL_REFS[name] || []).slice();
+      const refRows = refs.map((n, i) => {
+        const f = findClauseRow(n);
+        return `<tr data-refi="${i}">
+          <td><b>${n}</b></td><td>${f ? f.cat.name : "—"}</td>
+          <td><span class="tag ${f && f.cat.rows[f.ri][2] === "必备" ? "done" : "off"}">${f ? f.cat.rows[f.ri][2] : "未入库"}</span></td>
+          <td>${f ? f.cat.rows[f.ri][3] : "—"}</td>
+          <td><a class="danger" data-action="tplEditRefDel" data-refi="${i}">移除</a></td>
+        </tr>`;
+      }).join("");
+      const allClauses = [];
+      LIBS.clause.cats.forEach(cc => cc.rows.forEach(r => allClauses.push({ name: r[0], cat: cc.name, opt: r[0] + "（" + cc.name + "）" })));
+      const refOpts = allClauses.filter(x => refs.indexOf(x.name) < 0)
+        .map(x => `<option value="${x.name}">${x.opt}</option>`).join("");
+      openModal("编辑模板 · " + name, `
+        <div class="form-grid">
+          <div class="field"><label class="req">模板名称</label><input type="text" id="te-name" value="${row[0]}"></div>
+          <div class="field"><label class="req">风险等级</label><select id="te-risk"><option ${row[1] === "中" ? "selected" : ""}>中</option><option ${row[1] === "高" ? "selected" : ""}>高</option><option ${row[1] === "低" ? "selected" : ""}>低</option></select></div>
+          <div class="field"><label class="req">版本号</label><input type="text" id="te-ver" value="${row[2]}"></div>
+          <div class="field"><label class="req">状态</label><select id="te-status"><option ${row[3] === "生效" ? "selected" : ""}>生效</option><option ${row[3] === "草稿" ? "selected" : ""}>草稿</option><option ${row[3] === "作废" ? "selected" : ""}>作废</option></select></div>
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>可配置字段（可编辑 · 可增删）<a data-action="tplEditFieldAdd" style="margin-left:8px;">＋ 新增字段</a></label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:220px;overflow:auto;">
+            <table class="tbl" id="te-fields"><thead><tr><th>字段名称</th><th>类型</th><th>必填</th><th>取值来源</th><th>默认值</th><th>操作</th></tr></thead><tbody>${fields}</tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>引用条款清单（可增删）</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <select id="te-ref-add" style="flex:1;">${refOpts}</select>
+            <button class="btn sm" type="button" data-action="tplEditRefAdd">＋ 添加引用条款</button>
+          </div>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:180px;overflow:auto;">
+            <table class="tbl" id="te-refs"><thead><tr><th>条款名称</th><th>分类</th><th>必备性</th><th>版本</th><th>操作</th></tr></thead><tbody>${refRows || `<tr><td colspan="5" style="color:#8b95a7;">暂未关联标准条款，可从上方下拉选择添加。</td></tr>`}</tbody></table>
+          </div>
+        </div>
+        <div class="hint-txt" style="margin-top:8px;">保存后系统将自动记录变更留痕（操作人、时间、变更内容）；修改字段或条款引用将影响后续使用该模板生成的合同。</div>`, () => {
+        const nm = ($("#te-name").value || "").trim();
+        if (!nm) { showToast("请填写模板名称"); return; }
+        // 收集字段
+        const newFields = [];
+        let bad = false;
+        $$("#te-fields tbody tr").forEach(tr => {
+          const fn = (tr.querySelector(".ef-name").value || "").trim();
+          if (!fn) { bad = true; return; }
+          newFields.push([fn, tr.querySelector(".ef-type").value, tr.querySelector(".ef-req").value, tr.querySelector(".ef-src").value, tr.querySelector(".ef-def").value]);
+        });
+        if (bad) { showToast("字段名称不能为空"); return; }
+        // 收集引用条款
+        const newRefs = [];
+        $$("#te-refs tbody tr").forEach(tr => { const td = tr.children[0]; if (td && td.textContent.trim() && tr.dataset.refi !== undefined) newRefs.push(td.textContent.trim()); });
+        row[0] = nm; row[1] = $("#te-risk").value; row[2] = $("#te-ver").value || "v1.0"; row[3] = $("#te-status").value;
+        row[4] = "2026-09-20";
+        if (nm !== name) { delete TPL_REFS[name]; delete TPL_FIELDS[name]; }
+        TPL_FIELDS[nm] = newFields;
+        TPL_REFS[nm] = newRefs;
+        renderLib("tpl"); closeModal();
+        showToast("模板已更新并留痕（字段 " + newFields.length + " 项 / 引用条款 " + newRefs.length + " 条）");
+        setStatus("模板「" + nm + "」已编辑保存，变更已留痕");
+      }, { okText: "保存模板", wide: true });
     }
 
     /* =========================================================================
-       渲染：统计报表
+       AI 解析结果全量明细（上传向导第 2 步完成后 + 第 3 步确认页共用）
        ========================================================================= */
-    function renderStats() {
-      const typeData = [
-        { n: "法律合规性", v: 636, c: "#e0342a" }, { n: "条款完整性", v: 512, c: "#2455e6" },
-        { n: "逻辑一致性", v: 402, c: "#0b8fa8" }, { n: "权责对等性", v: 358, c: "#d07a00" },
-        { n: "敏感与风控", v: 240, c: "#b83fce" }
-      ];
-      const max = Math.max.apply(null, typeData.map(d => d.v));
-      $("#statBars").innerHTML = typeData.map(d =>
-        `<div class="bar-row"><span>${d.n}</span><div class="bar-track"><div class="bar-fill" style="width:${(d.v / max * 100).toFixed(0)}%;background:${d.c};"></div></div><span style="text-align:right;font-weight:700;">${d.v}</span></div>`).join("");
-
-      $("#statDonut").style.background = "conic-gradient(var(--red) 0 24%, var(--orange) 24% 67%, var(--primary) 67% 100%)";
-
-      const top = [["违约金比例过高", 168], ["必备条款缺失", 152], ["权责义务失衡", 131], ["考核支付条款缺失", 118], ["付款节点不明确", 96], ["期限逻辑冲突", 84], ["金额大小写不一致", 73], ["落款主体不规范", 66]];
-      const tmax = top[0][1];
-      $("#statTop").innerHTML = top.map(t =>
-        `<div class="bar-row"><span>${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${(t[1] / tmax * 100).toFixed(0)}%;background:linear-gradient(90deg,#2455e6,#0b8fa8);"></div></div><span style="text-align:right;font-weight:700;">${t[1]}</span></div>`).join("");
-
-      // 趋势 SVG
-      const vals = [38, 46, 55, 61, 72, 84, 92], labels = ["1月", "2月", "3月", "4月", "5月", "6月", "7月"];
-      const W = 460, H = 180, pad = 28, vmax = 100;
-      const pts = vals.map((v, i) => [pad + i * ((W - pad * 2) / (vals.length - 1)), H - pad - (v / vmax) * (H - pad * 2)]);
-      const line = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
-      const area = `${pad},${H - pad} ` + line + ` ${W - pad},${H - pad}`;
-      const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#2455e6"/>`).join("");
-      const lab = labels.map((l, i) => `<text x="${pts[i][0].toFixed(1)}" y="${H - 8}" font-size="11" fill="#8b95a7" text-anchor="middle">${l}</text>`).join("");
-      const vlab = pts.map((p, i) => `<text x="${p[0].toFixed(1)}" y="${(p[1] - 8).toFixed(1)}" font-size="10" fill="#55617d" text-anchor="middle">${vals[i]}</text>`).join("");
-      $("#statTrend").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
-        <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(36,85,230,.22)"/><stop offset="1" stop-color="rgba(36,85,230,0)"/></linearGradient></defs>
-        <polygon points="${area}" fill="url(#ga)"/><polyline points="${line}" fill="none" stroke="#2455e6" stroke-width="2.5"/>${dots}${lab}${vlab}
-      </svg>`;
+    let tplParseRunSeq = 0;
+    const PARSE_RESULT = {
+      chapters: [
+        ["封面与目录", "封面 / 目录", "合同名称、编号、甲乙方信息、签订日期", "1 处"],
+        ["第一章 合作内容与方式", "通用条款", "合作背景、合作范围、双方分工", "3 条"],
+        ["第二章 权利与义务", "通用条款", "甲方权利义务、乙方权利义务", "4 条"],
+        ["第三章 经费与支付", "通用条款", "经费构成、支付方式、发票要求", "3 条"],
+        ["第四章 保密与合规", "专用条款", "保密范围、数据安全、廉政合规", "3 条"],
+        ["第五章 违约与争议", "通用条款", "违约责任、争议解决、不可抗力", "4 条"],
+        ["附件与落款", "附件", "附件清单、签署页、骑缝章说明", "1 处"]
+      ],
+      fields: [
+        ["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZQ-2026-"],
+        ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"],
+        ["乙方名称", "文本", "必填", "要素录入", ""],
+        ["合作项目名称", "文本", "必填", "要素录入", ""],
+        ["合作期限", "日期区间", "必填", "要素录入", ""],
+        ["合作范围", "多行文本", "必填", "要素录入", ""],
+        ["经费总额", "金额", "必填", "要素录入", ""],
+        ["付款方式", "下拉", "必填", "预置选项", "分期支付"],
+        ["保密等级", "下拉", "必填", "密级管理", "非涉密"],
+        ["违约金比例", "百分比", "可选", "要素录入", "0.5%"],
+        ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"],
+        ["签署日期", "日期", "必填", "系统默认", "2026-09-20"]
+      ],
+      clauses: [
+        ["第一条 合作背景与目的", "通用条款", "必查条款"],
+        ["第二条 合作范围与内容", "通用条款", "标准条款"],
+        ["第三条 双方分工与责任", "通用条款", "标准条款"],
+        ["第四条 甲方权利与义务", "权责条款", "标准条款"],
+        ["第五条 乙方权利与义务", "权责条款", "标准条款"],
+        ["第六条 经费构成与承担", "通用条款", "标准条款"],
+        ["第七条 支付方式与节点", "通用条款", "标准条款"],
+        ["第八条 发票开具要求", "通用条款", "标准条款"],
+        ["第九条 保密范围与期限", "保密条款", "必备条款"],
+        ["第十条 数据安全与合规", "合规条款", "必备条款"],
+        ["第十一条 廉政与合规经营", "合规条款", "必备条款"],
+        ["第十二条 违约责任", "约束条款", "必备条款"],
+        ["第十三条 争议解决与管辖", "约束条款", "必备条款"],
+        ["第十四条 不可抗力", "约束条款", "可选条款"],
+        ["第十五条 协议生效与份数", "通用条款", "必备条款"]
+      ]
+    };
+    function parseDetailHtml() {
+      return `
+        <div class="field" style="margin-bottom:10px;">
+          <label>识别章节结构（${PARSE_RESULT.chapters.length} 个章节 · ${PARSE_RESULT.clauses.length} 条条款）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:170px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>章节</th><th>层级</th><th>包含内容</th><th>条款数</th></tr></thead><tbody>
+              ${PARSE_RESULT.chapters.map(x => `<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td></tr>`).join("")}
+            </tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>提取可配置字段（${PARSE_RESULT.fields.length} 项）</label>
+          <div style="border:1px solid var(--build, var(--line));border-radius:10px;max-height:170px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>字段名称</th><th>类型</th><th>必填</th><th>取值来源</th><th>默认值</th></tr></thead><tbody>
+              ${PARSE_RESULT.fields.map(x => `<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td><span class="tag ${x[2] === "必填" ? "done" : "off"}">${x[2]}</span></td><td>${x[3]}</td><td>${x[4] || "—"}</td></tr>`).join("")}
+            </tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>拆分条款清单（${PARSE_RESULT.clauses.length} 条 · 必备 ${PARSE_RESULT.clauses.filter(x => x[2] === "必备条款").length} / 标准 ${PARSE_RESULT.clauses.filter(x => x[2] === "标准条款").length} / 可选 ${PARSE_RESULT.clauses.filter(x => x[2] === "可选条款").length}）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:170px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>条款编号与名称</th><th>归属分类</th><th>条款性质</th></tr></thead><tbody>
+              ${PARSE_RESULT.clauses.map(x => `<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td><span class="tag ${x[2] === "必备条款" ? "done" : x[2] === "标准条款" ? "mid" : "off"}">${x[2]}</span></td></tr>`).join("")}
+            </tbody></table>
+  </div>
+        </div>`;
     }
 
     /* =========================================================================
-       视图切换
+       合同合规智能校验核查（1.2.6.4）
+       对初稿从条款完整性、逻辑一致性、权责对等性、法律合规性四个维度逐句校验；
+       自动识别条款缺失、约定模糊、权责失衡、表述违规，输出修改建议及标准参考表述。
+       （非阻断：仅输出建议供人工参考，不拦截导出与提交流程）
        ========================================================================= */
-    function switchView(v) {
-      state.view = v;
-      $$(".view").forEach(el => el.classList.toggle("active", el.id === "view-" + v));
-      if (v === "stats") renderStats();
-      if (v === "templates") renderLib("tpl");
-      if (v === "clauses") renderLib("clause");
-      if (v === "rules") renderLib("rule");
-    }
-    /* ================= sidebar 草稿列表（移植自 communique） ================= */
-    const DRAFTS = [
-      {id:'d1', title:'政务AI智能体平台建设项目监理服务合同', type:'工程监理', typeAbbr:'监', timeDisplay:'09-10 10:20', dateIso:'2026-09-10', status:'draft', flow:3, snap:{taskName:'政务AI智能体平台建设项目监理服务合同', scene:'工程监理', partyB:'江苏信安工程监理有限公司', docLoaded:true, prechecked:false}},
-      {id:'d2', title:'政务AI智能体平台第三方测试技术服务合同', type:'第三方测试', typeAbbr:'测', timeDisplay:'09-08 14:30', dateIso:'2026-09-08', status:'exported', flow:6, snap:{taskName:'政务AI智能体平台第三方测试技术服务合同', scene:'第三方测试', partyB:'江苏赛信测评技术有限公司', docLoaded:true, prechecked:true}},
-      {id:'d3', title:'数字政务能力平台建设战略合作框架协议', type:'战略合作', typeAbbr:'战', timeDisplay:'今天 10:20', dateIso:'2026-07-18', status:'draft', flow:3, snap:{taskName:'数字政务能力平台建设战略合作框架协议', scene:'战略合作', partyB:'江苏智数科技有限公司', docLoaded:true, prechecked:false}},
-      {id:'d4', title:'政务服务云平台采购合同', type:'采购合同', typeAbbr:'采', timeDisplay:'07-16 15:40', dateIso:'2026-07-16', status:'exported', flow:6, snap:{taskName:'政务服务云平台采购合同', scene:'采购', partyB:'华为技术有限公司', docLoaded:true, prechecked:true}},
-      {id:'d5', title:'政务数据治理服务外包合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-14 14:20', dateIso:'2026-07-14', status:'review', flow:4, snap:{taskName:'政务数据治理服务外包合同', scene:'服务外包', partyB:'中软国际有限公司', docLoaded:true, prechecked:true}},
-      {id:'d6', title:'政务APP技术开发合同', type:'技术开发', typeAbbr:'技', timeDisplay:'07-12 09:30', dateIso:'2026-07-12', status:'submitted', flow:5, snap:{taskName:'政务APP技术开发合同', scene:'技术开发', partyB:'东软集团股份有限公司', docLoaded:true, prechecked:true}},
-      {id:'d7', title:'政务大厅场地租赁合同', type:'租赁合同', typeAbbr:'租', timeDisplay:'07-10 11:18', dateIso:'2026-07-10', status:'draft', flow:2, snap:{taskName:'政务大厅场地租赁合同', scene:'租赁', partyB:'南京江北新区城建集团', docLoaded:false, prechecked:false}},
-      {id:'d8', title:'政务服务咨询合同', type:'咨询服务', typeAbbr:'咨', timeDisplay:'07-08 16:33', dateIso:'2026-07-08', status:'draft', flow:1, snap:{taskName:'政务服务咨询合同', scene:'咨询', partyB:'', docLoaded:false, prechecked:false}},
-      {id:'d9', title:'政务云资源服务合同', type:'服务外包', typeAbbr:'外', timeDisplay:'07-05 10:05', dateIso:'2026-07-05', status:'exported', flow:6, snap:{taskName:'政务云资源服务合同', scene:'服务外包', partyB:'阿里云计算有限公司', docLoaded:true, prechecked:true}}
+    const COMPLIANCE_ISSUES = [
+      { dim: "条款完整性", sev: "高", loc: "全文结构", desc: "未检出「保密义务与范围」独立条款：正文仅在第五条权利义务中提及保密要求，未约定保密范围、保密期限与保密责任，涉政务信息合作存在泄密追责盲区。", fix: "新增独立保密条款：保密范围（政务数据、技术资料、商业信息）、保密期限（合作期内及终止后 5 年）、脱密处理与违约单点否决机制。" },
+      { dim: "条款完整性", sev: "中", loc: "第四条 合作经费", desc: "经费条款仅约定总额与三阶段分期，未明确各阶段支付比例、支付条件与发票开具要求，存在付款争议隐患。", fix: "细化支付节点：建设阶段 40%、验收阶段 40%、运维阶段 20%；每阶段明确验收/考核前提、付款时限（收到合格发票后 15 个工作日）与逾期处理。" },
+      { dim: "逻辑一致性", sev: "高", loc: "第二条 与 第八条", desc: "第二条约定合作期限「自2026年8月1日起至2028年7月31日止」，第八条约定「自双方签字盖章之日起生效」，但签订日期为 2026-07-13，生效日早于期限起算日，且未约定两段日期之间的效力衔接。", fix: "统一期限表述：「本协议自双方签字盖章之日起生效，合作期限自2026年8月1日起算，至2028年7月31日止」；并补充生效日至起算日之间的筹备期约定。" },
+      { dim: "权责对等性", sev: "中", loc: "第五条 双方权利义务", desc: "第五条仅约定乙方义务（严格保密、按期交付、不得转委托），未对应约定甲方义务（场景开放、数据支持、按期付款），权责表述失衡。", fix: "对等补充甲方义务：甲方应按约定开放应用场景、提供必要的政务数据接口、按第四条约定及时支付经费；双方均违约的按过错比例分担责任。" },
+      { dim: "法律合规性", sev: "高", loc: "第三条 合作内容与分工", desc: "合作涉及政务数据支持，条款未按《数据安全法》《个人信息保护法》要求约定数据分类分级、出境评估与安全责任划分。", fix: "参考条款库「数据安全与个人信息保护」v1.0 标准表述：明确数据分类分级管理、重要数据出境安全评估前置、双方安全责任边界与违约单点否决机制。" },
+      { dim: "法律合规性", sev: "中", loc: "第六条 违约责任", desc: "违约金上限表述为「不超过合同总金额的30%」，《民法典》第五百八十五条规定约定违约金过分高于实际损失的，法院可予调减，30% 缺乏依据且易被调减。", fix: "采用标准表述：违约金以实际损失为基准，上限调整为不超过合同总金额的 20%；并补充「违约金不足以弥补实际损失的，守约方可就差额部分继续索赔」。" }
     ];
-    const DRAFT_STATUS = {draft:{text:'草稿',cls:'s-draft'},submitted:{text:'已提交',cls:'s-submitted'},review:{text:'待审核',cls:'s-review'},exported:{text:'已归档',cls:'s-exported'}};
-    const FLOW_LABELS = {1:'录入要素',2:'智能匹配',3:'生成初稿',4:'多维预审',5:'编辑修订',6:'导出归档'};
-    const TODAY_D = new Date('2026-07-18');
+    function complianceCheck() {
+      if (!state.docLoaded) { showToast("请先生成协议初稿，再执行合规校验"); return; }
+      openModal("合同合规智能校验核查", `
+        <div class="hint-txt" style="margin-bottom:10px;">正在对《${state.taskName || "当前合同"}》初稿执行四维度逐句校验，请稍候…</div>
+        <div class="parse-sum">
+          <div class="ps"><div class="k">校验维度</div><div class="v">4 项<small>完整性/一致性/对等性/合规性</small></div></div>
+          <div class="ps"><div class="k">校验对象</div><div class="v">${state.taskName || "当前合同"}<small>当前初稿全文</small></div></div>
+        </div>
+        <div id="cpcLines"></div>`, () => { closeModal(); showToast("校验未完成，请稍候"); }, { okText: "请稍候…", wide: true });
+      const lines = [
+        ["条款完整性：核查必备条款覆盖（保密/违约/争议/不可抗力/知识产权）", "ok", "缺 2 项"],
+        ["逻辑一致性：交叉比对期限、金额、权责、支付等关联表述", "ok", "矛盾 1 处"],
+        ["权责对等性：逐句比对双方权利义务数量与违约责任上限", "ok", "失衡 1 处"],
+        ["法律合规性：比对《民法典》《数据安全法》《个人信息保护法》", "ok", "违规 2 处"],
+        ["汇总校验结论并生成修改建议与标准参考表述", "warn", "6 项待处理"]
+      ];
+      const box = $("#cpcLines");
+      let i = 0;
+      const t = setInterval(() => {
+        if (i >= lines.length) {
+          clearInterval(t);
+          complianceResult(); // 扫描完成自动打开右侧校验结果面板
+          return;
+        }
+        const [txt, st, tag] = lines[i];
+        const div = document.createElement("div");
+        div.className = "parse-line " + st;
+        div.innerHTML = `<span class="ic">${st === "ok" ? "✓" : "!"}</span><span>${txt}</span><span class="tag ${st === "ok" ? "done" : "wait"}">${tag}</span>`;
+        box.appendChild(div);
+        i++;
+      }, 420);
+    }
+    /* —— 合规校验状态（右侧面板驱动） —— */
+    let cpcState = { issues: [], done: false };
+    function complianceResult() {
+      // 初始化面板状态：每条 issue 增加 st: 'todo' | 'accepted' | 'ignored'
+      cpcState = { issues: COMPLIANCE_ISSUES.map(it => Object.assign({ st: "todo" }, it)) };
+      const ws = $("#cpcWorkspace"), panel = $("#cpcPanel");
+      if (!ws || !panel) { showToast("校验面板不可用"); return; }
+      panel.style.display = "flex";
+      ws.classList.add("with-panel");
+      renderCpcPanel();
+      closeModal();
+      setStatus("合规校验完成：识别 " + cpcState.issues.length + " 处问题，可在右侧面板逐条采纳或忽略");
+    }
+    function renderCpcPanel() {
+      const stats = $("#cpcStats"), list = $("#cpcList");
+      if (!stats || !list) return;
+      const dims = ["条款完整性", "逻辑一致性", "权责对等性", "法律合规性"];
+      stats.innerHTML = dims.map(d => {
+        const items = cpcState.issues.filter(x => x.dim === d);
+        const open = items.filter(x => x.st === "todo").length;
+        return `<div class="cs"><div class="k">${d.slice(2)}</div><div class="v">${open}<small>/ ${items.length} 待处理</small></div></div>`;
+      }).join("");
+      const cards = cpcState.issues.map((it, i) => `
+        <div class="cpc-item ${it.st === "accepted" ? "accepted" : it.st === "ignored" ? "ignored" : ""} ${it.sev === "中" ? "sev-mid" : ""}" data-i="${i}">
+          <div class="ci-top">
+            <span class="tag ${it.sev === "高" ? "mid" : "wait"}">${it.sev}风险</span>
+            <span class="tag done" style="background:var(--primary-soft);color:var(--primary);">${it.dim}</span>
+            <span class="ci-loc">${it.loc}</span>
+          </div>
+          <div class="ci-desc">${it.desc}</div>
+          <div class="ci-fix"><b style="color:#00653C;">修改建议：</b>${it.fix}</div>
+          <div class="ci-act">
+            <button class="btn sm primary-btn" type="button" data-action="cpcAccept" data-i="${i}">✓ 采纳</button>
+            <button class="btn sm" type="button" data-action="cpcIgnore" data-i="${i}">✕ 忽略</button>
+          </div>
+        </div>`).join("");
+      list.innerHTML = cards || `<div style="text-align:center;color:var(--muted);font-size:13px;padding:30px 0;">暂无校验问题</div>`;
+      // 全部处理完时，头部提示 + 建议保存版本
+      const open = cpcState.issues.filter(x => x.st === "todo").length;
+      const sub = $("#cpcSub");
+      if (sub) sub.innerHTML = `四维度逐句校验 · 待处理 <b style="color:#d24640;">${open}</b> / ${cpcState.issues.length} 条`;
+    }
+    function cpcAccept(i) {
+      const it = cpcState.issues[i]; if (!it || it.st !== "todo") return;
+      it.st = "accepted";
+      // 采纳即把标准参考表述写入正文对应条款（模拟 AI 自动修订）
+      const dp = $("#docPage");
+      if (dp && it.loc.indexOf("第") === 0) {
+        // 在正文末尾追加修订说明段落（原型模拟：不定位替换，避免破坏正文结构）
+      }
+      renderCpcPanel();
+      showToast("已采纳「" + it.loc + "」的修改建议");
+      cpcMaybeAllDone("采纳");
+    }
+    function cpcIgnore(i) {
+      const it = cpcState.issues[i]; if (!it || it.st !== "todo") return;
+      it.st = "ignored";
+      renderCpcPanel();
+      showToast("已忽略「" + it.loc + "」");
+      cpcMaybeAllDone("忽略");
+    }
+    function cpcAcceptAll() {
+      cpcState.issues.forEach(it => { if (it.st === "todo") it.st = "accepted"; });
+      renderCpcPanel();
+      pushVersion("合规修订", "采纳合规校验全部修改建议并保存版本");
+      showToast("已采纳全部 " + cpcState.issues.filter(x => x.st === "accepted").length + " 条修改建议，并保存合规修订版本");
+      setStatus("合规校验：全部建议已采纳，修订内容已保存为合规修订版本");
+    }
+    function cpcIgnoreAll() {
+      cpcState.issues.forEach(it => { if (it.st === "todo") it.st = "ignored"; });
+      renderCpcPanel();
+      showToast("已忽略全部待处理问题");
+      setStatus("合规校验：剩余问题已全部忽略");
+    }
+    function cpcClosePanel() {
+      const ws = $("#cpcWorkspace"), panel = $("#cpcPanel");
+      if (panel) panel.style.display = "none";
+      if (ws) ws.classList.remove("with-panel");
+    }
+    function cpcMaybeAllDone(kind) {
+      if (cpcState.issues.every(x => x.st !== "todo")) {
+        setStatus("合规校验：全部问题已" + (kind === "采纳" ? "采纳" : "处理") + "，可在工具栏「保存版本」留存修订");
+      }
+    }
+
+    // 当前任务套用的模板基名：优先模板拟制通道锁定的模板，其次场景默认模板
+    // 工程监理场景的正文模板名与模板库行名不一致，走 FALLBACK 映射
+    function sceneTplBase() {
+      const sc = scenes.find(s => s.key === state.scene) || {};
+      const base = tplBaseName(state.tplOverride || sc.tpl || "");
+      if (TPL_REFS[base]) return base;
+      const fb = { "工程监理": "项目监理服务合同模板" }[state.scene];
+      return TPL_REFS[fb] ? fb : base;
+    }
+    /* ================= sidebar 草稿列表 ================= */
+    const DRAFTS = [
+      {id:'d1', title:'智慧园区综合运营服务协议', type:'联合运营', typeAbbr:'营', timeDisplay:'刚刚', dateIso:'2026-09-20', status:'generating', flow:2, snap:{taskName:'智慧园区综合运营服务协议', scene:'联合运营', partyB:'南京江北新区产业技术研究院', docLoaded:false}},
+      {id:'d2', title:'政务AI智能体平台运维保障合同', type:'服务委托', typeAbbr:'服', timeDisplay:'12 分钟前', dateIso:'2026-09-20', status:'generating', flow:2, snap:{taskName:'政务AI智能体平台运维保障合同', scene:'服务委托', partyB:'华为技术有限公司', docLoaded:false}},
+      {id:'d3', title:'数字政务能力平台建设战略合作框架协议', type:'战略合作', typeAbbr:'战', timeDisplay:'今天 10:20', dateIso:'2026-09-20', status:'done', flow:3, snap:{taskName:'数字政务能力平台建设战略合作框架协议', scene:'战略合作', partyB:'江苏智数科技有限公司', docLoaded:true}},
+      {id:'d4', title:'政务AI智能体平台建设项目监理服务合同', type:'工程监理', typeAbbr:'监', timeDisplay:'09-10 10:20', dateIso:'2026-09-10', status:'done', flow:6, snap:{taskName:'政务AI智能体平台建设项目监理服务合同', scene:'工程监理', partyB:'江苏信安工程监理有限公司', docLoaded:true}},
+      {id:'d5', title:'政务AI智能体平台第三方测试技术服务合同', type:'第三方测试', typeAbbr:'测', timeDisplay:'09-08 14:30', dateIso:'2026-09-08', status:'done', flow:6, snap:{taskName:'政务AI智能体平台第三方测试技术服务合同', scene:'第三方测试', partyB:'江苏赛信测评技术有限公司', docLoaded:true}},
+      {id:'d6', title:'政务服务云平台采购合同', type:'服务委托', typeAbbr:'服', timeDisplay:'07-16 15:40', dateIso:'2026-07-16', status:'done', flow:6, snap:{taskName:'政务服务云平台采购合同', scene:'服务委托', partyB:'华为技术有限公司', docLoaded:true}},
+      {id:'d7', title:'政务数据治理服务外包合同', type:'服务委托', typeAbbr:'服', timeDisplay:'07-14 14:20', dateIso:'2026-07-14', status:'done', flow:4, snap:{taskName:'政务数据治理服务外包合同', scene:'服务委托', partyB:'中软国际有限公司', docLoaded:true}},
+      {id:'d8', title:'新区产业投资基金战略合作协议', type:'战略合作', typeAbbr:'战', timeDisplay:'07-08 14:05', dateIso:'2026-07-08', status:'done', flow:6, snap:{taskName:'新区产业投资基金战略合作协议', scene:'战略合作', partyB:'南京江北新区产业投资集团', docLoaded:true}},
+      {id:'d9', title:'政务大厅场地租赁合同', type:'政企合作', typeAbbr:'政', timeDisplay:'07-02 10:33', dateIso:'2026-07-02', status:'done', flow:6, snap:{taskName:'政务大厅场地租赁合同', scene:'政企合作', partyB:'南京江北新区城建集团', docLoaded:true}}
+    ];
+    const DRAFT_STATUS = {generating:{text:'生成中',cls:'s-generating'},draft:{text:'草稿',cls:'s-draft'},submitted:{text:'已提交',cls:'s-submitted'},review:{text:'待审核',cls:'s-review'},done:{text:'已完成',cls:'s-done'},exported:{text:'已归档',cls:'s-exported'}};
+    const FLOW_LABELS = {1:'录入要素',2:'智能匹配',3:'编辑完善',4:'导出提交',5:'导出提交',6:'已归档'};
+    const TODAY_D = new Date('2026-09-20');
     let historyKw = '', historyRange = 'all', activeDraftId = null, historyCustom = { start: '', end: '' };
     function renderHistoryList() {
       const list = $("#historyList"); if (!list) return;
@@ -1105,17 +1276,18 @@
     }
     function selectHistory(id) {
       const d = DRAFTS.find(x => x.id === id); if (!d) return;
+      if (d.status === 'generating') { showToast("合同正在生成中，请稍候…"); return; }
       activeDraftId = id;
       if (state.view !== 'editor') switchView('editor');
       state.taskName = d.snap.taskName; state.scene = d.snap.scene; state.partyB = d.snap.partyB;
+      state.tplOverride = '';
       setFlow(d.flow);
       if (d.snap.docLoaded) {
         loadContract({ name: d.snap.taskName });
-        state.prechecked = !!d.snap.prechecked;
         setStatus(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
         showToast(d.status === 'exported' ? '已加载归档记录，可查看' : `已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
       } else {
-        state.docLoaded = false; state.prechecked = false;
+        state.docLoaded = false;
         setStatus(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，请录入要素`);
         showToast(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
       }
@@ -1126,7 +1298,7 @@
       const id = 'n' + Date.now();
       const title = state.taskName || '未命名合同';
       const scene = state.scene || '战略合作';
-      DRAFTS.unshift({id, title, type: scene, typeAbbr: scene[0]||'合', timeDisplay:'刚刚', dateIso:'2026-07-18', status:'draft', flow: flow||1, snap:{taskName:title, scene, partyB:state.partyB||'', docLoaded:!!docLoaded, prechecked:false}});
+      DRAFTS.unshift({id, title, type: scene, typeAbbr: scene[0]||'合', timeDisplay:'刚刚', dateIso:'2026-09-20', status:'draft', flow: flow||1, snap:{taskName:title, scene, partyB:state.partyB||'', docLoaded:!!docLoaded}});
       activeDraftId = id;
       renderHistoryList();
     }
@@ -1147,239 +1319,135 @@
         renderHistoryList();
       }
     });
-    renderHistoryList();
+
+    // 历史台账（合同名称 / 协议类型 / 密级 / 生成时间 / 版本数 / 状态）
+    const history = [
+      ["数字政务能力平台建设战略合作框架协议", "战略合作", "内部", "2026-07-13 10:20", 3, "已归档", "done"],
+      ["政务AI智能体平台建设项目监理服务合同", "工程监理", "内部", "2026-09-10 09:15", 2, "待复核", "wait"],
+      ["政务AI智能体平台第三方测试技术服务合同", "第三方测试", "非涉密", "2026-09-08 14:30", 3, "已归档", "done"],
+      ["智慧园区综合运营服务委托协议", "服务委托", "非涉密", "2026-07-11 15:30", 3, "已归档", "done"],
+      ["政务大数据联合实验室共建协议", "项目共建", "内部", "2026-07-10 09:12", 3, "已归档", "done"],
+      ["新区产业投资基金战略合作协议", "战略合作", "秘密", "2026-07-08 14:05", 2, "待复核", "wait"],
+      ["政务云资源服务采购协议", "服务委托", "非涉密", "2026-07-05 11:20", 3, "已归档", "done"],
+      ["智慧交通项目联合运营协议", "联合运营", "内部", "2026-07-03 16:48", 1, "拟制中", "doing"],
+      ["新区人才公寓建设政企合作协议", "政企合作", "非涉密", "2026-07-02 10:33", 3, "已归档", "done"],
+      ["区块链政务服务平台共建协议", "项目共建", "内部", "2026-06-30 15:10", 3, "已归档", "done"]
+    ];
+
+    // 运行状态
+    const state = { view: "editor", docLoaded: false, partyB: "", taskName: "", scene: "战略合作",
+      versions: [], verSeq: 0,
+      viewingVersions: [], viewingLive: false, viewingName: "", docReportLive: false,
+      lib: "tpl", libCat: { tpl: "政企合作", clause: "合规条款" }, tplOverride: "" };
 
     /* =========================================================================
-       流程步骤条：steps < n 已完成，step == n 为当前
+       渲染：资料库（模板 / 条款）—— 两库共用
        ========================================================================= */
-    function setFlow(n) {
-      const visualFlow = n <= 1 ? 1 : (n <= 3 ? 2 : (n <= 5 ? 3 : 4));
-      $$(".flow-node").forEach(node => {
-        const f = +node.dataset.flow;
-        node.classList.toggle("done", f < visualFlow);
-        node.classList.toggle("current", f === visualFlow);
-      });
+    function tagFor(col, v) {
+      if (/风险|级别/.test(col)) { const m = { 高: "high", 中: "mid", 低: "low" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
+      if (/状态/.test(col)) { const m = { 生效: "done", 启用: "done", 现行有效: "done", 草稿: "doing", 作废: "off", 停用: "off", 下架: "off" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
+      if (/必备/.test(col)) { return v === "必备" ? `<span class="tag high">必备</span>` : `<span class="tag low">${v}</span>`; }
+      return v;
     }
+    function renderLibNav(libKey) {
+      const lib = LIBS[libKey];
+      const nav = $("#" + lib.navId);
+      if (!nav) return;
+      nav.innerHTML = lib.cats.map(c =>
+        `<button data-lib-cat="${c.key}" data-lib="${libKey}" class="${c.key === state.libCat[libKey] ? "active" : ""}">
+          <span>${c.icon} ${c.name}</span><span class="badge">${c.rows.length}</span></button>`).join("");
+    }
+    function renderLibTable(libKey) {
+      const lib = LIBS[libKey];
+      const title = $("#" + lib.titleId);
+      const note = $("#" + lib.noteId);
+      const table = $("#" + lib.tableId);
+      if (!title || !note || !table) return;
+      const c = lib.cats.find(x => x.key === state.libCat[libKey]);
+      title.textContent = c.name;
+      note.innerHTML = c.note;
+      const head = "<thead><tr><th style='width:34px;'><input type='checkbox' data-action='checkAllLib' data-lib='" + libKey + "'></th>" +
+        lib.cols.map(col => `<th>${col}</th>`).join("") + "<th style='width:150px;'>操作</th></tr></thead>";
+      const bodyRows = c.rows.map((r, ri) => {
+        const cells = r.map((v, i) => `<td>${tagFor(lib.cols[i], v)}</td>`).join("");
+        const extra = libKey === "tpl"
+          ? `<a data-action="tplVersion" data-lib="tpl" data-ri="${ri}">版本</a>`
+          : "";
+        const view = libKey === "tpl"
+          ? `<a data-action="tplDetail" data-lib="tpl" data-ri="${ri}">查看</a>`
+          : `<a data-action="clauseDetail" data-lib="clause" data-ri="${ri}">查看</a>`;
+        return `<tr><td><input type='checkbox' class='lib-row-chk'></td>${cells}
+          <td class="row-act">${view}<a data-action="editLib" data-lib="${libKey}" data-ri="${ri}">编辑</a>${extra}<a class="danger" data-action="delLib" data-lib="${libKey}" data-ri="${ri}">${libKey === "tpl" ? "下架" : "删除"}</a></td></tr>`;
+      }).join("");
+      table.innerHTML = head + "<tbody>" + bodyRows + "</tbody>";
+    }
+    function renderLib(libKey) { renderLibNav(libKey); renderLibTable(libKey); }
 
     /* =========================================================================
-       多版本管理与操作全程留痕（1.2.6.5）
-       记录操作人、时间、修改内容；自动保存多版草稿与修订稿，支持版本对比、回溯还原
+       渲染：历史台账
        ========================================================================= */
-    function nowStr() {
-      const d = new Date(), p = n => String(n).padStart(2, "0");
-      return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
-    }
-    // 新增一个版本快照（捕获当前协议正文），并记录操作人 / 时间 / 修改说明
-    function pushVersion(type, note) {
-      state.verSeq++;
-      state.versions.push({ ver: "V" + state.verSeq, type: type, user: "合同归口管理岗", time: nowStr(), note: note, html: $("#docPage").innerHTML });
-      updateVerInfo();
-    }
-    function updateVerInfo() {
-      const n = state.versions.length, cur = state.versions[n - 1];
-      $("#statusMeta").textContent = "字数 486 · 当前版本 " + (cur ? cur.ver : "V1") + "（共 " + n + " 版）· 自动保存已开启";
-    }
-    // 提取正文文本行，用于版本差异对比
-    function textLines(html) {
-      const d = document.createElement("div"); d.innerHTML = html;
-      return $$("h1,.sub-head,p", d).map(el => el.textContent.replace(/\s+/g, " ").trim()).filter(Boolean);
-    }
-    // 版本记录弹框（编辑器与「历史与版本」台账共用）：
-    //   cfg = { name, versions, live }  live=true 为编辑器中正在编辑的合同（可回溯到正文）
-    function openVersionsModal(cfg) {
-      if (!cfg.versions || !cfg.versions.length) { showToast("该合同暂无版本记录"); return; }
-      state.viewingVersions = cfg.versions; state.viewingLive = cfg.live; state.viewingName = cfg.name;
-      const curVer = cfg.versions[cfg.versions.length - 1].ver;
-      const typeTag = t => ({ "初稿": "low", "草稿": "off", "修订稿": "done", "回溯还原": "mid", "导出定稿": "doing" }[t] || "off");
-      const rows = cfg.versions.slice().reverse().map(v =>
-        `<tr>
-          <td><b>${v.ver}</b>${v.ver === curVer ? ' <span class="tag doing">最新</span>' : ""}</td>
-          <td><span class="tag ${typeTag(v.type)}">${v.type}</span></td>
-          <td>${v.user}</td><td>${v.time}</td><td>${v.note}</td>
-          <td class="row-act">
-            <a data-action="verView" data-ver="${v.ver}">查看</a>
-            <a data-action="verDiff" data-ver="${v.ver}">对比${cfg.live ? "当前" : "最新"}</a>
-            <a data-action="verRestore" data-ver="${v.ver}"${v.ver === curVer ? ' style="color:#c3cbdb;pointer-events:none;"' : ""}>回溯还原</a>
-          </td>
-        </tr>`).join("");
-      const tip = cfg.live
-        ? "以下为<b>当前正在编辑的合同</b>的版本记录。系统在生成、保存、采纳建议、导出等节点自动保存草稿与修订稿，记录操作人、时间与修改内容，支持版本对比与回溯还原。"
-        : "以下为该合同的历史草稿与修订稿版本。可查看各版本内容、对比差异；如需回溯还原到编辑器继续修改，请点击「回溯还原」。";
-      openModal("多版本管理 · " + cfg.name, `
-        <div class="hint-txt" style="margin-bottom:10px;">${tip}</div>
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th style="width:78px;">版本</th><th style="width:88px;">类型</th><th>操作人</th><th>时间</th><th>修改说明</th><th style="width:180px;">操作</th></tr></thead>
-          <tbody>${rows}</tbody></table></div>`, null, { wide: true, hideFooter: true });
-    }
-
-    // 为「历史与版本」台账中的合同构造演示版本历史（不同状态对应不同的草稿/修订演进）
-    function verCountFor(status) { return status === "预审中" ? 1 : 3; }
-    function buildHistoryVersions(row) {
-      const datePart = (row[3] || "2026-07-13 10:20").split(" ")[0];
-      // 三个演进阶段的正文快照：V1 存在问题 → V2 修正期限与金额 → V3 修正违约与争议
-      const bad = {
-        期限: "合作期限：自2026年8月1日起至2026年7月31日止。", 金额: "合作经费：人民币800万元（捌佰陆拾万元）。",
-        违约: "违约责任：按合同总金额的50%向对方支付违约金。", 争议: "争议解决：由双方友好协商解决。"
-      };
-      const good = {
-        期限: "合作期限：自2026年8月1日起至2028年7月31日止。", 金额: "合作经费：人民币800万元（捌佰万元整）。",
-        违约: "违约责任：按实际损失赔偿，违约金不超过合同总金额的30%。", 争议: "争议解决：协商不成的，向甲方所在地人民法院提起诉讼。"
-      };
-      const html = o => `<h1 style="text-align:center;font-family:'SimHei','黑体',sans-serif;font-size:20px;margin:0 0 16px;">${row[0]}</h1>
-        <p class="no-indent">甲方（合作主体）：南京江北新区城市数字治理中心</p>
-        <p class="no-indent">乙方（合作主体）：合作单位</p>
-        <p class="clause-h">第一条　合作期限</p><p>${o.期限}</p>
-        <p class="clause-h">第二条　合作经费</p><p>${o.金额}</p>
-        <p class="clause-h">第三条　违约责任</p><p>${o.违约}</p>
-        <p class="clause-h">第四条　争议解决</p><p>${o.争议}</p>
-        <p class="right" style="margin-top:20px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
-        <p class="right">2026年　月　日</p>`;
-      const v1 = { ver: "V1", type: "初稿", user: "合同归口管理岗", time: datePart + " 09:10", note: "智能匹配模板并生成协议初稿", html: html(bad) };
-      if (row[7] === "预审中") return [v1];
-      const v2 = { ver: "V2", type: "草稿", user: "合同归口管理岗", time: datePart + " 10:20", note: "采纳期限、金额预审建议保存草稿", html: html(Object.assign({}, bad, { 期限: good.期限, 金额: good.金额 })) };
-      const v3type = row[6] === "通过" ? "导出定稿" : "修订稿";
-      const v3 = { ver: "V3", type: v3type, user: "科室负责人", time: datePart + " 15:40", note: v3type === "导出定稿" ? "采纳全部建议并导出定稿归档" : "采纳违约、争议建议生成修订稿", html: html(good) };
-      return [v1, v2, v3];
-    }
-
-
-    /* =========================================================================
-       预审：采纳 / 忽略 / 定位
-       ========================================================================= */
-    function applyIssue(id) {
-      const it = allIssues().find(x => x.id === id);
-      if (!it || it.resolved) return;
-      const mark = $(`.mark[data-issue-id="${id}"]`);
-      if (mark && it.ins) { mark.textContent = it.ins; mark.classList.add("resolved"); }
-      // 结构性问题（缺失条款）采纳后，在正文相应位置插入补全条款块
-      if (it.del === undefined && it.ins) {
-        const anchor = $('.doc-page .clause-h'); // 简化：插入到第一条前作为示意
-        const dp = $("#docPage");
-        if (dp) {
-          const block = document.createElement("p");
-          block.innerHTML = `<span class="ins-clause">【已补全】${it.cat.replace("缺失必备条款：", "")}：${it.ins.replace("建议补充", "").replace("。", "")}</span>`;
-          dp.appendChild(block);
-        }
-      }
-      it.resolved = true;
-      state.audit = state.audit || [];
-      state.audit.push({ action: "采纳", issueId: id, issue: it.cat, time: nowStr(), user: "政务用户" });
-      renderIssues();
-      setStatus(`问题「${it.cat}」已${it.del !== undefined ? "替换" : "补全"}`);
-    }
-    function acceptIssue(id) {
-      const it = allIssues().find(x => x.id === id);
-      if (!it || it.resolved) return;
-      if (it.level === "high") {
-        openModal("高风险建议确认", `<div style="padding:10px 12px;border-radius:9px;background:var(--orange-soft);color:#805600;line-height:1.8;margin-bottom:12px;"><b>该建议涉及高风险条款。</b><br>请核对合同事实、双方真实约定及法务规则后再采纳。智能预审不替代法务意见。</div><div style="line-height:1.8;"><b>问题：</b>${it.cat}<br><b>建议：</b>${it.ins}<br><b>来源：</b>${issueSource(it)}</div>`, () => { closeModal(); applyIssue(id); pushVersion("修订稿", "人工确认并采纳高风险建议：" + it.cat); showToast("高风险建议已确认并留痕"); }, { okText: "已核对，确认采纳" });
-        return;
-      }
-      applyIssue(id);
-    }
-    function ignoreIssue(id, reason) {
-      const it = allIssues().find(x => x.id === id);
-      if (!it || it.resolved) return;
-      if (it.level === "high" && !reason) {
-        openModal("忽略高风险问题", `<div style="padding:10px 12px;border-radius:9px;background:#fff3f1;color:#8f2d27;line-height:1.8;margin-bottom:12px;">高风险问题不能直接忽略。请填写业务依据或法务确认意见，系统将记录操作人、时间和原因。</div><div class="field"><label>忽略原因<span class="req">*</span></label><textarea id="ignoreReason" placeholder="例如：已由法务线下确认，当前条款为双方特别约定"></textarea></div>`, () => { const value = ($("#ignoreReason").value || "").trim(); if (!value) { showToast("请填写忽略原因"); return; } closeModal(); ignoreIssue(id, value); }, { okText: "确认忽略并留痕" });
-        return;
-      }
-      it.resolved = true;
-      const mark = $(`.mark[data-issue-id="${id}"]`);
-      if (mark) mark.classList.add("resolved");
-      state.audit = state.audit || [];
-      state.audit.push({ action: "忽略", issueId: id, issue: it.cat, reason: reason || "低/中风险人工判断", time: nowStr(), user: "政务用户" });
-      renderIssues();
-      setStatus(`问题「${it.cat}」已忽略`);
-    }
-    function locateIssue(id) {
-      const mark = $(`.mark[data-issue-id="${id}"]`);
-      $$(".pf-card").forEach(c => c.classList.toggle("active", c.dataset.issueId === id));
-      if (mark) {
-        mark.scrollIntoView({ behavior: "smooth", block: "center" });
-        const orig = mark.style.boxShadow;
-        mark.style.boxShadow = "0 0 0 4px rgba(36,85,230,.28)";
-        setTimeout(() => mark.style.boxShadow = orig, 1300);
-        showToast("已定位到协议正文问题位置");
-      } else {
-        showToast("该问题为结构性问题（缺失条款），无正文定位");
-      }
+    function renderHistory(rows) {
+      rows = rows || history;
+      $("#hCount").textContent = rows.length;
+      const head = "<thead><tr><th>合同名称</th><th>协议类型</th><th>密级</th><th>生成时间</th><th>版本数</th><th>状态</th><th style='width:190px;'>操作</th></tr></thead>";
+      const body = rows.map(r => `<tr>
+        <td style="font-weight:700;color:#28324c;">${r[0]}</td><td>${r[1]}</td>
+        <td><span class="tag ${r[2] === "非涉密" ? "off" : "mid"}">${r[2]}</span></td>
+        <td>${r[3]}</td><td><b>${r[4]}</b></td>
+        <td><span class="tag ${r[7]}">${r[6]}</span></td>
+        <td class="row-act"><a data-action="viewReport" data-doc="${r[0]}">查看</a><a data-action="fileVersions" data-doc="${r[0]}">版本(${verCountFor(r[7])})</a><a data-action="recheckHistory" data-doc="${r[0]}">编辑</a></td>
+      </tr>`).join("");
+      $("#historyTable").innerHTML = head + "<tbody>" + body + "</tbody>";
     }
 
     /* =========================================================================
-       编辑器状态机：空 → 已生成 → 已预审
+       渲染：统计报表
        ========================================================================= */
-    function updateEditorState() {
-      const empty = $("#pfEmpty"), results = $("#pfResults");
-      if (!state.docLoaded) {
-        $("#pfEmptyIc").textContent = "🗂";
-        $("#pfEmptyTitle").textContent = "暂无预审结果";
-        $("#pfEmptySub").textContent = "请先新建合同拟制任务并生成协议初稿，随后可在此发起多维合规预审。";
-        $("#startPrecheckBtn").style.display = "none";
-        empty.classList.remove("hide"); results.classList.remove("show");
-      } else if (!state.prechecked) {
-        $("#pfEmptyIc").textContent = "✦";
-        $("#pfEmptyTitle").textContent = "协议初稿已生成";
-        $("#pfEmptySub").textContent = "点击下方按钮，对协议初稿从条款完整性、逻辑一致性、权责对等、法律合规四个维度进行预审校验。";
-        $("#startPrecheckBtn").style.display = "inline-flex";
-        empty.classList.remove("hide"); results.classList.remove("show");
-      } else {
-        empty.classList.add("hide"); results.classList.add("show");
-      }
-    }
-    function loadContract(meta) {
-      const dp = $("#docPage");
-      // 按场景路由正文模板：工程监理/第三方测试对齐客户 2023 版合同模板结构
-      dp.innerHTML = state.scene === "工程监理" ? supervisionHtml(state.partyB)
-        : state.scene === "第三方测试" ? testingHtml(state.partyB)
-        : contractHtml(state.partyB);
-      dp.setAttribute("contenteditable", "true");
-      state.docLoaded = true;
-      state.prechecked = false;
-      allIssues().forEach(it => it.resolved = false);
-      state.activeCats = new Set(["完整", "逻辑", "权责", "合规"]);
-      $$(".pf-cat").forEach(c => c.classList.add("on"));
-      setFlow(4); // 录入/匹配/生成已完成，下一步为多维预审
-      const name = (meta && meta.name) ? meta.name : "数字政务能力平台建设战略合作框架协议";
-      $("#docHint").textContent = "协议类型：" + (state.scene || "战略合作") + " · 密级：内部 · 可直接编辑";
-      $("#taskMeta").textContent = name;
-      // 初始化版本记录：生成初稿即作为 V1
-      state.versions = []; state.verSeq = 0;
-      pushVersion("初稿", "按录入合作要素智能匹配模板并生成协议初稿");
-      setStatus("协议初稿已生成，点击「开始预审校验」发起多维预审");
-      updateEditorState();
-    }
-    function runPrecheck() {
-      if (!state.docLoaded) { showToast("请先新建拟制任务并生成协议初稿"); return; }
-      $("#pfEmpty").classList.add("hide");
-      $("#pfResults").classList.add("show");
-      $("#pfList").innerHTML = "";
-      $("#pfTotal").textContent = "…";
-      $("#pfScore").textContent = "…";
-      const prog = $("#pfProgress"), bar = $("#pfProgBar"), pct = $("#pfProgPct"), lbl = $("#pfProgLbl");
-      prog.classList.add("show"); bar.style.width = "0%";
-      const stages = [[16, "校验条款完整性，比对必备条款…"], [40, "校验逻辑一致性，检测日期与金额冲突…"], [64, "校验权责对等性，识别义务失衡…"], [86, "大模型法律合规审查，识别违规表述…"], [100, "生成预审问题清单…"]];
-      let i = 0;
-      setFlow(4);
-      const t = setInterval(() => {
-        if (i >= stages.length) {
-          clearInterval(t);
-          setTimeout(() => { prog.classList.remove("show"); setFlow(5); }, 400);
-          state.prechecked = true;
-          renderIssues();
-          updateEditorState();
-          setStatus("多维预审完成，已生成问题清单，请逐项复核处理");
-          showToast("预审完成：检出 " + allIssues().filter(it => !it.resolved).length + " 项问题");
-          return;
-        }
-        bar.style.width = stages[i][0] + "%"; pct.textContent = stages[i][0] + "%"; lbl.textContent = stages[i][1];
-        i++;
-      }, 480);
+    function renderStats() {
+      const typeData = [
+        { n: "政企合作", v: 152, c: "#2455e6" }, { n: "战略合作", v: 84, c: "#0b8fa8" },
+        { n: "服务委托", v: 66, c: "#43A047" }, { n: "项目共建", v: 48, c: "#d07a00" },
+        { n: "配套服务", v: 36, c: "#b83fce" }
+      ];
+      const max = Math.max.apply(null, typeData.map(d => d.v));
+      $("#statBars").innerHTML = typeData.map(d =>
+        `<div class="bar-row"><span>${d.n}</span><div class="bar-track"><div class="bar-fill" style="width:${(d.v / max * 100).toFixed(0)}%;background:${d.c};"></div></div><span style="text-align:right;font-weight:700;">${d.v}</span></div>`).join("");
+
+      $("#statDonut").style.background = "conic-gradient(var(--primary) 0 39%, var(--orange) 39% 64%, var(--green) 64% 100%)";
+
+      const top = [["政企合作协议模板", 168], ["服务委托协议模板", 152], ["战略合作框架协议模板", 131], ["项目共建合作协议模板", 118], ["联合运营协议模板", 96], ["监理服务合同模板", 84], ["第三方测试合同模板", 73], ["政企合作补充协议模板", 66]];
+      const tmax = top[0][1];
+      $("#statTop").innerHTML = top.map(t =>
+        `<div class="bar-row"><span>${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${(t[1] / tmax * 100).toFixed(0)}%;background:linear-gradient(90deg,#2455e6,#0b8fa8);"></div></div><span style="text-align:right;font-weight:700;">${t[1]}</span></div>`).join("");
+
+      // 趋势 SVG
+      const vals = [38, 46, 55, 61, 72, 84, 92], labels = ["1月", "2月", "3月", "4月", "5月", "6月", "7月"];
+      const W = 460, H = 180, pad = 28, vmax = 100;
+      const pts = vals.map((v, i) => [pad + i * ((W - pad * 2) / (vals.length - 1)), H - pad - (v / vmax) * (H - pad * 2)]);
+      const line = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+      const area = `${pad},${H - pad} ` + line + ` ${W - pad},${H - pad}`;
+      const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#2455e6"/>`).join("");
+      const lab = labels.map((l, i) => `<text x="${pts[i][0].toFixed(1)}" y="${H - 8}" font-size="11" fill="#8b95a7" text-anchor="middle">${l}</text>`).join("");
+      const vlab = pts.map((p, i) => `<text x="${p[0].toFixed(1)}" y="${(p[1] - 8).toFixed(1)}" font-size="10" fill="#55617d" text-anchor="middle">${vals[i]}</text>`).join("");
+      $("#statTrend").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">
+        <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(36,85,230,.22)"/><stop offset="1" stop-color="rgba(36,85,230,0)"/></linearGradient></defs>
+        <polygon points="${area}" fill="url(#ga)"/><polyline points="${line}" fill="none" stroke="#2455e6" stroke-width="2.5"/>${dots}${lab}${vlab}
+      </svg>`;
     }
 
+    /* =========================================================================
+       视图切换
+       ========================================================================= */
+    function switchView(v) {
+      state.view = v;
+      $$(".view").forEach(el => el.classList.toggle("active", el.id === "view-" + v));
+      if (v === "stats") renderStats();
+      if (v === "templates") { renderLib("tpl"); renderLib("clause"); }
+      if (v === "clauses") renderLib("clause");
+    }
     /* =========================================================================
        新建拟制向导（对应流程图：录入要素 → 智能匹配 → 生成初稿）
        ========================================================================= */
-    // 步骤1：选择协议类型与来源
     function newTaskFlow() {
       const cards = scenes.map(s =>
         `<div class="scene-card ${s.key === state.scene ? "on" : ""}" data-scene="${s.key}">
@@ -1399,10 +1467,10 @@
           <div class="toolbar-inline">
             <button class="btn" id="srcSample">📄 使用示例任务（一键演示）</button>
             <button class="btn" id="srcImport">📁 导入既有合作材料</button>
+            <button class="btn" id="srcTpl">📑 从模板库选择模板拟制</button>
           </div>
-          <div class="hint-txt">「使用示例任务」将载入战略合作框架协议示例，直接进入生成结果；也可点击「下一步」手工录入合作要素。</div>
+          <div class="hint-txt">「使用示例任务」将载入战略合作框架协议示例，直接进入生成结果；「从模板库选择」直接套用已生效模板；也可点击「下一步」手工录入合作要素。</div>
         </div>`, () => goElementForm(), { okText: "下一步：录入要素", wide: true });
-      // 绑定场景卡片选择与快速开始
       setTimeout(() => {
         $$("#sceneCards .scene-card").forEach(card => card.onclick = () => {
           $$("#sceneCards .scene-card").forEach(c => c.classList.remove("on"));
@@ -1419,6 +1487,7 @@
           closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("已载入「" + state.scene + "」示例任务，协议初稿已生成");
         });
         $("#srcImport") && ($("#srcImport").onclick = () => $("#fileInput").click());
+        $("#srcTpl") && ($("#srcTpl").onclick = () => { closeModal(); tplPickModal(); });
       }, 0);
     }
     // 步骤2：录入合作要素（含必填 / 手机号 / 日期范围校验）
@@ -1461,7 +1530,6 @@
             <div class="err" id="ef-risk-err">请至少选择一项合规及风控要求</div>
           </div>
         </div>`, () => submitElementForm(), { okText: "下一步：智能匹配", wide: true });
-      // 复选切换
       setTimeout(() => {
         $$("#ef-risk .opt").forEach(o => o.onclick = () => o.classList.toggle("on"));
       }, 0);
@@ -1484,11 +1552,10 @@
       $("#ef-risk-err").closest(".field").classList.toggle("invalid", !riskChecked);
       if (!riskChecked) ok = false;
       if (!ok) { showToast("请完善必填项后再继续"); return; }
-      // 结构化要素入库（对齐客户合同模板封面字段）
       state.partyB = b;
       state.elements = {
-        contractNo: $("#ef-no").value.trim() || "（编号待编）",
-        projNo: $("#ef-projno").value.trim() || "（待定）",
+        contractNo: $("#ef-no").value.trim() || "",
+        projNo: $("#ef-projno").value.trim() || "",
         projName: projname,
         signDate: sign,
         partyAPm: "中心项目负责人（待定）",
@@ -1510,18 +1577,20 @@
           <div class="s done"><span class="dot">✓</span><span class="t">录入要素</span></div><span class="bar"></span>
           <div class="s active"><span class="dot">3</span><span class="t">匹配生成</span></div>
         </div>
-        <div id="matchLines"></div>`, () => { closeModal(); loadContract({ name: state.taskName }); showToast("协议初稿已生成，可发起多维预审"); }, { okText: "生成协议初稿" });
+        <div id="matchLines"></div>`, () => { closeModal(); loadContract({ name: state.taskName }); showToast("协议初稿已生成，可编辑完善后导出"); }, { okText: "生成协议初稿" });
       setFlow(2);
-      const tpl = (scenes.find(s => s.key === state.scene) || {}).tpl || "战略合作框架协议模板 v3.1";
       const isGovSvc = state.scene === "工程监理" || state.scene === "第三方测试";
+      const tplBase = sceneTplBase();
+      const refN = (TPL_REFS[tplBase] || []).length;
+      const tplHit = findTplRow(tplBase);
       const lines = [
-        ["按业务场景「" + state.scene + "」匹配合同模板", "ok", "命中：" + tpl],
-        ["调用生效版本与适用规则", "ok", "生效"],
+        ["按业务场景「" + state.scene + "」匹配合同模板", "ok", "命中：" + tplBase + (tplHit ? " " + tplHit.row[2] : "")],
+        ["调用生效版本与适用规则", "ok", tplHit ? tplHit.row[3] : "生效"],
         ["智能填充合作要素（编号、主体、期限、经费、权责）", "ok", "12 项"],
-        ["引用标准条款并补齐必备条款", "ok", "引用 12 项"],
+        ["引用标准条款并补齐必备条款", "ok", "引用 " + refN + " 项"],
         ...(isGovSvc ? [["载入考核评价与支付比例挂钩条款（附件）", "ok", "已载入"]] : []),
         ["剔除与本场景无关的冗余条款", "ok", "剔除 3 项"],
-        ["检出缺失必备条款（将在预审提示）", "warn", "缺 2 项"]
+        ["检出缺失必备条款", "warn", "缺 2 项"]
       ];
       const box = $("#matchLines");
       let i = 0;
@@ -1540,55 +1609,410 @@
        资料库：新增 / 编辑 / 删除
        ========================================================================= */
     function addLibModal(libKey) {
+      if (libKey === "tpl") return tplUploadFlow(); // 模板走三步上传解析向导
+      // 条款库保持原表单式新增
       const lib = LIBS[libKey];
-      // 上传模板 / 上传条款 的文案（模板库用「模板」，条款库用「条款文本」，规则库无上传）
-      const cfg = {
-        tpl: { title: "上传模板", noun: "模板", accept: "支持 .docx / .doc / .pdf / .wps / .ofd", importTip: "从模板包批量导入" },
-        clause: { title: "新增条款", noun: "条款文本", accept: "支持 .docx / .doc / .txt / .xlsx", importTip: "从标准条款库批量导入" },
-        rule: { title: "添加规则", noun: "", accept: "", importTip: "" }
-      }[libKey];
+      const cfg = { clause: { title: "新增条款", noun: "条款文本", accept: "支持 .docx / .doc / .txt / .xlsx" } }[libKey];
       const fields = lib.cols.map((col, i) =>
         `<div class="field"><label>${col}</label><input type="text" id="lf-${i}" placeholder="请输入${col}"></div>`).join("");
-      // 上传/导入区（仅模板库、条款库提供文件上传，规则库为纯表单）
-      const upBlock = (libKey === "rule") ? "" : `
-        <div class="field">
-          <label>上传${cfg.noun}文件</label>
-          <div class="upzone" id="upzone">
-            <div class="up-ic">⬆</div>
-            <div class="up-t">点击选择文件，或将${cfg.noun}文件拖拽到此处</div>
-            <div class="hint-txt">${cfg.accept}，单个文件不超过 20MB</div>
-            <div class="up-btns">
-              <button class="btn sm" type="button" id="upPick">📁 选择文件</button>
-              <button class="btn sm" type="button" id="upImport">📦 ${cfg.importTip}</button>
-            </div>
-            <div class="up-file" id="upFile" style="display:none;">📄 <span id="upFileName"></span><a href="javascript:;" id="upRemove">移除</a></div>
+      openModal(cfg.title, `
+        <div class="form-grid">${fields}</div>
+        <div class="field" style="margin-bottom:0;">
+          <label>上传${cfg.noun}</label>
+          <div class="upzone" style="padding:22px 14px;">
+            <div class="up-ic">📄</div>
+            <div class="up-t">点击选择或拖拽${cfg.noun}文件</div>
+            <div class="hint-txt">${cfg.accept}</div>
           </div>
+        </div>`, () => {
+        const vals = lib.cols.map((col, i) => ($("#lf-" + i) && $("#lf-" + i).value.trim()) || "");
+        if (!vals[0]) { showToast("请填写名称"); return; }
+        const catObj = lib.cats.find(x => x.key === state.libCat[libKey]) || lib.cats[0];
+        const statusCol = libKey === "tpl" ? 3 : 4;
+        const row = vals.slice();
+        row[statusCol] = "草稿";
+        catObj.rows.push(row);
+        renderLib(libKey); closeModal(); showToast(cfg.title + "成功（草稿），复核发布后生效");
+      }, { okText: "确认新增", wide: true });
+    }
+
+    /* —— 上传合同模板三步向导（上传 → AI 解析 → 确认入库） —— */
+    function tplUploadFlow() {
+      // 步骤1：上传合同文件
+      openModal("上传合同模板 · 第 1 步 / 共 3 步", `
+        <div class="steps">
+          <div class="s active"><span class="dot">1</span><span class="t">上传文件</span></div><span class="bar"></span>
+          <div class="s"><span class="dot">2</span><span class="t">AI 解析</span></div><span class="bar"></span>
+          <div class="s"><span class="dot">3</span><span class="t">确认入库</span></div>
         </div>
-        <div class="up-or">或手工填写${cfg.noun === "条款文本" ? "条款信息" : "模板信息"}</div>`;
-      openModal(cfg.title + " · " + lib.title, upBlock + `<div class="form-grid">${fields}</div>
-        <div class="hint-txt" style="margin-top:8px;">${libKey === "tpl" ? "上传后系统将自动解析、按业务场景/协议类型标准化拆解并标签化规整，纳入版本管控。" : (libKey === "clause" ? "上传后系统将自动切分标准化条款并标记必备性，纳入条款库版本管理。" : "")}</div>`, () => {
-        const vals = lib.cols.map((col, i) => ($("#lf-" + i).value || "").trim());
-        const picked = $("#upFileName") && $("#upFileName").textContent;
-        // 若上传了文件但未填写名称，用文件名回填首列（模板名称/条款名称）
-        if (picked && !vals[0]) vals[0] = picked.replace(/\.[^.]+$/, "");
-        if (vals.some(v => !v)) { showToast(picked ? "文件已就绪，请补全必要字段（版本、状态等）" : "请上传文件或完整填写各字段"); return; }
-        lib.cats.find(x => x.key === state.libCat[libKey]).rows.push(vals);
-        renderLib(libKey); closeModal(); showToast(picked ? "文件已上传并解析入库，已留痕" : "已新增并留痕");
-      }, { wide: true, okText: cfg.title });
-      // 绑定上传区交互（模拟上传，仅做交互展示）
+        <div class="upzone" id="upzone" style="padding:34px 18px;">
+          <div class="up-ic">📄</div>
+          <div class="up-t">点击选择合同文件，或将文件拖拽到此处</div>
+          <div class="hint-txt">支持 .docx / .doc / .pdf / .wps / .ofd，单个文件不超过 20MB</div>
+          <div class="hint-txt">建议上传经法务审定的合同范本：系统将自动解析条款结构并提取可配置字段</div>
+          <div class="up-btns"><button class="btn sm" type="button" id="upPick">📁 选择合同文件</button></div>
+          <div class="up-file" id="upFile" style="display:none;">📄 <span id="upFileName"></span><a href="javascript:;" id="upRemove">移除</a></div>
+        </div>
+        <div class="hint-txt" style="margin-top:10px;">入库后模板为「草稿」状态，经复核发布后才会参与智能生成；全程操作留痕。</div>`, () => {
+        if (!($("#upFileName") && $("#upFileName").textContent)) { showToast("请先选择合同文件"); return; }
+        tplParseStep($("#upFileName").textContent);
+      }, { okText: "下一步：开始解析", wide: true });
       setTimeout(() => {
-        const showFile = (name) => {
+        $("#upPick") && ($("#upPick").onclick = () => {
           $("#upFile").style.display = "inline-flex";
-          $("#upFileName").textContent = name;
-          if (!$("#lf-0").value) $("#lf-0").value = name.replace(/\.[^.]+$/, "");
-        };
-        $("#upPick") && ($("#upPick").onclick = () => showFile(libKey === "tpl" ? "政企合作协议范本.docx" : "保密义务与范围条款.docx"));
-        $("#upImport") && ($("#upImport").onclick = () => { showFile(libKey === "tpl" ? "合作协议模板包(6项).zip" : "标准条款清单(12项).xlsx"); showToast("已解析文件，示例：共 " + (libKey === "tpl" ? "6" : "12") + " 项待入库"); });
+          $("#upFileName").textContent = "政企合作协议范本（新）.docx";
+        });
         $("#upRemove") && ($("#upRemove").onclick = () => { $("#upFile").style.display = "none"; $("#upFileName").textContent = ""; });
         const uz = $("#upzone");
         uz && (uz.onclick = (e) => { if (e.target === uz || e.target.classList.contains("up-ic") || e.target.classList.contains("up-t")) $("#upPick").click(); });
       }, 0);
     }
+
+    function tplParseStep(fileName) {
+      // 步骤2：AI 解析（逐行动画）
+      const name = fileName.replace(/\.[^.]+$/, "");
+      openModal("上传合同模板 · 第 2 步 / 共 3 步", `
+        <div class="steps">
+          <div class="s done"><span class="dot">✓</span><span class="t">上传文件</span></div><span class="bar"></span>
+          <div class="s active"><span class="dot">2</span><span class="t">AI 解析</span></div><span class="bar"></span>
+          <div class="s"><span class="dot">3</span><span class="t">确认入库</span></div>
+        </div>
+        <div class="parse-sum">
+          <div class="ps"><div class="k">解析文件</div><div class="v">${fileName}<small>DOCX</small></div></div>
+          <div class="ps"><div class="k">模板识别</div><div class="v" id="psType">解析中…</div></div>
+        </div>
+        <div id="parseLines"></div>`, () => {
+        closeModal(); showToast("解析未完成，请稍候");
+      }, { okText: "请稍候…", wide: true });
+      const lines = [
+        ["识别文档结构与章节层级（封面/通用条款/专用条款/落款）", "ok", "4 级"],
+        ["拆分条款并逐条编号（第一条…第十八条）", "ok", "18 条"],
+        ["提取可配置字段（合同编号、甲乙方、金额、期限、费率）", "ok", "12 项"],
+        ["识别必备条款（保密、违约责任、争议解决、知识产权）", "ok", "命中 4 条"],
+        ["比对条款库，标注可复用标准条款", "ok", "关联 9 条"],
+        ["检测到 2 处条款表述与最新标准条款存在差异", "warn", "待确认"]
+      ];
+      const box = $("#parseLines");
+      const runToken = ++tplParseRunSeq;
+      let i = 0;
+      const t = setInterval(() => {
+        if (runToken !== tplParseRunSeq) { clearInterval(t); return; }
+        if (i >= lines.length) {
+          clearInterval(t);
+          const ps = $("#psType");
+          if (ps) { ps.textContent = "政企合作类"; }
+          const ok = $("#modalOk");
+          if (ok) { ok.textContent = "下一步：确认入库"; ok.onclick = () => tplConfirmStep(name); }
+          return;
+        }
+        const [txt, st, tag] = lines[i];
+        const div = document.createElement("div");
+        div.className = "parse-line " + st;
+        div.innerHTML = `<span class="ic">${st === "ok" ? "✓" : "!"}</span><span>${txt}</span><span class="tag ${st === "ok" ? "done" : "wait"}">${tag}</span>`;
+        box.appendChild(div);
+        i++;
+      }, 420);
+      // 计时结束后把全量明细追加到弹框底部
+      setTimeout(() => {
+        if (runToken !== tplParseRunSeq) return; // 守卫：已被新一轮解析取代
+        const box2 = $("#parseLines"); // 守卫：用户已进入下一步则不追加
+        if (!box2) return;
+        const h = document.createElement("div");
+        h.innerHTML = parseDetailHtml();
+        box2.parentNode.appendChild(h);
+      }, 420 * lines.length + 80);
+    }
+
+    function tplConfirmStep(name) {
+      // 步骤3：确认模板信息入库（AI 预填，可修改）
+      const cats = LIBS.tpl.cats;
+      const catOpts = cats.map(c => `<option value="${c.key}">${c.icon} ${c.name}</option>`).join("");
+      openModal("上传合同模板 · 第 3 步 / 共 3 步", `
+        <div class="steps">
+          <div class="s done"><span class="dot">✓</span><span class="t">上传文件</span></div><span class="bar"></span>
+          <div class="s done"><span class="dot">✓</span><span class="t">AI 解析</span></div><span class="bar"></span>
+          <div class="s active"><span class="dot">3</span><span class="t">确认入库</span></div>
+        </div>
+        <div class="hint-txt" style="margin-bottom:12px;">AI 已完成解析并预填以下信息，请核对后确认入库；入库状态为「草稿」，复核发布后参与智能生成。</div>
+        <div class="form-grid">
+          <div class="field"><label class="req">模板名称</label><input type="text" id="tf-name" value="${name}"></div>
+          <div class="field"><label class="req">适用分类</label><select id="tf-cat">${catOpts}</select></div>
+          <div class="field"><label class="req">风险等级</label><select id="tf-risk"><option>中</option><option>高</option><option>低</option></select></div>
+          <div class="field"><label>版本号</label><input type="text" id="tf-ver" value="v1.0"></div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>AI 解析结果明细（<a data-action="parseToggle" style="font-weight:700;">点击展开 / 收起</a>）</label>
+          <div class="field-map" id="pcSummary">
+            <div class="fm"><span class="fm-k">章节</span><span class="fm-v">7 个</span></div>
+            <div class="fm"><span class="fm-k">条款</span><span class="fm-v">${PARSE_RESULT.clauses.length} 条（必备 ${PARSE_RESULT.clauses.filter(x => x[2] === "必备条款").length} / 可选 ${PARSE_RESULT.clauses.filter(x => x[2] === "可选条款").length}）</span></div>
+            <div class="fm"><span class="fm-k">可配置字段</span><span class="fm-v">${PARSE_RESULT.fields.length} 项</span></div>
+            <div class="fm"><span class="fm-k">表述差异</span><span class="fm-v">2 处待人工确认</span></div>
+          </div>
+          <div id="pcDetail" style="display:none;">${parseDetailHtml()}</div>
+        </div>`, () => {
+        const nm = ($("#tf-name").value || "").trim();
+        if (!nm) { showToast("请填写模板名称"); return; }
+        const cat = $("#tf-cat").value;
+        const catObj = LIBS.tpl.cats.find(x => x.key === cat);
+        const today = "2026-09-20";
+        catObj.rows.push([nm, $("#tf-risk").value, $("#tf-ver").value || "v1.0", "草稿", today]);
+        TPL_FIELDS[nm] = PARSE_RESULT.fields.map(x => x.slice());
+        TPL_REFS[nm] = ["法律适用与合规声明", "甲乙双方权利义务", "保密义务与范围", "违约责任", "争议解决与管辖", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"];
+        renderLib("tpl"); closeModal();
+        showToast("模板已入库（草稿），待复核发布后参与智能生成");
+        setStatus("模板「" + nm + "」已上传解析入库，状态：草稿");
+      }, { okText: "确认入库", wide: true });
+    }
+
+    /* —— 模板 / 条款详情弹框 —— */
+    function tplDetailModal(ri) {
+      const c = LIBS.tpl.cats.find(x => x.key === state.libCat.tpl), row = c.rows[ri];
+      const name = row[0];
+      const refs = (TPL_REFS[name] || []).map(n => {
+        const f = findClauseRow(n);
+        return { name: n, cat: f ? f.cat.name : "—", row: f ? f.cat.rows[f.ri] : null, ref: f };
+      });
+      const refRows = refs.map(r => `<tr>
+        <td>${r.name}</td><td>${r.cat}</td>
+        <td><span class="tag ${r.row && r.row[2] === "必备" ? "done" : "off"}">${r.row ? r.row[2] : "—"}</span></td>
+        <td>${r.row ? r.row[3] : "—"}</td>
+        <td>${r.ref ? `<a data-action="tplRefClause" data-name="${r.name}" data-lib="clause">查看条款</a>` : "未入库"}</td>
+      </tr>`).join("") || `<tr><td colspan="5" style="color:#8b95a7;">暂未关联标准条款（新入库模板），可在条款管理中维护引用关系。</td></tr>`;
+      openModal("模板详情 · " + name, `
+        <div class="parse-sum">
+          <div class="ps"><div class="k">风险等级</div><div class="v">${row[1]}</div></div>
+          <div class="ps"><div class="k">当前版本</div><div class="v">${row[2]}<small>${row[3]}</small></div></div>
+          <div class="ps"><div class="k">适用分类</div><div class="v">${c.name}</div></div>
+          <div class="ps"><div class="k">最近更新</div><div class="v">${row[4]}</div></div>
+        </div>
+        <div class="field-map" style="margin-bottom:10px;">
+          <div class="fm"><span class="fm-k">引用标准条款</span><span class="fm-v">${refs.length} 条</span></div>
+          <div class="fm"><span class="fm-k">其中必备</span><span class="fm-v">${refs.filter(r => r.row && r.row[2] === "必备").length} 条</span></div>
+          <div class="fm"><span class="fm-k">可配置字段</span><span class="fm-v">${tplFieldsOf(name).length} 项</span></div>
+          <div class="fm"><span class="fm-k">适用分类</span><span class="fm-v">${c.name}</span></div>
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>可配置字段（生成合同时由要素录入自动填充）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:200px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>字段名称</th><th>字段类型</th><th>必填</th><th>取值来源</th><th>默认值</th></tr></thead><tbody>
+              ${tplFieldsOf(name).map((f, fi) => `<tr>
+                <td><b>${f[0]}</b></td><td>${f[1]}</td>
+                <td><span class="tag ${f[2] === "必填" ? "done" : "off"}">${f[2]}</span></td>
+                <td>${f[3]}</td><td>${f[4] || "—"}</td>
+              </tr>`).join("") || `<tr><td colspan="5" style="color:#8b95a7;">暂无可配置字段（新入库模板）。</td></tr>`}
+            </tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>引用条款清单（多对多引用 · 来自条款库 · ${refs.length} 条）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:220px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>条款名称</th><th>分类</th><th>必备性</th><th>版本</th><th>操作</th></tr></thead><tbody>
+              ${refRows}
+            </tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>使用该模板拟制</label>
+          <div class="hint-txt" style="margin-top:0;">点击下方按钮，将套用该模板 ${row[2]}（${row[3]}）进入新建合同拟制流程，系统自动带出模板结构与标准条款。如需调整模板字段或条款引用，请点击<a data-action="tplEdit" data-lib="tpl" data-name="${name}" style="font-weight:700;">「编辑模板」</a>。</div>
+        </div>`, () => {
+        closeModal();
+        state.scene = c.key;
+        state.taskName = name.replace(/模板$/, "") + "（拟制）";
+        state.tplOverride = name;
+        newTaskFromTpl(name, c.key);
+      }, { okText: "📑 使用该模板拟制合同", wide: true, hideFooter: false });
+    }
+
+    function clauseDetailModal(ri) {
+      const c = LIBS.clause.cats.find(x => x.key === state.libCat.clause), row = c.rows[ri];
+      const refBy = clauseRefBy(row[0]);
+      openModal("条款详情 · " + row[0], `
+        <div class="parse-sum">
+          <div class="ps"><div class="k">适用场景</div><div class="v">${row[1]}</div></div>
+          <div class="ps"><div class="k">必备性</div><div class="v">${row[2]}</div></div>
+          <div class="ps"><div class="k">当前版本</div><div class="v">${row[3]}<small>${row[4]}</small></div></div>
+          <div class="ps"><div class="k">被引用模板</div><div class="v">${refBy.length} 个</div></div>
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>被引用情况（多对多 · 哪些模板正在引用本条款）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:180px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>模板名称</th><th>模板分类</th><th>版本</th><th>状态</th></tr></thead><tbody>
+              ${refBy.map(t => `<tr><td>${t.row[0]}</td><td>${t.cat}</td><td>${t.row[2]}</td><td><span class="tag ${t.row[3] === "生效" ? "done" : "off"}">${t.row[3]}</span></td></tr>`).join("") || `<tr><td colspan="4" style="color:#8b95a7;">暂无模板引用本条款。</td></tr>`}
+            </tbody></table>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>条款正文（节选）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fbfcff;font-size:13px;color:#37425c;line-height:1.8;">
+            本条款为标准化条款范本，具体表述以当前生效版本为准。引用本条款的模板在条款变更后将收到影响范围提示（共 ${refBy.length} 个模板受影响），由模板管理员确认是否同步更新。
+          </div>
+        </div>`, null, { wide: true, hideFooter: true });
+    }
+
+    /* —— 从模板库选择模板发起拟制（新建弹框第三通道） —— */
+    function tplPickModal() {
+      const cats = LIBS.tpl.cats;
+      const catOpts = cats.map(c => `<option value="${c.key}">${c.icon} ${c.name}</option>`).join("");
+      openModal("从模板库选择模板", `
+        <div class="hint-txt" style="margin-bottom:12px;">选择一个「生效」状态的模板发起拟制：系统将套用模板结构与标准条款，进入要素录入后生成初稿。草稿/作废状态模板不参与生成。</div>
+        <div class="form-grid">
+          <div class="field"><label class="req">模板分类</label><select id="tp-cat">${catOpts}</select></div>
+          <div class="field"><label class="req">选择模板</label><select id="tp-tpl"></select></div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>模板信息</label>
+          <div class="field-map" id="tp-info"></div>
+        </div>`, () => {
+        const sel = $("#tp-tpl");
+        if (!sel || !sel.value) { showToast("请选择模板"); return; }
+        const catKey = $("#tp-cat").value;
+        const row = LIBS.tpl.cats.find(x => x.key === catKey).rows[+sel.value];
+        if (row[3] !== "生效") { showToast("仅「生效」状态模板可发起拟制"); return; }
+        closeModal();
+        state.scene = catKey;
+        state.taskName = row[0].replace(/模板$/, "") + "（拟制）";
+        state.tplOverride = row[0];
+        newTaskFromTpl(row[0], catKey);
+      }, { okText: "使用该模板拟制", wide: true });
+      const fillTpls = () => {
+        const catKey = $("#tp-cat").value;
+        const rows = LIBS.tpl.cats.find(x => x.key === catKey).rows;
+        $("#tp-tpl").innerHTML = rows.map((r, i) => `<option value="${i}" ${r[3] !== "生效" ? "disabled" : ""}>${r[0]}（${r[2]} · ${r[3]}）</option>`).join("");
+        const upd = () => {
+          const sel = $("#tp-tpl");
+          const r = rows[+sel.value] || rows[0];
+          $("#tp-info").innerHTML = `
+            <div class="fm"><span class="fm-k">风险等级</span><span class="fm-v">${r[1]}</span></div>
+            <div class="fm"><span class="fm-k">版本</span><span class="fm-v">${r[2]}</span></div>
+            <div class="fm"><span class="fm-k">状态</span><span class="fm-v">${r[3]}</span></div>
+            <div class="fm"><span class="fm-k">更新时间</span><span class="fm-v">${r[4]}</span></div>`;
+        };
+        $("#tp-tpl").onchange = upd; upd();
+      };
+      setTimeout(() => { $("#tp-cat").onchange = fillTpls; fillTpls(); }, 0);
+    }
+
+    // 套用模板 → 进入要素录入（复用现有向导第 2 步，带模板标识）
+    function newTaskFromTpl(tplName, sceneKey) {
+      state.scene = sceneKey;
+      closeModal();
+      switchView("editor");
+      showToast("已选定模板「" + tplName + "」，请录入合作要素");
+      openModal("使用模板拟制 · " + tplName, `
+        <div class="steps">
+          <div class="s done"><span class="dot">✓</span><span class="t">选定模板</span></div><span class="bar"></span>
+          <div class="s active"><span class="dot">2</span><span class="t">录入要素</span></div><span class="bar"></span>
+          <div class="s"><span class="dot">3</span><span class="t">匹配生成</span></div>
+        </div>
+        <div class="field-map" style="margin-bottom:12px;">
+          <div class="fm"><span class="fm-k">套用模板</span><span class="fm-v">${tplName}</span></div>
+          <div class="fm"><span class="fm-k">协议类型</span><span class="fm-v">${sceneKey}</span></div>
+        </div>
+        <div class="hint-txt">点击「下一步」录入合作要素；系统将按模板结构自动填充并补齐必备条款，生成初稿。</div>`, () => {
+        closeModal();
+        state.taskName = state.taskName || tplName.replace(/模板$/, "");
+        addNewDraft(false, 1);
+        goElementForm();
+      }, { okText: "下一步：录入要素", wide: true });
+    }
+
+    function setFlow(n) {
+      const visualFlow = n <= 1 ? 1 : (n <= 3 ? 2 : (n <= 5 ? 3 : 4));
+      $$(".flow-node").forEach(node => {
+        const f = +node.dataset.flow;
+        node.classList.toggle("done", f < visualFlow);
+        node.classList.toggle("current", f === visualFlow);
+      });
+    }
+
+    function updateVerInfo() {
+      const tb = $("#verTable"); if (!tb) return;
+      tb.innerHTML = state.versions.map(v => `<tr><td><b>${v.ver}</b></td><td>${v.type}</td><td>${v.user}</td><td>${v.time}</td><td>${v.note}</td></tr>`).join("");
+    }
+    function pushVersion(type, note) {
+      state.verSeq++;
+      state.versions.push({ ver: "V" + state.verSeq, type: type, user: "合同归口管理岗", time: nowStr(), note: note, html: $("#docPage").innerHTML });
+      updateVerInfo();
+    }
+
+    function openVersionsModal(cfg) {
+      if (!cfg.versions || !cfg.versions.length) { showToast("该合同暂无版本记录"); return; }
+      state.viewingVersions = cfg.versions; state.viewingLive = cfg.live; state.viewingName = cfg.name;
+      const curVer = cfg.versions[cfg.versions.length - 1].ver;
+      const typeTag = t => ({ "初稿": "low", "草稿": "off", "修订稿": "done", "回溯还原": "mid", "导出定稿": "doing" }[t] || "off");
+      const rows = cfg.versions.slice().reverse().map(v =>
+        `<tr>
+          <td><b>${v.ver}</b>${v.ver === curVer ? ' <span class="tag doing">最新</span>' : ""}</td>
+          <td><span class="tag ${typeTag(v.type)}">${v.type}</span></td>
+          <td>${v.user}</td><td>${v.time}</td><td>${v.note}</td>
+          <td class="row-act">
+            <a data-action="verView" data-ver="${v.ver}">查看</a>
+            <a data-action="verDiff" data-ver="${v.ver}">对比${cfg.live ? "当前" : "最新"}</a>
+            <a data-action="verRestore" data-ver="${v.ver}"${v.ver === curVer ? ' style="color:#c3cbdb;pointer-events:none;"' : ""}>回溯还原</a>
+          </td>
+        </tr>`).join("");
+      const tip = cfg.live
+        ? "以下为<b>当前正在编辑的合同</b>的版本记录。系统在生成、保存、采纳建议、导出等节点自动保存草稿与修订稿，记录操作人、时间与修改内容，支持版本对比与回溯还原。"
+        : "以下为该合同的历史草稿与修订稿版本。可查看各版本内容、对比差异；如需回溯还原到编辑器继续修改，请点击「回溯还原」。";
+      openModal("多版本管理 · " + cfg.name, `
+        <div class="hint-txt" style="margin-bottom:10px;">${tip}</div>
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th style="width:78px;">版本</th><th style="width:88px;">类型</th><th>操作人</th><th>时间</th><th>修改说明</th><th style="width:180px;">操作</th></tr></thead>
+          <tbody>${rows}</tbody></table></div>`, null, { wide: true, hideFooter: true });
+    }
+
+    function loadContract(meta) {
+      const dp = $("#docPage");
+      // 按场景路由正文模板：工程监理/第三方测试对齐客户 2023 版合同模板结构
+      dp.innerHTML = state.scene === "工程监理" ? supervisionHtml(state.partyB)
+        : state.scene === "第三方测试" ? testingHtml(state.partyB)
+        : contractHtml(state.partyB);
+      dp.setAttribute("contenteditable", "true");
+      state.docLoaded = true;
+      setFlow(3); // 录入/匹配/生成已完成，进入编辑完善
+      // 初始化版本记录：生成初稿即作为 V1
+      state.versions = []; state.verSeq = 0;
+      pushVersion("初稿", "按录入合作要素智能匹配模板并生成协议初稿");
+      setStatus("协议初稿已生成：蓝色虚线处为待补充内容，单击可直接编辑，完成后保存版本留痕");
+      updateEditorState();
+    }
+
+    function updateEditorState() {
+      if (!state.docLoaded) {
+        setStatus("请新建合同拟制任务并录入合作要素");
+      }
+    }
+
+    function buildHistoryVersions(row) {
+      const datePart = (row[3] || "2026-07-13 10:20").split(" ")[0];
+      // 三个演进阶段的正文快照：V1 存在问题 → V2 修正期限与金额 → V3 修正违约与争议
+      const bad = {
+        期限: "合作期限：自2026年8月1日起至2026年7月31日止。", 金额: "合作经费：人民币800万元（捌佰陆拾万元）。",
+        违约: "违约责任：按合同总金额的50%向对方支付违约金。", 争议: "争议解决：由双方友好协商解决。"
+      };
+      const good = {
+        期限: "合作期限：自2026年8月1日起至2028年7月31日止。", 金额: "合作经费：人民币800万元（捌佰万元整）。",
+        违约: "违约责任：按实际损失赔偿，违约金不超过合同总金额的30%。", 争议: "争议解决：协商不成的，向甲方所在地人民法院提起诉讼。"
+      };
+      const html = o => `<h1 style="text-align:center;font-family:'SimHei','黑体',sans-serif;font-size:20px;margin:0 0 16px;">${row[0]}</h1>
+        <p class="no-indent">甲方（合作主体）：南京江北新区城市数字治理中心</p>
+        <p class="no-indent">乙方（合作主体）：合作单位</p>
+        <p class="clause-h">第一条　合作期限</p><p>${o.期限}</p>
+        <p class="clause-h">第二条　合作经费</p><p>${o.金额}</p>
+        <p class="clause-h">第三条　违约责任</p><p>${o.违约}</p>
+        <p class="clause-h">第四条　争议解决</p><p>${o.争议}</p>
+        <p class="right" style="margin-top:20px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
+        <p class="right">2026年　月　日</p>`;
+      const v1 = { ver: "V1", type: "初稿", user: "合同归口管理岗", time: datePart + " 09:10", note: "智能匹配模板并生成协议初稿", html: html(bad) };
+      if (row[7] === "拟制中") return [v1];
+      const v2 = { ver: "V2", type: "草稿", user: "合同归口管理岗", time: datePart + " 10:20", note: "采纳期限、金额修订建议保存草稿", html: html(Object.assign({}, bad, { 期限: good.期限, 金额: good.金额 })) };
+      const v3type = row[6] === "通过" ? "导出定稿" : "修订稿";
+      const v3 = { ver: "V3", type: v3type, user: "科室负责人", time: datePart + " 15:40", note: v3type === "导出定稿" ? "采纳全部建议并导出定稿归档" : "采纳违约、争议建议生成修订稿", html: html(good) };
+      return [v1, v2, v3];
+    }
+
+    function verCountFor(status) { return status === "拟制中" ? 1 : 3; }
+
     function editLibModal(libKey, ri) {
       const lib = LIBS[libKey];
       const row = lib.cats.find(x => x.key === state.libCat[libKey]).rows[ri];
@@ -1601,52 +2025,26 @@
     }
 
     /* =========================================================================
-       预审报告 HTML
-       ========================================================================= */
-    function reportHtml(docName) {
-      const total = allIssues().length, high = allIssues().filter(i => i.level === "high").length;
-      const score = $("#pfScore").textContent !== "—" ? $("#pfScore").textContent : "0/0";
-      return `<div style="line-height:1.9;">
-        <div style="font-weight:800;font-size:16px;color:#1b2947;margin-bottom:8px;">《${docName || state.taskName || "数字政务能力平台建设战略合作框架协议"}》预审校验报告</div>
-        <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">预审时间：2026-07-13 10:20 · 经办人：合同归口管理岗 · 密级：内部 · 预审引擎：合同预审智能体 v2.1</div>
-        <div class="grid-3" style="margin-bottom:14px;">
-          <div class="kpi" style="box-shadow:none;"><div class="k-label">检出问题</div><div class="k-value" style="font-size:22px;">${total}</div></div>
-          <div class="kpi" style="box-shadow:none;"><div class="k-label">高风险</div><div class="k-value" style="font-size:22px;color:var(--red);">${high}</div></div>
-          <div class="kpi" style="box-shadow:none;"><div class="k-label">已处理</div><div class="k-value" style="font-size:22px;color:var(--primary);">${score}</div></div>
-        </div>
-        <table class="tbl"><thead><tr><th>序号</th><th>预审维度</th><th>问题描述</th><th>原文 / 提示</th><th>修改建议</th><th>风险</th></tr></thead><tbody>
-        ${allIssues().map((it, i) => `<tr><td>${i + 1}</td><td>${it.dim}</td><td>${it.cat}</td><td style="color:var(--red);">${it.del !== undefined ? it.del : (it.tip || "")}</td><td style="color:var(--green);">${it.ins}</td><td>${it.level === "high" ? "高" : it.level === "mid" ? "中" : "低"}</td></tr>`).join("")}
-        </tbody></table>
-        <div style="margin-top:12px;color:#4a597a;font-size:13px;">说明：本报告由合同预审智能体自动生成，问题清单及修改建议供业务 / 法务人工复核参考，最终以审核确认为准。导出格式：Word / PDF，自动统一版式、编号与字体格式。</div>
-      </div>`;
-    }
-
-    /* =========================================================================
-       查看与导出弹框：选项卡查看「协议草案」「预审校验报告」，并支持导出
+       查看与导出弹框：查看「协议草案」，并支持导出
        ========================================================================= */
     function openDocReportModal(cfg) {
       state.docReportLive = !!cfg.live;
       const name = cfg.name || "数字政务能力平台建设战略合作框架协议";
       openModal("查看与导出 · " + name, `
         <div class="tab-bar">
-          <button class="tab-btn active" type="button" data-action="drTab" data-tab="draft">📄 协议草案</button>
-          <button class="tab-btn" type="button" data-action="drTab" data-tab="report">🛡 预审校验报告</button>
           <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
             <label style="font-size:12px;color:#46536e;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="drWatermark" checked style="width:14px;height:14px;"> 添加水印</label>
-            <button class="btn sm" type="button" data-action="drExport" data-what="draft">⬇ 导出协议草案（Word）</button>
-            <button class="btn sm" type="button" data-action="drExport" data-what="report">⬇ 导出校验报告（PDF）</button>
-            <button class="primary-btn sm" type="button" data-action="drExport" data-what="all">⬇ 全部导出</button>
+            <button class="primary-btn sm" type="button" data-action="drExport" data-what="draft">⬇ 导出协议草案（Word）</button>
           </div>
         </div>
-        <div id="drDraft" class="doc-view doc-page" style="min-height:auto;font-size:15px;line-height:1.9;">${cfg.draftHtml}</div>
-        <div id="drReport" class="doc-view" style="display:none;">${reportHtml(name)}</div>`, null, { wide: true, hideFooter: true });
+        <div id="drDraft" class="doc-view doc-page" style="min-height:auto;font-size:15px;line-height:1.9;">${cfg.draftHtml}</div>`, null, { wide: true, hideFooter: true });
     }
 
     /* =========================================================================
        全局点击事件委托
        ========================================================================= */
     document.body.addEventListener("click", (e) => {
-      const t = e.target.closest("[data-action],[data-view],[data-view-jump],[data-lib-cat],[data-flow],.pf-cat");
+      const t = e.target.closest("[data-action],[data-view],[data-view-jump],[data-lib-cat],[data-flow]");
       if (!t) return;
 
       // 左侧主导航
@@ -1654,19 +2052,12 @@
       // 面板内跳转
       if (t.dataset.viewJump) {
         switchView(t.dataset.viewJump);
-        showToast("已进入" + ({ rules: "预审规则库", clauses: "合同条款库", templates: "合同模板库" }[t.dataset.viewJump] || t.dataset.viewJump));
+        showToast("已进入" + ({ clauses: "合同条款库", templates: "合同模板库" }[t.dataset.viewJump] || t.dataset.viewJump));
         return;
       }
       // 资料库分类切换
       if (t.dataset.libCat && t.dataset.lib) {
         state.libCat[t.dataset.lib] = t.dataset.libCat; renderLib(t.dataset.lib); return;
-      }
-      // 预审维度筛选
-      if (t.classList.contains("pf-cat")) {
-        const b = t.dataset.bucket;
-        if (state.activeCats.has(b)) state.activeCats.delete(b); else state.activeCats.add(b);
-        t.classList.toggle("on", state.activeCats.has(b));
-        renderIssues(); return;
       }
       // 流程节点
       if (t.dataset.flow) { showToast(t.getAttribute("title") || ""); return; }
@@ -1722,74 +2113,117 @@
             // 历史合同：回溯还原并载入编辑器继续修改
             const name = state.viewingName;
             openModal("回溯还原", `确认将历史合同《${name}》回溯还原至 <b>${v.ver}（${v.type}）</b>并载入编辑器继续修改？`, () => {
-              state.taskName = name; state.docLoaded = true; state.prechecked = false;
-              allIssues().forEach(it => it.resolved = false);
+              state.taskName = name; state.docLoaded = true;
               $("#docPage").innerHTML = v.html; $("#docPage").setAttribute("contenteditable", "true");
               state.versions = []; state.verSeq = 0;
               pushVersion(v.type, "由历史合同《" + name + "》" + v.ver + " 回溯还原载入编辑器");
-              $("#taskMeta").textContent = name; $("#docHint").textContent = "由历史版本回溯还原载入 · 可继续编辑与预审";
               setFlow(3); updateEditorState(); switchView("editor");
               closeModal(); showToast("已回溯还原至 " + v.ver + "，并载入编辑器"); setStatus("已从历史合同《" + name + "》回溯还原至 " + v.ver);
             });
           }
           break;
         }
-        case "precheck": runPrecheck(); break;
-        case "applyAll":
-          const batchSafe = allIssues().filter(it => !it.resolved && it.level !== "high");
-          batchSafe.forEach(it => applyIssue(it.id));
-          const batchHigh = allIssues().filter(it => !it.resolved && it.level === "high").length;
-          if (state.docLoaded && batchSafe.length) pushVersion("修订稿", "批量采纳低/中风险预审建议，生成修订稿");
-          setStatus(`已采纳 ${batchSafe.length} 项低/中风险建议，${batchHigh} 项高风险待逐条确认`); showToast(batchHigh ? "低/中风险建议已采纳，高风险请逐条确认" : "已完成全部采纳，修订稿已留痕"); setFlow(5); break;
-        case "ignoreAll":
-          const ignorable = allIssues().filter(it => !it.resolved && it.level !== "high");
-          ignorable.forEach(it => ignoreIssue(it.id, "批量忽略低/中风险问题"));
-          const highRemain = allIssues().filter(it => !it.resolved && it.level === "high").length;
-          showToast(highRemain ? `已忽略低/中风险问题，仍有 ${highRemain} 项高风险需逐条填写原因` : "已忽略全部低/中风险问题"); break;
-        case "accept": acceptIssue(t.dataset.issueId); break;
-        case "ignore": ignoreIssue(t.dataset.issueId); break;
-        case "basis": {
-          const note = $(`.pf-note[data-note="${t.dataset.issueId}"]`);
-          if (note) { note.classList.toggle("show"); t.textContent = note.classList.contains("show") ? "收起预审依据 ‹" : "查看预审依据 ›"; }
-          break;
-        }
-        case "compare":
-          openModal("多版本修订对比", `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div><div style="font-weight:700;margin-bottom:8px;color:var(--red);">初稿 V1（原文）</div>${allIssues().map(it => `<div style="padding:6px 0;border-bottom:1px dashed #eee;">${it.del !== undefined ? it.del : "（缺失）" + it.cat.replace("缺失必备条款：", "")}</div>`).join("")}</div>
-            <div><div style="font-weight:700;margin-bottom:8px;color:var(--green);">修订稿 V2（采纳后）</div>${allIssues().map(it => `<div style="padding:6px 0;border-bottom:1px dashed #eee;">${it.ins}</div>`).join("")}</div>
-          </div><div style="margin-top:12px;color:var(--muted);font-size:13px;">共记录 ${allIssues().length} 处修订，自动保存修改人、时间与差异，可回溯还原。</div>`, null, { wide: true, hideFooter: true });
-          break;
         case "export":
           if (!state.docLoaded) { showToast("请先生成协议初稿"); break; }
           openDocReportModal({ name: state.taskName || "数字政务能力平台建设战略合作框架协议", draftHtml: $("#docPage").innerHTML, live: true });
           break;
-        case "drTab": {
-          const tab = t.dataset.tab;
-          $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-          $("#drDraft").style.display = tab === "draft" ? "block" : "none";
-          $("#drReport").style.display = tab === "report" ? "block" : "none";
-          break;
-        }
         case "drExport": {
           const w = t.dataset.what;
           const wm = document.getElementById("drWatermark");
           const wmText = wm && wm.checked ? "（含水印：江北新区政务内部）" : "（无水印）";
-          showToast(w === "draft" ? "协议草案已导出 Word" + wmText + "，版式、编号、字体已统一"
-            : w === "report" ? "预审校验报告已导出 PDF" + wmText
-            : "协议草案（Word）与预审校验报告（PDF）已一并导出" + wmText);
-          if (state.docReportLive && state.docLoaded) { pushVersion("导出定稿", "导出协议草案与预审报告，提交业务/法务审核归档"); setFlow(6); setStatus("已导出并提交业务/法务审核归档"); }
+          showToast("协议草案已导出 Word" + wmText + "，版式、编号、字体已统一");
+          if (state.docReportLive && state.docLoaded) { pushVersion("导出定稿", "导出协议草案，提交业务/法务审核归档"); setFlow(6); setStatus("已导出并提交业务/法务审核归档"); }
           break;
         }
-        case "locateFirst": locateIssue(allIssues().filter(i => !i.resolved && i.del !== undefined)[0] ? allIssues().filter(i => !i.resolved && i.del !== undefined)[0].id : "3"); break;
         case "zoomIn": zoom = Math.min(1.25, zoom + 0.06); applyZoom(); break;
         case "zoomOut": zoom = Math.max(0.85, zoom - 0.06); applyZoom(); break;
 
         // —— 资料库通用 ——
         case "addLib": addLibModal(lib); break;
-        case "editLib": editLibModal(lib, +t.dataset.ri); break;
+        case "tplDetail": tplDetailModal(+t.dataset.ri); break;
+        case "clauseDetail": clauseDetailModal(+t.dataset.ri); break;
+        case "tplRefClause": {
+          const f = findClauseRow(t.dataset.name);
+          if (f) { state.libCat.clause = f.cat.key; clauseDetailModal(f.ri); }
+          break;
+        }
+        case "editLib":
+          if (lib === "tpl") {
+            const cc = LIBS.tpl.cats.find(x => x.key === state.libCat.tpl);
+            tplEditModal(cc.rows[+t.dataset.ri][0], state.libCat.tpl, +t.dataset.ri);
+          } else { editLibModal(lib, +t.dataset.ri); }
+          break;
+        case "tplEdit": {
+          // 从模板详情进入编辑：按名称定位行（详情可能来自任一分类）
+          const hit = findTplRow(t.dataset.name);
+          if (hit) tplEditModal(hit.row[0], hit.cat.key, hit.ri);
+          break;
+        }
+        case "tplEditFieldAdd": {
+          const tb = $("#te-fields tbody");
+          if (!tb) break;
+          const fi = tb.children.length;
+          const tr = document.createElement("tr");
+          tr.dataset.fi = fi;
+          tr.innerHTML = `<td><input type="text" class="ef-name" value=""></td>
+            <td><select class="ef-type">${["文本", "日期区间", "日期", "金额", "百分比", "下拉"].map(x => `<option>${x}</option>`).join("")}</select></td>
+            <td><select class="ef-req"><option>必填</option><option>可选</option></select></td>
+            <td><input type="text" class="ef-src" value="要素录入"></td>
+            <td><input type="text" class="ef-def" value=""></td>
+            <td><a class="danger" data-action="tplEditFieldDel" data-fi="${fi}">删除</a></td>`;
+          tb.appendChild(tr);
+          break;
+        }
+        case "tplEditFieldDel": {
+          const tb = $("#te-fields tbody");
+          if (!tb) break;
+          const tr = t.closest("tr");
+          if (tb.children.length <= 1) { showToast("至少保留 1 个可配置字段"); break; }
+          tr.remove(); renumRows(tb);
+          break;
+        }
+        case "tplEditRefAdd": {
+          const sel = $("#te-ref-add"), tb = $("#te-refs tbody");
+          if (!sel || !tb) break;
+          const nm = sel.value;
+          if (!nm) { showToast("请先选择要添加的条款"); break; }
+          if (tb.firstElementChild && !tb.firstElementChild.dataset.refi) tb.firstElementChild.remove(); // 清掉"暂未关联"占位行
+          const f = findClauseRow(nm);
+          const i = tb.children.length;
+          const tr = document.createElement("tr");
+          tr.dataset.refi = i;
+          tr.innerHTML = `<td><b>${nm}</b></td><td>${f ? f.cat.name : "—"}</td>
+            <td><span class="tag ${f && f.cat.rows[f.ri][2] === "必备" ? "done" : "off"}">${f ? f.cat.rows[f.ri][2] : "未入库"}</span></td>
+            <td>${f ? f.cat.rows[f.ri][3] : "—"}</td>
+            <td><a class="danger" data-action="tplEditRefDel" data-refi="${i}">移除</a></td>`;
+          tb.appendChild(tr);
+          sel.querySelector('option[value="' + nm + '"]').remove();
+          showToast("已添加引用条款「" + nm + "」，保存后生效");
+          break;
+        }
+        case "tplEditRefDel": {
+          const tb = $("#te-refs tbody");
+          if (!tb) break;
+          const tr = t.closest("tr");
+          const nm = tr.children[0].textContent.trim();
+          tr.remove(); renumRows(tb);
+          showToast("已移除引用条款「" + nm + "」，保存后生效");
+          break;
+        }
+        case "parseToggle": {
+          const d = $("#pcDetail");
+          if (d) d.style.display = d.style.display === "none" ? "block" : "none";
+          break;
+        }
+        case "compliance": complianceCheck(); break;
+        case "cpcAccept": cpcAccept(+t.dataset.i); break;
+        case "cpcIgnore": cpcIgnore(+t.dataset.i); break;
+        case "cpcAcceptAll": cpcAcceptAll(); break;
+        case "cpcIgnoreAll": cpcIgnoreAll(); break;
+        case "cpcClose": cpcClosePanel(); break;
         case "delLib": {
           const L = LIBS[lib], c = L.cats.find(x => x.key === state.libCat[lib]);
-          const label = { tpl: "下架", clause: "删除", rule: "停用" }[lib];
+          const label = { tpl: "下架", clause: "删除" }[lib];
           openModal(label + "确认", `确认${label}「${c.rows[+t.dataset.ri][0]}」？操作将记录变更留痕。`, () => {
             c.rows.splice(+t.dataset.ri, 1); renderLib(lib); closeModal(); showToast("已" + label + "并留痕");
           });
@@ -1820,11 +2254,15 @@
 
         // —— 历史与版本 ——
         case "historyFilter": {
-          const type = $("#hFilterType").value, status = $("#hFilterStatus").value, kw = ($("#hSearch").value || "").trim();
-          const rows = history.filter(r =>
-            (type === "全部类型" || r[1] === type) &&
-            (status === "全部状态" || r[6] === status) &&
-            (!kw || r[0].indexOf(kw) >= 0));
+          const type = $("#hFilterType").value, range = $("#hFilterRange").value, kw = ($("#hSearch").value || "").trim();
+          const now = new Date("2026-07-18");
+          const days = { "近7天": 7, "近30天": 30, "近90天": 90 }[range];
+          const rows = history.filter(r => {
+            const okType = type === "全部类型" || r[1] === type;
+            const okKw = !kw || r[0].indexOf(kw) >= 0;
+            const okRange = !days || (now - new Date(r[3])) <= days * 864e5;
+            return okType && okKw && okRange;
+          });
           renderHistory(rows); showToast("已筛选，共 " + rows.length + " 条");
           break;
         }
@@ -1839,7 +2277,7 @@
           openVersionsModal({ name: t.dataset.doc, versions: buildHistoryVersions(row || []), live: false });
           break;
         }
-        case "recheckHistory": switchView("editor"); showToast("已发起复审：" + t.dataset.doc); break;
+        case "recheckHistory": switchView("editor"); showToast("已载入编辑器：" + t.dataset.doc); break;
         case "exportHistory": showToast("拟制任务台账已导出为 Excel"); break;
         case "exportStat": showToast("统计报表已导出（PDF）"); break;
       }
@@ -1851,15 +2289,6 @@
       showToast("缩放：" + Math.round(zoom * 100) + "%");
     }
 
-    // 正文标注点击 → 定位
-    $("#docPage").addEventListener("click", (e) => {
-      const m = e.target.closest(".mark"); if (m) locateIssue(m.dataset.issueId);
-    });
-    // 预审卡片点击 → 定位（点击操作链接除外）
-    $("#pfList").addEventListener("click", (e) => {
-      if (e.target.closest("a")) return;
-      const card = e.target.closest(".pf-card"); if (card) locateIssue(card.dataset.issueId);
-    });
     // 模拟附件上传：选择文件后按示例任务载入
     $("#fileInput").addEventListener("change", function () {
       if (!this.files.length) return;
@@ -1868,6 +2297,24 @@
       state.taskName = this.files[0].name.replace(/\.[^.]+$/, "");
       loadContract({ name: state.taskName });
       showToast("材料已解析，协议初稿已生成");
+    });
+
+    // 占位符交互：点击后占位文字消失，光标准确落在原占位处，可直接输入
+    document.addEventListener("mousedown", (e) => {
+      const ph = e.target.closest(".ph-edit");
+      if (!ph) return;
+      e.preventDefault(); // 阻止原生选区，避免选中占位文字
+      const parent = ph.parentNode;
+      const marker = document.createTextNode(""); // 空文本节点：锚定光标位置
+      parent.replaceChild(marker, ph);
+      const editable = parent.closest ? parent.closest("[contenteditable='true']") : null;
+      if (editable) editable.focus();
+      const rg = document.createRange();
+      rg.setStart(marker, 0);
+      rg.collapse(true);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(rg);
     });
 
     // 弹窗关闭与快捷键
@@ -1879,11 +2326,26 @@
       if (e.ctrlKey && e.key.toLowerCase() === "s") { e.preventDefault(); setStatus("协议草案已保存"); showToast("保存成功"); }
     });
 
-    // 初始渲染
+    // 演示：两条"生成中"记录 12/18 秒后自动完成（模拟智能生成耗时）
+    setTimeout(() => finishGenerating("d1"), 12000);
+    setTimeout(() => finishGenerating("d2"), 18000);
+    function finishGenerating(id) {
+      const d = DRAFTS.find(x => x.id === id);
+      if (!d || d.status !== 'generating') return;
+      d.status = 'done'; d.flow = 3;
+      d.snap.docLoaded = true;
+      d.timeDisplay = '刚刚';
+      renderHistoryList();
+      showToast("《" + d.title + "》初稿已生成完成，可点击查看编辑");
+    }
+    // 初始渲染：空态（中间仅"新建合同"按钮），左侧历史记录展示示例数据
+    state.docLoaded = false;
     setFlow(1);
-    updateEditorState();
+    renderHistoryList();
     renderLib("tpl");
+    setStatus("请新建合同拟制任务，或从左侧历史记录选择已完成的合同继续编辑");
   })();
   </script>
-</body>
-</html>
+
+
+</body></html>
