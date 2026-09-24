@@ -9367,7 +9367,7 @@ let sidebarCollapsed = false;
       models:["模型能力管理","统一维护对话生成、语音识别、文档解析、OCR、Embedding 和 Rerank 模型服务。"],
       skillsManage:["技能管理","统一维护技能基本信息、技能包、作用业务部门、快捷提问及运行状态。"],
       lexicon:["词库管理","系统管理员维护公共词库，委办局管理员仅维护本部门词库；公共规则作为平台底线，部门规则只能补充或加严。"],
-      reviewRules:["核查规则管理","维护政务行文、政策法规、制度和保密四类核查规则；规则作用范围不得超出所属规则库授权范围。"],
+      reviewRules:["核查规则管理","维护政务行文、政策法规、制度和保密等核查规则库；委办局作用范围由规则库统一控制。"],
       tenants:["租户管理","面向智能体工作台、招商、企业、人才等业务系统配置租户、组织范围与独立鉴权；仅超级管理员可见。"]
     };
     return meta[section] || ["配置治理中心","集中维护平台配置。"];
@@ -10900,43 +10900,45 @@ let sidebarCollapsed = false;
   // ===== 核查规则管理 =====
   let reviewRuleActiveBankId = "review-bank-writing";
   let reviewRuleBankSearch = "";
-  let reviewRuleFilters = { name:"", docType:"all", jurisdiction:"all", role:"all", status:"all" };
+  let reviewRuleFilters = { name:"", docType:"all", jurisdiction:"all", status:"all" };
   const REVIEW_RULE_DOC_TYPES = ["全部文种","决议","决定","命令（令）","公报","公告","通告","意见","通知","通报","报告","请示","批复","议案","函","纪要"];
   const REVIEW_RULE_ALL_DEPARTMENTS = CFG_DIRECTORY_DATA.orgs.map(item => item.name);
-  const REVIEW_RULE_ALL_ROLES = CFG_DIRECTORY_DATA.roles.map(item => item.name);
   const REVIEW_RULE_BANKS = [
     {
-      id:"review-bank-writing", name:"政务行文规则库", code:"GOV-WRITING", desc:"检查文种、主送机关、行文方向和公文结构等政务行文规范。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:10",
+      id:"review-bank-writing", name:"政务行文规则库", code:"GOV-WRITING", desc:"检查文种、主送机关、行文方向和公文结构等政务行文规范。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:10",
       rules:[
-        {id:"rr-writing-001",name:"请示应当一文一事",docType:"请示",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文种为请示，且正文识别出两个及以上相互独立的请示事项。",problemPrompt:"当前请示包含多个独立事项，不符合一文一事要求。",suggestion:"建议按独立请示事项拆分为多份请示文件。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-04",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:12"},
-        {id:"rr-writing-002",name:"请示主送机关规范",docType:"请示",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文种为请示，主送机关超过一个，或抄送对象中包含下级机关。",problemPrompt:"请示的主送或抄送机关设置不规范。",suggestion:"原则上只保留一个上级主送机关，并删除下级抄送机关。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-01",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:15"}
+        {id:"rr-writing-001",name:"请示应当一文一事",docType:"请示",condition:"文种为请示，且正文识别出两个及以上相互独立的请示事项。",problemPrompt:"当前请示包含多个独立事项，不符合一文一事要求。",suggestion:"建议按独立请示事项拆分为多份请示文件。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-04",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:12"},
+        {id:"rr-writing-002",name:"请示主送机关规范",docType:"请示",condition:"文种为请示，主送机关超过一个，或抄送对象中包含下级机关。",problemPrompt:"请示的主送或抄送机关设置不规范。",suggestion:"原则上只保留一个上级主送机关，并删除下级抄送机关。",evidenceFileId:"KB-DOC-GW-0001",evidenceClauseId:"KB-CLAUSE-GW-15-01",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:15"}
       ]
     },
     {
-      id:"review-bank-policy", name:"政策法规库", code:"POLICY-LAW", desc:"结合知识中台同步的政策法规，检查政策口径、适用条件和依据一致性。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:20",
+      id:"review-bank-policy", name:"政策法规库", code:"POLICY-LAW", desc:"结合知识中台同步的政策法规，检查政策口径、适用条件和依据一致性。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:20",
       rules:[
-        {id:"rr-policy-001",name:"公共数据开放范围校验",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"正文出现“全部数据向社会开放”等无条件、无分类的数据开放表述。",problemPrompt:"数据开放范围表述过宽，未体现分类分级和安全审查要求。",suggestion:"调整为经分类分级、安全审查和脱敏处理后，依法依规开放可开放数据。",evidenceFileId:"KB-DOC-LAW-DS-001",evidenceClauseId:"KB-CLAUSE-LAW-DS-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:22"},
-        {id:"rr-policy-002",name:"政策依据名称一致性校验",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:["委办局管理员","普通使用人员"],condition:"正文引用的政策文件名称与知识中台当前文件名称不一致，或引用文件未被检索到。",problemPrompt:"引用的政策文件名称可能不准确或缺少有效依据。",suggestion:"请核对知识中台返回的文件名称和具体条款后再引用。",evidenceFileId:"KB-DOC-POLICY-INDEX",evidenceClauseId:"KB-CLAUSE-POLICY-NAME",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:25"}
+        {id:"rr-policy-001",name:"公共数据开放范围校验",docType:"全部文种",condition:"正文出现“全部数据向社会开放”等无条件、无分类的数据开放表述。",problemPrompt:"数据开放范围表述过宽，未体现分类分级和安全审查要求。",suggestion:"调整为经分类分级、安全审查和脱敏处理后，依法依规开放可开放数据。",evidenceFileId:"KB-DOC-LAW-DS-001",evidenceClauseId:"KB-CLAUSE-LAW-DS-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:22"},
+        {id:"rr-policy-002",name:"政策依据名称一致性校验",docType:"全部文种",condition:"正文引用的政策文件名称与知识中台当前文件名称不一致，或引用文件未被检索到。",problemPrompt:"引用的政策文件名称可能不准确或缺少有效依据。",suggestion:"请核对知识中台返回的文件名称和具体条款后再引用。",evidenceFileId:"KB-DOC-POLICY-INDEX",evidenceClauseId:"KB-CLAUSE-POLICY-NAME",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:25"}
       ]
     },
     {
-      id:"review-bank-institution", name:"制度规则库", code:"INTERNAL-RULE", desc:"检查是否符合新区及各委办局内部立项、审批、采购和发文制度。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:["委办局管理员","普通使用人员"], enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:30",
+      id:"review-bank-institution", name:"制度规则库", code:"INTERNAL-RULE", desc:"检查是否符合新区通用立项、审批、采购和发文制度。", source:"知识中台同步", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:30", rules:[]
+    },
+    {
+      id:"review-bank-data-institution", name:"数据局制度规则库", code:"DATA-INTERNAL-RULE", desc:"检查数据局内部信息化项目和机关公文制度。", source:"部门制度维护", departments:["南京江北新区数据局"], enabled:true, ownerLevel:"department", ownerDepartment:"南京江北新区数据局", updatedAt:"2026-08-21 09:35",
       rules:[
-        {id:"rr-institution-001",name:"信息化项目立项前置校验",docType:"请示",departments:["南京江北新区数据局"],roles:["委办局管理员","普通使用人员"],condition:"文稿包含信息化项目采购或直接确定供应商，但未体现需求论证、项目立项和采购审批程序。",problemPrompt:"当前文稿缺少信息化项目立项和采购审批程序说明。",suggestion:"补充需求论证、项目立项、预算审核及依法采购等程序表述。",evidenceFileId:"KB-DOC-DATA-IT-008",evidenceClauseId:"KB-CLAUSE-DATA-IT-08",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:32"},
-        {id:"rr-institution-002",name:"部门名称规范全称校验",docType:"全部文种",departments:["南京江北新区数据局"],roles:["委办局管理员","普通使用人员"],condition:"正文首次出现本部门简称，但未出现“南京江北新区数据局”规范全称。",problemPrompt:"部门名称未使用已维护的规范全称。",suggestion:"首次出现时使用部门全称，后续可使用规范简称。",evidenceFileId:"KB-DOC-DATA-OFFICE-002",evidenceClauseId:"KB-CLAUSE-DATA-OFFICE-03",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:35"}
+        {id:"rr-institution-001",name:"信息化项目立项前置校验",docType:"请示",condition:"文稿包含信息化项目采购或直接确定供应商，但未体现需求论证、项目立项和采购审批程序。",problemPrompt:"当前文稿缺少信息化项目立项和采购审批程序说明。",suggestion:"补充需求论证、项目立项、预算审核及依法采购等程序表述。",evidenceFileId:"KB-DOC-DATA-IT-008",evidenceClauseId:"KB-CLAUSE-DATA-IT-08",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:32"},
+        {id:"rr-institution-002",name:"部门名称规范全称校验",docType:"全部文种",condition:"正文首次出现本部门简称，但未出现“南京江北新区数据局”规范全称。",problemPrompt:"部门名称未使用已维护的规范全称。",suggestion:"首次出现时使用部门全称，后续可使用规范简称。",evidenceFileId:"KB-DOC-DATA-OFFICE-002",evidenceClauseId:"KB-CLAUSE-DATA-OFFICE-03",enabled:true,ownerLevel:"department",ownerDepartment:"南京江北新区数据局",updatedAt:"2026-08-21 09:35"}
       ]
     },
     {
-      id:"review-bank-confidential", name:"保密规则库", code:"SECURITY-PRIVACY", desc:"检查正文和附件中的个人信息、账号密码、内网地址及不宜公开内容。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), roles:REVIEW_RULE_ALL_ROLES.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:40",
+      id:"review-bank-confidential", name:"保密规则库", code:"SECURITY-PRIVACY", desc:"检查正文和附件中的个人信息、账号密码、内网地址及不宜公开内容。", source:"平台预置", departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(), enabled:true, ownerLevel:"system", ownerDepartment:"平台治理中心", updatedAt:"2026-08-21 09:40",
       rules:[
-        {id:"rr-confidential-001",name:"系统账号密码检测",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"正文或附件中出现账号、用户名、密码、密钥等字段，并识别到对应值。",problemPrompt:"检测到疑似系统登录凭证，不应在文稿中直接展示。",suggestion:"删除账号密码；确需传递时应通过独立安全渠道发送。",evidenceFileId:"KB-DOC-SEC-BASELINE",evidenceClauseId:"KB-CLAUSE-SEC-CREDENTIAL",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:42"},
-        {id:"rr-confidential-002",name:"公开材料个人信息脱敏",docType:"全部文种",departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition:"文件使用范围为公开发布，且正文或附件识别到身份证号、手机号等个人信息。",problemPrompt:"拟公开材料包含个人信息，请确认必要性并进行脱敏。",suggestion:"删除无关个人信息；必要字段采用掩码或去标识化方式处理。",evidenceFileId:"KB-DOC-LAW-PIPL-001",evidenceClauseId:"KB-CLAUSE-LAW-PIPL-06",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:45"}
+        {id:"rr-confidential-001",name:"系统账号密码检测",docType:"全部文种",condition:"正文或附件中出现账号、用户名、密码、密钥等字段，并识别到对应值。",problemPrompt:"检测到疑似系统登录凭证，不应在文稿中直接展示。",suggestion:"删除账号密码；确需传递时应通过独立安全渠道发送。",evidenceFileId:"KB-DOC-SEC-BASELINE",evidenceClauseId:"KB-CLAUSE-SEC-CREDENTIAL",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:42"},
+        {id:"rr-confidential-002",name:"公开材料个人信息脱敏",docType:"全部文种",condition:"文件使用范围为公开发布，且正文或附件识别到身份证号、手机号等个人信息。",problemPrompt:"拟公开材料包含个人信息，请确认必要性并进行脱敏。",suggestion:"删除无关个人信息；必要字段采用掩码或去标识化方式处理。",evidenceFileId:"KB-DOC-LAW-PIPL-001",evidenceClauseId:"KB-CLAUSE-LAW-PIPL-06",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 09:45"}
       ]
     }
   ];
   const REVIEW_RULE_JURISDICTIONS = ["国家级","江苏省","南京市","江北新区","平台规则"];
   function reviewRuleResearchItem(bankId,id,name,jurisdiction,docTypes,condition,problemPrompt,suggestion,evidenceFile,evidenceClause,sourceUrl) {
-    return { bankId, rule:{id,name,jurisdiction,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],departments:REVIEW_RULE_ALL_DEPARTMENTS.slice(),roles:REVIEW_RULE_ALL_ROLES.slice(),condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:`OFFICIAL-DOC-${id.toUpperCase()}`,evidenceClauseId:`OFFICIAL-CLAUSE-${id.toUpperCase()}`,sourceUrl,sourceSyncedAt:"2026-08-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 15:30"} };
+    return { bankId, rule:{id,name,jurisdiction,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:`OFFICIAL-DOC-${id.toUpperCase()}`,evidenceClauseId:`OFFICIAL-CLAUSE-${id.toUpperCase()}`,sourceUrl,sourceSyncedAt:"2026-08-21",enabled:true,ownerLevel:"system",ownerDepartment:"平台治理中心",updatedAt:"2026-08-21 15:30"} };
   }
   const REVIEW_RULE_RESEARCH_ADDITIONS = [
     reviewRuleResearchItem("review-bank-writing","rr-national-doc-kind","法定文种用途匹配","国家级",["全部文种"],"标题或正文使用了法定公文文种，但实际发文目的、行文方向与该文种适用范围不一致。","当前文种与文稿用途或行文方向可能不匹配。","根据发文目的重新选择决议、决定、通知、报告、请示、函等法定文种，并同步调整标题和正文用语。","《党政机关公文处理工作条例》","第八条规定了十五种主要公文文种及各自适用范围。","https://www.miit.gov.cn/xwdt/szyw/art/2020/art_6afb8ee6d07540dcacccbeb47dbc0fd4.html"),
@@ -10972,17 +10974,16 @@ let sidebarCollapsed = false;
   }
   function reviewRuleCanAddRule(bank) {
     if (configRole === "system") return true;
-    return configRole === "dept" && (bank.departments || []).includes(cfgRoleMeta().dept) && (bank.roles || []).some(role => role !== "系统管理员");
+    return configRole === "dept" && bank.ownerLevel === "department" && bank.ownerDepartment === cfgRoleMeta().dept && (bank.departments || []).includes(cfgRoleMeta().dept);
   }
   function reviewRuleCanManageRule(rule) {
     if (configRole === "system") return true;
-    return configRole === "dept" && rule.ownerLevel === "department" && rule.ownerDepartment === cfgRoleMeta().dept && (rule.departments || []).every(name => name === cfgRoleMeta().dept);
+    return configRole === "dept" && rule.ownerLevel === "department" && rule.ownerDepartment === cfgRoleMeta().dept;
   }
   function reviewRuleDepartmentText(values) {
     const list = values || [];
     return REVIEW_RULE_ALL_DEPARTMENTS.length && REVIEW_RULE_ALL_DEPARTMENTS.every(name => list.includes(name)) ? "全部委办局" : (list.join("、") || "未配置");
   }
-  function reviewRuleRoleText(values) { return (values || []).join("、") || "未配置"; }
   const REVIEW_RULE_EVIDENCE_TEXT = {
     "KB-DOC-GW-0001": { file:"《党政机关公文处理工作条例》", clause:"请示应当一文一事，原则上只写一个主送机关。" },
     "KB-DOC-LAW-DS-001": { file:"《中华人民共和国数据安全法》", clause:"开展数据处理活动应当依法依规，建立健全全流程数据安全管理制度。" },
@@ -11015,14 +11016,11 @@ let sidebarCollapsed = false;
     if (isView) return `<div class="review-rule-doc-readonly">${Array.from(selectedSet).map(name => `<span>${esc(name)}</span>`).join("")}</div>`;
     return `<div class="review-rule-doc-picker" id="reviewRuleDocTypePicker"><button class="review-rule-doc-trigger" id="reviewRuleDocTypeTrigger" type="button"><span id="reviewRuleDocTypeText">${esc(Array.from(selectedSet).join("、"))}</span><span class="review-rule-doc-arrow">⌄</span></button><div class="review-rule-doc-menu" id="reviewRuleDocTypeMenu" hidden>${REVIEW_RULE_DOC_TYPES.map(name => `<label class="check-row"><input type="checkbox" name="reviewRuleDocType" value="${esc(name)}" ${selectedSet.has(name) ? "checked" : ""}><span>${esc(name)}</span></label>`).join("")}</div></div>`;
   }
-  function reviewRuleAllowedDepartments(bank) { return configRole === "system" ? (bank.departments || []).slice() : (bank.departments || []).filter(name => name === cfgRoleMeta().dept); }
-  function reviewRuleAllowedRoles(bank) { return configRole === "system" ? (bank.roles || []).slice() : (bank.roles || []).filter(name => name !== "系统管理员"); }
   function reviewRuleCloseBankMenu() { const pop = $("#reviewRuleBankPopover"); if (pop) pop.remove(); }
-  function reviewRuleScopeBoxes(prefix, allowedDepartments, selectedDepartments, allowedRoles, selectedRoles, disabled) {
-    const deptSet = new Set(selectedDepartments || []), roleSet = new Set(selectedRoles || []), lock = disabled ? "disabled" : "";
+  function reviewRuleScopeBoxes(prefix, allowedDepartments, selectedDepartments, disabled) {
+    const deptSet = new Set(selectedDepartments || []), lock = disabled ? "disabled" : "";
     const depts = allowedDepartments.map(name => `<label class="check-row"><input type="checkbox" name="${prefix}Department" value="${esc(name)}" ${deptSet.has(name) ? "checked" : ""} ${lock}><span>${esc(name)}</span></label>`).join("");
-    const roles = allowedRoles.map(name => `<label class="check-row"><input type="checkbox" name="${prefix}Role" value="${esc(name)}" ${roleSet.has(name) ? "checked" : ""} ${lock}><span>${esc(name)}</span></label>`).join("");
-    return `<div class="review-rule-scope-grid"><div class="review-rule-scope-box"><div>作用委办局</div><div class="review-rule-scope-options">${depts || `<span class="cfg-role-scope-empty">无可选委办局</span>`}</div></div><div class="review-rule-scope-box"><div>作用角色</div><div class="review-rule-scope-options">${roles || `<span class="cfg-role-scope-empty">无可选角色</span>`}</div></div></div>`;
+    return `<div class="review-rule-scope-box"><div>作用委办局</div><div class="review-rule-scope-options">${depts || `<span class="cfg-role-scope-empty">无可选委办局</span>`}</div></div>`;
   }
   function reviewRuleBankListHTML() {
     const banks = reviewRuleVisibleBanks();
@@ -11043,24 +11041,23 @@ let sidebarCollapsed = false;
     if (f.name) rules = rules.filter(item => item.name.toLowerCase().includes(f.name.toLowerCase()));
     if (f.docType !== "all") rules = rules.filter(item => { const types = reviewRuleDocTypes(item); return types.includes(f.docType) || types.includes("全部文种"); });
     if (f.jurisdiction !== "all") rules = rules.filter(item => reviewRuleJurisdiction(item) === f.jurisdiction);
-    if (f.role !== "all") rules = rules.filter(item => (item.roles || []).includes(f.role));
     if (f.status !== "all") rules = rules.filter(item => item.enabled === (f.status === "enabled"));
     const rows = rules.length ? rules.map((item,index) => {
       const canManage = reviewRuleCanManageRule(item);
       const docTypeText = reviewRuleDocTypeText(item);
-      return `<tr><td>${String(index+1).padStart(2,"0")}</td><td><b>${esc(item.name)}</b><div class="review-rule-condition" title="${esc(item.condition)}">${esc(item.condition.length > 56 ? item.condition.slice(0,56) + "…" : item.condition)}</div></td><td><span class="review-rule-doc" title="${esc(docTypeText)}">${esc(docTypeText)}</span></td><td><span class="review-rule-jurisdiction">${esc(reviewRuleJurisdiction(item))}</span></td><td><span class="lex-scope-badge">${esc(reviewRuleDepartmentText(item.departments))}</span></td><td><span class="lex-scope-badge">${esc(reviewRuleRoleText(item.roles))}</span></td><td><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? "启用" : "禁用"}</span></td><td>${esc(item.updatedAt)}</td><td>
+      return `<tr><td>${String(index+1).padStart(2,"0")}</td><td><b>${esc(item.name)}</b><div class="review-rule-condition" title="${esc(item.condition)}">${esc(item.condition.length > 56 ? item.condition.slice(0,56) + "…" : item.condition)}</div></td><td><span class="review-rule-doc" title="${esc(docTypeText)}">${esc(docTypeText)}</span></td><td><span class="review-rule-jurisdiction">${esc(reviewRuleJurisdiction(item))}</span></td><td><span class="cfg-status-pill ${item.enabled ? "" : "off"}">${item.enabled ? "启用" : "禁用"}</span></td><td>${esc(item.updatedAt)}</td><td>
         <button class="btn" data-act="reviewRuleView" data-bank="${bank.id}" data-id="${item.id}">查看</button>
-        ${canManage ? `<button class="btn primary" data-act="reviewRuleEdit" data-bank="${bank.id}" data-id="${item.id}">${svgi("i-edit",12)}编辑</button><button class="btn" data-act="reviewRuleScope" data-bank="${bank.id}" data-id="${item.id}">作用范围</button><button class="btn ${item.enabled ? "" : "primary"}" data-act="reviewRuleToggle" data-bank="${bank.id}" data-id="${item.id}">${item.enabled ? "禁用" : "启用"}</button><button class="btn" data-act="reviewRuleDelete" data-bank="${bank.id}" data-id="${item.id}" style="color:#c44e49">${svgi("i-trash",12)}删除</button>` : ""}
+        ${canManage ? `<button class="btn primary" data-act="reviewRuleEdit" data-bank="${bank.id}" data-id="${item.id}">${svgi("i-edit",12)}编辑</button><button class="btn ${item.enabled ? "" : "primary"}" data-act="reviewRuleToggle" data-bank="${bank.id}" data-id="${item.id}">${item.enabled ? "禁用" : "启用"}</button><button class="btn" data-act="reviewRuleDelete" data-bank="${bank.id}" data-id="${item.id}" style="color:#c44e49">${svgi("i-trash",12)}删除</button>` : ""}
       </td></tr>`;
-    }).join("") : `<tr><td colspan="9"><div class="cfg-empty"><b>暂无符合条件的规则</b><p>${canAdd ? "可点击右上角新增规则" : "请调整筛选条件"}</p></div></td></tr>`;
-    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${esc(bank.name)}</h2><p>${esc(bank.desc)} · ${esc(reviewRuleDepartmentText(bank.departments))} · ${esc(reviewRuleRoleText(bank.roles))}</p><div class="review-rule-scope-line"><span class="review-rule-source">${esc(bank.source)}</span><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "规则库已启用" : "规则库已禁用"}</span></div></div><div class="cfg-section-head-actions">${canAdd ? `<button class="btn primary" data-act="reviewRuleAdd" data-bank="${bank.id}">${svgi("i-plus",13)}新增规则</button>` : ""}</div></div>
-      <div class="cfg-section-body"><div class="review-rule-panel-note">${svgi("i-shield",14)}<span>规则的委办局与角色范围只能从所属规则库范围内选择；委办局管理员新增的规则固定归属本部门。</span></div><div class="cfg-filter-bar" style="margin-bottom:12px"><div class="cfg-filter-field wide"><label>规则名称</label><input data-review-rule-filter="name" value="${esc(f.name)}" placeholder="请输入规则名称"></div><div class="cfg-filter-field"><label>适用文种</label><select data-review-rule-filter="docType"><option value="all">全部文种</option>${REVIEW_RULE_DOC_TYPES.filter(name => name !== "全部文种").map(name => `<option value="${esc(name)}" ${f.docType === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>依据层级</label><select data-review-rule-filter="jurisdiction"><option value="all">全部层级</option>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${f.jurisdiction === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>作用角色</label><select data-review-rule-filter="role"><option value="all">全部角色</option>${bank.roles.map(name => `<option value="${esc(name)}" ${f.role === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>启用状态</label><select data-review-rule-filter="status"><option value="all">全部状态</option><option value="enabled" ${f.status === "enabled" ? "selected" : ""}>启用</option><option value="disabled" ${f.status === "disabled" ? "selected" : ""}>禁用</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="reviewRuleFilter">${svgi("i-search",13)}筛选</button><button class="btn" data-act="reviewRuleReset">重置</button></div></div><div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>序号</th><th>规则名称/命中条件</th><th>适用文种</th><th>依据层级</th><th>作用委办局</th><th>作用角色</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></div></section>`;
+    }).join("") : `<tr><td colspan="7"><div class="cfg-empty"><b>暂无符合条件的规则</b><p>${canAdd ? "可点击右上角新增规则" : "请调整筛选条件"}</p></div></td></tr>`;
+    return `<section class="cfg-section-card"><div class="cfg-section-head"><div class="cfg-section-head-copy"><h2>${esc(bank.name)}</h2><p>${esc(bank.desc)} · 作用范围：${esc(reviewRuleDepartmentText(bank.departments))}</p><div class="review-rule-scope-line"><span class="review-rule-source">${esc(bank.source)}</span><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "规则库已启用" : "规则库已禁用"}</span></div></div><div class="cfg-section-head-actions">${canAdd ? `<button class="btn primary" data-act="reviewRuleAdd" data-bank="${bank.id}">${svgi("i-plus",13)}新增规则</button>` : ""}</div></div>
+      <div class="cfg-section-body"><div class="review-rule-panel-note">${svgi("i-shield",14)}<span>当前规则库中的所有规则统一适用于该库所选委办局；委办局管理员仅能在本部门规则库新增规则。</span></div><div class="cfg-filter-bar" style="margin-bottom:12px"><div class="cfg-filter-field wide"><label>规则名称</label><input data-review-rule-filter="name" value="${esc(f.name)}" placeholder="请输入规则名称"></div><div class="cfg-filter-field"><label>适用文种</label><select data-review-rule-filter="docType"><option value="all">全部文种</option>${REVIEW_RULE_DOC_TYPES.filter(name => name !== "全部文种").map(name => `<option value="${esc(name)}" ${f.docType === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>依据层级</label><select data-review-rule-filter="jurisdiction"><option value="all">全部层级</option>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${f.jurisdiction === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-filter-field"><label>启用状态</label><select data-review-rule-filter="status"><option value="all">全部状态</option><option value="enabled" ${f.status === "enabled" ? "selected" : ""}>启用</option><option value="disabled" ${f.status === "disabled" ? "selected" : ""}>禁用</option></select></div><div class="cfg-filter-actions"><button class="btn primary" data-act="reviewRuleFilter">${svgi("i-search",13)}筛选</button><button class="btn" data-act="reviewRuleReset">重置</button></div></div><div class="tbl-wrap"><table class="cfg-data-table"><thead><tr><th>序号</th><th>规则名称/命中条件</th><th>适用文种</th><th>依据层级</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div></div></section>`;
   }
   function cfgReviewRulesHTML() {
     if (configRole === "user") return `<section class="cfg-section-card"><div class="cfg-section-body"><div class="cfg-empty"><b>无权访问</b><p>核查规则管理仅对系统管理员和委办局管理员开放。</p></div></div></section>`;
     const visible = reviewRuleVisibleBanks();
     if (!visible.some(item => item.id === reviewRuleActiveBankId)) reviewRuleActiveBankId = visible[0]?.id || "";
-    return `<div class="review-rule-benchmark">${svgi("i-spark",15)}<span><b>公开竞品能力参考：</b>文字与标点、知识性差错、内容导向、政治术语、敏感词、格式与行文规范、修改留痕。平台规则以国家及地方官方文件为依据，并叠加委办局与角色作用范围。</span></div><div class="lex-layout">${reviewRuleBankListHTML()}<div class="lex-main">${reviewRuleTableHTML()}</div></div>`;
+    return `<div class="review-rule-benchmark">${svgi("i-spark",15)}<span><b>规则适用说明：</b>每个规则库统一配置作用委办局；库内规则继承该范围，并按文种、命中条件及启用状态执行。</span></div><div class="lex-layout">${reviewRuleBankListHTML()}<div class="lex-main">${reviewRuleTableHTML()}</div></div>`;
   }
   function reviewRuleOpenBankEditor(id) {
     const bank = id ? reviewRuleBankById(id) : null;
@@ -11074,8 +11071,7 @@ let sidebarCollapsed = false;
       if (bank) { Object.assign(bank,{name,code,desc,source,enabled,updatedAt:time}); cfgRecordAudit("编辑规则库","核查规则",name,`修改规则库“${name}”基础信息`); }
       else {
         const departments = configRole === "dept" ? [cfgRoleMeta().dept] : REVIEW_RULE_ALL_DEPARTMENTS.slice();
-        const roles = configRole === "dept" ? ["委办局管理员","普通使用人员"] : REVIEW_RULE_ALL_ROLES.slice();
-        const next = {id:`review-bank-${Date.now()}`,name,code,desc,source,departments,roles,enabled,ownerLevel:configRole === "dept" ? "department" : "system",ownerDepartment:cfgRoleMeta().dept,updatedAt:time,rules:[]};
+        const next = {id:`review-bank-${Date.now()}`,name,code,desc,source,departments,enabled,ownerLevel:configRole === "dept" ? "department" : "system",ownerDepartment:cfgRoleMeta().dept,updatedAt:time,rules:[]};
         REVIEW_RULE_BANKS.push(next); reviewRuleActiveBankId = next.id; cfgRecordAudit("新增规则库","核查规则",name,`新增规则库“${name}”`);
       }
       closeModal(); renderConfig(); showToast(bank ? "规则库已更新" : "规则库已新增");
@@ -11083,20 +11079,18 @@ let sidebarCollapsed = false;
   }
   function reviewRuleOpenBankDetail(id) {
     const bank = reviewRuleBankById(id); if (!bank) return;
-    openModal(`规则库详情 · ${bank.name}`,`<dl class="review-rule-detail-grid"><dt>规则库名称</dt><dd><b>${esc(bank.name)}</b></dd><dt>规则库标识</dt><dd>${esc(bank.code)}</dd><dt>依据来源</dt><dd>${esc(bank.source)}</dd><dt>规则库描述</dt><dd>${esc(bank.desc || "暂无描述")}</dd><dt>作用委办局</dt><dd>${esc(reviewRuleDepartmentText(bank.departments))}</dd><dt>作用角色</dt><dd>${esc(reviewRuleRoleText(bank.roles))}</dd><dt>规则数量</dt><dd>${bank.rules.length} 条</dd><dt>维护范围</dt><dd>${bank.ownerLevel === "system" ? "平台公共规则库" : esc(bank.ownerDepartment + "部门规则库")}</dd><dt>启用状态</dt><dd><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "启用" : "禁用"}</span></dd><dt>更新时间</dt><dd>${esc(bank.updatedAt)}</dd></dl>`,null,{hideFooter:true,width:"680px"});
+    openModal(`规则库详情 · ${bank.name}`,`<dl class="review-rule-detail-grid"><dt>规则库名称</dt><dd><b>${esc(bank.name)}</b></dd><dt>规则库标识</dt><dd>${esc(bank.code)}</dd><dt>依据来源</dt><dd>${esc(bank.source)}</dd><dt>规则库描述</dt><dd>${esc(bank.desc || "暂无描述")}</dd><dt>作用委办局</dt><dd>${esc(reviewRuleDepartmentText(bank.departments))}</dd><dt>规则数量</dt><dd>${bank.rules.length} 条</dd><dt>维护范围</dt><dd>${bank.ownerLevel === "system" ? "平台公共规则库" : esc(bank.ownerDepartment + "部门规则库")}</dd><dt>启用状态</dt><dd><span class="cfg-status-pill ${bank.enabled ? "" : "off"}">${bank.enabled ? "启用" : "禁用"}</span></dd><dt>更新时间</dt><dd>${esc(bank.updatedAt)}</dd></dl>`,null,{hideFooter:true,width:"680px"});
   }
   function reviewRuleOpenBankScope(id) {
-    const bank = reviewRuleBankById(id); if (!bank || !reviewRuleCanManageBank(bank)) { showToast("无权修改该规则库作用范围"); return; }
-    const allowedDepartments = configRole === "system" ? REVIEW_RULE_ALL_DEPARTMENTS.slice() : [cfgRoleMeta().dept];
-    const allowedRoles = configRole === "system" ? REVIEW_RULE_ALL_ROLES.slice() : ["委办局管理员","普通使用人员"];
-    const body = `<div class="cfg-readonly" style="margin-bottom:12px">规则库范围决定其下所有规则可选择的最大范围；缩小范围后，下属规则将同步收敛。</div>${reviewRuleScopeBoxes("reviewBankScope",allowedDepartments,bank.departments,allowedRoles,bank.roles,false)}`;
+    const bank = reviewRuleBankById(id); if (!bank || configRole !== "system" || bank.ownerLevel !== "system") { showToast("部门规则库作用范围固定为本部门"); return; }
+    const allowedDepartments = REVIEW_RULE_ALL_DEPARTMENTS.slice();
+    const body = `<div class="cfg-readonly" style="margin-bottom:12px">规则库选中的委办局适用于库内所有规则；调整范围后，库内规则将统一按新范围执行。</div>${reviewRuleScopeBoxes("reviewBankScope",allowedDepartments,bank.departments,false)}`;
     openModal(`配置规则库作用范围 · ${bank.name}`,body,() => {
-      const departments = $$('input[name="reviewBankScopeDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewBankScopeRole"]:checked').map(input => input.value);
-      if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; }
-      bank.departments = departments; bank.roles = roles; bank.updatedAt = formatDateTime(Date.now());
-      bank.rules.forEach(rule => { rule.departments = (rule.departments || []).filter(name => departments.includes(name)); rule.roles = (rule.roles || []).filter(name => roles.includes(name)); });
-      cfgRecordAudit("配置规则库作用范围","核查规则",bank.name,`作用范围调整为：${reviewRuleDepartmentText(departments)}；${reviewRuleRoleText(roles)}`);
-      closeModal(); renderConfig(); showToast("规则库及下属规则作用范围已更新");
+      const departments = $$('input[name="reviewBankScopeDepartment"]:checked').map(input => input.value);
+      if (!departments.length) { showToast("请至少选择一个委办局"); return; }
+      bank.departments = departments; bank.updatedAt = formatDateTime(Date.now());
+      cfgRecordAudit("配置规则库作用范围","核查规则",bank.name,`作用委办局调整为：${reviewRuleDepartmentText(departments)}`);
+      closeModal(); renderConfig(); showToast("规则库作用范围已更新，库内规则同步生效");
     },{okText:"保存范围",width:"760px"});
   }
   function reviewRuleDeleteBank(id) {
@@ -11107,27 +11101,21 @@ let sidebarCollapsed = false;
     const bank = reviewRuleBankById(bankId), rule = ruleId ? reviewRuleFind(bankId,ruleId) : null; if (!bank) return;
     if (!isView && rule && !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则"); return; }
     if (!isView && !rule && !reviewRuleCanAddRule(bank)) { showToast("无权在该规则库新增规则"); return; }
-    const allowedDepartments = reviewRuleAllowedDepartments(bank), allowedRoles = reviewRuleAllowedRoles(bank);
-    const selectedDepartments = rule ? (rule.departments || []).filter(name => allowedDepartments.includes(name)) : allowedDepartments.slice();
-    const selectedRoles = rule ? (rule.roles || []).filter(name => allowedRoles.includes(name)) : allowedRoles.slice();
     const selectedDocTypes = rule ? reviewRuleDocTypes(rule) : ["全部文种"];
     const disabled = isView ? "disabled" : "", value = key => esc(rule?.[key] || "");
     const evidenceFileOptions = Array.from(new Set(Object.values(REVIEW_RULE_EVIDENCE_TEXT).map(item => item.file))).map(name => `<option value="${esc(name)}"></option>`).join("");
     const officialSourceLink = isView && rule?.sourceUrl ? `<a class="review-rule-official-link" href="${esc(rule.sourceUrl)}" target="_blank" rel="noopener">${svgi("i-globe",12)}打开官方来源</a>` : "";
-    const body = `<div class="review-rule-panel-note">${svgi("i-shield",14)}<span>作用范围只能从所属规则库授权范围内选择；依据文件和条款由用户填写可读内容，内部文件ID与条款ID由系统自动关联。</span></div><div class="cfg-form-grid"><div class="cfg-form-field"><label>规则名称 <i>*</i></label><input id="reviewRuleName" maxlength="50" value="${value("name")}" ${disabled}></div><div class="cfg-form-field"><label>所属规则库</label><select disabled><option>${esc(bank.name)}</option></select></div><div class="cfg-form-field"><label>适用文种 <i>*</i></label>${reviewRuleDocTypePickerHTML(selectedDocTypes,isView)}</div><div class="cfg-form-field"><label>依据层级 <i>*</i></label><select id="reviewRuleJurisdiction" ${disabled}>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${reviewRuleJurisdiction(rule) === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-form-field"><label>启用状态</label><select id="reviewRuleEnabled" ${disabled}><option value="true" ${!rule || rule.enabled ? "selected" : ""}>启用</option><option value="false" ${rule && !rule.enabled ? "selected" : ""}>禁用</option></select></div><div class="cfg-form-field full"><label>作用范围 <i>*</i></label>${reviewRuleScopeBoxes("reviewRuleForm",allowedDepartments,selectedDepartments,allowedRoles,selectedRoles,isView)}</div><div class="cfg-form-field full"><label>命中条件 <i>*</i></label><textarea id="reviewRuleCondition" style="min-height:88px" placeholder="描述文种、文本特征、字段值或组合判断条件" ${disabled}>${value("condition")}</textarea></div><div class="cfg-form-field full"><label>问题提示 <i>*</i></label><textarea id="reviewRuleProblem" placeholder="命中后向用户展示的问题说明" ${disabled}>${value("problemPrompt")}</textarea></div><div class="cfg-form-field full"><label>修改建议 <i>*</i></label><textarea id="reviewRuleSuggestion" placeholder="给出清晰、可执行的修改建议" ${disabled}>${value("suggestion")}</textarea></div><div class="cfg-form-field full"><label>依据文件 <i>*</i></label><input id="reviewRuleEvidenceFile" list="reviewRuleEvidenceFileOptions" maxlength="120" value="${esc(reviewRuleEvidenceFile(rule))}" placeholder="输入或选择文件全称，例如：《党政机关公文处理工作条例》" ${disabled}><datalist id="reviewRuleEvidenceFileOptions">${evidenceFileOptions}</datalist><small class="review-rule-evidence-hint">可从已有文件名称中选择，也可输入部门制度文件全称；系统自动匹配内部文件ID。</small></div><div class="cfg-form-field full"><label>依据条款（一句话） <i>*</i></label><textarea id="reviewRuleEvidenceClause" maxlength="300" style="min-height:72px" placeholder="填写一条完整、可直接展示给用户的依据条款" ${disabled}>${esc(reviewRuleEvidenceClause(rule))}</textarea><small class="review-rule-evidence-hint">建议填写一句完整条款或规则原文，审查结果将直接展示该内容。</small></div><div class="cfg-form-field full"><label>官方来源链接</label><input id="reviewRuleSourceUrl" maxlength="500" value="${value("sourceUrl")}" placeholder="请输入官方网页地址，例如：https://www.gov.cn/..." ${disabled}>${officialSourceLink}<small class="review-rule-evidence-hint">建议填写政府门户或国家标准官方页面，便于复核规则依据；内部制度可留空。</small></div></div>`;
+    const body = `<div class="review-rule-panel-note">${svgi("i-shield",14)}<span>本规则继承“${esc(bank.name)}”的委办局作用范围：${esc(reviewRuleDepartmentText(bank.departments))}。依据文件和条款由用户填写可读内容。</span></div><div class="cfg-form-grid"><div class="cfg-form-field"><label>规则名称 <i>*</i></label><input id="reviewRuleName" maxlength="50" value="${value("name")}" ${disabled}></div><div class="cfg-form-field"><label>所属规则库</label><select disabled><option>${esc(bank.name)}</option></select></div><div class="cfg-form-field"><label>适用文种 <i>*</i></label>${reviewRuleDocTypePickerHTML(selectedDocTypes,isView)}</div><div class="cfg-form-field"><label>依据层级 <i>*</i></label><select id="reviewRuleJurisdiction" ${disabled}>${REVIEW_RULE_JURISDICTIONS.map(name => `<option value="${esc(name)}" ${reviewRuleJurisdiction(rule) === name ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div><div class="cfg-form-field"><label>启用状态</label><select id="reviewRuleEnabled" ${disabled}><option value="true" ${!rule || rule.enabled ? "selected" : ""}>启用</option><option value="false" ${rule && !rule.enabled ? "selected" : ""}>禁用</option></select></div><div class="cfg-form-field full"><label>命中条件 <i>*</i></label><textarea id="reviewRuleCondition" style="min-height:88px" placeholder="描述文种、文本特征、字段值或组合判断条件" ${disabled}>${value("condition")}</textarea></div><div class="cfg-form-field full"><label>问题提示 <i>*</i></label><textarea id="reviewRuleProblem" placeholder="命中后向用户展示的问题说明" ${disabled}>${value("problemPrompt")}</textarea></div><div class="cfg-form-field full"><label>修改建议 <i>*</i></label><textarea id="reviewRuleSuggestion" placeholder="给出清晰、可执行的修改建议" ${disabled}>${value("suggestion")}</textarea></div><div class="cfg-form-field full"><label>依据文件 <i>*</i></label><input id="reviewRuleEvidenceFile" list="reviewRuleEvidenceFileOptions" maxlength="120" value="${esc(reviewRuleEvidenceFile(rule))}" placeholder="输入或选择文件全称，例如：《党政机关公文处理工作条例》" ${disabled}><datalist id="reviewRuleEvidenceFileOptions">${evidenceFileOptions}</datalist><small class="review-rule-evidence-hint">可从已有文件名称中选择，也可输入部门制度文件全称；系统自动匹配内部文件ID。</small></div><div class="cfg-form-field full"><label>依据条款（一句话） <i>*</i></label><textarea id="reviewRuleEvidenceClause" maxlength="300" style="min-height:72px" placeholder="填写一条完整、可直接展示给用户的依据条款" ${disabled}>${esc(reviewRuleEvidenceClause(rule))}</textarea><small class="review-rule-evidence-hint">建议填写一句完整条款或规则原文，审查结果将直接展示该内容。</small></div><div class="cfg-form-field full"><label>官方来源链接</label><input id="reviewRuleSourceUrl" maxlength="500" value="${value("sourceUrl")}" placeholder="请输入官方网页地址，例如：https://www.gov.cn/..." ${disabled}>${officialSourceLink}<small class="review-rule-evidence-hint">建议填写政府门户或国家标准官方页面，便于复核规则依据；内部制度可留空。</small></div></div>`;
     if (isView) { openModal(`查看规则 · ${rule?.name || ""}`,body,null,{hideFooter:true,width:"860px"}); return; }
     openModal(rule ? `编辑规则 · ${rule.name}` : `新增规则 · ${bank.name}`,body,() => {
       const name = ($("#reviewRuleName")?.value || "").trim(), condition = ($("#reviewRuleCondition")?.value || "").trim(), problemPrompt = ($("#reviewRuleProblem")?.value || "").trim(), suggestion = ($("#reviewRuleSuggestion")?.value || "").trim(), evidenceFile = ($("#reviewRuleEvidenceFile")?.value || "").trim(), evidenceClause = ($("#reviewRuleEvidenceClause")?.value || "").trim(), jurisdiction = $("#reviewRuleJurisdiction")?.value || "平台规则", sourceUrl = ($("#reviewRuleSourceUrl")?.value || "").trim();
       const docTypes = $$('.review-rule-doc-menu input[name="reviewRuleDocType"]:checked').map(input => input.value);
-      const departments = $$('input[name="reviewRuleFormDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewRuleFormRole"]:checked').map(input => input.value);
       if (!name || !condition || !problemPrompt || !suggestion || !evidenceFile || !evidenceClause) { showToast("请完整填写规则名称、判断内容、依据文件和依据条款"); return; }
       if (!docTypes.length) { showToast("请至少选择一个适用文种"); return; }
       if (sourceUrl && !/^https?:\/\//i.test(sourceUrl)) { showToast("官方来源链接需以 http:// 或 https:// 开头"); return; }
-      if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; }
       if (bank.rules.some(item => item.id !== rule?.id && item.name === name)) { showToast("当前规则库中已存在同名规则"); return; }
-      if (!departments.every(name => allowedDepartments.includes(name)) || !roles.every(name => allowedRoles.includes(name))) { showToast("规则作用范围不能超出所属规则库或当前管理员权限"); return; }
       const internalStamp = Date.now();
-      const payload = {name,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],jurisdiction,departments,roles,condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:rule?.evidenceFileId || `KB-DOC-LOCAL-${internalStamp}`,evidenceClauseId:rule?.evidenceClauseId || `KB-CLAUSE-LOCAL-${internalStamp}`,sourceUrl,sourceSyncedAt:sourceUrl ? cfgNowDate() : (rule?.sourceSyncedAt || ""),enabled:$("#reviewRuleEnabled").value === "true",updatedAt:formatDateTime(internalStamp)};
+      const payload = {name,docTypes,docType:docTypes.includes("全部文种") ? "全部文种" : docTypes[0],jurisdiction,condition,problemPrompt,suggestion,evidenceFile,evidenceClause,evidenceFileId:rule?.evidenceFileId || `KB-DOC-LOCAL-${internalStamp}`,evidenceClauseId:rule?.evidenceClauseId || `KB-CLAUSE-LOCAL-${internalStamp}`,sourceUrl,sourceSyncedAt:sourceUrl ? cfgNowDate() : (rule?.sourceSyncedAt || ""),enabled:$("#reviewRuleEnabled").value === "true",updatedAt:formatDateTime(internalStamp)};
       if (rule) { Object.assign(rule,payload); cfgRecordAudit("编辑核查规则","核查规则",name,`编辑规则库“${bank.name}”中的规则“${name}”`); }
       else { bank.rules.unshift({id:`review-rule-${Date.now()}`,...payload,ownerLevel:configRole === "dept" ? "department" : "system",ownerDepartment:cfgRoleMeta().dept}); cfgRecordAudit("新增核查规则","核查规则",name,`在规则库“${bank.name}”中新增规则“${name}”`); }
       closeModal(); renderConfig(); showToast(rule ? "规则已更新" : "规则已新增");
@@ -11145,12 +11133,6 @@ let sidebarCollapsed = false;
         trigger.title = text.textContent;
       });
     }
-  }
-  function reviewRuleOpenRuleScope(bankId,ruleId) {
-    const bank = reviewRuleBankById(bankId), rule = reviewRuleFind(bankId,ruleId); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则作用范围"); return; }
-    const allowedDepartments = reviewRuleAllowedDepartments(bank), allowedRoles = reviewRuleAllowedRoles(bank);
-    const body = `<div class="cfg-readonly" style="margin-bottom:12px">仅能选择所属规则库和当前管理员权限范围内的委办局与角色。</div>${reviewRuleScopeBoxes("reviewRuleScope",allowedDepartments,rule.departments,allowedRoles,rule.roles,false)}`;
-    openModal(`配置规则作用范围 · ${rule.name}`,body,() => { const departments = $$('input[name="reviewRuleScopeDepartment"]:checked').map(input => input.value), roles = $$('input[name="reviewRuleScopeRole"]:checked').map(input => input.value); if (!departments.length || !roles.length) { showToast("请至少选择一个委办局和一个角色"); return; } rule.departments = departments; rule.roles = roles; rule.updatedAt = formatDateTime(Date.now()); cfgRecordAudit("配置规则作用范围","核查规则",rule.name,`规则“${rule.name}”作用范围调整为：${reviewRuleDepartmentText(departments)}；${reviewRuleRoleText(roles)}`); closeModal(); renderConfig(); showToast("规则作用范围已更新"); },{okText:"保存范围",width:"760px"});
   }
   function reviewRuleDeleteRule(bankId,ruleId) {
     const bank = reviewRuleBankById(bankId), rule = reviewRuleFind(bankId,ruleId); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权删除该规则"); return; }
@@ -14024,7 +14006,7 @@ function cfgRoleManagementHTML() {
       }
       case "lexiconHitFilter": { const next = {}; $$('[data-lexicon-hit-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.lexiconHitFilter] = input.value.trim(); }); lexiconHitFilters = {...lexiconHitFilters,...next}; renderConfig(); break; }
       case "lexiconHitReset": lexiconHitFilters = { keyword:"", category:"all", scope:"all", startDate:"", endDate:"" }; renderConfig(); break;
-      case "reviewRuleBankSelect": reviewRuleActiveBankId = el.dataset.id; reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",role:"all",status:"all"}; reviewRuleCloseBankMenu(); renderConfig(); break;
+      case "reviewRuleBankSelect": reviewRuleActiveBankId = el.dataset.id; reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",status:"all"}; reviewRuleCloseBankMenu(); renderConfig(); break;
       case "reviewRuleBankAdd": reviewRuleOpenBankEditor(null); break;
       case "reviewRuleBankMenuToggle": {
         const bank = reviewRuleBankById(el.dataset.id); if (!bank) break;
@@ -14033,7 +14015,7 @@ function cfgRoleManagementHTML() {
         reviewRuleCloseBankMenu();
         const canManage = reviewRuleCanManageBank(bank), pop = document.createElement("div");
         pop.className = "lex-bank-popover"; pop.id = "reviewRuleBankPopover"; pop.dataset.bankId = bank.id;
-        pop.innerHTML = `<button data-review-bank-pop="detail">${svgi("i-clipboard",13)}查看详情</button>${canManage ? `<button data-review-bank-pop="scope">${svgi("i-globe",13)}作用范围</button><button data-review-bank-pop="edit">${svgi("i-edit",13)}编辑</button><button class="danger" data-review-bank-pop="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
+         pop.innerHTML = `<button data-review-bank-pop="detail">${svgi("i-clipboard",13)}查看详情</button>${canManage ? `${configRole === "system" && bank.ownerLevel === "system" ? `<button data-review-bank-pop="scope">${svgi("i-globe",13)}作用范围</button>` : ""}<button data-review-bank-pop="edit">${svgi("i-edit",13)}编辑</button><button class="danger" data-review-bank-pop="delete">${svgi("i-trash",13)}删除</button>` : ""}`;
         document.body.appendChild(pop); const rect = el.getBoundingClientRect(); pop.style.left = Math.min(rect.right - 150,window.innerWidth - 170) + "px"; pop.style.top = rect.bottom + 4 + "px";
         pop.addEventListener("click",event => { const btn = event.target.closest("[data-review-bank-pop]"); if (!btn) return; const action = btn.dataset.reviewBankPop; pop.remove(); if (action === "detail") reviewRuleOpenBankDetail(bank.id); else if (action === "scope") reviewRuleOpenBankScope(bank.id); else if (action === "edit") reviewRuleOpenBankEditor(bank.id); else if (action === "delete") reviewRuleDeleteBank(bank.id); });
         setTimeout(() => document.addEventListener("click",function closer(event){ if (!pop.contains(event.target)) { pop.remove(); document.removeEventListener("click",closer); } }),0);
@@ -14042,9 +14024,8 @@ function cfgRoleManagementHTML() {
       case "reviewRuleAdd": reviewRuleOpenRuleEditor(el.dataset.bank,null,false); break;
       case "reviewRuleView": reviewRuleOpenRuleEditor(el.dataset.bank,el.dataset.id,true); break;
       case "reviewRuleEdit": reviewRuleOpenRuleEditor(el.dataset.bank,el.dataset.id,false); break;
-      case "reviewRuleScope": reviewRuleOpenRuleScope(el.dataset.bank,el.dataset.id); break;
       case "reviewRuleFilter": { const next = {}; $$('[data-review-rule-filter]',el.closest(".cfg-filter-bar")).forEach(input => { next[input.dataset.reviewRuleFilter] = input.value.trim(); }); reviewRuleFilters = {...reviewRuleFilters,...next}; renderConfig(); break; }
-      case "reviewRuleReset": reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",role:"all",status:"all"}; renderConfig(); break;
+      case "reviewRuleReset": reviewRuleFilters = {name:"",docType:"all",jurisdiction:"all",status:"all"}; renderConfig(); break;
       case "reviewRuleToggle": { const bank = reviewRuleBankById(el.dataset.bank), rule = reviewRuleFind(el.dataset.bank,el.dataset.id); if (!bank || !rule || !reviewRuleCanManageRule(rule)) { showToast("无权修改该规则状态"); break; } rule.enabled = !rule.enabled; rule.updatedAt = formatDateTime(Date.now()); cfgRecordAudit(rule.enabled ? "启用核查规则" : "禁用核查规则","核查规则",rule.name,`${rule.enabled ? "启用" : "禁用"}规则库“${bank.name}”中的规则“${rule.name}”`); renderConfig(); showToast(`规则“${rule.name}”已${rule.enabled ? "启用" : "禁用"}`); break; }
       case "reviewRuleDelete": reviewRuleDeleteRule(el.dataset.bank,el.dataset.id); break;
       case "cfgRoleMenuScope": cfgOpenRoleMenuScope(el.dataset.id); break;
