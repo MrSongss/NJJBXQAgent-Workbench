@@ -135,16 +135,6 @@
     .toolbar-left, .toolbar-right, .tool-group { display: flex; align-items: center; gap: 7px; min-width: 0; }
 
     /* 流程步骤条（来源于业务流程图泳道） */
-    .flowbar { display: flex; align-items: center; gap: 0; padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
-    .flow-step { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .flow-node { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #f1f4fb; color: #7c88a2; font-size: 12px; font-weight: 700; cursor: pointer; transition: .16s; border: 1px solid transparent; }
-    .flow-node .n { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; background: #cfd8ea; color: #fff; font-size: 10px; }
-    .flow-node:hover { background: var(--primary-soft); color: var(--primary); }
-    .flow-node.done { background: var(--green-soft); color: var(--green); }
-    .flow-node.done .n { background: var(--green); }
-    .flow-node.current { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .flow-node.current .n { background: rgba(255,255,255,0.35); }
-    .flow-arrow { width: 20px; height: 1px; background: #d5deee; margin: 0 2px; position: relative; flex: none; }
     .flow-arrow::after { content: "›"; position: absolute; right: -3px; top: -10px; color: #b6c1d8; }
 
     .workspace { min-height: 0; overflow: auto; padding: 20px 24px 36px; }
@@ -300,6 +290,28 @@
     @keyframes modalOut { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-30px) scale(.9); opacity: 0; } }
     .modal-mask .modal.closing { animation: modalOut .22s ease-in forwards; pointer-events: none; }
     .modal { width: min(600px, calc(100vw - 40px)); max-height: calc(100vh - 60px); display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28); }
+        .tflt { height: 30px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 12px; color: #28324c; background: #fff; }
+    .tpl-doc-view { max-height: 480px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 34px 44px; }
+    .tpl-doc-view h1, .tpl-doc-view .doc-h1 { text-align: center; font-size: 20px; color: #16233f; margin: 0 0 8px; }
+    .tpl-doc-view .sub-head { text-align: center; color: #75809a; font-size: 12.5px; margin-bottom: 18px; }
+    .tpl-doc-view p { font-size: 13.5px; line-height: 1.95; color: #28324c; margin: 6px 0; text-align: justify; }
+    .tpl-doc-view .clause-h { font-weight: 800; color: #16233f; margin-top: 14px; }
+    .ph-tpl { color: var(--primary); background: var(--primary-soft); padding: 0 4px; border-radius: 4px; font-weight: 700; }
+    .cl2-item { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; background: #fff; overflow: hidden; }
+    .cl2-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; user-select: none; }
+    .cl2-head:hover { background: #f7f9fe; }
+    .cl2-id { flex: none; font-size: 11px; font-weight: 800; color: var(--primary); background: var(--primary-soft); border-radius: 6px; padding: 2px 7px; }
+    .cl2-name { font-weight: 700; color: #1f2b45; font-size: 13.5px; }
+    .cl2-head .tg { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+    .cl2-toggle { flex: none; color: #98a3bb; font-size: 12px; }
+    .cl2-body { border-top: 1px dashed var(--line); padding: 12px 16px; background: #fbfcff; font-size: 13px; line-height: 1.9; color: #37425c; }
+    .cl2-body .lb { font-weight: 800; color: #16233f; }
+    .cl2-badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 0 5px; margin: 0 1px; }
+    .cl2-badge.b-law { color: #00653C; background: #e3f2ea; }
+    .cl2-badge.b-reg { color: #121961; background: #e6e9f8; }
+    .cl2-badge.b-std { color: #0b8fa8; background: #e2f4f7; }
+    .cl2-badge.b-case { color: #b36a00; background: #fbf0dd; }
+    .cl2-badge.b-custom { color: #b3382e; background: #fbe7e5; }
     .modal.wide { width: min(880px, calc(100vw - 40px)); }
     .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 18px; border-bottom: 1px solid var(--line); font-weight: 800; font-size: 15px; }
     .modal-body { padding: 18px; color: #46536e; line-height: 1.75; overflow: auto; }
@@ -341,6 +353,40 @@
     .doc-view { border: 1px solid var(--line); border-radius: 10px; max-height: 56vh; overflow: auto; padding: 24px 30px; background: #fff; }
 
     /* 场景选择卡片（协议类型） */
+    .modal.xwide { width: min(1060px, calc(100vw - 40px)); }
+    /* 新建合同：创建方式双入口 */
+    .nt-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+    .nt-choice { border: 1.5px solid var(--line); border-radius: 14px; padding: 26px 22px 20px; cursor: pointer; transition: .18s; background: #fff; text-align: center; }
+    .nt-choice:hover { border-color: var(--primary); background: var(--primary-soft); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(18,25,97,.08); }
+    .nt-choice .ic { font-size: 34px; }
+    .nt-choice .t { margin-top: 10px; font-size: 16px; font-weight: 800; color: #1f2b45; }
+    .nt-choice .d { margin-top: 7px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+    .nt-choice .go { margin-top: 12px; font-size: 12px; color: var(--primary); font-weight: 700; }
+    /* 合同模板图库（搜索 + 分类页签 + 缩略预览） */
+    .tpl-search { display: flex; gap: 10px; margin-bottom: 12px; }
+    .tpl-search input { flex: 1; }
+    .tpl-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 14px; overflow-x: auto; }
+    .tpl-tab { padding: 8px 13px; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; }
+    .tpl-tab:hover { color: var(--primary); }
+    .tpl-tab.on { color: var(--primary); border-color: var(--primary); font-weight: 700; }
+    .tpl-gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 16px 14px; max-height: 50vh; overflow-y: auto; padding: 2px 2px 6px; }
+    .tpl-card { cursor: pointer; border: 2px solid transparent; border-radius: 10px; padding: 7px 7px 9px; transition: .15s; position: relative; background: #fff; }
+    .tpl-card:hover { box-shadow: 0 6px 18px rgba(18,25,97,.10); }
+    .tpl-card.on { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(36,85,230,.10); }
+    .tpl-card.off { opacity: .52; }
+    .tpl-card.off:hover { box-shadow: none; }
+    .tpl-thumb { position: relative; background: #fff; border: 1px solid #e3e8f4; border-radius: 6px; aspect-ratio: 3 / 4; overflow: hidden; padding: 9px 8px; }
+    .tpl-thumb .tt { font-weight: 800; text-align: center; color: #33415e; margin-bottom: 6px; letter-spacing: .5px; }
+    .tpl-thumb .tl { color: #9aa5bc; white-space: nowrap; overflow: hidden; }
+    .tpl-thumb .bar { background: #e8ecf5; border-radius: 2px; }
+    .tpl-zoom { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(18,25,97,.30); opacity: 0; transition: .15s; font-size: 22px; color: #fff; pointer-events: none; }
+    .tpl-card .tpl-thumb:hover .tpl-zoom { opacity: 1; }
+    .tpl-zoom-ic { width: 46px; height: 46px; border-radius: 50%; background: #fff; color: var(--primary); font-size: 26px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(18,25,97,.28); pointer-events: auto; cursor: pointer; }
+    .tpl-zoom:hover .tpl-zoom-ic { background: var(--primary); color: #fff; }
+    .tpl-check { position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; display: none; align-items: center; justify-content: center; font-size: 12px; z-index: 2; }
+    .tpl-card.on .tpl-check { display: flex; }
+    .tpl-name { text-align: center; font-size: 13px; font-weight: 700; color: #2a3550; margin-top: 8px; }
+    .tpl-meta { text-align: center; font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; justify-content: center; gap: 6px; align-items: center; }
     .scene-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .scene-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px 13px; cursor: pointer; transition: .16s; background: #fff; }
     .scene-card:hover { border-color: rgba(36,85,230,.4); background: var(--primary-soft); }
@@ -517,16 +563,6 @@
           </div>
         </section>
 
-        <!-- 经办人四阶段主流程；智能匹配在生成阶段后台自动完成 -->
-        <section class="flowbar" id="flowbar" data-page-node-id="8vBbMO8GeEusQZcLIox3Kh">
-          <div class="flow-step" data-page-node-id="EZ5vMwrWrIipE23T3hT5rd"><button class="flow-node current" data-flow="1" title="录入合作要素：背景、主体、期限、经费、权责、风控" data-page-node-id="44KERTURqnlZn4BxG7z3rr"><span class="n" data-page-node-id="8Ukf8x9PsNSsi0HXS2GabO">1</span>填写信息</button></div>
-          <div class="flow-arrow" data-page-node-id="5Gm1kuf51yqmzhXGlJ4yND"></div>
-          <div class="flow-step" data-page-node-id="n34pez70YBOVLkTSiLKJCF"><button class="flow-node" data-flow="2" title="后台自动匹配已生效模板和标准条款，生成协议初稿" data-page-node-id="o0cFykT2AYBgbMrXvE3yiA"><span class="n" data-page-node-id="VqE9X87OPsGGMlaBd88Y4O">2</span>生成草案</button></div>
-          <div class="flow-arrow" data-page-node-id="5zr2hwcx16sLzUWuwD08Yq"></div>
-          <div class="flow-step" data-page-node-id="MenU4R0vScrTA6Ii5Gw3gY"><button class="flow-node" data-flow="3" title="在线编辑协议正文，保存版本并留痕" data-page-node-id="RQGFUysY4k7UEZFmHCz4oO"><span class="n" data-page-node-id="HQ8LTqYsKAM3C377ovjPPP">3</span>编辑完善</button></div>
-          <div class="flow-arrow" data-page-node-id="g8TDEPAbVfpBNpSRQJGPHN"></div>
-          <div class="flow-step" data-page-node-id="1cZQ5Dbhm2wTvqcjCqjEu9"><button class="flow-node" data-flow="4" title="导出协议草案，提交法务复核或归档" data-page-node-id="iQXaXR9FZwbLCKC35siM0W"><span class="n" data-page-node-id="CjR0zqbTfdaYqyhXcLfIbm">4</span>导出提交</button></div>
-        </section>
 
         <section class="workspace" id="cpcWorkspace" data-page-node-id="kfFXE0YVQyaKwLXOAJ8q22">
           <div class="doc-wrap" data-page-node-id="1ZtDYGxC4L5QxcQOQdSsAu">
@@ -627,7 +663,7 @@
             </div>
           </div>
         </div>
-      </div>
+              </div>
     </div>
 
     <!-- ===================== 视图：历史与版本 ===================== -->
@@ -756,6 +792,7 @@
       modalFoot.style.display = opts.hideFooter ? "none" : "flex";
       modalOk.textContent = opts.okText || "确认";
       modalBox.classList.toggle("wide", !!opts.wide);
+      modalBox.classList.toggle("xwide", !!opts.xwide);
       modalOk.onclick = onOk || closeModal;
       modalBox.classList.remove("closing");
       modalMask.classList.add("show");
@@ -787,15 +824,23 @@
     // 协议初稿正文模板（__PARTYB__ 为乙方占位符，生成时按录入替换）
     // 结构对齐客户 2023 版合同模板：合同编号 → 标题 → 封面要素（项目编号/名称/甲乙方/签订日期）→ 正文条款 → 规范落款
     function contractHtml(partyB) {
-      partyB = partyB || "江苏智数科技有限公司";
+      partyB = partyB || '<span class="ph-edit">单击此处直接编辑</span>';
       const el = state.elements || {};
       const no = el.contractNo || "";
       const pn = el.projNo || "";
       const projName = el.projName || "数字政务能力平台建设项目";
       const signDate = el.signDate || "2026-07-13";
+      const secret = el.secret || "内部";
+      const PH = '<span class="ph-edit">单击此处直接编辑</span>';
+      const term = (el.start && el.end) ? ("自" + el.start + "起至" + el.end + "止") : PH;
+      const moneyTxt = el.money ? ("人民币" + el.money + "万元") : PH;
+      const bgTxt = el.bg || "为推进新区政务数字化转型，双方拟围绕政务大模型、智能体应用及数据治理等领域开展战略合作，共同打造区域数字政务标杆。";
+      const dutyTxt = el.duty || "1. 甲方负责统筹协调、场景开放及必要的政务数据支持；2. 乙方负责平台建设、模型训练、系统集成与运维保障。";
+      const perfTxt = el.performance ? ("<p>3. 履约要求：" + el.performance + "</p>") : "";
+      const disputeTxt = el.dispute ? ("本协议在履行过程中发生争议的，由双方" + el.dispute + "。") : "本协议在履行过程中发生争议的，由双方友好协商解决；协商不成的，任何一方均可向甲方所在地人民法院提起诉讼。";
       return `
       <h1>南京江北新区数字政务能力平台建设战略合作框架协议</h1>
-      <div class="sub-head">合同编号：${no || '<span class="ph-edit">单击此处直接编辑</span>'}　　密级：内部</div>
+      <div class="sub-head">合同编号：${no || '<span class="ph-edit">单击此处直接编辑</span>'}　　密级：${secret}</div>
       <p class="no-indent">项目编号：${pn || '<span class="ph-edit">单击此处直接编辑</span>'}</p>
       <p class="no-indent">项目名称：${projName}</p>
       <p class="no-indent">采购人（甲方）：南京江北新区城市数字治理中心</p>
@@ -803,19 +848,19 @@
       <p class="no-indent">签订日期：${signDate}</p>
       <p>根据《中华人民共和国民法典》及国家、省市有关规定，甲乙双方本着平等自愿、优势互补、合作共赢的原则，就共建数字政务能力平台相关事宜，经友好协商，达成如下协议：</p>
       <p class="clause-h">第一条　合作背景与目标</p>
-      <p>为推进新区政务数字化转型，双方拟围绕政务大模型、智能体应用及数据治理等领域开展战略合作，共同打造区域数字政务标杆。</p>
+      <p>${bgTxt}</p>
       <p class="clause-h">第二条　合作期限</p>
-      <p>本协议合作期限自2026年8月1日起至2028年7月31日止，期满后双方可另行协商续签。</p>
+      <p>本协议合作期限${term}，期满后双方可另行协商续签。</p>
       <p class="clause-h">第三条　合作内容与分工</p>
-      <p>1. 甲方负责统筹协调、场景开放及必要的政务数据支持；2. 乙方负责平台建设、模型训练、系统集成与运维保障。</p>
+      <p>${dutyTxt}</p>${perfTxt}
       <p class="clause-h">第四条　合作经费</p>
-      <p>本项目合作经费总额为人民币800万元（捌佰万元整），按建设、验收、运维三个阶段分期支付。</p>
+      <p>本项目合作经费总额为${moneyTxt}，按建设、验收、运维三个阶段分期支付。</p>
       <p class="clause-h">第五条　双方权利义务</p>
       <p>甲乙双方应各自履行相应义务，实施风险按双方过错程度与约定比例合理分担。乙方应严格履行保密义务、按期交付，不得擅自转委托或披露合作过程中获取的政务信息。</p>
       <p class="clause-h">第六条　违约责任</p>
       <p>任何一方违反本协议约定，给对方造成损失的，应按实际损失赔偿；约定违约金的，不超过合同总金额的30%。</p>
       <p class="clause-h">第七条　争议解决</p>
-      <p>本协议在履行过程中发生争议的，由双方友好协商解决；协商不成的，任何一方均可向甲方所在地人民法院提起诉讼。</p>
+      <p>${disputeTxt}</p>
       <p class="clause-h">第八条　其他</p>
       <p>本协议一式肆份，甲乙双方各执贰份，自双方法定代表人或委托代理人签字并盖章之日起生效。</p>
       <p class="right" style="margin-top:28px;">甲方（盖章）：南京江北新区城市数字治理中心</p>
@@ -826,7 +871,7 @@
 
     // 工程监理合同正文（对齐《项目监理服务合同》模板：三部分结构 + 附件 1-4 + 评价考核与支付比例挂钩）
     function supervisionHtml(partyB) {
-      partyB = partyB || "江苏信安工程监理有限公司";
+      partyB = partyB || '<span class="ph-edit">单击此处直接编辑</span>';
       const el = state.elements || {};
       const no = el.contractNo || "JBXQ-JL-2026-001";
       const pn = el.projNo || "";
@@ -870,7 +915,7 @@
 
     // 第三方测试合同正文（对齐《第三方测试技术服务合同》模板：通用条款 + 专用条款 + 考核等级支付表）
     function testingHtml(partyB) {
-      partyB = partyB || "江苏赛信测评技术有限公司";
+      partyB = partyB || '<span class="ph-edit">单击此处直接编辑</span>';
       const el = state.elements || {};
       const no = el.contractNo || "JBXQ-CS-2026-001";
       const pn = el.projNo || "";
@@ -911,38 +956,30 @@
     const LIBS = {
       tpl: {
         title: "合同模板库", searchId: "tplSearch", navId: "tplNav", tableId: "tplTable", titleId: "tplCatTitle", noteId: "tplNote",
-        cols: ["模板名称", "风险等级", "版本", "状态", "更新时间"],
+        cols: ["模板名称", "业务领域", "风险等级", "版本", "状态", "更新时间"],
         cats: [
           { key: "政企合作", name: "政企合作", icon: "🏢", note: "ℹ 政企合作类模板适用于政府与企业的产业落地、平台共建等场景，风险等级默认为「中」。",
-            rows: [["政企合作协议模板", "中", "v2.3", "生效", "2026-06-20"], ["政企合作补充协议模板", "中", "v1.1", "生效", "2026-06-12"], ["政企合作意向书模板", "低", "v1.0", "草稿", "2026-07-05"]] },
+            rows: [["政企合作协议模板", "产业发展", "中", "v2.3", "生效", "2026-06-20"], ["政企合作补充协议模板", "产业发展", "中", "v1.1", "生效", "2026-06-12"], ["政企合作意向书模板", "产业发展", "低", "v1.0", "草稿", "2026-07-05"]] },
           { key: "战略合作", name: "战略合作", icon: "🤝", note: "ℹ 战略合作类模板多为框架性协议，涉及长期权责与保密，风险等级默认为「高」。",
-            rows: [["战略合作框架协议模板", "高", "v3.1", "生效", "2026-06-18"], ["战略合作框架协议模板", "高", "v2.6", "作废", "2025-12-11"]] },
+            rows: [["战略合作框架协议模板", "产业发展", "高", "v3.1", "生效", "2026-06-18"], ["战略合作框架协议模板", "产业发展", "高", "v2.6", "作废", "2025-12-11"]] },
           { key: "项目共建", name: "项目共建", icon: "🏗", note: "ℹ 项目共建类模板涉及共同投入与成果归属，须包含知识产权与风险分担条款。",
-            rows: [["项目共建合作协议模板", "高", "v1.5", "生效", "2026-05-30"], ["联合实验室共建协议模板", "高", "v1.2", "生效", "2026-05-20"]] },
+            rows: [["项目共建合作协议模板", "科技创新", "高", "v1.5", "生效", "2026-05-30"], ["联合实验室共建协议模板", "科技创新", "高", "v1.2", "生效", "2026-05-20"]] },
           { key: "服务委托", name: "服务委托", icon: "📦", note: "ℹ 服务委托类模板须明确服务范围、验收标准与付款节点。",
-            rows: [["服务委托协议模板", "中", "v2.0", "生效", "2026-05-22"], ["政务云资源服务采购协议模板", "中", "v1.4", "生效", "2026-04-28"]] },
+            rows: [["服务委托协议模板", "政务服务", "中", "v2.0", "生效", "2026-05-22"], ["政务云资源服务采购协议模板", "数据要素", "中", "v1.4", "生效", "2026-04-28"]] },
           { key: "联合运营", name: "联合运营", icon: "⚙", note: "ℹ 联合运营类模板须约定收益分配、退出机制与责任边界。",
-            rows: [["联合运营协议模板", "高", "v1.2", "草稿", "2026-07-05"]] },
+            rows: [["联合运营协议模板", "产业发展", "高", "v1.2", "草稿", "2026-07-05"]] },
           { key: "配套服务合同", name: "配套服务合同", icon: "🛰", note: "ℹ 对齐中心 2023 版合同模板：信息系统工程监理、第三方测试技术服务等信息化项目配套服务合同，含考核评价与支付比例挂钩条款。",
-            rows: [["项目监理服务合同模板", "中", "v2023.9", "生效", "2023-09-25"], ["第三方测试技术服务合同模板", "中", "v2023.9", "生效", "2023-09-25"]] }
+            rows: [["项目监理服务合同模板", "信息化建设", "中", "v2023.9", "生效", "2023-09-25"], ["第三方测试技术服务合同模板", "信息化建设", "中", "v2023.9", "生效", "2023-09-25"]] }
         ]
       },
       clause: {
         title: "合同条款库", searchId: "clauseSearch", navId: "clauseNav", tableId: "clauseTable", titleId: "clauseCatTitle", noteId: "clauseNote",
-        cols: ["条款名称", "适用场景", "必备性", "版本", "状态"],
+        cols: ["条款名称", "业务场景", "是否必备", "状态"],
         cats: [
-          { key: "合规条款", name: "合规条款", icon: "⚖", note: "ℹ 合规条款用于满足法律法规与政策要求，多为必备条款。",
-            rows: [["法律适用与合规声明", "通用", "必备", "v2.1", "生效"], ["廉政与合规经营条款", "政企合作/战略合作", "必备", "v1.3", "生效"], ["数据安全与个人信息保护", "政务数据合作", "必备", "v1.0", "生效"]] },
-          { key: "权责条款", name: "权责条款", icon: "🧭", note: "ℹ 权责条款用于界定双方权利义务与风险分担，须保持权责对等。",
-            rows: [["甲乙双方权利义务", "通用", "必备", "v2.4", "生效"], ["风险分担与责任划分", "项目共建/联合运营", "必备", "v1.2", "生效"], ["知识产权与成果归属", "项目共建/服务委托", "必备", "v1.1", "生效"]] },
-          { key: "约束条款", name: "约束条款", icon: "🔗", note: "ℹ 约束条款用于约定履约要求、违约责任与争议解决。",
-            rows: [["违约责任", "通用", "必备", "v2.0", "生效"], ["争议解决与管辖", "通用", "必备", "v1.5", "生效"], ["不可抗力", "通用", "可选", "v1.0", "生效"]] },
-          { key: "保密条款", name: "保密条款", icon: "🔒", note: "ℹ 保密条款用于约定保密范围、期限与责任，涉密合作须启用。",
-            rows: [["保密义务与范围", "通用", "必备", "v2.2", "生效"], ["保密期限与解除", "战略合作/项目共建", "可选", "v1.1", "生效"]] },
-          { key: "通用条款", name: "通用条款", icon: "📄", note: "ℹ 通用条款用于协议主体、期限、经费、生效与份数等基础约定。",
-            rows: [["合作主体与联系方式", "通用", "必备", "v1.6", "生效"], ["合作期限", "通用", "必备", "v1.3", "生效"], ["经费与支付", "通用", "必备", "v1.4", "生效"], ["协议生效与份数", "通用", "必备", "v1.2", "生效"]] },
-          { key: "配套服务条款", name: "配套服务条款", icon: "🛰", note: "ℹ 对齐中心 2023 版监理/测试合同模板的核心条款：考核评价与支付比例挂钩、分期付款与发票要求、保密与单项否决。",
-            rows: [["考核评价与费用支付（等级挂钩）", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["付款节点与等额发票", "工程监理/第三方测试", "必备", "v2023.9", "生效"], ["监理义务与成果验收", "工程监理", "必备", "v2023.9", "生效"], ["测试交付与回归测试", "第三方测试", "必备", "v2023.9", "生效"], ["保密责任（单项否决）", "第三方测试", "必备", "v2023.9", "生效"]] }
+          { key: "合规条款", name: "合规条款", icon: "⚖", note: "ℹ 合规条款用于满足法律法规与政策要求：生效依据、合规表述、数据安全、付款合规、政府采购与国标依据等，多为必备条款。", rows: [] },
+          { key: "权责条款", name: "权责条款", icon: "🧭", note: "ℹ 权责条款用于界定双方权利义务、投入分工、知识产权与收益归属，须保持权责对等。", rows: [] },
+          { key: "约束条款", name: "约束条款", icon: "🔗", note: "ℹ 约束条款用于约定履约要求：违约责任、解除退出、不可抗力、验收考核、排他竞业与争议解决等。", rows: [] },
+          { key: "保密条款", name: "保密条款", icon: "🔒", note: "ℹ 保密条款用于约定保密范围、期限与责任，涉政务数据合作须启用。", rows: [] }
         ]
       }
     };
@@ -953,17 +990,17 @@
        （版本演进不改变条款引用关系）；新上传入库的模板初始无引用，可在模板编辑中维护
        ========================================================================= */
     const TPL_REFS = {
-      "政企合作协议模板": ["法律适用与合规声明", "廉政与合规经营条款", "数据安全与个人信息保护", "甲乙双方权利义务", "违约责任", "争议解决与管辖", "保密义务与范围", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
-      "政企合作补充协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "违约责任", "保密义务与范围", "协议生效与份数"],
-      "政企合作意向书模板": ["保密义务与范围", "合作主体与联系方式", "协议生效与份数"],
-      "战略合作框架协议模板": ["法律适用与合规声明", "廉政与合规经营条款", "甲乙双方权利义务", "风险分担与责任划分", "违约责任", "争议解决与管辖", "保密义务与范围", "保密期限与解除", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
-      "项目共建合作协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "风险分担与责任划分", "知识产权与成果归属", "违约责任", "争议解决与管辖", "保密义务与范围", "合作期限", "经费与支付", "协议生效与份数"],
-      "联合实验室共建协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "知识产权与成果归属", "违约责任", "保密义务与范围", "保密期限与解除", "合作期限", "经费与支付", "协议生效与份数"],
-      "服务委托协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "知识产权与成果归属", "违约责任", "争议解决与管辖", "不可抗力", "保密义务与范围", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"],
-      "政务云资源服务采购协议模板": ["法律适用与合规声明", "数据安全与个人信息保护", "甲乙双方权利义务", "违约责任", "保密义务与范围", "合作期限", "经费与支付", "协议生效与份数"],
-      "联合运营协议模板": ["法律适用与合规声明", "甲乙双方权利义务", "风险分担与责任划分", "知识产权与成果归属", "违约责任", "争议解决与管辖", "保密义务与范围", "保密期限与解除", "合作期限", "经费与支付", "协议生效与份数"],
-      "项目监理服务合同模板": ["考核评价与费用支付（等级挂钩）", "付款节点与等额发票", "监理义务与成果验收", "保密义务与范围", "违约责任", "争议解决与管辖", "协议生效与份数"],
-      "第三方测试技术服务合同模板": ["考核评价与费用支付（等级挂钩）", "付款节点与等额发票", "测试交付与回归测试", "保密责任（单项否决）", "违约责任", "争议解决与管辖", "协议生效与份数"]
+      "政企合作协议模板": ["合同主要条款完整性", "廉政合规条款", "数据安全与个人信息保护（涉政务数据/个人信息处理）", "全面履行与附随义务", "违约责任", "争议解决条款的独立性", "保密义务", "合同主要条款完整性", "期限与续签", "付款安排", "合同生效"],
+      "政企合作补充协议模板": ["合同主要条款完整性", "全面履行与附随义务", "违约责任", "保密义务", "合同生效"],
+      "政企合作意向书模板": ["保密义务", "合同主要条款完整性", "合同生效"],
+      "战略合作框架协议模板": ["合同主要条款完整性", "廉政合规条款", "全面履行与附随义务", "风险分担机制原则", "违约责任", "争议解决条款的独立性", "保密义务", "保密条款", "合同主要条款完整性", "期限与续签", "付款安排", "合同生效"],
+      "项目共建合作协议模板": ["合同主要条款完整性", "全面履行与附随义务", "风险分担机制原则", "知识产权归属（涉技术开发类合作）", "违约责任", "争议解决条款的独立性", "保密义务", "期限与续签", "付款安排", "合同生效"],
+      "联合实验室共建协议模板": ["合同主要条款完整性", "全面履行与附随义务", "知识产权归属（涉技术开发类合作）", "违约责任", "保密义务", "保密条款", "期限与续签", "付款安排", "合同生效"],
+      "服务委托协议模板": ["合同主要条款完整性", "全面履行与附随义务", "知识产权归属（涉技术开发类合作）", "违约责任", "争议解决条款的独立性", "不可抗力", "保密义务", "合同主要条款完整性", "期限与续签", "付款安排", "合同生效"],
+      "政务云资源服务采购协议模板": ["合同主要条款完整性", "数据安全与个人信息保护（涉政务数据/个人信息处理）", "全面履行与附随义务", "违约责任", "保密义务", "期限与续签", "付款安排", "合同生效"],
+      "联合运营协议模板": ["合同主要条款完整性", "全面履行与附随义务", "风险分担机制原则", "知识产权归属（涉技术开发类合作）", "违约责任", "争议解决条款的独立性", "保密义务", "保密条款", "期限与续签", "付款安排", "合同生效"],
+      "项目监理服务合同模板": ["考核评价与支付挂钩", "付款安排", "双方承诺与委托人义务", "保密义务", "违约责任", "争议解决条款的独立性", "合同生效"],
+      "第三方测试技术服务合同模板": ["考核评价与支付挂钩", "付款安排", "验收与整改", "保密义务", "违约责任", "争议解决条款的独立性", "合同生效"]
     };
 
     // 模板名归一：去掉版本号后缀（如 "战略合作框架协议模板 v3.1" → "战略合作框架协议模板"）
@@ -1005,11 +1042,11 @@
        模板名 → [字段名, 类型, 必填性, 取值来源, 默认值]
        ========================================================================= */
     const TPL_FIELDS = {
-      "政企合作协议模板": [["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZQ-2026-"], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作项目名称", "文本", "必填", "要素录入", ""], ["合作期限", "日期区间", "必填", "要素录入", ""], ["经费总额", "金额", "必填", "要素录入", ""], ["付款方式", "下拉", "必填", "预置选项", "分期支付"], ["保密等级", "下拉", "必填", "密级管理", "非涉密"], ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"], ["违约金比例", "百分比", "可选", "要素录入", "0.5%"], ["联系人", "文本", "可选", "要素录入", ""], ["签署日期", "日期", "必填", "系统默认", "2026-09-20"]],
+      "政企合作协议模板": [["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZQ-2026-"], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作项目名称", "文本", "必填", "要素录入", ""], ["期限与续签", "日期区间", "必填", "要素录入", ""], ["经费总额", "金额", "必填", "要素录入", ""], ["付款方式", "下拉", "必填", "预置选项", "分期支付"], ["保密等级", "下拉", "必填", "密级管理", "非涉密"], ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"], ["违约金比例", "百分比", "可选", "要素录入", "0.5%"], ["联系人", "文本", "可选", "要素录入", ""], ["签署日期", "日期", "必填", "系统默认", "2026-09-20"]],
       "战略合作框架协议模板": [["合同编号", "文本", "必填", "系统自动编号", "NJJB-ZL-2026-"], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作领域", "文本", "必填", "要素录入", ""], ["战略期限", "日期区间", "必填", "要素录入", "3 年"], ["保密期限", "年数", "必填", "预置选项", "5 年"], ["争议解决方式", "下拉", "可选", "预置选项", "诉讼"], ["联系人", "文本", "可选", "要素录入", ""]]
     };
     // 未配置明细的模板按通用字段展示
-    const TPL_FIELDS_DEFAULT = [["合同编号", "文本", "必填", "系统自动编号", ""], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["合作期限", "日期区间", "必填", "要素录入", ""], ["经费/费用总额", "金额", "必填", "要素录入", ""], ["保密等级", "下拉", "可选", "密级管理", "非涉密"], ["签署日期", "日期", "必填", "系统默认", ""]];
+    const TPL_FIELDS_DEFAULT = [["合同编号", "文本", "必填", "系统自动编号", ""], ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"], ["乙方名称", "文本", "必填", "要素录入", ""], ["期限与续签", "日期区间", "必填", "要素录入", ""], ["经费/费用总额", "金额", "必填", "要素录入", ""], ["保密等级", "下拉", "可选", "密级管理", "非涉密"], ["签署日期", "日期", "必填", "系统默认", ""]];
     function tplFieldsOf(name) { return TPL_FIELDS[name] || (TPL_FIELDS[name] = TPL_FIELDS_DEFAULT.slice()); }
 
     /* =========================================================================
@@ -1042,9 +1079,10 @@
       openModal("编辑模板 · " + name, `
         <div class="form-grid">
           <div class="field"><label class="req">模板名称</label><input type="text" id="te-name" value="${row[0]}"></div>
-          <div class="field"><label class="req">风险等级</label><select id="te-risk"><option ${row[1] === "中" ? "selected" : ""}>中</option><option ${row[1] === "高" ? "selected" : ""}>高</option><option ${row[1] === "低" ? "selected" : ""}>低</option></select></div>
-          <div class="field"><label class="req">版本号</label><input type="text" id="te-ver" value="${row[2]}"></div>
-          <div class="field"><label class="req">状态</label><select id="te-status"><option ${row[3] === "生效" ? "selected" : ""}>生效</option><option ${row[3] === "草稿" ? "selected" : ""}>草稿</option><option ${row[3] === "作废" ? "selected" : ""}>作废</option></select></div>
+          <div class="field"><label class="req">业务领域</label><select id="te-domain">${["产业发展", "数字政务", "信息化建设", "政务服务", "数据要素", "科技创新"].map(d => `<option ${d === row[1] ? "selected" : ""}>${d}</option>`).join("")}</select></div>
+          <div class="field"><label class="req">风险等级</label><select id="te-risk"><option ${row[2] === "中" ? "selected" : ""}>中</option><option ${row[2] === "高" ? "selected" : ""}>高</option><option ${row[2] === "低" ? "selected" : ""}>低</option></select></div>
+          <div class="field"><label class="req">版本号</label><input type="text" id="te-ver" value="${row[3]}"></div>
+          <div class="field"><label class="req">状态</label><select id="te-status"><option ${row[4] === "生效" ? "selected" : ""}>生效</option><option ${row[4] === "草稿" ? "selected" : ""}>草稿</option><option ${row[4] === "作废" ? "selected" : ""}>作废</option></select></div>
         </div>
         <div class="field" style="margin-bottom:10px;">
           <label>可配置字段（可编辑 · 可增删）<a data-action="tplEditFieldAdd" style="margin-left:8px;">＋ 新增字段</a></label>
@@ -1077,8 +1115,8 @@
         // 收集引用条款
         const newRefs = [];
         $$("#te-refs tbody tr").forEach(tr => { const td = tr.children[0]; if (td && td.textContent.trim() && tr.dataset.refi !== undefined) newRefs.push(td.textContent.trim()); });
-        row[0] = nm; row[1] = $("#te-risk").value; row[2] = $("#te-ver").value || "v1.0"; row[3] = $("#te-status").value;
-        row[4] = "2026-09-20";
+        row[0] = nm; row[1] = $("#te-domain").value; row[2] = $("#te-risk").value; row[3] = $("#te-ver").value || "v1.0"; row[4] = $("#te-status").value;
+        row[5] = "2026-09-28";
         if (nm !== name) { delete TPL_REFS[name]; delete TPL_FIELDS[name]; }
         TPL_FIELDS[nm] = newFields;
         TPL_REFS[nm] = newRefs;
@@ -1107,7 +1145,7 @@
         ["甲方名称", "文本", "必填", "组织架构同步", "南京江北新区管理委员会"],
         ["乙方名称", "文本", "必填", "要素录入", ""],
         ["合作项目名称", "文本", "必填", "要素录入", ""],
-        ["合作期限", "日期区间", "必填", "要素录入", ""],
+        ["期限与续签", "日期区间", "必填", "要素录入", ""],
         ["合作范围", "多行文本", "必填", "要素录入", ""],
         ["经费总额", "金额", "必填", "要素录入", ""],
         ["付款方式", "下拉", "必填", "预置选项", "分期支付"],
@@ -1171,7 +1209,7 @@
     const COMPLIANCE_ISSUES = [
       { dim: "条款完整性", sev: "高", loc: "全文结构", desc: "未检出「保密义务与范围」独立条款：正文仅在第五条权利义务中提及保密要求，未约定保密范围、保密期限与保密责任，涉政务信息合作存在泄密追责盲区。", fix: "新增独立保密条款：保密范围（政务数据、技术资料、商业信息）、保密期限（合作期内及终止后 5 年）、脱密处理与违约单点否决机制。" },
       { dim: "条款完整性", sev: "中", loc: "第四条 合作经费", desc: "经费条款仅约定总额与三阶段分期，未明确各阶段支付比例、支付条件与发票开具要求，存在付款争议隐患。", fix: "细化支付节点：建设阶段 40%、验收阶段 40%、运维阶段 20%；每阶段明确验收/考核前提、付款时限（收到合格发票后 15 个工作日）与逾期处理。" },
-      { dim: "逻辑一致性", sev: "高", loc: "第二条 与 第八条", desc: "第二条约定合作期限「自2026年8月1日起至2028年7月31日止」，第八条约定「自双方签字盖章之日起生效」，但签订日期为 2026-07-13，生效日早于期限起算日，且未约定两段日期之间的效力衔接。", fix: "统一期限表述：「本协议自双方签字盖章之日起生效，合作期限自2026年8月1日起算，至2028年7月31日止」；并补充生效日至起算日之间的筹备期约定。" },
+      { dim: "逻辑一致性", sev: "高", loc: "第二条 与 第八条", desc: "第二条约定合作期限「自2026年10月1日起至2028年9月30日止」，第八条约定「自双方签字盖章之日起生效」，但签订日期早于期限起算日，且未约定两段日期之间的效力衔接。", fix: "统一期限表述：「本协议自双方签字盖章之日起生效，合作期限自2026年8月1日起算，至2028年7月31日止」；并补充生效日至起算日之间的筹备期约定。" },
       { dim: "权责对等性", sev: "中", loc: "第五条 双方权利义务", desc: "第五条仅约定乙方义务（严格保密、按期交付、不得转委托），未对应约定甲方义务（场景开放、数据支持、按期付款），权责表述失衡。", fix: "对等补充甲方义务：甲方应按约定开放应用场景、提供必要的政务数据接口、按第四条约定及时支付经费；双方均违约的按过错比例分担责任。" },
       { dim: "法律合规性", sev: "高", loc: "第三条 合作内容与分工", desc: "合作涉及政务数据支持，条款未按《数据安全法》《个人信息保护法》要求约定数据分类分级、出境评估与安全责任划分。", fix: "参考条款库「数据安全与个人信息保护」v1.0 标准表述：明确数据分类分级管理、重要数据出境安全评估前置、双方安全责任边界与违约单点否决机制。" },
       { dim: "法律合规性", sev: "中", loc: "第六条 违约责任", desc: "违约金上限表述为「不超过合同总金额的30%」，《民法典》第五百八十五条规定约定违约金过分高于实际损失的，法院可予调减，30% 缺乏依据且易被调减。", fix: "采用标准表述：违约金以实际损失为基准，上限调整为不超过合同总金额的 20%；并补充「违约金不足以弥补实际损失的，守约方可就差额部分继续索赔」。" }
@@ -1353,7 +1391,7 @@
       if (state.view !== 'editor') switchView('editor');
       state.taskName = d.snap.taskName; state.scene = d.snap.scene; state.partyB = d.snap.partyB;
       state.tplOverride = '';
-      setFlow(d.flow);
+      
       if (d.snap.docLoaded) {
         loadContract({ name: d.snap.taskName });
         setStatus(`已恢复草稿·${FLOW_LABELS[d.flow]||''}，可继续编辑`);
@@ -1416,6 +1454,7 @@
        渲染：资料库（模板 / 条款）—— 两库共用
        ========================================================================= */
     function tagFor(col, v) {
+      if (/业务领域|合作类型|业务场景/.test(col)) { return `<span class="tag mid">${v}</span>`; }
       if (/风险|级别/.test(col)) { const m = { 高: "high", 中: "mid", 低: "low" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
       if (/状态/.test(col)) { const m = { 生效: "done", 启用: "done", 现行有效: "done", 草稿: "doing", 作废: "off", 停用: "off", 下架: "off" }[v]; return m ? `<span class="tag ${m}">${v}</span>` : v; }
       if (/必备/.test(col)) { return v === "必备" ? `<span class="tag high">必备</span>` : `<span class="tag low">${v}</span>`; }
@@ -1438,10 +1477,34 @@
       const c = lib.cats.find(x => x.key === state.libCat[libKey]);
       title.textContent = c.name;
       note.innerHTML = c.note;
+      // 模板库：业务领域 / 风险等级标签化筛选
+      if (libKey === "tpl") {
+        if (!state.tplFilter) state.tplFilter = { domain: "全部", risk: "全部" };
+        const noteEl = $("#tplNote");
+        if (noteEl && !$("#tplFilters")) {
+          const sp = document.createElement("span");
+          sp.id = "tplFilters";
+          sp.style.cssText = "display:inline-flex;gap:6px;align-items:center;margin-left:14px;flex:none;";
+          noteEl.parentNode.insertBefore(sp, noteEl.nextSibling);
+        }
+        const fp = $("#tplFilters");
+        if (fp) {
+          const domains = ["全部"].concat(Array.from(new Set(LIBS.tpl.cats.reduce((acc, cc) => acc.concat(cc.rows.map(r => r[1])), []))));
+          fp.innerHTML = '<select id="tflt-domain" class="tflt" title="按业务领域筛选">' + domains.map(d => `<option ${d === state.tplFilter.domain ? "selected" : ""}>${d}</option>`).join("") + "</select>" +
+            '<select id="tflt-risk" class="tflt" title="按风险等级筛选">' + ["全部", "高", "中", "低"].map(r => `<option ${r === state.tplFilter.risk ? "selected" : ""}>${r}</option>`).join("") + "</select>";
+          $("#tflt-domain").onchange = e => { state.tplFilter.domain = e.target.value; renderLibTable("tpl"); };
+          $("#tflt-risk").onchange = e => { state.tplFilter.risk = e.target.value; renderLibTable("tpl"); };
+        }
+      }
       const head = "<thead><tr><th style='width:34px;'><input type='checkbox' data-action='checkAllLib' data-lib='" + libKey + "'></th>" +
         lib.cols.map(col => `<th>${col}</th>`).join("") + "<th style='width:150px;'>操作</th></tr></thead>";
-      const bodyRows = c.rows.map((r, ri) => {
-        const cells = r.map((v, i) => `<td>${tagFor(lib.cols[i], v)}</td>`).join("");
+      let pairs = c.rows.map((r, ri) => ({ r: r, ri: ri }));
+      if (libKey === "tpl" && state.tplFilter) {
+        if (state.tplFilter.domain !== "全部") pairs = pairs.filter(x => x.r[1] === state.tplFilter.domain);
+        if (state.tplFilter.risk !== "全部") pairs = pairs.filter(x => x.r[2] === state.tplFilter.risk);
+      }
+      const bodyRows = pairs.map(({ r, ri }) => {
+        const cells = r.slice(0, lib.cols.length).map((v, i) => `<td>${tagFor(lib.cols[i], v)}</td>`).join("");
         const extra = libKey === "tpl"
           ? `<a data-action="tplVersion" data-lib="tpl" data-ri="${ri}">版本</a>`
           : "";
@@ -1508,6 +1571,27 @@
     }
 
     /* =========================================================================
+       通用合同条款库（联网检索整理 v1.0 · 来源分级标注 · 数据源自公开权威检索）
+       ========================================================================= */
+    const CLAUSE_LIB2 = {"cats": [{"key": "说明", "name": "使用说明与来源体系", "icon": "📖", "note": "全部条款来自公开权威来源联网检索整理，按来源类型分级标注（法条原文 ＞ 行政法规/规章 ＞ 示范文本/国标 ＞ 公开实例 ＞ 惯例整理），未凭空捏造。"}, {"key": "通用", "name": "全场景通用条款", "icon": "📜", "note": "7 个业务场景均适用的通用条款（T 系列 16 条），以《民法典》法条原文与行政法规为主，可直接入库引用。"}, {"key": "政企合作", "name": "政企合作", "icon": "🏢", "note": "场景特点：无专门国家示范文本，框架性协议为主；核心风险在政府方义务表述边界（政策/数据支持不得表述为行政承诺或保底）与数据合规。"}, {"key": "战略合作", "name": "战略合作", "icon": "🤝", "note": "场景特点：框架协议，核心是\"框架 vs 专项\"的关系处理、知识产权与保密、退出安排。"}, {"key": "项目共建", "name": "项目共建", "icon": "🏗", "note": "场景特点：核心是出资/投入、共同治理、成果归属、收益与亏损分担、退出清算。"}, {"key": "服务委托", "name": "服务委托", "icon": "📦", "note": "场景特点：直接适用《民法典》委托合同章（第 919-936 条）+ 政府购买服务规范；核心是服务范围、验收标准、付款、任意解除权的应对。"}, {"key": "联合运营", "name": "联合运营", "icon": "⚙", "note": "场景特点：长期共同经营，核心是治理决策、独立核算、收益分配与退出。"}, {"key": "工程监理", "name": "工程监理", "icon": "🛰", "note": "场景特点：有国家示范文本（GF-2012-0202 建设工程监理合同）+ 信息化监理国标（GB/T 19668 系列）；行业通行\"四控制、三管理、一协调\"。"}, {"key": "第三方测试", "name": "第三方测试", "icon": "🧪", "note": "场景特点：核心是测试依据标准、范围界定、缺陷闭环、报告资质（CMA/CNAS 签章是法律效力关键）。"}], "items": [{"id": "T-01", "cat": "通用", "name": "合同主要条款完整性", "parts": [["要点", "合同内容一般应包括：当事人名称和住所、标的、数量、质量、价款或报酬、履行期限/地点/方式、违约责任、解决争议的方法；并注明\"当事人可以参照各类合同的示范文本订立合同\"。"]], "src": "【法条要点】《民法典》第 470 条。", "tags": ["法条要点"]}, {"id": "T-02", "cat": "通用", "name": "合同生效", "parts": [["参考表述", "\"本合同自双方法定代表人或授权代表签字并加盖公章（或合同专用章）之日起生效。依法应当办理批准等手续的，依照其规定；未办理批准手续影响合同生效的，不影响合同中履行报批等义务条款以及相关条款的效力。\""]], "src": "【法条要点】《民法典》第 502 条（\"依法成立的合同，自成立时生效……\"已于内蒙古政府网公开法条页逐字核实）。", "tags": ["法条要点"]}, {"id": "T-03", "cat": "通用", "name": "全面履行与附随义务", "parts": [["参考表述（法条原文）", "\"当事人应当按照约定全面履行自己的义务。当事人应当遵循诚信原则，根据合同的性质、目的和交易习惯履行通知、协助、保密等义务。当事人在履行合同过程中，应当避免浪费资源、污染环境和破坏生态。\""]], "src": "【法条原文】《民法典》第 509 条（经宁夏法院网、内蒙古政府网公开法条页核实）。", "tags": ["法条原文"]}, {"id": "T-04", "cat": "通用", "name": "约定不明的补充规则", "parts": [["要点", "质量、价款、履行地点等约定不明的，先协议补充；不能补充的按合同相关条款或交易习惯确定；仍不能确定的——质量要求按强制性国标→推荐性国标→行业标准→通常标准履行。"]], "src": "【法条原文要点】《民法典》第 510、511 条（内蒙古政府网公开法条页核实）。", "tags": ["法条原文要点"]}, {"id": "T-05", "cat": "通用", "name": "保密义务", "parts": [["参考表述（法条原文）", "\"当事人在订立合同过程中知悉的商业秘密或者其他应当保密的信息，无论合同是否成立，不得泄露或者不正当地使用；泄露、不正当地使用该商业秘密或者信息，造成对方损失的，应当承担赔偿责任。\"合同终止后仍应依诚信原则履行保密等后合同义务（第 558 条）。"], ["合同化表述建议", "明确保密范围（技术资料/政务数据/商务信息）、保密期限（合作期内及终止后 X 年）、例外情形（已公开信息、依有权机关要求披露）、违约责任。"]], "src": "【法条原文】《民法典》第 501、558 条（汕尾市政府、合浦县政府普法页核实）。", "tags": ["法条原文"]}, {"id": "T-06", "cat": "通用", "name": "违约责任", "parts": [["参考表述（法条原文）", "\"当事人一方不履行合同义务或者履行合同义务不符合约定的，应当承担继续履行、采取补救措施或者赔偿损失等违约责任。\"（第 577 条）损失赔偿额应相当于因违约所造成的损失，包括合同履行后可以获得的利益，但不得超过违约方订立合同时预见到或应当预见到的损失（第 584 条）。"]], "src": "【法条原文】《民法典》第 577、584 条（多家法院公开页核实）。", "tags": ["法条原文"]}, {"id": "T-07", "cat": "通用", "name": "违约金及司法调整", "parts": [["参考表述（法条原文）", "\"当事人可以约定一方违约时应当根据违约情况向对方支付一定数额的违约金，也可以约定因违约产生的损失赔偿额的计算方法。约定的违约金低于造成的损失的，人民法院或者仲裁机构可以根据当事人的请求予以增加；约定的违约金过分高于造成的损失的，人民法院或者仲裁机构可以根据当事人的请求予以适当减少。当事人就迟延履行约定违约金的，违约方支付违约金后，还应当履行债务。\""], ["起草提示", "违约金比例不宜畸高（公开法律实务普遍提示一般不超过实际损失的 30% 作为参照），否则存在被调减风险。"]], "src": "【法条原文】《民法典》第 585 条（河南、福建、宁夏多家法院公开页核实）。", "tags": ["法条原文"]}, {"id": "T-08", "cat": "通用", "name": "不可抗力", "parts": [["参考表述（法条原文）", "\"不可抗力是不能预见、不能避免且不能克服的客观情况。\"（第 180 条）\"当事人一方因不可抗力不能履行合同的，根据不可抗力的影响，部分或者全部免除责任，但是法律另有规定的除外。因不可抗力不能履行合同的，应当及时通知对方，以减轻可能给对方造成的损失，并应当在合理期限内提供证明。当事人迟延履行后发生不可抗力的，不免除其违约责任。\"（第 590 条）"], ["合同化表述建议", "列举事件类型（自然灾害、政府行为、社会异常事件——司法实践通行分类）+ 通知时限（如事件发生后 5 个工作日内书面通知）+ 证明文件 + 后果处理（部分/全部免责、变更或解除）。"]], "src": "【法条原文】《民法典》第 180、590 条（山东高法、青海司法厅、新疆法院网核实）。", "tags": ["法条原文"]}, {"id": "T-09", "cat": "通用", "name": "合同解除", "parts": [["要点", "法定解除情形包括：不可抗力致合同目的不能实现；预期违约；迟延履行主要债务经催告后合理期限内仍未履行；迟延履行或其他违约行为致合同目的不能实现。"]], "src": "【法条原文要点】《民法典》第 563 条（河南法院网公开法条页核实）。", "tags": ["法条原文要点"]}, {"id": "T-10", "cat": "通用", "name": "减损义务", "parts": [["要点", "一方违约后，对方应当采取适当措施防止损失扩大；未采取措施致损失扩大的，不得就扩大的损失请求赔偿。"]], "src": "【法条要点】《民法典》第 591 条（乌兰察布市检察院普法页核实）。", "tags": ["法条要点"]}, {"id": "T-11", "cat": "通用", "name": "免责条款的无效边界", "parts": [["要点", "合同中\"造成对方人身损害的\"及\"因故意或者重大过失造成对方财产损失的\"免责条款无效。起草责任限制条款时不得突破该边界。"]], "src": "【法条原文要点】《民法典》第 506 条（内蒙古政府网公开法条页核实）。", "tags": ["法条原文要点"]}, {"id": "T-12", "cat": "通用", "name": "争议解决条款的独立性", "parts": [["参考表述（法条原文要点）", "\"合同不生效、无效、被撤销或者终止的，不影响合同中有关解决争议方法的条款的效力。\""], ["起草提示", "诉讼与仲裁**只能二选一**，同时约定可能导致仲裁条款无效；管辖法院建议约定与合同有实际联系地点（甲方所在地/合同签订地/合同履行地）。"]], "src": "【法条原文要点】《民法典》第 507 条（内蒙古政府网公开法条页核实）；二选一规则为公开法律实务共识【惯例整理】。", "tags": ["法条原文要点", "惯例整理"]}, {"id": "T-13", "cat": "通用", "name": "付款期限（涉机关事业单位付款义务，强约束）", "parts": [["规范要求", "机关、事业单位从中小企业采购货物、工程、服务，**应当自交付之日起 30 日内支付款项；合同另有约定的从其约定，但付款期限最长不得超过 60 日**；不得约定以收到第三方付款作为支付条件或按第三方付款进度比例支付；对无争议部分应当先行支付；逾期支付按每日万分之五计付逾期利息。"]], "src": "【行政法规】《保障中小企业款项支付条例》（2025 修订，国务院令第 802 号，2025-06-01 施行——中国政府网政策解读及江门市、河源市政府公开解读页核实）。", "tags": ["行政法规"]}, {"id": "T-14", "cat": "通用", "name": "政府采购合同签订与备案时限（涉政府采购程序的项目）", "parts": [["规范要求", "采购人与中标、成交供应商应当自中标、成交通知书发出之日起 **30 日内**按采购文件确定的事项签订政府采购合同；合同自签订之日起 **7 个工作日内**报同级政府采购监督管理部门和有关部门备案。"]], "src": "【法条原文要点】《政府采购法》第 46、47 条（泸州市公共资源交易中心、深圳市财政局公开答复页核实）。", "tags": ["法条原文要点"]}, {"id": "T-15", "cat": "通用", "name": "数据安全与个人信息保护（涉政务数据/个人信息处理）", "parts": [["规范要求", "①国家实行数据分类分级保护制度，列入重要数据目录的数据重点保护（《数据安全法》第 21 条）；②开展数据处理活动应加强风险监测，发生数据安全事件应立即处置并按规定报告（第 29 条）；③处理个人信息应采取内部管理制度、分类管理、加密去标识化、权限管控、应急预案等措施（《个人信息保护法》第 51 条）；④**委托处理个人信息**的，应事前进行个人信息保护影响评估并记录（第 55 条）；⑤发生或可能发生个人信息泄露的，应立即补救并通知监管部门和个人（第 57 条）；⑥网络运营者应按网络安全等级保护制度履行安全保护义务，网络日志留存不少于 6 个月（《网络安全法》第 21 条）。"], ["合同化表述建议", "明确数据分类分级管理、双方安全责任边界、委托处理的范围与期限、安全措施清单、事件报告时限、个人信息保护影响评估前置、合同终止后数据返还/删除安排。"]], "src": "【法条原文要点】《数据安全法》第 21、29 条（上海市发改委公开页核实）；《个人信息保护法》第 51、55、57 条（梁河县、德惠市政府公开页、中央网信办解读核实）；《网络安全法》第 21 条。", "tags": ["法条原文要点"]}, {"id": "T-16", "cat": "通用", "name": "知识产权归属（涉技术开发类合作）", "parts": [["参考表述（法条原文）", "委托开发完成的发明创造，除法律另有规定或当事人另有约定外，申请专利的权利属于研究开发人；研究开发人取得专利权的，委托人可以依法实施该专利；转让专利申请权的，委托人享有同等条件优先受让权（第 859 条）。合作开发完成的发明创造，申请专利的权利属于合作开发当事人共有；一方转让共有申请权的，其他各方享有同等条件优先受让权；一方不同意申请专利的，其他方不得申请（第 860 条）。"]], "src": "【法条原文】《民法典》第 859、860 条（芒市政府、张家界市市监局公开页核实）。", "tags": ["法条原文"]}, {"id": "QZ-01", "cat": "政企合作", "name": "合作原则与协议定位", "parts": [["条款要点", "明确\"本协议为框架性合作协议，不构成任何一方的强制性交易义务；具体合作项目由双方另行签订专项协议确定权利义务\"。【公开实例】南陵县政府网站公开发布的《与安徽广电传媒产业集团战略合作框架协议》即采用\"战略合作协议+专项协议\"双层结构；【惯例整理】。"]], "src": "", "tags": ["公开实例", "惯例整理"]}, {"id": "QZ-02", "cat": "政企合作", "name": "政府方支持事项的合规表述", "parts": [["条款要点", "政府方义务建议表述为\"统筹协调、场景开放、依法依规提供必要的政务数据支持\"，避免\"保证/承诺/兜底\"类表述；涉及财政资金的应明确\"依法依规、按预算管理程序安排\"。【惯例整理·需法务审核】"]], "src": "", "tags": ["惯例整理"]}, {"id": "QZ-03", "cat": "政企合作", "name": "政务数据提供与使用", "parts": [["条款要点", "约定数据提供以《政务数据共享条例》为边界——\"谁管理谁负责、谁使用谁负责\"；受托开展政务信息化建设的，受托方应履行政务数据安全保护义务，采取技术措施防止政务数据被篡改、破坏、泄露或非法获取、非法利用。【行政法规】《政务数据共享条例》（国务院令第 809 号，2025-08-01 施行，中国政府网全文及国家数据局解读核实）。"]], "src": "", "tags": ["行政法规"]}, {"id": "QZ-04", "cat": "政企合作", "name": "合作机制", "parts": [["条款要点", "联席会议机制（双方分管领导任召集人，定期通报进展、协调重大事项）+ 专项对接机制（具体项目指定责任单位与负责人，明确时间表路线图）。【公开实例】南陵县公开协议第五条。"]], "src": "", "tags": ["公开实例"]}, {"id": "QZ-05", "cat": "政企合作", "name": "产业落地与投入条款", "parts": [["条款要点", "明确企业方投资/建设内容、投资规模（可约定目标值而非承诺值）、建设周期、就业/税收等贡献目标的表述方式（建议\"预期/力争\"而非\"保证\"）。【惯例整理·需法务审核】"]], "src": "", "tags": ["惯例整理"]}, {"id": "QZ-06", "cat": "政企合作", "name": "背景与前景知识产权", "parts": [["条款要点", "一方签约前已有的知识产权（背景知识产权）仍归该方所有；因履行具体合作项目产生的知识产权（前景知识产权）按主导投入方所有、另一方在合作范围内非排他免费使用、共同投入难以分割的共同所有并另行约定收益分配。【公开实例】南陵县公开协议第四条（该条款对政企合作知识产权分层处理有直接参考价值）；法条依据《民法典》第 859、860 条。"]], "src": "", "tags": ["公开实例"]}, {"id": "QZ-07", "cat": "政企合作", "name": "廉政合规条款", "parts": [["条款要点", "双方承诺遵守廉政建设规定，不得以任何形式进行商业贿赂或不正当利益输送；违反的守约方有权单方解除协议并要求赔偿。【惯例整理】（政务类合同通行必备条款）。"]], "src": "", "tags": ["惯例整理"]}, {"id": "QZ-08", "cat": "政企合作", "name": "保密与政务信息边界", "parts": [["条款要点", "除 T-05 外，增加\"涉及国家秘密、工作秘密的信息不适用本协议数据共享约定\"——依据《政务数据共享条例》第 3 条\"政务数据不包括属于国家秘密、工作秘密的数据\"。【行政法规】"]], "src": "", "tags": ["行政法规"]}, {"id": "QZ-09", "cat": "政企合作", "name": "考核与退出", "parts": [["条款要点", "约定年度合作评估机制；一方严重违约经书面催告后 30 日内仍未纠正的，守约方有权书面通知终止协议，且不影响追究违约责任。【公开实例】南陵县公开协议附则第 3 条。"]], "src": "", "tags": ["公开实例"]}, {"id": "QZ-10", "cat": "政企合作", "name": "特许经营特别提示", "parts": [["条款要点", "如合作内容实质构成基础设施和公用事业特许经营（使用者付费的 PPP），应适用《基础设施和公用事业特许经营管理办法》（六部门 2024 年第 17 号令）：公开竞争方式选择特许经营者、特许经营期限最长不超过 40 年、明确风险分担机制、禁止以 BT 方式逃避运营义务或垫资施工。【部门规章】（中国政府网、央广网、陕西省工信厅解读核实）。"]], "src": "", "tags": ["部门规章"]}, {"id": "ZL-01", "cat": "战略合作", "name": "框架协议性质声明", "parts": [["条款要点", "\"本协议为战略合作框架协议，确立双方合作关系与基本原则；除本协议明确约定外，本协议本身不产生具体的采购、付款等交易义务，具体合作事项以双方另行签署的专项协议/订单为准。\"【公开实例】南陵县公开协议附则第 1 条；国际通行模板（Jotform 战略合作模板第 1 条）亦同。"]], "src": "", "tags": ["公开实例"]}, {"id": "ZL-02", "cat": "战略合作", "name": "合作关系性质", "parts": [["条款要点", "\"双方为独立法律主体，本协议不构成法律意义上的合伙、合资、代理或雇佣关系；任何一方无权以另一方名义对外作出承诺或承担义务。\"【公开实例】Jotform 战略合作模板第 2 条（国际通行写法）；【惯例整理】。"]], "src": "", "tags": ["公开实例", "惯例整理"]}, {"id": "ZL-03", "cat": "战略合作", "name": "合作领域与机制", "parts": [["条款要点", "列举合作方向 + 联席会议 + 专项对接 + 项目验收三层机制（同 QZ-04）。【公开实例】南陵县公开协议。"]], "src": "", "tags": ["公开实例"]}, {"id": "ZL-04", "cat": "战略合作", "name": "知识产权分层", "parts": [["条款要点", "背景知识产权各自保留 + 前景知识产权按贡献归属 + 共同投入部分共有（同 QZ-06）。【公开实例】南陵县公开协议第四条；【法条】《民法典》第 859、860 条。"]], "src": "", "tags": ["公开实例", "法条"]}, {"id": "ZL-05", "cat": "战略合作", "name": "商标与标识使用", "parts": [["条款要点", "\"未经对方事先书面同意，任何一方不得使用对方的商标、商号、标识进行宣传；经授权使用的，不得超出授权范围。\"【公开实例】Jotform 模板第 7 条；【惯例整理】。"]], "src": "", "tags": ["公开实例", "惯例整理"]}, {"id": "ZL-06", "cat": "战略合作", "name": "保密条款", "parts": [["条款要点", "保密范围（商业秘密、技术秘密、合作细节含收益分配比例与未公开合作计划）+ 保密期限（建议\"自信息披露之日起至信息进入公域为止，且不短于合作终止后 X 年\"）+ 违约金。【公开实例】人人文库《企业战略合作协议模板范本（2026 版）》保密条款；法条依据《民法典》第 501 条。"]], "src": "", "tags": ["公开实例"]}, {"id": "ZL-07", "cat": "战略合作", "name": "排他性安排（可选）", "parts": [["条款要点", "如约定排他，应明确排他范围（地域/领域/期限）及违反排他的违约责任；不约定则默示非排他。【惯例整理·需法务审核】"]], "src": "", "tags": ["惯例整理"]}, {"id": "ZL-08", "cat": "战略合作", "name": "期限与续签", "parts": [["条款要点", "\"本协议有效期 X 年，自双方签字盖章之日起生效；期满前 X 个月双方可协商续签并签订书面续期协议。\"【公开实例】南陵县公开协议（有效期三年）；华律网战略合作范本。"]], "src": "", "tags": ["公开实例"]}, {"id": "ZL-09", "cat": "战略合作", "name": "违约与催告终止", "parts": [["条款要点", "\"一方严重违反本协议约定，经另一方书面催告后 30 日内仍未纠正的，守约方有权书面通知违约方终止本协议；协议终止不影响守约方追究违约责任。\"【公开实例】南陵县公开协议附则第 3 条。"]], "src": "", "tags": ["公开实例"]}, {"id": "ZL-10", "cat": "战略合作", "name": "终止后安排", "parts": [["条款要点", "\"本协议有效期届满或终止后，不影响协议有效期内已签订的各项专项合同的法律效力；保密、知识产权、争议解决条款在协议终止后继续有效。\"【公开实例】南陵县公开协议附则第 4 条；Jotform 模板第 9 条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-01", "cat": "项目共建", "name": "投入条款", "parts": [["条款要点", "明确各方投入形式（资金/场地/设备/技术/数据/人员）、作价方式、比例、到位时间；逾期出资的违约责任（公开范本通行写法：每逾期一日按未出资金额的一定比例支付违约金，逾期超过 X 日守约方有权解除）。【公开实例】华律网《合同联营协议范本》违约责任条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-02", "cat": "项目共建", "name": "共同治理机制", "parts": [["条款要点", "设立联合管理机构（如联合项目管理委员会）；重大事项清单（投资、融资、预算、业务拓展、对外担保等）须经双方协商一致方可实施。【公开实例】华律网联营范本\"经营管理\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-03", "cat": "项目共建", "name": "财务管理", "parts": [["条款要点", "\"项目设立独立财务账户，由双方共同（或指定一方）管理；各项费用支出应符合项目经营需要并经双方共同认可；财务报表定期向双方提供。\"【公开实例】华律网联营范本\"财务管理\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-04", "cat": "项目共建", "name": "成果与知识产权归属", "parts": [["条款要点", "共建形成的技术成果，合作开发的发明创造申请专利的权利归双方共有（《民法典》第 860 条）；软件著作权、数据成果等建议专项明确归属与使用许可范围。【法条原文】第 860 条；【惯例整理】。"]], "src": "", "tags": ["法条原文", "惯例整理"]}, {"id": "XG-05", "cat": "项目共建", "name": "收益分配", "parts": [["条款要点", "\"每个会计年度结束后进行财务结算，扣除成本、税费后按约定比例分配利润；分配时间为次年 X 月前；因市场变化、政策调整致收益较大变化的，双方可协商调整分配方式。\"【公开实例】开鲁县政府网站公开发布的联营方案第七条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-06", "cat": "项目共建", "name": "亏损与风险分担", "parts": [["条款要点", "\"项目亏损由双方按出资比例（或约定比例）分担；因一方过错致项目损失的，过错方承担赔偿责任；因不可抗力致损失的，按法律规定和合同约定分担。\"【公开实例】开鲁县联营方案第八条；华律网范本\"利润分配与亏损分担\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-07", "cat": "项目共建", "name": "风险分担机制原则", "parts": [["条款要点", "参照特许经营办法精神——\"根据风险性质以及各方风险管控能力，明确风险分担机制并切实执行\"（最优控制原则：最有能力控制风险的一方承担相应风险）。【部门规章】《基础设施和公用事业特许经营管理办法》2024 年第 17 号令原则（陕西省工信厅解读核实）。"]], "src": "", "tags": ["部门规章"]}, {"id": "XG-08", "cat": "项目共建", "name": "退出机制", "parts": [["条款要点", "\"一方退出应提前 X 个月书面通知；经协商一致后对项目资产评估作价，按出资比例及盈亏情况计算应得或应承担金额；退出方配合办理变更手续，确保项目正常运营不受影响。\"【公开实例】华律网/66 法律网联营范本\"退出机制\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "XG-09", "cat": "项目共建", "name": "资产归属与移交", "parts": [["条款要点", "共建形成固定资产、数据资产的归属与期满移交安排（参照 BOT/BOOT 模式的移交条款：期满或提前终止时资产状态、移交程序、移交费用）。【部门规章】特许经营办法列举的 BOT/BOOT/TOT 实施方式；【惯例整理】。"]], "src": "", "tags": ["部门规章", "惯例整理"]}, {"id": "XG-10", "cat": "项目共建", "name": "争议期间继续履行", "parts": [["条款要点", "\"争议解决期间，除争议事项外，双方应继续履行合同其他无争议条款，确保项目正常进行。\"【公开实例】开鲁县联营方案第十条。"]], "src": "", "tags": ["公开实例"]}, {"id": "WT-01", "cat": "服务委托", "name": "委托事项与服务范围", "parts": [["条款要点", "明确服务内容、服务标准、服务期限、交付成果清单（建议以附件《服务清单》形式列明）。法条依据：委托合同是委托人和受托人约定，由受托人处理委托人事务的合同（《民法典》第 919 条）。【法条要点】"]], "src": "", "tags": ["法条要点"]}, {"id": "WT-02", "cat": "服务委托", "name": "政府购买服务合同必备要素（涉财政资金购买服务时）", "parts": [["条款要点", "\"政府购买服务合同应当明确服务的内容、期限、数量、质量、价格、资金结算方式、各方权利义务事项和违约责任等内容\"，并应约定服务质量标准、绩效评价方式、不可抗力等。【部门规章】《政府购买服务管理办法》（财政部令第 102 号，鄂托克前旗政府公开实施方案引用核实）。"]], "src": "", "tags": ["部门规章"]}, {"id": "WT-03", "cat": "服务委托", "name": "验收标准与程序", "parts": [["条款要点", "明确验收标准（引用附件技术协议/需求规格说明书）、验收时限（如交付后 10 个工作日内完成验收）、逾期未提出异议视为验收通过、验收不合格的整改期限与再次验收流程；质量要求约定不明的按强制性国标→推荐性国标→行业标准履行（《民法典》第 511 条）。【法条】第 511 条；【惯例整理】。"]], "src": "", "tags": ["法条", "惯例整理"]}, {"id": "WT-04", "cat": "服务委托", "name": "付款安排", "parts": [["条款要点", "分期付款明确各期比例、支付前提（验收/考核通过）、支付时限；机关事业单位付款须遵守 30 日/最长 60 日及逾期利息日万分之五的强制规定（见 T-13）。【行政法规】《保障中小企业款项支付条例》2025 修订。"]], "src": "", "tags": ["行政法规"]}, {"id": "WT-05", "cat": "服务委托", "name": "亲自履行与转委托限制", "parts": [["条款要点", "\"受托人应当亲自处理委托事务。经委托人同意，受托人可以转委托；转委托经同意或追认的，受托人仅就第三人的选任及其指示承担责任；转委托未经同意的，受托人应当对转委托的第三人的行为承担责任。\"【法条原文】《民法典》第 923 条（上海高院、黑龙江法院公开页核实）。涉政务项目建议约定\"未经甲方书面同意不得转委托、分包\"。"]], "src": "", "tags": ["法条原文"]}, {"id": "WT-06", "cat": "服务委托", "name": "报告义务与配合义务", "parts": [["条款要点", "受托人应按约定定期报告服务进展与成果；委托人应及时提供必要资料、场地与决策确认，因委托人迟延配合致服务延误的，服务期限相应顺延。【法条要点】《民法典》委托合同章；【惯例整理】。"]], "src": "", "tags": ["法条要点", "惯例整理"]}, {"id": "WT-07", "cat": "服务委托", "name": "受托人过错赔偿", "parts": [["条款要点", "\"有偿的委托合同，因受托人的过错造成委托人损失的，委托人可以请求赔偿损失；受托人超越权限造成委托人损失的，应当赔偿损失。\"【法条原文】《民法典》第 929 条。"]], "src": "", "tags": ["法条原文"]}, {"id": "WT-08", "cat": "服务委托", "name": "任意解除权的应对", "parts": [["条款要点", "委托合同双方均可随时解除（《民法典》第 933 条），有偿委托合同解除方应赔偿对方直接损失和合同履行后可获得的利益。起草建议：约定提前通知期（如 30 日）+ 已完成部分按实结算 + 约定解约补偿计算方式，降低任意解除带来的不确定性。【法条原文】第 933 条；【惯例整理】。"]], "src": "", "tags": ["法条原文", "惯例整理"]}, {"id": "WT-09", "cat": "服务委托", "name": "成果归属", "parts": [["条款要点", "受托服务形成的文档、数据、成果归属约定（建议归委托方所有或约定使用许可）；涉及委托开发软件的知识产权按《民法典》第 859 条处理。【法条】第 859 条。"]], "src": "", "tags": ["法条"]}, {"id": "WT-10", "cat": "服务委托", "name": "履约考核与支付挂钩", "parts": [["条款要点", "约定考核指标（服务响应时限、成果质量、投诉率等）、考核周期、考核结果与付款比例挂钩的规则（如考核不合格按约定比例扣减当期服务费或解除）。【公开实例】鄂托克前旗政府购买服务方案\"按进度考核，考核不合格可以解除合同\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-01", "cat": "联合运营", "name": "运营范围与期限", "parts": [["条款要点", "明确联合运营的业务范围、地域范围、运营期限及期满续展/终止安排。【惯例整理】"]], "src": "", "tags": ["惯例整理"]}, {"id": "LY-02", "cat": "联合运营", "name": "治理与决策", "parts": [["条款要点", "联合运营决策机构设置；重大事项（定价、预算、投资、对外合作、人事）双方协商一致；日常运营由运营方负责并接受另一方监督。【公开实例】华律网联营范本\"经营管理\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-03", "cat": "联合运营", "name": "独立核算与账户", "parts": [["条款要点", "\"联合运营业务设立独立财务账户，收支单独核算；双方均有权查阅账目并可委托第三方审计。\"【公开实例】华律网联营范本\"财务管理\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-04", "cat": "联合运营", "name": "收益分配", "parts": [["条款要点", "\"每个会计年度结束后进行财务结算，扣除成本、税费后按约定比例分配；分配时限明确；市场或政策重大变化时可协商调整分配方式。\"【公开实例】开鲁县联营方案第七条（含固定分成+营业额比例分成的组合实例）。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-05", "cat": "联合运营", "name": "亏损分担", "parts": [["条款要点", "按出资比例或约定比例分担亏损；亏损分担金额应在确定后 X 个工作日内支付至指定账户。【公开实例】66 法律网《单位联营合同范本》。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-06", "cat": "联合运营", "name": "运营成本分担", "parts": [["条款要点", "明确各项运营成本（人员、场地、系统运维、市场费用）的承担主体与分担比例；追加投入的决策程序与分担规则。【公开实例】Harper James 协作协议指南（成本与追加投入需事前约定）；【惯例整理】。"]], "src": "", "tags": ["公开实例", "惯例整理"]}, {"id": "LY-07", "cat": "联合运营", "name": "退出机制", "parts": [["条款要点", "提前 X 个月书面通知 + 资产评估作价 + 按出资比例及盈亏清算 + 配合办理变更手续（同 XG-08）。【公开实例】华律网/66 法律网联营范本。"]], "src": "", "tags": ["公开实例"]}, {"id": "LY-08", "cat": "联合运营", "name": "竞业与利益冲突", "parts": [["条款要点", "运营期内一方不得自营或与他人合作经营与联合运营业务构成直接竞争的业务（如约定）；违反的违约金与解除权。【惯例整理·需法务审核】"]], "src": "", "tags": ["惯例整理"]}, {"id": "LY-09", "cat": "联合运营", "name": "数据与客户资源归属", "parts": [["条款要点", "运营期间积累的客户数据、运营数据的权属与使用规则；合作终止后的数据交接安排；涉个人信息处理的按《个人信息保护法》第 51、55 条执行。【法条】个保法；【惯例整理】。"]], "src": "", "tags": ["法条", "惯例整理"]}, {"id": "LY-10", "cat": "联合运营", "name": "违约与争议期间安排", "parts": [["条款要点", "违约金（公开政府联营方案实例为固定金额违约金+损失赔偿）+ 争议期间除争议事项外继续履行（同 XG-10）。【公开实例】开鲁县联营方案第九、十条。"]], "src": "", "tags": ["公开实例"]}, {"id": "JL-01", "cat": "工程监理", "name": "合同文件组成与解释顺序", "parts": [["条款要点", "\"组成本合同的文件包括：①协议书；②中标通知书（招标工程）或委托书（非招标工程）；③投标文件或监理与相关服务建议书；④专用条件；⑤通用条件；⑥附录（附录 A 相关服务的范围和内容；附录 B 委托人派遣的人员和提供的房屋、资料、设备）；双方签订的补充协议也是合同组成部分。\"【示范文本】GF-2012-0202 协议书第三条（多份政府采购公开招标文件核实）。"]], "src": "", "tags": ["示范文本"]}, {"id": "JL-02", "cat": "工程监理", "name": "总监理工程师", "parts": [["条款要点", "明确总监理工程师姓名、身份证号、注册号；实行**总监理工程师负责制**，监理机构按项目需要配备总监代表、专业监理工程师等人员。【示范文本】GF-2012-0202 协议书第四条；【公开实例】内蒙古政府采购信息化监理需求（呼伦贝尔明信公司招标文件）。"]], "src": "", "tags": ["示范文本", "公开实例"]}, {"id": "JL-03", "cat": "工程监理", "name": "监理范围与工作内容", "parts": [["条款要点", "信息化项目监理通行内容为\"**四控制、三管理、一协调**\"（质量控制、进度控制、投资控制、变更控制/安全控制，合同管理、信息/文档管理、安全管理，组织协调）。【国标】GB/T 19668.1-2014《信息技术服务 监理 第 1 部分：总则》及第 2-7 部分（基础设施/运行维护/信息安全/软件工程/数据中心/监理工作量度量）；【公开实例】杭州市生态环境局、吉林省政务数字化中心监理采购需求。"]], "src": "", "tags": ["国标", "公开实例"]}, {"id": "JL-04", "cat": "工程监理", "name": "质量控制细则", "parts": [["条款要点", "审查技术方案/实施方案合理性与可操作性、审核质量管理计划、检查实施状况与人员一致性、关键环节签认、重大质量隐患签发停工令并报业主、验收申请评估与整改监督、培训监督评估等（公开采购文件列明 16 项）。【公开实例】四川政府采购网信息化监理采购需求（2024）。"]], "src": "", "tags": ["公开实例"]}, {"id": "JL-05", "cat": "工程监理", "name": "进度控制细则", "parts": [["条款要点", "审查阶段进度计划、定期检查实际进度与计划一致性、处理工程延期申请、签发监理通知单并监督纠偏、验收阶段进度安排意见（公开采购文件列明 6 项）。【公开实例】同上。"]], "src": "", "tags": ["公开实例"]}, {"id": "JL-06", "cat": "工程监理", "name": "投资控制", "parts": [["条款要点", "审查承建单位结算申请和实际工程量、控制支付进度并签发支付凭证、协助违约及索赔核查、竣工阶段审核工程结算。【公开实例】吉林省政务服务和数字化建设服务中心监理项目公告。"]], "src": "", "tags": ["公开实例"]}, {"id": "JL-07", "cat": "工程监理", "name": "监理期限", "parts": [["条款要点", "\"监理期限自 X 年 X 月 X 日始至 X 年 X 月 X 日止（暂定 X 日历天，最终以施工工期为准）\"，或\"自工程开工至保修期满止\"；相关服务（勘察/设计/保修阶段）期限分别列明。【示范文本】GF-2012-0202 协议书第六条及各地招标文件实例。"]], "src": "", "tags": ["示范文本"]}, {"id": "JL-08", "cat": "工程监理", "name": "监理酬金与计取", "parts": [["条款要点", "\"签约酬金（大写）\"，可约定\"实际监理费用=经审计的工程结算价×监理费率（X%）\"，并区分监理酬金与各阶段相关服务酬金。【示范文本】GF-2012-0202 协议书第五条；费率折算实例见安徽濉溪县公开监理合同。"]], "src": "", "tags": ["示范文本"]}, {"id": "JL-09", "cat": "工程监理", "name": "双方承诺与委托人义务", "parts": [["条款要点", "\"监理人承诺按合同约定提供监理与相关服务；委托人承诺按约定派遣相应人员、提供房屋/资料/设备并支付酬金。\"【示范文本】GF-2012-0202 协议书第七条。"]], "src": "", "tags": ["示范文本"]}, {"id": "JL-10", "cat": "工程监理", "name": "考核评价与支付挂钩", "parts": [["条款要点", "监理服务考核指标（到岗率、文档及时性、问题发现率）与监理费支付比例挂钩；考核不合格的扣减与整改规则。（本项目中心 2023 版监理合同模板既有做法，与公开采购文件\"按进度考核\"精神一致）【惯例整理】。"]], "src": "", "tags": ["惯例整理"]}, {"id": "CS-01", "cat": "第三方测试", "name": "测试依据标准", "parts": [["条款要点", "\"测试依据：GB/T 25000.51-2016《系统与软件工程 系统与软件质量要求和评价（SQuaRE）第 51 部分：就绪可用软件产品（RUSP）的质量要求和测试细则》、合同及附件《软件需求规格说明书》。\"**禁止\"参照业内通用规范\"等模糊表述**——报告中必须列明现行有效标准编号及版本号。【国标】GB/T 25000.51-2016；【公开实例】重庆市经信委软件测评采购文件（2025-12）及检测机构合规指引。"]], "src": "", "tags": ["国标", "公开实例"]}, {"id": "CS-02", "cat": "第三方测试", "name": "测试范围界定", "parts": [["条款要点", "明确测试覆盖的功能模块、接口、非功能特性（功能性、性能效率、安全性等），以及明确排除的范围；附功能清单或需求跟踪矩阵（RTM），标注每个功能点测试状态（通过/失败/未测），未覆盖部分给出书面理由。【公开实例】第三方测试报告合规指引（cnascmatest.com）及重庆采购文件。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-03", "cat": "第三方测试", "name": "测试原则", "parts": [["条款要点", "客观性和公正性（按双方认可的测试方案实施）、可再现性（同样要求与方式下重复执行应得到同样结果）、结果完善性（结果证明是良好判断和对测评项的正确理解）。【公开实例】重庆市经信委采购文件\"测试原则\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-04", "cat": "第三方测试", "name": "测试内容", "parts": [["条款要点", "功能性测试（功能完备性、正确性、适合性——依据需求规格说明书验证全部需求实现）、性能效率测试（多用户大并发下吞吐量、点击率、平均事务响应时间）、安全性测试等，并出具第三方软件测试报告。【公开实例】重庆市经信委采购文件\"测评内容\"条；GB/T 25000.51 八大质量特性。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-05", "cat": "第三方测试", "name": "缺陷管理与闭环", "parts": [["条款要点", "缺陷按致命/严重/一般/提示四级分类，注明复现步骤、截图日志；整改后回归测试并可追溯；报告应含完整缺陷信息而非仅\"发现 X 个已修复\"。【公开实例】第三方测试报告合规指引。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-06", "cat": "第三方测试", "name": "测试环境与被测件管理", "parts": [["条款要点", "测试环境（硬件配置、操作系统、数据库、网络拓扑、测试工具及版本）精确记录并可复现；被测软件名称、版本号、完整性全程可追溯（接收-保存-传递-处置流程）。【公开实例】CNAS 软件测试要求（卓码测评文章）。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-07", "cat": "第三方测试", "name": "报告必备内容", "parts": [["条款要点", "依据 GB/T 25000.51-2016 第 7.5 节，符合性评价报告九项必备内容：RUSP 标识、评价人员、完成日期、测试用计算机系统、使用的文档、评价活动汇总、结果汇总、详细结果、不符合项清单；另含效果声明与复制声明。【国标】GB/T 25000.51-2016（信立方检测文章核实）。"]], "src": "", "tags": ["国标"]}, {"id": "CS-08", "cat": "第三方测试", "name": "报告签章与法律效力", "parts": [["条款要点", "\"测试报告应加盖检验检测专用章及 CMA 或 CNAS 签章\"——CMA（中国计量认证）是在国内具有法律效力的底线；机构能力附表范围必须覆盖本次测试类型，超范围盖章的报告在验收中无效。【公开实例】重庆市经信委采购文件；合规指引（认 e 云 cx.cnca.cn 可核验 CMA 状态）。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-09", "cat": "第三方测试", "name": "验收与整改", "parts": [["条款要点", "甲方组织验收，乙方按验收要求准备资料；验收不通过的乙方配合整改直至通过；因乙方原因复测的费用承担约定。【公开实例】昆明市教育体育局监理/测试采购需求\"验收要求\"条。"]], "src": "", "tags": ["公开实例"]}, {"id": "CS-10", "cat": "第三方测试", "name": "测试数据安全", "parts": [["条款要点", "测试过程中接触的政务数据/个人信息按 T-15 执行；建议使用脱敏测试数据；测试结束后数据及副本的返还/删除与保密义务存续。【法条】《数据安全法》第 21、29 条、《个人信息保护法》第 51 条；【惯例整理】。"]], "src": "", "tags": ["法条", "惯例整理"]}]};
+
+    /* —— 条款库四分类构建：将「通用合同条款库（联网检索整理 v1.0）」86 条并入合同条款库 ——
+       行结构：[条款名称, 业务场景, 是否必备, 状态, 条款正文(=条款要点), 来源标注, 扩展部分] */
+    const CLAUSE4_MAP = {"T-01":"合规条款","T-02":"合规条款","T-03":"合规条款","T-13":"合规条款","T-14":"合规条款","T-15":"合规条款","QZ-02":"合规条款","QZ-03":"合规条款","QZ-07":"合规条款","QZ-10":"合规条款","ZL-01":"合规条款","WT-02":"合规条款","JL-01":"合规条款","CS-01":"合规条款","CS-07":"合规条款","CS-08":"合规条款","T-16":"权责条款","QZ-01":"权责条款","QZ-04":"权责条款","QZ-05":"权责条款","QZ-06":"权责条款","ZL-02":"权责条款","ZL-03":"权责条款","ZL-04":"权责条款","ZL-05":"权责条款","XG-01":"权责条款","XG-02":"权责条款","XG-03":"权责条款","XG-04":"权责条款","XG-05":"权责条款","XG-06":"权责条款","XG-07":"权责条款","XG-09":"权责条款","WT-01":"权责条款","WT-06":"权责条款","WT-09":"权责条款","LY-01":"权责条款","LY-02":"权责条款","LY-03":"权责条款","LY-04":"权责条款","LY-05":"权责条款","LY-06":"权责条款","LY-09":"权责条款","JL-02":"权责条款","JL-03":"权责条款","JL-04":"权责条款","JL-05":"权责条款","JL-06":"权责条款","JL-08":"权责条款","JL-09":"权责条款","CS-02":"权责条款","CS-03":"权责条款","CS-04":"权责条款","CS-06":"权责条款","T-04":"约束条款","T-06":"约束条款","T-07":"约束条款","T-08":"约束条款","T-09":"约束条款","T-10":"约束条款","T-11":"约束条款","T-12":"约束条款","QZ-09":"约束条款","ZL-07":"约束条款","ZL-08":"约束条款","ZL-09":"约束条款","ZL-10":"约束条款","XG-08":"约束条款","XG-10":"约束条款","WT-03":"约束条款","WT-04":"约束条款","WT-05":"约束条款","WT-07":"约束条款","WT-08":"约束条款","WT-10":"约束条款","LY-07":"约束条款","LY-08":"约束条款","LY-10":"约束条款","JL-07":"约束条款","JL-10":"约束条款","CS-05":"约束条款","CS-09":"约束条款","T-05":"保密条款","QZ-08":"保密条款","ZL-06":"保密条款","CS-10":"保密条款"};
+    (function buildClauseLib() {
+      CLAUSE_LIB2.items.forEach(it => {
+        const cat = LIBS.clause.cats.find(c => c.key === CLAUSE4_MAP[it.id]);
+        if (!cat) return;
+        const bodyPart = it.parts.find(p => p[0] === "条款要点");
+        const body = bodyPart ? bodyPart[1] : (it.parts[0] ? it.parts[0][1] : "");
+        const allText = (it.src || "") + " " + JSON.stringify(it.parts);
+        const req = (it.cat === "通用" || /【法条|【行政法规|【示范文本|【国标|强制性|必备要素/.test(allText)) ? "必备" : "无须必备";
+        const scene = it.cat === "通用" ? "全场景通用" : it.cat;
+        cat.rows.push([it.name, scene, req, "启用", body, it.src || "【惯例整理】通行范本归纳，需法务审核", it.parts]);
+      });
+    })();
+
+    /* =========================================================================
        视图切换
        ========================================================================= */
     function switchView(v) {
@@ -1520,124 +1604,91 @@
     /* =========================================================================
        新建拟制向导（对应流程图：录入要素 → 智能匹配 → 生成初稿）
        ========================================================================= */
+    // 新建合同：两种创建方式（已有模板 / 自定义）
     function newTaskFlow() {
+      openModal("新建合同", `
+        <div class="hint-txt" style="margin-bottom:12px;">请选择创建方式：套用模板库中已生效的合同模板快速生成；或自定义录入合同要素，智能匹配合同条款库生成初稿。</div>
+        <div class="nt-choices">
+          <div class="nt-choice" id="ntTpl">
+            <div class="ic">📑</div>
+            <div class="t">使用已有合同模板</div>
+            <div class="d">从合同模板库选择已生效模板<br>套用模板结构与标准条款，直接进入编辑</div>
+            <div class="go">选择模板 →</div>
+          </div>
+          <div class="nt-choice" id="ntCustom">
+            <div class="ic">✏️</div>
+            <div class="t">自定义合同</div>
+            <div class="d">录入合同类型、合作主体、期限、经费等要素<br>智能匹配合同条款库生成初稿，支持在线编辑</div>
+            <div class="go">录入要素 →</div>
+          </div>
+        </div>
+        <div class="hint-txt" style="margin-top:14px;text-align:center;">选择上方任一方式开始拟制合同</div>`, null, { hideFooter: true, wide: true });
+      setTimeout(() => {
+        $("#ntTpl").onclick = () => tplGalleryModal();
+        $("#ntCustom").onclick = () => goElementForm();
+      }, 0);
+    }
+    // 自定义合同：录入合同要素（类型场景 / 名称 / 通用字段 / 背景目标 / 权责 / 争议解决）
+    function goElementForm() {
       const cards = scenes.map(s =>
         `<div class="scene-card ${s.key === state.scene ? "on" : ""}" data-scene="${s.key}">
           <div class="t">${s.icon} ${s.key}</div><div class="d">${s.d}</div></div>`).join("");
-      openModal("新建合同拟制 · 选择协议类型", `
+      openModal("自定义合同 · 录入合同要素", `
         <div class="steps">
-          <div class="s active"><span class="dot">1</span><span class="t">选择类型</span></div><span class="bar"></span>
-          <div class="s"><span class="dot">2</span><span class="t">录入要素</span></div><span class="bar"></span>
+          <div class="s done"><span class="dot">✓</span><span class="t">创建方式</span></div><span class="bar"></span>
+          <div class="s active"><span class="dot">2</span><span class="t">录入要素</span></div><span class="bar"></span>
           <div class="s"><span class="dot">3</span><span class="t">匹配生成</span></div>
         </div>
-        <div class="field"><label class="req">协议类型 / 业务场景</label><div class="scene-cards" id="sceneCards">${cards}</div></div>
-        <div class="form-grid" style="margin-top:4px;">
-          <div class="field"><label class="req">合同名称</label><input type="text" id="taskName" value="数字政务能力平台建设战略合作框架协议"></div>
-          <div class="field"><label>密级</label><select id="taskSecret"><option>内部</option><option>非涉密</option><option>秘密</option></select></div>
+        <div class="field"><label class="req">合同类型 / 业务场景</label><div class="scene-cards" id="sceneCards">${cards}</div></div>
+        <div class="form-grid" style="margin-top:2px;">
+          <div class="field"><label class="req">合同名称</label><input type="text" id="ef-name" value="数字政务能力平台建设战略合作框架协议"><div class="err">请输入合同名称</div></div>
+          <div class="field"><label>密级</label><select id="ef-secret"><option>内部</option><option>非涉密</option><option>秘密</option></select></div>
         </div>
-        <div class="field" style="margin-bottom:0;"><label>快速开始</label>
-          <div class="toolbar-inline">
-            <button class="btn" id="srcSample">📄 使用示例任务（一键演示）</button>
-            <button class="btn" id="srcImport">📁 导入既有合作材料</button>
-            <button class="btn" id="srcTpl">📑 从模板库选择模板拟制</button>
-          </div>
-          <div class="hint-txt">「使用示例任务」将载入战略合作框架协议示例，直接进入生成结果；「从模板库选择」直接套用已生效模板；也可点击「下一步」手工录入合作要素。</div>
-        </div>`, () => goElementForm(), { okText: "下一步：录入要素", wide: true });
+        <div class="field" style="margin:2px 0 0;"><label style="font-weight:800;color:#1f2b45;">合同通用字段</label></div>
+        <div class="form-grid">
+          <div class="field"><label>甲方（我方）</label><input type="text" value="南京江北新区城市数字治理中心" readonly style="background:#f7f9fd;color:#75809a;"></div>
+          <div class="field"><label class="req">合作主体（乙方）</label><input type="text" id="ef-b" placeholder="请输入合作单位全称"><div class="err">请输入合作单位全称</div></div>
+          <div class="field"><label class="req">合作期限（起始）</label><input type="date" id="ef-start" value="2026-10-01"><div class="err">请选择起始日期</div></div>
+          <div class="field"><label class="req">合作期限（终止）</label><input type="date" id="ef-end" value="2028-09-30"><div class="err">终止日期须晚于起始日期</div></div>
+          <div class="field"><label>经费范围（万元）</label><input type="number" id="ef-money" placeholder="如 800，留空则正文中待补充" min="0"></div>
+          <div class="field"><label>签订日期</label><input type="date" id="ef-sign" value="2026-09-28"></div>
+          <div class="field full"><label>履约要求</label><textarea id="ef-perf" placeholder="如：按季度提交成果物并通过甲方考核；关键岗位人员不得擅自更换等">按季度提交建设成果并通过甲方考核验收；乙方关键岗位人员不得擅自更换，更换须提前书面报甲方同意。</textarea></div>
+          <div class="field full"><label>合作背景与目标</label><textarea id="ef-bg" placeholder="简要描述合作背景、合作目标与主要内容">围绕政务大模型、智能体应用及数据治理开展战略合作，共建数字政务能力平台。</textarea></div>
+          <div class="field full"><label>权责划分要点</label><textarea id="ef-duty" placeholder="简述甲乙双方主要权利义务与分工">甲方负责统筹协调与场景、数据支持；乙方负责平台建设、模型训练与运维保障。</textarea></div>
+          <div class="field full"><label>争议解决</label><select id="ef-dispute">
+            <option>友好协商解决；协商不成的，任何一方均可向甲方所在地人民法院提起诉讼</option>
+            <option>友好协商解决；协商不成的，提交南京仲裁委员会按其仲裁规则进行仲裁</option>
+            <option>友好协商解决；协商不成的，任何一方均可向合同签订地有管辖权的人民法院提起诉讼</option>
+          </select></div>
+        </div>`, () => submitElementForm(), { okText: "下一步：智能匹配", wide: true });
       setTimeout(() => {
         $$("#sceneCards .scene-card").forEach(card => card.onclick = () => {
           $$("#sceneCards .scene-card").forEach(c => c.classList.remove("on"));
           card.classList.add("on"); state.scene = card.dataset.scene;
         });
-        $("#srcSample") && ($("#srcSample").onclick = () => {
-          const SAMPLES = {
-            "工程监理": { partyB: "江苏信安工程监理有限公司", name: "政务AI智能体平台建设项目监理服务合同" },
-            "第三方测试": { partyB: "江苏赛信测评技术有限公司", name: "政务AI智能体平台第三方测试技术服务合同" }
-          };
-          const smp = SAMPLES[state.scene] || { partyB: "江苏智数科技有限公司", name: "数字政务能力平台建设战略合作框架协议" };
-          state.partyB = smp.partyB; state.taskName = ($("#taskName").value.trim() || smp.name);
-          state.elements = state.elements || {};
-          closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("已载入「" + state.scene + "」示例任务，协议初稿已生成");
-        });
-        $("#srcImport") && ($("#srcImport").onclick = () => $("#fileInput").click());
-        $("#srcTpl") && ($("#srcTpl").onclick = () => { closeModal(); tplPickModal(); });
-      }, 0);
-    }
-    // 步骤2：录入合作要素（含必填 / 手机号 / 日期范围校验）
-    function goElementForm() {
-      state.taskName = ($("#taskName") && $("#taskName").value.trim()) || state.taskName || "数字政务能力平台建设战略合作框架协议";
-      addNewDraft(false, 1);
-      openModal("新建合同拟制 · 录入合作要素", `
-        <div class="steps">
-          <div class="s done"><span class="dot">✓</span><span class="t">选择类型</span></div><span class="bar"></span>
-          <div class="s active"><span class="dot">2</span><span class="t">录入要素</span></div><span class="bar"></span>
-          <div class="s"><span class="dot">3</span><span class="t">匹配生成</span></div>
-        </div>
-        <div class="form-grid">
-          <div class="field"><label>甲方（我方）</label><input type="text" id="ef-a" value="南京江北新区城市数字治理中心" readonly style="background:#f7f9fd;color:#75809a;"></div>
-          <div class="field"><label class="req">乙方（合作单位）</label><input type="text" id="ef-b" placeholder="请输入合作单位全称"><div class="err">请输入合作单位全称</div></div>
-          <div class="field"><label>合同编号</label><input type="text" id="ef-no" placeholder="如：JBXQ-JL-2026-001"></div>
-          <div class="field"><label>项目编号</label><input type="text" id="ef-projno" placeholder="如：JBXQ-XM-2026-018"></div>
-          <div class="field"><label class="req">项目名称</label><input type="text" id="ef-projname" placeholder="如：政务AI智能体平台建设项目" value="政务AI智能体平台建设项目"><div class="err">请输入项目名称</div></div>
-          <div class="field"><label class="req">签订日期</label><input type="date" id="ef-sign" value="2026-09-10"><div class="err">请选择签订日期</div></div>
-          <div class="field"><label class="req">乙方联系电话</label><input type="text" id="ef-phone" placeholder="手机号或座机，如 13800138000 / 025-58150000"><div class="err">请输入正确的手机号或座机号码</div></div>
-          <div class="field"><label>乙方项目负责人</label><input type="text" id="ef-pm" placeholder="乙方项目负责人姓名"></div>
-          <div class="field"><label class="req">经费总额（万元）</label><input type="number" id="ef-money" placeholder="请输入数字，如 800" min="0"><div class="err">请输入有效的经费金额</div></div>
-          <div class="field"><label>费用计算方式</label><select id="ef-feetype"><option>固定总金额</option><option>投资总值 × 监理费费率（工程监理）</option><option>按测试工作量计费（第三方测试）</option></select></div>
-          <div class="field"><label>监理/服务费费率（%）</label><input type="number" id="ef-rate" placeholder="如 3.5，仅费率计费时填写" min="0" max="100" step="0.1"></div>
-          <div class="field"><label>乙方开户银行</label><input type="text" id="ef-bank" placeholder="如：中国银行南京江北新区支行"></div>
-          <div class="field"><label>乙方银行账号</label><input type="text" id="ef-acct" placeholder="如：5012 3456 7890"></div>
-          <div class="field"><label class="req">服务起始日期</label><input type="date" id="ef-start" value="2026-09-15"><div class="err">请选择起始日期</div></div>
-          <div class="field"><label class="req">服务终止日期</label><input type="date" id="ef-end" value="2028-09-14"><div class="err">终止日期须晚于起始日期</div></div>
-          <div class="field full"><label>合作背景与目标</label><textarea id="ef-bg" placeholder="简要描述合作背景、合作目标与主要内容">围绕政务大模型、智能体应用及数据治理开展战略合作，共建数字政务能力平台。</textarea></div>
-          <div class="field full"><label>权责划分要点</label><textarea id="ef-duty" placeholder="简述甲乙双方主要权利义务与分工">甲方负责统筹协调与场景、数据支持；乙方负责平台建设、模型训练与运维保障。</textarea></div>
-          <div class="field full"><label class="req">合规及风控要求（至少选择一项）</label>
-            <div class="chk-grid" id="ef-risk">
-              <span class="opt on" data-val="保密要求"><span class="cbx">✓</span>保密要求</span>
-              <span class="opt on" data-val="数据安全"><span class="cbx">✓</span>数据安全与个人信息保护</span>
-              <span class="opt" data-val="廉政合规"><span class="cbx">✓</span>廉政与合规经营</span>
-              <span class="opt" data-val="知识产权"><span class="cbx">✓</span>知识产权归属</span>
-              <span class="opt on" data-val="违约责任"><span class="cbx">✓</span>违约责任与争议解决</span>
-              <span class="opt" data-val="不可抗力"><span class="cbx">✓</span>不可抗力</span>
-            </div>
-            <div class="err" id="ef-risk-err">请至少选择一项合规及风控要求</div>
-          </div>
-        </div>`, () => submitElementForm(), { okText: "下一步：智能匹配", wide: true });
-      setTimeout(() => {
-        $$("#ef-risk .opt").forEach(o => o.onclick = () => o.classList.toggle("on"));
       }, 0);
     }
     function submitElementForm() {
       let ok = true;
       const setErr = (id, bad) => { const f = $("#" + id).closest(".field"); if (f) f.classList.toggle("invalid", bad); if (bad) ok = false; };
-      const b = $("#ef-b").value.trim(), phone = $("#ef-phone").value.trim(), money = $("#ef-money").value.trim();
-      const projname = $("#ef-projname").value.trim(), sign = $("#ef-sign").value;
+      const name = $("#ef-name").value.trim(), b = $("#ef-b").value.trim();
       const start = $("#ef-start").value, end = $("#ef-end").value;
-      const phoneOk = /^1[3-9]\d{9}$/.test(phone) || /^0\d{2,3}-?\d{7,8}$/.test(phone);
+      setErr("ef-name", !name);
       setErr("ef-b", !b);
-      setErr("ef-phone", !phoneOk);
-      setErr("ef-money", !(money !== "" && +money > 0));
-      setErr("ef-projname", !projname);
-      setErr("ef-sign", !sign);
       setErr("ef-start", !start);
       setErr("ef-end", !(end && start && end > start));
-      const riskChecked = $$("#ef-risk .opt.on").length > 0;
-      $("#ef-risk-err").closest(".field").classList.toggle("invalid", !riskChecked);
-      if (!riskChecked) ok = false;
       if (!ok) { showToast("请完善必填项后再继续"); return; }
+      state.taskName = name;
       state.partyB = b;
       state.elements = {
-        contractNo: $("#ef-no").value.trim() || "",
-        projNo: $("#ef-projno").value.trim() || "",
-        projName: projname,
-        signDate: sign,
-        partyAPm: "中心项目负责人（待定）",
-        partyBPm: $("#ef-pm").value.trim() || "（待定）",
-        feeType: $("#ef-feetype").value,
-        rate: $("#ef-rate").value.trim(),
-        bank: $("#ef-bank").value.trim(),
-        acct: $("#ef-acct").value.trim(),
-        money: money, start: start, end: end,
-        bg: $("#ef-bg").value.trim(), duty: $("#ef-duty").value.trim()
+        contractNo: "", projNo: "", projName: "",
+        secret: $("#ef-secret").value,
+        signDate: $("#ef-sign").value || "",
+        money: $("#ef-money").value.trim(),
+        start: start, end: end,
+        performance: $("#ef-perf").value.trim(),
+        bg: $("#ef-bg").value.trim(), duty: $("#ef-duty").value.trim(),
+        dispute: $("#ef-dispute").value
       };
       matchAndGenerate();
     }
@@ -1645,12 +1696,12 @@
     function matchAndGenerate() {
       openModal("新建合同拟制 · 智能匹配与生成", `
         <div class="steps">
-          <div class="s done"><span class="dot">✓</span><span class="t">选择类型</span></div><span class="bar"></span>
+          <div class="s done"><span class="dot">✓</span><span class="t">创建方式</span></div><span class="bar"></span>
           <div class="s done"><span class="dot">✓</span><span class="t">录入要素</span></div><span class="bar"></span>
           <div class="s active"><span class="dot">3</span><span class="t">匹配生成</span></div>
         </div>
-        <div id="matchLines"></div>`, () => { closeModal(); loadContract({ name: state.taskName }); showToast("协议初稿已生成，可编辑完善后导出"); }, { okText: "生成协议初稿" });
-      setFlow(2);
+        <div id="matchLines"></div>`, () => { closeModal(); loadContract({ name: state.taskName }); addNewDraft(true, 3); showToast("协议初稿已生成，可编辑完善后导出"); }, { okText: "生成协议初稿" });
+      
       const isGovSvc = state.scene === "工程监理" || state.scene === "第三方测试";
       const tplBase = sceneTplBase();
       const refN = (TPL_REFS[tplBase] || []).length;
@@ -1667,7 +1718,7 @@
       const box = $("#matchLines");
       let i = 0;
       const t = setInterval(() => {
-        if (i >= lines.length) { clearInterval(t); setFlow(3); return; }
+        if (i >= lines.length) { clearInterval(t); return; }
         const [txt, st, tag] = lines[i];
         const div = document.createElement("div");
         div.className = "parse-line " + st;
@@ -1682,29 +1733,28 @@
        ========================================================================= */
     function addLibModal(libKey) {
       if (libKey === "tpl") return tplUploadFlow(); // 模板走三步上传解析向导
-      // 条款库保持原表单式新增
       const lib = LIBS[libKey];
-      const cfg = { clause: { title: "新增条款", noun: "条款文本", accept: "支持 .docx / .doc / .txt / .xlsx" } }[libKey];
-      const fields = lib.cols.map((col, i) =>
-        `<div class="field"><label>${col}</label><input type="text" id="lf-${i}" placeholder="请输入${col}"></div>`).join("");
-      openModal(cfg.title, `
-        <div class="form-grid">${fields}</div>
-        <div class="field" style="margin-bottom:0;">
-          <label>上传${cfg.noun}</label>
-          <div class="upzone" style="padding:22px 14px;">
-            <div class="up-ic">📄</div>
-            <div class="up-t">点击选择或拖拽${cfg.noun}文件</div>
-            <div class="hint-txt">${cfg.accept}</div>
-          </div>
-        </div>`, () => {
-        const vals = lib.cols.map((col, i) => ($("#lf-" + i) && $("#lf-" + i).value.trim()) || "");
-        if (!vals[0]) { showToast("请填写名称"); return; }
-        const catObj = lib.cats.find(x => x.key === state.libCat[libKey]) || lib.cats[0];
-        const statusCol = libKey === "tpl" ? 3 : 4;
-        const row = vals.slice();
-        row[statusCol] = "草稿";
-        catObj.rows.push(row);
-        renderLib(libKey); closeModal(); showToast(cfg.title + "成功（草稿），复核发布后生效");
+      const curCat = state.libCat.clause;
+      const sceneOpts = ["全场景通用", "政企合作", "战略合作", "项目共建", "服务委托", "联合运营", "工程监理", "第三方测试"];
+      openModal("新增条款", `
+        <div class="form-grid">
+          <div class="field"><label class="req">条款名称</label><input type="text" id="lf-name" placeholder="请输入条款名称"></div>
+          <div class="field"><label class="req">业务场景</label><select id="lf-scene">${sceneOpts.map(s => `<option>${s}</option>`).join("")}</select></div>
+          <div class="field"><label class="req">是否必备</label><select id="lf-req"><option>必备</option><option>无须必备</option></select></div>
+          <div class="field"><label class="req">状态</label><select id="lf-status"><option>启用</option><option>停用</option></select></div>
+        </div>
+        <div class="field"><label class="req">条款正文</label><textarea id="lf-body" rows="5" placeholder="请输入条款正文"></textarea></div>
+        <div class="field" style="margin-bottom:0;"><label>条款分类</label><select id="lf-cat">${lib.cats.map(c => `<option ${c.key === curCat ? "selected" : ""} value="${c.key}">${c.icon} ${c.name}</option>`).join("")}</select>
+          <div class="hint-txt" style="margin-top:6px;">新增条款将加入所选分类；操作全程留痕。</div></div>`, () => {
+        const name = ($("#lf-name").value || "").trim();
+        const body = ($("#lf-body").value || "").trim();
+        if (!name) { showToast("请填写条款名称"); return; }
+        if (!body) { showToast("请填写条款正文"); return; }
+        if (findClauseRow(name)) { showToast("条款名称已存在，请勿重复新增"); return; }
+        const cat = lib.cats.find(x => x.key === $("#lf-cat").value);
+        cat.rows.push([name, $("#lf-scene").value, $("#lf-req").value, $("#lf-status").value, body, "【手动新增】", [["条款要点", body]]]);
+        state.libCat.clause = cat.key;
+        renderLib(libKey); closeModal(); showToast("新增条款成功，已加入「" + cat.name + "」");
       }, { okText: "确认新增", wide: true });
     }
 
@@ -1807,8 +1857,9 @@
         </div>
         <div class="hint-txt" style="margin-bottom:12px;">AI 已完成解析并预填以下信息，请核对后确认入库；入库状态为「草稿」，复核发布后参与智能生成。</div>
         <div class="form-grid">
-          <div class="field"><label class="req">模板名称</label><input type="text" id="tf-name" value="${name}"></div>
-          <div class="field"><label class="req">适用分类</label><select id="tf-cat">${catOpts}</select></div>
+          <div class="field"><label class="req">合同模板名称</label><input type="text" id="tf-name" value="${name}"></div>
+          <div class="field"><label class="req">业务领域</label><select id="tf-domain">${["产业发展", "数字政务", "信息化建设", "政务服务", "数据要素", "科技创新"].map(d => `<option>${d}</option>`).join("")}</select></div>
+          <div class="field"><label class="req">合作类型</label><select id="tf-cat">${catOpts}</select></div>
           <div class="field"><label class="req">风险等级</label><select id="tf-risk"><option>中</option><option>高</option><option>低</option></select></div>
           <div class="field"><label>版本号</label><input type="text" id="tf-ver" value="v1.0"></div>
         </div>
@@ -1827,9 +1878,9 @@
         const cat = $("#tf-cat").value;
         const catObj = LIBS.tpl.cats.find(x => x.key === cat);
         const today = "2026-09-20";
-        catObj.rows.push([nm, $("#tf-risk").value, $("#tf-ver").value || "v1.0", "草稿", today]);
+        catObj.rows.push([nm, $("#tf-domain").value, $("#tf-risk").value, $("#tf-ver").value || "v1.0", "草稿", today]);
         TPL_FIELDS[nm] = PARSE_RESULT.fields.map(x => x.slice());
-        TPL_REFS[nm] = ["法律适用与合规声明", "甲乙双方权利义务", "保密义务与范围", "违约责任", "争议解决与管辖", "合作主体与联系方式", "合作期限", "经费与支付", "协议生效与份数"];
+        TPL_REFS[nm] = ["合同主要条款完整性", "全面履行与附随义务", "保密义务", "违约责任", "争议解决条款的独立性", "合同主要条款完整性", "期限与续签", "付款安排", "合同生效"];
         renderLib("tpl"); closeModal();
         showToast("模板已入库（草稿），待复核发布后参与智能生成");
         setStatus("模板「" + nm + "」已上传解析入库，状态：草稿");
@@ -1840,59 +1891,39 @@
     function tplDetailModal(ri) {
       const c = LIBS.tpl.cats.find(x => x.key === state.libCat.tpl), row = c.rows[ri];
       const name = row[0];
-      const refs = (TPL_REFS[name] || []).map(n => {
-        const f = findClauseRow(n);
-        return { name: n, cat: f ? f.cat.name : "—", row: f ? f.cat.rows[f.ri] : null, ref: f };
-      });
-      const refRows = refs.map(r => `<tr>
-        <td>${r.name}</td><td>${r.cat}</td>
-        <td><span class="tag ${r.row && r.row[2] === "必备" ? "done" : "off"}">${r.row ? r.row[2] : "—"}</span></td>
-        <td>${r.row ? r.row[3] : "—"}</td>
-        <td>${r.ref ? `<a data-action="tplRefClause" data-name="${r.name}" data-lib="clause">查看条款</a>` : "未入库"}</td>
-      </tr>`).join("") || `<tr><td colspan="5" style="color:#8b95a7;">暂未关联标准条款（新入库模板），可在条款管理中维护引用关系。</td></tr>`;
-      openModal("模板详情 · " + name, `
+      openModal("合同模板 · " + name, `
         <div class="parse-sum">
-          <div class="ps"><div class="k">风险等级</div><div class="v">${row[1]}</div></div>
-          <div class="ps"><div class="k">当前版本</div><div class="v">${row[2]}<small>${row[3]}</small></div></div>
-          <div class="ps"><div class="k">适用分类</div><div class="v">${c.name}</div></div>
-          <div class="ps"><div class="k">最近更新</div><div class="v">${row[4]}</div></div>
-        </div>
-        <div class="field-map" style="margin-bottom:10px;">
-          <div class="fm"><span class="fm-k">引用标准条款</span><span class="fm-v">${refs.length} 条</span></div>
-          <div class="fm"><span class="fm-k">其中必备</span><span class="fm-v">${refs.filter(r => r.row && r.row[2] === "必备").length} 条</span></div>
-          <div class="fm"><span class="fm-k">可配置字段</span><span class="fm-v">${tplFieldsOf(name).length} 项</span></div>
-          <div class="fm"><span class="fm-k">适用分类</span><span class="fm-v">${c.name}</span></div>
-        </div>
-        <div class="field" style="margin-bottom:10px;">
-          <label>可配置字段（生成合同时由要素录入自动填充）</label>
-          <div style="border:1px solid var(--line);border-radius:10px;max-height:200px;overflow:auto;">
-            <table class="tbl"><thead><tr><th>字段名称</th><th>字段类型</th><th>必填</th><th>取值来源</th><th>默认值</th></tr></thead><tbody>
-              ${tplFieldsOf(name).map((f, fi) => `<tr>
-                <td><b>${f[0]}</b></td><td>${f[1]}</td>
-                <td><span class="tag ${f[2] === "必填" ? "done" : "off"}">${f[2]}</span></td>
-                <td>${f[3]}</td><td>${f[4] || "—"}</td>
-              </tr>`).join("") || `<tr><td colspan="5" style="color:#8b95a7;">暂无可配置字段（新入库模板）。</td></tr>`}
-            </tbody></table>
-          </div>
-        </div>
-        <div class="field" style="margin-bottom:10px;">
-          <label>引用条款清单（多对多引用 · 来自条款库 · ${refs.length} 条）</label>
-          <div style="border:1px solid var(--line);border-radius:10px;max-height:220px;overflow:auto;">
-            <table class="tbl"><thead><tr><th>条款名称</th><th>分类</th><th>必备性</th><th>版本</th><th>操作</th></tr></thead><tbody>
-              ${refRows}
-            </tbody></table>
-          </div>
+          <div class="ps"><div class="k">业务领域</div><div class="v">${row[1]}</div></div>
+          <div class="ps"><div class="k">合作类型</div><div class="v">${c.name}</div></div>
+          <div class="ps"><div class="k">风险等级</div><div class="v">${row[2]}</div></div>
+          <div class="ps"><div class="k">版本 / 状态</div><div class="v">${row[3]}<small>${row[4]} · ${row[5]}</small></div></div>
         </div>
         <div class="field" style="margin-bottom:0;">
-          <label>使用该模板拟制</label>
-          <div class="hint-txt" style="margin-top:0;">点击下方按钮，将套用该模板 ${row[2]}（${row[3]}）进入新建合同拟制流程，系统自动带出模板结构与标准条款。如需调整模板字段或条款引用，请点击<a data-action="tplEdit" data-lib="tpl" data-name="${name}" style="font-weight:700;">「编辑模板」</a>。</div>
+          <label>模板内容（${row[3]} 现行文本 · 【待填写】处为生成时由要素自动填充的字段）</label>
+          <div class="tpl-doc-view">${tplContentHtml(name)}</div>
         </div>`, () => {
         closeModal();
         state.scene = c.key;
         state.taskName = name.replace(/模板$/, "") + "（拟制）";
         state.tplOverride = name;
         newTaskFromTpl(name, c.key);
-      }, { okText: "📑 使用该模板拟制合同", wide: true, hideFooter: false });
+      }, { okText: "📑 使用该模板拟制合同", xwide: true, hideFooter: false });
+    }
+
+    // 模板实际内容：复用场景正文生成器，要素置空 → 占位符呈现为【待填写】
+    function tplContentHtml(name) {
+      const base = tplBaseName(name);
+      const savedEl = state.elements;
+      state.elements = {};
+      let doc;
+      if (/监理/.test(base)) doc = supervisionHtml("【乙方（监理单位）】");
+      else if (/测试/.test(base)) doc = testingHtml("【乙方（测试机构）】");
+      else doc = contractHtml("【乙方（合作方）】");
+      state.elements = savedEl;
+      const PH_SPAN = '<span class="ph-edit">单击此处直接编辑</span>';
+      return doc
+        .split(PH_SPAN).join('<span class="ph-tpl">【待填写】</span>')
+        .replace(/南京智云数科科技有限公司/g, "【乙方名称】");
     }
 
     function clauseDetailModal(ri) {
@@ -1900,103 +1931,132 @@
       const refBy = clauseRefBy(row[0]);
       openModal("条款详情 · " + row[0], `
         <div class="parse-sum">
-          <div class="ps"><div class="k">适用场景</div><div class="v">${row[1]}</div></div>
-          <div class="ps"><div class="k">必备性</div><div class="v">${row[2]}</div></div>
-          <div class="ps"><div class="k">当前版本</div><div class="v">${row[3]}<small>${row[4]}</small></div></div>
+          <div class="ps"><div class="k">业务场景</div><div class="v">${row[1]}</div></div>
+          <div class="ps"><div class="k">是否必备</div><div class="v">${tagFor("是否必备", row[2])}</div></div>
+          <div class="ps"><div class="k">状态</div><div class="v">${tagFor("状态", row[3])}</div></div>
           <div class="ps"><div class="k">被引用模板</div><div class="v">${refBy.length} 个</div></div>
         </div>
         <div class="field" style="margin-bottom:10px;">
-          <label>被引用情况（多对多 · 哪些模板正在引用本条款）</label>
-          <div style="border:1px solid var(--line);border-radius:10px;max-height:180px;overflow:auto;">
-            <table class="tbl"><thead><tr><th>模板名称</th><th>模板分类</th><th>版本</th><th>状态</th></tr></thead><tbody>
-              ${refBy.map(t => `<tr><td>${t.row[0]}</td><td>${t.cat}</td><td>${t.row[2]}</td><td><span class="tag ${t.row[3] === "生效" ? "done" : "off"}">${t.row[3]}</span></td></tr>`).join("") || `<tr><td colspan="4" style="color:#8b95a7;">暂无模板引用本条款。</td></tr>`}
-            </tbody></table>
-          </div>
+          <label>条款正文</label>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fbfcff;font-size:13px;color:#37425c;line-height:1.9;max-height:180px;overflow:auto;">${row[4] || "（暂无正文）"}</div>
         </div>
+        <div class="field" style="margin-bottom:10px;"><label>来源标注</label><div class="hint-txt" style="margin:0;line-height:1.8;">${row[5] || "—"}</div></div>
         <div class="field" style="margin-bottom:0;">
-          <label>条款正文（节选）</label>
-          <div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fbfcff;font-size:13px;color:#37425c;line-height:1.8;">
-            本条款为标准化条款范本，具体表述以当前生效版本为准。引用本条款的模板在条款变更后将收到影响范围提示（共 ${refBy.length} 个模板受影响），由模板管理员确认是否同步更新。
+          <label>被引用情况（多对多 · 哪些模板正在引用本条款）</label>
+          <div style="border:1px solid var(--line);border-radius:10px;max-height:150px;overflow:auto;">
+            <table class="tbl"><thead><tr><th>模板名称</th><th>业务领域</th><th>版本</th><th>状态</th></tr></thead><tbody>
+              ${refBy.map(t => `<tr><td>${t.row[0]}</td><td>${t.row[1]}</td><td>${t.row[3]}</td><td><span class="tag ${t.row[4] === "生效" ? "done" : "off"}">${t.row[4]}</span></td></tr>`).join("") || `<tr><td colspan="4" style="color:#8b95a7;">暂无模板引用本条款。</td></tr>`}
+            </tbody></table>
           </div>
         </div>`, null, { wide: true, hideFooter: true });
     }
 
     /* —— 从模板库选择模板发起拟制（新建弹框第三通道） —— */
-    function tplPickModal() {
-      const cats = LIBS.tpl.cats;
-      const catOpts = cats.map(c => `<option value="${c.key}">${c.icon} ${c.name}</option>`).join("");
-      openModal("从模板库选择模板", `
-        <div class="hint-txt" style="margin-bottom:12px;">选择一个「生效」状态的模板发起拟制：系统将套用模板结构与标准条款，进入要素录入后生成初稿。草稿/作废状态模板不参与生成。</div>
-        <div class="form-grid">
-          <div class="field"><label class="req">模板分类</label><select id="tp-cat">${catOpts}</select></div>
-          <div class="field"><label class="req">选择模板</label><select id="tp-tpl"></select></div>
+    /* =========================================================================
+       使用已有合同模板：图库式选择（搜索 + 分类页签 + 缩略预览 + 确定生成）
+       ========================================================================= */
+    let tgState = { selKey: "", curTab: "全部", kw: "" };
+    function tplGalleryAll() {
+      const all = [];
+      LIBS.tpl.cats.forEach(c => c.rows.forEach((r, ri) =>
+        all.push({ cat: c.key, name: r[0], domain: r[1], risk: r[2], ver: r[3], status: r[4], time: r[5], ri: ri })));
+      return all;
+    }
+    // 缩略预览：模板名 + 骨架行 + 引用条款名（模拟合同首页）
+    function tplThumbHtml(item, big) {
+      const base = tplBaseName(item.name).replace(/模板$/, "");
+      const refs = (TPL_REFS[item.name] || TPL_REFS[tplBaseName(item.name)] || []).slice(0, big ? 14 : 7);
+      const fs = big ? 12 : 9, fs2 = big ? 8 : 5.5, lh = big ? 2.2 : 2.0, bh = big ? 4 : 3;
+      const bars = [92, 100, 78, 88, 64].map(w => `<div class="bar" style="width:${w}%;height:${bh}px;margin:${bh + 1}px 0;"></div>`).join("");
+      const lines = refs.map(n => `<div class="tl" style="font-size:${fs2}px;line-height:${lh};">${n}</div>`).join("");
+      return `<div class="tpl-thumb" ${big ? 'style="width:320px;flex:none;padding:16px 14px;"' : ""}>
+        <div class="tt" style="font-size:${fs}px;">${base}</div>${bars}
+        ${lines || '<div class="tl" style="font-size:' + fs2 + 'px;">（模板正文预览）</div>'}
+        ${big ? "" : '<div class="tpl-zoom" title="查看模板内容"><span class="tpl-zoom-ic">＋</span></div>'}</div>`;
+    }
+    function tplGalleryModal() {
+      const tabs = ["全部"].concat(LIBS.tpl.cats.map(c => c.key));
+      openModal("合同模板", `
+        <div class="tpl-search">
+          <input type="text" id="tg-kw" placeholder="搜索合同模板" value="${tgState.kw}">
+          <button class="btn" id="tg-search" style="background:var(--primary);color:#fff;border-color:var(--primary);">搜索</button>
         </div>
-        <div class="field" style="margin-bottom:0;">
-          <label>模板信息</label>
-          <div class="field-map" id="tp-info"></div>
-        </div>`, () => {
-        const sel = $("#tp-tpl");
-        if (!sel || !sel.value) { showToast("请选择模板"); return; }
-        const catKey = $("#tp-cat").value;
-        const row = LIBS.tpl.cats.find(x => x.key === catKey).rows[+sel.value];
-        if (row[3] !== "生效") { showToast("仅「生效」状态模板可发起拟制"); return; }
-        closeModal();
-        state.scene = catKey;
-        state.taskName = row[0].replace(/模板$/, "") + "（拟制）";
-        state.tplOverride = row[0];
-        newTaskFromTpl(row[0], catKey);
-      }, { okText: "使用该模板拟制", wide: true });
-      const fillTpls = () => {
-        const catKey = $("#tp-cat").value;
-        const rows = LIBS.tpl.cats.find(x => x.key === catKey).rows;
-        $("#tp-tpl").innerHTML = rows.map((r, i) => `<option value="${i}" ${r[3] !== "生效" ? "disabled" : ""}>${r[0]}（${r[2]} · ${r[3]}）</option>`).join("");
-        const upd = () => {
-          const sel = $("#tp-tpl");
-          const r = rows[+sel.value] || rows[0];
-          $("#tp-info").innerHTML = `
-            <div class="fm"><span class="fm-k">风险等级</span><span class="fm-v">${r[1]}</span></div>
-            <div class="fm"><span class="fm-k">版本</span><span class="fm-v">${r[2]}</span></div>
-            <div class="fm"><span class="fm-k">状态</span><span class="fm-v">${r[3]}</span></div>
-            <div class="fm"><span class="fm-k">更新时间</span><span class="fm-v">${r[4]}</span></div>`;
+        <div class="tpl-tabs" id="tg-tabs">${tabs.map(t => `<span class="tpl-tab ${t === tgState.curTab ? "on" : ""}" data-tab="${t}">${t}</span>`).join("")}</div>
+        <div class="tpl-gal" id="tg-gal"></div>
+        <div class="hint-txt" style="margin-top:10px;">单击卡片直接选中模板；点击缩略图中央的「＋」可查看模板实际内容；仅「生效」状态模板可用于生成，草稿 / 作废模板仅可查看。</div>`, () => {
+        if (!tgState.selKey) { showToast("请先选择一个合同模板"); return; }
+        const item = tplGalleryAll().find(x => x.cat + "|" + x.ri === tgState.selKey);
+        if (!item || item.status !== "生效") { showToast("仅「生效」状态模板可用于生成"); return; }
+        newTaskFromTpl(item.name, item.cat);
+      }, { okText: "确定", xwide: true });
+      setTimeout(() => {
+        const render = () => {
+          const list = tplGalleryAll().filter(x =>
+            (tgState.curTab === "全部" || x.cat === tgState.curTab) && (!tgState.kw || x.name.indexOf(tgState.kw) >= 0));
+          $("#tg-gal").innerHTML = list.length ? list.map(x => {
+            const key = x.cat + "|" + x.ri;
+            const off = x.status !== "生效";
+            const tagCls = x.status === "生效" ? "done" : (x.status === "草稿" ? "wait" : "off");
+            return `<div class="tpl-card ${off ? "off" : ""} ${tgState.selKey === key ? "on" : ""}" data-key="${key}">
+              <span class="tpl-check">✓</span>
+              ${tplThumbHtml(x, false)}
+              <div class="tpl-name">${x.name.replace(/模板$/, "")}</div>
+              <div class="tpl-meta"><span class="tag ${tagCls}">${x.status}</span><span>${x.ver}</span></div>
+            </div>`;
+          }).join("") : `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0;">未找到匹配的合同模板</div>`;
+          $$("#tg-gal .tpl-card").forEach(card => {
+            card.onclick = (e) => {
+              const item = tplGalleryAll().find(x => x.cat + "|" + x.ri === card.dataset.key);
+              if (e.target.closest(".tpl-zoom-ic")) { tgPreviewModal(item); return; }
+              if (card.classList.contains("off")) { showToast("该模板为「" + item.status + "」状态，仅可预览"); return; }
+              tgState.selKey = card.dataset.key;
+              $$("#tg-gal .tpl-card").forEach(c => c.classList.toggle("on", c.dataset.key === tgState.selKey));
+            };
+          });
         };
-        $("#tp-tpl").onchange = upd; upd();
-      };
-      setTimeout(() => { $("#tp-cat").onchange = fillTpls; fillTpls(); }, 0);
+        $$("#tg-tabs .tpl-tab").forEach(tab => tab.onclick = () => {
+          tgState.curTab = tab.dataset.tab;
+          $$("#tg-tabs .tpl-tab").forEach(t => t.classList.toggle("on", t === tab));
+          render();
+        });
+        const doSearch = () => { tgState.kw = $("#tg-kw").value.trim(); render(); };
+        $("#tg-search").onclick = doSearch;
+        $("#tg-kw").addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+        render();
+      }, 0);
+    }
+    // 模板放大预览（保持选择状态，可返回图库）
+    function tgPreviewModal(item) {
+      const tagCls = item.status === "生效" ? "done" : (item.status === "草稿" ? "wait" : "off");
+      const riskCls = item.risk === "高" ? "high" : (item.risk === "中" ? "mid" : "low");
+      openModal("模板内容 · " + item.name, `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+          <button class="btn" id="tg-back">← 返回模板列表</button>
+          <span class="tag mid">${item.cat}</span>
+          <span class="tag ${riskCls}">${item.risk}风险</span>
+          <span class="tag ${tagCls}">${item.status}</span>
+          <span style="color:var(--muted);font-size:12px;">${item.ver} · 更新于 ${item.time}</span>
+        </div>
+        <div class="doc-page" style="min-height:auto;max-height:58vh;overflow:auto;padding:26px 30px;font-size:14px;line-height:1.9;border:1px solid var(--line);border-radius:10px;">${tplContentHtml(item.name)}</div>
+        <div class="hint-txt" style="margin-top:10px;">蓝底【待填写】为生成合同时需补充的要素字段；返回列表后已选中的模板保持选中状态。</div>`, () => {
+        if (item.status !== "生效") { showToast("仅「生效」状态模板可用于生成"); return; }
+        newTaskFromTpl(item.name, item.cat);
+      }, { okText: "使用该模板生成", xwide: true });
+      setTimeout(() => { const b = $("#tg-back"); if (b) b.onclick = () => tplGalleryModal(); }, 0);
     }
 
-    // 套用模板 → 进入要素录入（复用现有向导第 2 步，带模板标识）
-    function newTaskFromTpl(tplName, sceneKey) {
-      state.scene = sceneKey;
+    // 套用模板 → 直接生成初稿，进入编辑完善
+    function newTaskFromTpl(tplName, catKey) {
+      state.scene = catKey === "配套服务合同" ? (/监理/.test(tplName) ? "工程监理" : "第三方测试") : catKey;
+      state.tplOverride = tplName;
+      state.taskName = tplBaseName(tplName).replace(/模板$/, "") || tplName;
+      state.partyB = "";
+      state.elements = {};
       closeModal();
       switchView("editor");
-      showToast("已选定模板「" + tplName + "」，请录入合作要素");
-      openModal("使用模板拟制 · " + tplName, `
-        <div class="steps">
-          <div class="s done"><span class="dot">✓</span><span class="t">选定模板</span></div><span class="bar"></span>
-          <div class="s active"><span class="dot">2</span><span class="t">录入要素</span></div><span class="bar"></span>
-          <div class="s"><span class="dot">3</span><span class="t">匹配生成</span></div>
-        </div>
-        <div class="field-map" style="margin-bottom:12px;">
-          <div class="fm"><span class="fm-k">套用模板</span><span class="fm-v">${tplName}</span></div>
-          <div class="fm"><span class="fm-k">协议类型</span><span class="fm-v">${sceneKey}</span></div>
-        </div>
-        <div class="hint-txt">点击「下一步」录入合作要素；系统将按模板结构自动填充并补齐必备条款，生成初稿。</div>`, () => {
-        closeModal();
-        state.taskName = state.taskName || tplName.replace(/模板$/, "");
-        addNewDraft(false, 1);
-        goElementForm();
-      }, { okText: "下一步：录入要素", wide: true });
-    }
-
-    function setFlow(n) {
-      // 内部状态直接对齐视觉 4 步：1 填写信息 / 2 生成草案 / 3 编辑完善 / 4 导出提交
-      // n>=4 视为完成态：导出后 1-3 步全亮、第 4 步为当前（或已归档时全亮）
-      const visualFlow = Math.min(n, 4);
-      $$(".flow-node").forEach(node => {
-        const f = +node.dataset.flow;
-        node.classList.toggle("done", f < visualFlow || n >= 6);
-        node.classList.toggle("current", f === visualFlow && n < 6);
-      });
+      loadContract({ name: state.taskName });
+      addNewDraft(true, 3);
+      showToast("已按模板「" + tplName + "」生成合同初稿，蓝色虚线处待补充");
     }
 
     // 当前时间字符串（版本记录用）
@@ -2055,7 +2115,7 @@
         : contractHtml(state.partyB);
       dp.setAttribute("contenteditable", "true");
       state.docLoaded = true;
-      setFlow(3); // 录入/匹配/生成已完成，进入编辑完善
+      
       // 初始化版本记录：生成初稿即作为 V1
       state.versions = []; state.verSeq = 0;
       pushVersion("初稿", "按录入合作要素智能匹配模板并生成协议初稿");
@@ -2101,13 +2161,29 @@
 
     function editLibModal(libKey, ri) {
       const lib = LIBS[libKey];
-      const row = lib.cats.find(x => x.key === state.libCat[libKey]).rows[ri];
-      const fields = lib.cols.map((col, i) =>
-        `<div class="field"><label>${col}</label><input type="text" id="lf-${i}" value="${row[i] || ""}"></div>`).join("");
-      openModal("编辑 · " + lib.title, `<div class="form-grid">${fields}</div><div class="hint-txt" style="margin-top:6px;">保存后系统将自动记录变更留痕（操作人、时间、变更内容）。</div>`, () => {
-        lib.cols.forEach((col, i) => { row[i] = ($("#lf-" + i).value || "").trim(); });
-        renderLibTable(libKey); closeModal(); showToast("已更新并留痕");
-      }, { wide: true });
+      const catObj = lib.cats.find(x => x.key === state.libCat[libKey]);
+      const row = catObj.rows[ri];
+      const sceneOpts = ["全场景通用", "政企合作", "战略合作", "项目共建", "服务委托", "联合运营", "工程监理", "第三方测试"];
+      openModal("编辑条款 · " + row[0], `
+        <div class="form-grid">
+          <div class="field"><label class="req">条款名称</label><input type="text" id="lf-name" value="${row[0]}"></div>
+          <div class="field"><label class="req">业务场景</label><select id="lf-scene">${sceneOpts.map(s => `<option ${s === row[1] ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+          <div class="field"><label class="req">是否必备</label><select id="lf-req">${["必备", "无须必备"].map(s => `<option ${s === row[2] ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+          <div class="field"><label class="req">状态</label><select id="lf-status">${["启用", "停用"].map(s => `<option ${s === row[3] ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+        </div>
+        <div class="field"><label class="req">条款正文</label><textarea id="lf-body" rows="6">${row[4] || ""}</textarea></div>
+        <div class="field" style="margin-bottom:0;"><label>条款分类</label><select id="lf-cat">${lib.cats.map(c => `<option ${c.key === catObj.key ? "selected" : ""} value="${c.key}">${c.icon} ${c.name}</option>`).join("")}</select>
+          <div class="hint-txt" style="margin-top:6px;">保存后自动记录变更留痕（操作人、时间、变更内容）。</div></div>`, () => {
+        const name = ($("#lf-name").value || "").trim();
+        const body = ($("#lf-body").value || "").trim();
+        if (!name) { showToast("条款名称不能为空"); return; }
+        if (!body) { showToast("条款正文不能为空"); return; }
+        const newCat = lib.cats.find(x => x.key === $("#lf-cat").value);
+        const newRow = [name, $("#lf-scene").value, $("#lf-req").value, $("#lf-status").value, body, row[5] || "", [["条款要点", body]]];
+        if (newCat.key !== catObj.key) { catObj.rows.splice(ri, 1); newCat.rows.push(newRow); state.libCat.clause = newCat.key; }
+        else { catObj.rows[ri] = newRow; }
+        renderLib(libKey); closeModal(); showToast("已更新并留痕");
+      }, { okText: "保存", wide: true });
     }
 
     /* =========================================================================
@@ -2203,7 +2279,7 @@
               $("#docPage").innerHTML = v.html; $("#docPage").setAttribute("contenteditable", "true");
               state.versions = []; state.verSeq = 0;
               pushVersion(v.type, "由历史合同《" + name + "》" + v.ver + " 回溯还原载入编辑器");
-              setFlow(3); updateEditorState(); switchView("editor");
+              updateEditorState(); switchView("editor");
               closeModal(); showToast("已回溯还原至 " + v.ver + "，并载入编辑器"); setStatus("已从历史合同《" + name + "》回溯还原至 " + v.ver);
             });
           }
@@ -2220,7 +2296,7 @@
           showToast("协议草案已导出 Word" + wmText + "，版式、编号、字体已统一");
           if (state.docReportLive && state.docLoaded) {
             try { pushVersion("导出定稿", "导出协议草案，提交业务/法务审核归档"); } catch (err) { console.warn("版本记录失败：", err); }
-            setFlow(6); setStatus("已导出并提交业务/法务审核归档");
+            setStatus("已导出并提交业务/法务审核归档");
           }
           break;
         }
@@ -2332,7 +2408,7 @@
         case "tplVersion": {
           const c = LIBS.tpl.cats.find(x => x.key === state.libCat.tpl), row = c.rows[+t.dataset.ri];
           openModal("版本管控 · " + row[0], `<table class="tbl"><thead><tr><th>版本</th><th>状态</th><th>更新时间</th><th>变更说明</th></tr></thead><tbody>
-            <tr><td><b>${row[2]}</b></td><td><span class="tag done">生效</span></td><td>${row[4]}</td><td>补充数据安全条款，修订违约责任表述</td></tr>
+            <tr><td><b>${row[3]}</b></td><td><span class="tag done">生效</span></td><td>${row[5]}</td><td>补充数据安全条款，修订违约责任表述</td></tr>
             <tr><td>v2.2</td><td><span class="tag off">历史</span></td><td>2026-04-10</td><td>调整经费支付节点</td></tr>
             <tr><td>v2.1</td><td><span class="tag off">历史</span></td><td>2026-01-18</td><td>初始发布</td></tr>
           </tbody></table><div class="hint-txt" style="margin-top:8px;">支持版本生效 / 作废、历史回溯与一键还原，全程变更留痕。</div>`, null, { wide: true, hideFooter: true });
@@ -2385,6 +2461,7 @@
       state.partyB = "江苏智数科技有限公司";
       state.taskName = this.files[0].name.replace(/\.[^.]+$/, "");
       loadContract({ name: state.taskName });
+      addNewDraft(true, 3);
       showToast("材料已解析，协议初稿已生成");
     });
 
@@ -2429,7 +2506,6 @@
     }
     // 初始渲染：空态（中间仅"新建合同"按钮），左侧历史记录展示示例数据
     state.docLoaded = false;
-    setFlow(1);
     renderHistoryList();
     renderLib("tpl");
     setStatus("请新建合同拟制任务，或从左侧历史记录选择已完成的合同继续编辑");
