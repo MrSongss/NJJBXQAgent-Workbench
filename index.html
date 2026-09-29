@@ -957,6 +957,8 @@
   .skill-run-head-copy b { display:block; color:#2a3f55; font-size:12.5px; }
   .skill-run-head-copy small { display:block; margin-top:2px; color:#82909e; font-size:10px; }
   .skill-run-state { padding:3px 7px; border-radius:999px; background:#eaf6ee; color:#26734c; font-size:10px; font-weight:700; }
+  .skill-run-state.wait { background:#fff4df; color:#946018; }
+  .skill-run-state.pending,.skill-run-state.demo { background:#eaf3fa; color:#23658d; }
   .skill-run-body { padding:12px; color:#405269; font-size:12.5px; line-height:1.75; }
   .skill-run-body>p { margin:0 0 9px; }
   .skill-run-points { display:grid; gap:6px; margin:0; padding:0; list-style:none; }
@@ -967,6 +969,35 @@
   .skill-followups { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
   .skill-followup { min-height:30px; padding:5px 9px; border:1px solid #d7e2e9; border-radius:7px; background:#fff; color:#3d5870; font:inherit; font-size:11px; cursor:pointer; }
   .skill-followup:hover { border-color:#9fbacb; background:#f3f8fa; color:var(--gov-700); }
+  .skill-result-note { margin-top:9px; color:#738193; font-size:11px; line-height:1.6; }
+  .skill-result-cta { display:inline-flex; align-items:center; gap:6px; min-height:32px; margin-top:10px; padding:0 12px; border:1px solid var(--gov-700); border-radius:7px; background:var(--gov-700); color:#fff; font:inherit; font-size:11.5px; font-weight:700; cursor:pointer; }
+  .skill-result-cta:hover { background:var(--gov-800); }
+  .skill-result-cta.secondary { border-color:#cbdce7; background:#fff; color:var(--gov-700); }
+  .skill-result-cta.secondary:hover { background:var(--gov-25); }
+  .skill-result-cta .svg-icon { width:13px; height:13px; }
+  .skill-result-preview { margin-top:10px; overflow:hidden; border:1px solid #e1e8ed; border-radius:8px; }
+  .skill-result-preview table { width:100%; border-collapse:collapse; font-size:11px; }
+  .skill-result-preview th,.skill-result-preview td { padding:7px 9px; border-bottom:1px solid #e8eef1; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .skill-result-preview th { background:#f5f8fa; color:#627489; font-weight:700; }
+  .skill-result-preview tr:last-child td { border-bottom:0; }
+  .skill-result-view { height:100%; overflow:auto; background:#f1f3f5; }
+  .skill-result-top { position:sticky; top:0; z-index:3; display:flex; align-items:center; gap:15px; min-height:62px; padding:0 clamp(18px,4vw,46px); border-bottom:1px solid #dde5ea; background:#fff; }
+  .skill-result-top button { display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:0 10px; border:1px solid #d8e2e8; border-radius:7px; background:#fff; color:#31506a; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .skill-result-top button:hover { background:#f3f8fa; }
+  .skill-result-top .svg-icon { width:14px; height:14px; }
+  .skill-result-top b { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--gov-900); font-size:15px; }
+  .skill-result-top small { margin-left:auto; color:#7d8996; font-size:11px; }
+  .skill-result-main { max-width:1100px; margin:24px auto; padding:0 22px 42px; }
+  .skill-result-paper { min-height:380px; padding:25px 28px; border:1px solid #dfe6eb; border-radius:10px; background:#fff; box-shadow:0 5px 20px rgba(27,52,74,.045); }
+  .skill-result-paper h1 { margin:0 0 7px; color:var(--gov-900); font-size:22px; }
+  .skill-result-paper p { margin:0 0 20px; color:#68798a; font-size:12px; }
+  .skill-result-paper table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .skill-result-paper th,.skill-result-paper td { padding:11px 13px; border:1px solid #e1e8ed; text-align:left; }
+  .skill-result-paper th { background:#f5f8fa; color:#52677b; }
+  .skill-result-paper td { color:#34495e; }
+  .skill-editor-back { display:none; }
+  body.editor-mode:has(.skill-editor-back:not([hidden])) .skill-editor-back { display:inline-flex; }
+  @media(max-width:760px){.skill-result-main{margin:12px auto;padding:0 10px 24px}.skill-result-paper{padding:16px 12px;overflow-x:auto}.skill-result-top{padding:0 11px;gap:8px}.skill-result-top small{display:none}.skill-result-paper table{min-width:520px}.skill-result-preview{overflow-x:auto}.skill-result-preview table{min-width:330px}}
   @media(max-width:760px){.market-filter{align-items:stretch;flex-direction:column}.market-tools{width:100%;flex-wrap:wrap}.market-tools .search-box{flex:1;min-width:190px}.market-tools .search-box input{width:100%}.skills-grid{grid-template-columns:1fr}.skill-detail-modal .modal-body{padding:18px 17px 20px}.skill-market-detail-head{grid-template-columns:48px minmax(0,1fr);gap:11px;padding-right:38px}.skill-market-detail-icon{width:48px;height:48px}.skill-market-detail-title{align-items:flex-start;flex-direction:column;gap:4px}.skill-enable-control{align-self:flex-start}.skill-market-detail-cta{margin-top:7px}.skill-basic-grid{grid-template-columns:1fr 1fr}}
   .business-card { min-height:174px; display:block; padding:17px; }
   .business-card .skill-card-head { display:flex; align-items:center; gap:11px; }
@@ -2658,7 +2689,7 @@
             <div class="editor-top-bar">
             <div class="editor-panel-head">
               <div class="editor-panel-title"><b id="editorPanelTitle">在线编辑文稿</b><button class="editor-modified-btn" id="editorModifiedBtn" type="button" data-editor-action="history" title="查看文档修改历史"><svg class="svg-icon" style="width:12px;height:12px"><use href="#i-clock"></use></svg><span id="editorModifiedLabel">修改于—</span></button></div>
-              <div class="editor-head-actions"><button class="editor-review-trigger" type="button" data-review-action="start"><svg class="svg-icon"><use href="#i-shield"></use></svg>合规审查</button><button class="editor-polish-trigger" type="button" data-polish-action="start"><svg class="svg-icon"><use href="#i-wand"></use></svg>全文智能润色</button><button data-editor-action="share"><svg class="svg-icon"><use href="#i-share"></use></svg>分享</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
+              <div class="editor-head-actions"><button class="skill-editor-back" id="skillEditorBack" type="button" data-editor-action="close" hidden><svg class="svg-icon"><use href="#i-chevron-left"></use></svg>返回对话</button><button class="editor-review-trigger" type="button" data-review-action="start"><svg class="svg-icon"><use href="#i-shield"></use></svg>合规审查</button><button class="editor-polish-trigger" type="button" data-polish-action="start"><svg class="svg-icon"><use href="#i-wand"></use></svg>全文智能润色</button><button data-editor-action="share"><svg class="svg-icon"><use href="#i-share"></use></svg>分享</button><button data-editor-action="copy"><svg class="svg-icon"><use href="#i-copy"></use></svg>复制</button><button data-editor-action="download"><svg class="svg-icon"><use href="#i-download"></use></svg>下载</button><button data-editor-action="history"><svg class="svg-icon"><use href="#i-clock"></use></svg>历史记录</button><button class="editor-close" data-editor-action="close" aria-label="关闭编辑">×</button></div>
             </div>
             <div class="oo-toolbar" id="ooToolbar">
               <div class="oo-tabs">
@@ -2726,6 +2757,11 @@
             </div>
           </aside>
         </div>
+      </div>
+
+      <!-- ============ 视图：技能表格成果 ============ -->
+      <div class="view" id="view-skill-output">
+        <div class="skill-result-view"><header class="skill-result-top"><button type="button" data-act="skillReturnChat"><svg class="svg-icon"><use href="#i-chevron-left"></use></svg>返回对话</button><b id="skillOutputTitle">技能成果</b><small id="skillOutputMeta"></small><button type="button" data-act="skillDownloadData"><svg class="svg-icon"><use href="#i-download"></use></svg>下载 CSV</button></header><main class="skill-result-main" id="skillOutputMain"></main></div>
       </div>
 
       <!-- ============ 视图：智能体 ============ -->
@@ -3091,7 +3127,7 @@
   </div>
 </div>
 
-<input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf,.txt,.wps,.ofd" multiple>
+<input class="hidden-input" id="fileInput" type="file" accept=".doc,.docx,.pdf,.txt,.wps,.ofd,.xlsx,.xls,.csv,.png,.jpg,.jpeg,.mp3,.wav,.m4a" multiple>
 <input class="hidden-input" id="skillFileInput" type="file" accept=".zip">
 <div class="toast" id="toast"></div>
 <div class="modal-mask" id="modalMask">
@@ -3908,6 +3944,7 @@ let sidebarCollapsed = false;
   }
   function messageMaterial(m) {
     if (!m || m.kind === "task-progress") return null;
+    if (m.skillResult?.kind === "file" && m.materialHTML) return { name:m.materialTitle, source:m.materialSource || "技能成果", contentHTML:m.materialHTML };
     if (m.card && m.card.done) {
       const wf = m.card, agent = byId(wf.agentId) || byId(m.agent) || AGENTS[0];
       const title = currentDocTitle(wf, agent), extension = wf.flow === "ppt" ? ".pptx" : ".docx";
@@ -3954,7 +3991,7 @@ let sidebarCollapsed = false;
       const reports = `${reviewHistoryHTML(m,index)}${polishHistoryHTML(m,index)}`;
       return `<div class="generated-file-card ${styleSwitch ? "has-style" : ""}" role="button" tabindex="0" data-act="generatedEdit" data-msg-index="${index}" aria-label="打开《${esc(displayName)}》在线编辑">
         <span class="generated-file-card-icon">${svgi("i-file",22)}</span>
-        <span class="generated-file-card-copy"><b>${esc(displayName)}</b><small>创建时间：${esc(created)}</small>${styleSwitch}</span>
+        <span class="generated-file-card-copy"><b>${esc(displayName)}</b><small>${m.skillResult?.kind === "file" ? `Word成果 · 点击打开独立编辑页 · ${esc(created)}` : `创建时间：${esc(created)}`}</small>${styleSwitch}</span>
         <button class="generated-file-download" type="button" data-act="generatedExport" data-msg-index="${index}">${svgi("i-download",13)} 下载</button>
       </div>${reports}`;
     }
@@ -4328,9 +4365,9 @@ let sidebarCollapsed = false;
     if(!conversation || !message || !payload?.reportHTML)return null;
     const timestamp=Date.now(), reports=Array.isArray(message.polishReports)?[...message.polishReports]:[];
     let record=payload.reportId?reports.find(item=>item.id===payload.reportId):null;
-    const values={reportHTML:payload.reportHTML,summary:payload.summary||"优化项、分类与修改说明已留痕",totalCount:Number(payload.totalCount||0),acceptedCount:Number(payload.acceptedCount||0),ignoredCount:Number(payload.ignoredCount||0),pendingCount:Number(payload.pendingCount||0),categoryCount:Number(payload.categoryCount||0),selectedVersion:payload.selectedVersion||""};
+    const values={reportNo:payload.reportNo||"",reportHTML:payload.reportHTML,summary:payload.summary||"优化项、分类与修改说明已留痕",totalCount:Number(payload.totalCount||0),acceptedCount:Number(payload.acceptedCount||0),ignoredCount:Number(payload.ignoredCount||0),pendingCount:Number(payload.pendingCount||0),categoryCount:Number(payload.categoryCount||0),selectedVersion:payload.selectedVersion||""};
     if(record)Object.assign(record,values,{updatedAt:timestamp,time:formatDateTime(record.ts||timestamp)});
-    else{record={id:`POLISH-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),applied:false,...values};reports.push(record);}
+    else{record={id:payload.reportNo||`POLISH-REPORT-${timestamp}`,ts:timestamp,time:formatDateTime(timestamp),applied:false,...values};reports.push(record);}
     message.polishReports=reports;message.latestPolishReportId=record.id;
     if (!message.documentToolTask) message.html=record.selectedVersion==="original"
       ? `<p>已完成全文智能润色分析并保留原稿，共识别 <b>${record.totalCount}</b> 处可优化项；润色报告已保存。</p>`
@@ -4348,12 +4385,12 @@ let sidebarCollapsed = false;
     openModal("历史润色报告",found.report.reportHTML,null,{hideFooter:true,width:"min(1060px, calc(100vw - 32px))"});
   }
   function polishReportDownloadHTML(html){
-    return `<style>body{font-family:"Microsoft YaHei",sans-serif;color:#243e4c}.polish-report{max-width:940px;margin:0 auto}.polish-report header{text-align:center;border-bottom:1px solid #dce5e7;padding-bottom:18px}.polish-report header p{font-size:13px;color:#08755d;font-weight:700}.polish-report header h2{font-size:22px}.polish-report-kpis{display:table;width:100%;margin:20px 0;border-collapse:collapse}.polish-report-kpis>div{display:table-cell;width:25%;padding:12px;border:1px solid #dce5e7;text-align:center}.polish-report-kpis b,.polish-report-kpis span{display:block}.polish-report-kpis b{font-size:20px;color:#08755d}.polish-report h3{margin-top:22px;font-size:15px}.polish-report table{width:100%;border-collapse:collapse;font-size:12px}.polish-report th,.polish-report td{padding:8px;border:1px solid #dce5e7;vertical-align:top;line-height:1.6}.polish-report th{background:#f3f7f6}</style>${html}`;
+    return `<style>@page{size:A4;margin:22mm 21mm 24mm}body{font-family:"Microsoft YaHei",SimSun,sans-serif;color:#1d2129;font-size:11pt;line-height:1.55;padding:0}.polish-report{width:100%;margin:0 auto}.polish-report>header{text-align:center;border-bottom:1px solid #d9d9d9;padding-bottom:12pt}.polish-report>header h2{margin:0;color:#000;font-size:18pt}.polish-report>header p{margin:6pt 0 0;color:#4e5969;font-size:10pt}.polish-report section{margin-top:17pt}.polish-report h3{margin:0 0 8pt;color:#000;font-size:13pt;page-break-after:avoid}.polish-report section>p{margin:0;line-height:1.7}.polish-report table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5pt}.polish-report th,.polish-report td{border:1px solid #d9d9d9;padding:6pt 7pt;line-height:1.5;vertical-align:middle;word-break:break-word}.polish-report th{background:#edf2f6;color:#000;font-weight:700}.polish-report-meta th{width:16%}.polish-report-meta td{width:34%}.polish-report-category th:not(:first-child),.polish-report-category td:not(:first-child){width:14%;text-align:center}.polish-report-total th,.polish-report-total td{background:#f2f3f5;font-weight:700}.polish-report-item{margin:12pt 0 15pt;page-break-inside:avoid}.polish-report-item h4{margin:0;padding:7pt;border:1px solid #d9d9d9;border-bottom:0;background:#edf2f6;color:#000;font-size:10pt;page-break-after:avoid}.polish-report-item h4 span{float:right;font-weight:400}.polish-report-item th{width:24%}.polish-report-item td{width:76%}.polish-report-empty{padding:9pt;border:1px solid #d9d9d9}</style>${html}`;
   }
   function downloadSavedPolishReport(messageIndex,reportIndex){
     const found=polishReportAt(messageIndex,reportIndex);if(!found){showToast("未找到该润色报告");return;}
     const title=displayFileName(found.message.materialTitle||"政务文稿");
-    downloadDocumentByFormat(`${title}（文本润色报告-${String(Number(reportIndex)+1).padStart(2,"0")}）`,polishReportDownloadHTML(found.report.reportHTML),"word");
+    downloadDocumentByFormat(`${title}_文本智能润色报告_${found.report.reportNo||String(Number(reportIndex)+1).padStart(2,"0")}`,polishReportDownloadHTML(found.report.reportHTML),"word");
   }
   function downloadActivePolishReport(payload){
     if(!payload?.html){showToast("未找到可下载的润色报告");return false;}
@@ -4494,6 +4531,7 @@ let sidebarCollapsed = false;
     clearTimeout(autoSaveTimer);
     setEditorStatus("页 1 / 1 · 已就绪");
     $("#editorPanelTitle").textContent = String(message.materialTitle || "在线编辑文稿").replace(/\.[^.]+$/, "");
+    const skillBack = $("#skillEditorBack"); if (skillBack) skillBack.hidden = !message.skillId;
     ensureDocHistory(message);
     updateEditorModifiedLabel(message);
     closeEditorHistoryDrawer();
@@ -4553,7 +4591,8 @@ let sidebarCollapsed = false;
     const conversation = cur(), message = conversation && conversation.msgs[Number(editorMessageIndex)], paper = $("#editorPaper");
     if (!message || !paper) { showToast("未找到可保存的文稿"); return; }
     message.materialHTML = paper.innerHTML;
-    message.html = `<p>已保存您在右侧在线编辑区的修改。最新版本已同步到下方文件。</p>`;
+    const sourceSkill = message.skillId ? SKILLS.find(skill => skill.id === message.skillId) : null;
+    message.html = sourceSkill && message.skillResult?.kind === "file" ? skillReplyHTML(sourceSkill,message.skillResult,message.modelPayload?.attachments?.[0] || "",Number(editorMessageIndex)) : `<p>已保存您在右侧在线编辑区的修改。最新版本已同步到下方文件。</p>`;
     message.updatedAt = Date.now();
     conversation.updatedAt = Date.now();
     ensureDocHistory(message);
@@ -4578,6 +4617,7 @@ let sidebarCollapsed = false;
     window.JBAIReviewPilot?.close({ silent:true });
     window.JBAIPlanPilot?.close();
     const paper = $("#editorPaper"); if (paper) paper.style.display = "";
+    const skillBack = $("#skillEditorBack"); if (skillBack) skillBack.hidden = true;
     document.body.classList.remove("editor-mode", "editor-sidebar-shown");
     $("#view-chat").classList.remove("editor-open");
     editorMessageIndex = null;
@@ -4833,6 +4873,8 @@ let sidebarCollapsed = false;
   }
   function responseStatusText(message) {
     if (!message || message.kind === "task-progress" || message.kind === "workbench-task" || message.kind === "document-tool-task" || message.kind === "model-error") return "";
+    if (message.skillResult?.kind === "need-input") return "待补充材料";
+    if (message.skillResult?.kind === "review") return "待核查";
     const started = Number(message.startedAt || message.createdAt || Date.now());
     const completed = Number(message.completedAt || message.createdAt || Date.now());
     return `已完成 ${formatResponseDuration(Math.max(0, completed - started))}`;
@@ -6088,7 +6130,7 @@ let sidebarCollapsed = false;
     // v3.0: 如果正在进行v3迭代，将用户输入作为补充信息
     const requestedPilot = activeAgent || inferAgentFromRequest(text);
     if (requestedPilot === "plan" || requestedPilot === "interpret" || requestedPilot === "polish") agentV3Session = null;
-    if (agentV3Session) {
+    if (agentV3Session && !homeSkills.length) {
       const curConv = cur();
       if (!curConv || agentV3Session.convId !== curConv.id) {
         agentV3Session = null;
@@ -6123,7 +6165,7 @@ let sidebarCollapsed = false;
     const activeInterpretPilot = byId("interpret")?.entryMode === "chat" && !activeAgent && window.JBAIInterpretPilot?.hasTask(c.id);
     const contextualFollowup = byId("interpret")?.entryMode === "chat" && (!activeAgent || activeAgent === "interpret") && !pendingAttachList.length && !homeKnowledgeBases.length && window.JBAIInterpretPilot?.isFollowup(c.id, text);
     const inferredAgentId = contextualFollowup ? "interpret" : reviewRequest ? "review" : polishFullRequest ? "polish" : !revisionRequest && !activeAgent ? inferAgentFromRequest(text) : null;
-    const replyAgent = reviewRequest ? byId("review") : polishFullRequest ? byId("polish") : revisionRequest ? byId(previousGenerated.agent) : activeAgent ? byId(activeAgent) : inferredAgentId ? byId(inferredAgentId) : activeInterpretPilot ? byId("interpret") : activePlanPilot ? byId("plan") : null;
+    const replyAgent = selectedSkill ? null : reviewRequest ? byId("review") : polishFullRequest ? byId("polish") : revisionRequest ? byId(previousGenerated.agent) : activeAgent ? byId(activeAgent) : inferredAgentId ? byId(inferredAgentId) : activeInterpretPilot ? byId("interpret") : activePlanPilot ? byId("plan") : null;
     let structuredValues = null, structuredNeedsConfirm = null;
     if (replyAgent && (replyAgent.id === "polish" || replyAgent.id === "review") && !revisionRequest) {
       structuredValues = {};
@@ -6218,7 +6260,7 @@ let sidebarCollapsed = false;
     }
     // 智能体、技能与连接器互斥；知识库作为独立引用上下文。
     if (connector) startConnectorAction(c, connector, enrichedText, attach, null, connectorOperationId);
-    else if (selectedSkill) startSkillChat(c, selectedSkill, enrichedText, attach);
+    else if (selectedSkill) startSkillChat(c, selectedSkill, text, attach, pilotSources, previousGenerated);
     else if (revisionRequest && replyAgent) startRevisionGeneration(c, replyAgent, text, previousGenerated);
     else if (replyAgent) startDirectGeneration(c, replyAgent, enrichedText, attach, structuredValues, { knowledgeBases: c.knowledgeBases.slice(), attachment: attach || "" });
     else if (c.knowledgeBases.length) startKnowledgeChat(c, enrichedText, attach);
@@ -6596,31 +6638,78 @@ let sidebarCollapsed = false;
     const clean = String(text || "").replace(/\u2063/g, "").trim();
     return `<div class="connector-result-head"><span class="crh-ic" style="background:linear-gradient(135deg,#2674c7,#3b9fc3)">${svgi("i-chart",18)}</span><div><b>智能问数</b><small>按当前用户权限识别查询意图</small></div></div><p>已识别为数据查询需求，正在按问题拆解统计对象、时间范围和指标口径。</p><div class="panel-note"><b>查询内容：</b>${esc(clean)}</div>${attach ? `<div class="panel-note"><b>参考附件：</b>${esc(attach)}</div>` : ""}<div class="connector-result-doc"><div class="crd-title">查询条件待确认</div><table class="connector-result-table"><tbody><tr><th>数据对象</th><td>将从授权政务数据目录匹配</td></tr><tr><th>统计口径</th><td>请补充时间范围、部门或指标口径后继续</td></tr><tr><th>权限校验</th><td><span class="tag green">已进入查询流程</span></td></tr></tbody></table></div><p>您可以直接补充“按哪个时间段、哪个部门、哪个指标统计”，系统会继续沿用当前问题。</p>`;
   }
-  function skillExampleResult(skill, text) {
-    const topic = topicOf(String(text || "").replace(/【技能：.*?】/g, "")) || "当前材料";
+  async function skillSourceDocument(text, sources, previousGenerated) {
+    const upload = (sources || []).find(item => item?.file);
+    if (upload) {
+      try {
+        const content = await window.JBAIPilotIntake?.readFile?.(upload.file);
+        if (content?.trim()) return { title:upload.name || "上传文稿", html:`<p>${esc(content).replace(/\n/g,"<br>")}</p>` };
+      } catch (error) { return { error:error.message || "暂无法读取该文件正文" }; }
+      return { error:"暂无法读取该文件正文" };
+    }
+    const source = (sources || []).find(item => (item?.text || item?.contentHTML) && (item.type !== "本次粘贴内容" || item.text?.trim() !== String(text || "").trim() || /\n|(?:原文|正文|内容)[：:]/.test(text)));
+    if (source?.text) return { title:source.name || "当前材料", html:`<p>${esc(source.text).replace(/\n/g,"<br>")}</p>` };
+    if (source?.contentHTML) return { title:source.name || "当前材料", html:`<p>${esc(plainText(source.contentHTML)).replace(/\n/g,"<br>")}</p>` };
+    if (previousGenerated?.materialHTML && /(刚生成|这份|这篇|当前|上面)/.test(text)) return { title:previousGenerated.materialTitle || "当前生成文稿", html:previousGenerated.materialHTML };
+    const pasted = String(text || "").match(/(?:原文|正文|以下内容|待审文稿)[：:]\s*([\s\S]{40,})/);
+    if (pasted) return { title:"粘贴的文稿", html:`<p>${esc(pasted[1]).replace(/\n/g,"<br>")}</p>` };
+    return null;
+  }
+  function skillExampleResult(skill, text, context) {
+    const source = context?.source, attachment = String(context?.attach || ""), topic = topicOf(String(text || "").replace(/【技能：.*?】/g, "")) || "当前材料";
+    const needs = intro => ({ kind:"need-input", intro, note:"补充材料后在当前会话重新发送，即可继续使用该技能。" });
+    if (skill.id === "excel-word") {
+      if (!/\.(xlsx|xls|csv)(?:\b|$)/i.test(attachment)) return needs("请先添加需要转换的 Excel 或 CSV 文件。");
+      const base = attachment.split("、")[0].replace(/\.(xlsx|xls|csv)$/i,"") || "表格";
+      return { kind:"file", intro:"已建立 Word 成果页的演示预览，点击文件卡片可查看和编辑。", fileName:`${base}（转换预览）.docx`, note:"原型尚未读取 Excel 单元格或执行真实转换，以下内容用于展示交互。", documentHTML:`<h1>${esc(base)}（转换预览）</h1><p>演示预览：正式接入后，这里会按工作表展示实际表格内容。</p><h2>工作表结构示意</h2><table border="1" cellpadding="8"><tr><th>原工作表</th><th>Word章节</th><th>处理说明</th></tr><tr><td>${esc(base)}</td><td>第一章</td><td>保留字段顺序与表格结构</td></tr></table>` };
+    }
+    if (skill.id === "doc-check") {
+      if (!source?.html) return needs(attachment ? `${source?.error || "尚未取得文件正文"}。可粘贴文稿，或引用刚生成的文稿。` : "请粘贴待核查文稿，或引用当前已生成的文稿。");
+      return { kind:"review", intro:`已接入《${source.title}》，可进入专注模式查看并处理核查问题。`, documentHTML:source.html, fileName:source.title, note:"核查问题将在专注模式按当前文稿生成；纯文本无法检查字体、页边距等版式信息。" };
+    }
+    if (skill.id === "data-brief" || (skill.id === "ocr-clean" && /表格|台账|清单/.test(text))) {
+      if (skill.id === "data-brief" && !attachment && !source?.html) return needs("请添加待分析的表格或提供具体数据。");
+      if (skill.id === "ocr-clean" && !attachment && !source?.html) return needs("请添加需要提取表格的图片或扫描件。");
+      const data = skill.id === "data-brief";
+      return { kind:"table", intro:data ? "已整理为数据预览，可打开完整表格查看。" : "已建立表格提取预览，可打开完整表格查看。", title:data ? "政务数据分析预览" : "图片表格提取预览", columns:data ? ["指标","本期","上期","核对状态"] : ["序号","识别字段","识别内容","核对状态"], rows:data ? [["办结事项","126","118","示例数据"],["待处理事项","18","22","示例数据"],["平均办理时长","3.2天","3.6天","示例数据"]] : [["1","标题","待从图片提取","待核对"],["2","正文","待从图片提取","待核对"],["3","落款","待从图片提取","待核对"]], note:"当前为演示表格，数字和识别内容并非从附件计算或提取。" };
+    }
+    if (skill.id === "guide-maker" || skill.id === "meeting-summary") {
+      if (skill.id === "meeting-summary" && !attachment && !source?.html) return needs("请添加会议录音、转写材料，或粘贴会议记录。");
+      if (skill.id === "guide-maker" && !attachment && !source?.html) return needs("请添加政策文件，或粘贴需要整理的政策条款。");
+      const title = skill.id === "guide-maker" ? "办事指南（示例成果）" : "会议纪要（示例成果）";
+      const sections = skill.id === "guide-maker" ? ["适用对象","所需材料","办理流程"] : ["会议议题","议定事项","待办事项"];
+      return { kind:"file", intro:`已建立《${title}》的成果预览，点击文件卡片可查看和编辑。`, fileName:`${title}.docx`, note:"当前为原型演示内容，正式结果须基于材料和依据生成。", documentHTML:`<h1>${title}</h1><p>演示预览：正式运行时将核对原始材料与具体依据。</p>${sections.map((name,index)=>`<h2>${["一","二","三"][index]}、${name}</h2><p>待根据材料填写。</p>`).join("")}` };
+    }
+    if (skill.id === "ocr-clean" && !attachment && !source?.html) return needs("请添加需要识别的图片或扫描件。");
     const examples = {
-      "policy-guide": { intro:`已围绕“${topic}”完成政策要点梳理。`,points:["适用对象：在新区依法登记、符合政策申报方向的相关主体。","关键条件：需同时核对申报时间、主体资质、材料完整性和不得重复享受等限制。","办理路径：准备材料 → 线上或线下申报 → 主管部门审核 → 结果公示与兑现。"],followups:["展开申报材料清单","只看限制条件","生成企业问答口径"] },
-      "doc-check": { intro:"已完成当前文稿的初步格式与行文校验。",points:["标题与文种基本匹配，建议再次核对发文机关名称是否完整。","正文发现 2 处口语化表述，可改为更加客观、规范的政务用语。","落款和成文日期需结合正式发文信息补充后再提交。"],followups:["逐条展示修改建议","直接生成修订稿","只看格式问题"] },
-      "meeting-summary": { intro:"已按议题、结论和待办三个维度整理会议内容。",points:["核心议题：项目推进情况、当前堵点和跨部门协调事项。","会议结论：按既定目标推进，对滞后事项建立清单化跟踪机制。","待办事项：明确牵头单位、协同单位和反馈时限后形成闭环。"],followups:["生成正式会议纪要","列出待办清单","按责任单位归类"] },
-      "data-brief": { intro:"已完成数据变化、可能原因和工作建议的初步分析。",points:["主要变化：核心指标总体保持平稳，个别指标存在阶段性波动。","原因判断：需结合业务口径、统计周期和异常样本进一步核验。","建议：优先核对异常数据来源，并对连续波动指标建立跟踪清单。"],followups:["生成一页式简报","列出异常指标","补充图表建议"] },
-      "guide-maker": { intro:"已将政策条款转换为便于办理的指南结构。",points:["办理对象：先判断主体身份与事项是否落入政策适用范围。","准备材料：主体证明、申请表、相关佐证材料及政策要求的其他附件。","办理步骤：材料准备 → 提交申请 → 审核补正 → 结果反馈。"],followups:["生成完整办事指南","整理材料清单","生成群众问答"] },
-      "ocr-clean": { intro:"已完成图片文字识别与结构化整理。",points:["已识别标题、正文、表格和落款等主要内容区域。","已自动合并断行并保留原有段落顺序。","低置信度内容已单独标记，建议结合原图人工核对。"],followups:["输出纯文本","整理为Word结构","只看待核对内容"] }
+      "policy-guide": { intro:`已围绕“${topic}”整理政策解读示例。`, points:["适用对象：需依据政策原文核对。","申报条件：核对主体资格、申报时限和限制条款。","办理路径：材料准备 → 提交申请 → 审核与反馈。"], followups:["展开申报材料清单","只看限制条件","生成企业问答口径"] },
+      "ocr-clean": { intro:"已建立文字整理结果的展示示例。", points:["标题、正文和落款可分段展示。","低置信度内容应回到原图人工核对。"], followups:["整理为Word结构","只看待核对内容"] }
     };
-    return examples[skill.id] || { intro:`已使用“${skill.name}”完成本次处理。`,points:["已理解当前任务目标并整理输入内容。","已按技能内置方法完成分析和结构化处理。","结果可继续通过下方快捷指令调整。"],followups:["继续细化结果","换一种结构展示","生成可下载文稿"] };
+    return { kind:"text", ...(examples[skill.id] || { intro:`已使用“${skill.name}”形成文字结果预览。`, points:["可直接阅读结果，并继续提出修改要求。"], followups:["继续细化结果"] }), note:"当前为技能对话原型示例，具体结论请以实际材料与来源为准。" };
   }
-  function skillReplyHTML(skill, text, attach) {
-    const service = skillService(skill.id), result = skillExampleResult(skill,text), source = attach ? `已读取附件：${attach}` : "基于当前对话内容处理";
-    return `<div class="skill-run-card"><div class="skill-run-head"><span class="skill-run-icon" style="background:${skill.color}">${skill.iconData ? `<img src="${esc(skill.iconData)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` : svgi(skill.icon,16)}</span><span class="skill-run-head-copy"><b>${esc(skill.name)}</b><small>技能版本 ${esc(service?.version || skill.version || "v1.0")}</small></span><span class="skill-run-state">已完成</span></div><div class="skill-run-body"><p>${esc(result.intro)}</p><ul class="skill-run-points">${result.points.map(point => `<li>${svgi("i-check",12)}<span>${esc(point)}</span></li>`).join("")}</ul><div class="skill-run-source">${svgi("i-book",12)}<span>${esc(source)}；使用技能“${esc(skill.name)}”，结果请结合正式材料核实。</span></div><div class="skill-followups">${result.followups.map(item => `<button class="skill-followup" type="button" data-skill-followup="${skill.id}" data-prompt="${esc(item)}">${esc(item)}</button>`).join("")}</div></div></div>`;
+  function skillReplyHTML(skill, result, attach, messageIndex) {
+    const service = skillService(skill.id), state = result.kind === "need-input" ? "待补充" : result.kind === "review" ? "待核查" : result.kind === "file" ? "演示成果" : "示例预览";
+    const points = result.kind === "text" ? `<ul class="skill-run-points">${(result.points || []).map(point => `<li>${svgi("i-check",12)}<span>${esc(point)}</span></li>`).join("")}</ul>` : "";
+    const preview = result.kind === "table" ? `<div class="skill-result-preview"><table><thead><tr>${result.columns.map(value => `<th>${esc(value)}</th>`).join("")}</tr></thead><tbody>${result.rows.slice(0,2).map(row => `<tr>${row.map(value => `<td>${esc(value)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><button class="skill-result-cta" type="button" data-act="skillOpenData" data-msg-index="${messageIndex}">${svgi("i-arrow",13)}查看完整表格</button>` : "";
+    const action = result.kind === "review" ? `<button class="skill-result-cta" type="button" data-act="skillOpenReview" data-msg-index="${messageIndex}">${svgi("i-shield",13)}开始核查</button>` : result.kind === "need-input" ? `<button class="skill-result-cta secondary" type="button" data-act="skillPickAttachment" data-skill-id="${skill.id}">${svgi("i-paperclip",13)}添加材料</button>` : "";
+    const followups = result.kind === "text" && result.followups?.length ? `<div class="skill-followups">${result.followups.map(item => `<button class="skill-followup" type="button" data-skill-followup="${skill.id}" data-prompt="${esc(item)}">${esc(item)}</button>`).join("")}</div>` : "";
+    return `<div class="skill-run-card"><div class="skill-run-head"><span class="skill-run-icon" style="background:${skill.color}">${skill.iconData ? `<img src="${esc(skill.iconData)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` : svgi(skill.icon,16)}</span><span class="skill-run-head-copy"><b>${esc(skill.name)}</b><small>技能版本 ${esc(service?.version || skill.version || "v1.0")}${attach ? ` · 材料：${esc(attach)}` : ""}</small></span><span class="skill-run-state ${result.kind === "need-input" ? "wait" : result.kind === "review" ? "pending" : "demo"}">${state}</span></div><div class="skill-run-body"><p>${esc(result.intro)}</p>${points}${preview}${action}<div class="skill-result-note">${esc(result.note || "")}</div>${followups}</div></div>`;
   }
-  function startSkillChat(conv, skill, text, attach) {
+  function startSkillChat(conv, skill, text, attach, sources, previousGenerated) {
     if (currentView !== "chat") switchView("chat");
     if (typeof cfgRecordAudit === "function") cfgRecordAudit("使用技能","技能",skill.name,`对话调用 · ${skillService(skill.id)?.version || skill.version || "v1.0"}`);
     const generationState = beginShortGeneration("skill",conv), inner = $("#threadInner");
     inner.insertAdjacentHTML("beforeend",typingBubble(null,`${skill.name}处理中`)); scrollBottom();
-    generationState.timer = setTimeout(() => {
+    generationState.timer = setTimeout(async () => {
+      if (activeGeneration !== generationState) return;
+      const source = await skillSourceDocument(text,sources,previousGenerated);
       if (activeGeneration !== generationState) return;
       const tp = $("#typingBubble"); if (tp) tp.remove();
-      conv.msgs.push({ role:"agent", agent:null, skillId:skill.id, kind:"skill-result", html:skillReplyHTML(skill,text,attach), time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), noTrust:true, routeType:"skill", modelPayload:{ routeType:"skill",skillId:skill.id,skillVersion:skillService(skill.id)?.version || skill.version || "v1.0",prompt:text,attachments:attach ? [attach] : [] } });
+      const result = skillExampleResult(skill,text,{attach,source}), index = conv.msgs.length;
+      const message = { role:"agent", agent:null, skillId:skill.id, kind:"skill-result", skillResult:result, html:skillReplyHTML(skill,result,attach,index), time:nowTime(), startedAt:generationState.startedAt, completedAt:Date.now(), noTrust:true, routeType:"skill", modelPayload:{ routeType:"skill",skillId:skill.id,skillVersion:skillService(skill.id)?.version || skill.version || "v1.0",prompt:text,attachments:attach ? [attach] : [] } };
+      if (result.kind === "file") Object.assign(message,{directGenerated:true,generatedMaterial:true,materialTitle:result.fileName,materialHTML:result.documentHTML,materialSource:skill.name});
+      if (result.kind === "review") Object.assign(message,{directGenerated:true,materialTitle:result.fileName,materialHTML:result.documentHTML,materialSource:skill.name});
+      conv.msgs.push(message);
       conv.updatedAt=Date.now(); endShortGeneration(generationState); markConversationCompletion(conv); renderChat(); renderSidebar(); focusTop();
     },760);
   }
@@ -6630,6 +6719,40 @@ let sidebarCollapsed = false;
     renderAgentPill(); renderConnectorSelection(); renderHomeSkill(); syncExclusion();
     const input=$("#composerInput"); if (input) { input.value=prompt || skill.prompt; syncPromptHighlight(input); autoSize(); toggleSend(); input.focus(); }
     showToast(`已继续引用技能「${skill.name}」`);
+  }
+  let skillOutputContext = null;
+  function openSkillDataResult(messageIndex) {
+    const conversation = cur(), message = conversation?.msgs[Number(messageIndex)], result = message?.skillResult;
+    if (!conversation || result?.kind !== "table") { showToast("未找到可查看的表格成果"); return; }
+    skillOutputContext = { conversationId:conversation.id, messageIndex:Number(messageIndex) };
+    $("#skillOutputTitle").textContent = result.title || "数据成果";
+    $("#skillOutputMeta").textContent = `${SKILLS.find(item=>item.id===message.skillId)?.name || "技能"} · ${result.rows.length} 行`;
+    $("#skillOutputMain").innerHTML = `<article class="skill-result-paper"><h1>${esc(result.title || "数据成果")}</h1><p>${esc(result.note || "")}</p><table><thead><tr>${result.columns.map(value=>`<th scope="col">${esc(value)}</th>`).join("")}</tr></thead><tbody>${result.rows.map(row=>`<tr>${row.map(value=>`<td>${esc(value)}</td>`).join("")}</tr>`).join("")}</tbody></table></article>`;
+    switchView("skill-output");
+  }
+  function returnSkillConversation() {
+    const conversation = convs.find(item => item.id === skillOutputContext?.conversationId);
+    if (conversation) curId = conversation.id;
+    switchView("chat"); renderChat(); renderSidebar(); scrollBottom();
+  }
+  function downloadSkillData() {
+    const conversation = convs.find(item => item.id === skillOutputContext?.conversationId);
+    const result = conversation?.msgs[skillOutputContext?.messageIndex]?.skillResult;
+    if (result?.kind !== "table") { showToast("未找到可下载的表格成果"); return; }
+    const csv = [result.columns,...result.rows].map(row => row.map(value => `"${String(value).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+    downloadBlob("\uFEFF"+csv,"text/csv;charset=utf-8",`${result.title || "技能表格"}.csv`);
+  }
+  function openSkillReview(messageIndex) {
+    const message = cur()?.msgs[Number(messageIndex)];
+    if (message?.skillResult?.kind !== "review" || !message.materialHTML) { showToast("请先提供可核查的文稿正文"); return; }
+    openDocumentEditor(messageIndex);
+    setTimeout(() => { if (!window.JBAIReviewPilot?.startFromEditor?.({trigger:"skill"})) showToast("暂无法打开核查处理区，请稍后重试"); },0);
+  }
+  function pickSkillMaterial(skillId) {
+    const skill = SKILLS.find(item => item.id === skillId);
+    if (!skill) return;
+    prepareSkillFollowup(skillId,skill.prompt);
+    $("#attachBtn")?.click();
   }
   function startKnowledgeChat(conv, text, attach) {
     if (currentView !== "chat") switchView("chat");
@@ -11670,6 +11793,7 @@ function cfgRoleManagementHTML() {
     { id: "meeting-summary", name: "会议纪要整理", icon: "i-mic", color: "linear-gradient(135deg,#6b4bb4,#9275d4)", desc: "从会议录音或转写中自动提炼议题、结论、待办和责任分工。", prompt: "请根据会议转写内容，生成包含议题、结论和待办的会议纪要。", tag: "内容处理", calls: 247, published: "2026-07-08" },
     { id: "data-brief", name: "政务数据分析", icon: "i-chart-doc", color: "linear-gradient(135deg,#0b8fa8,#39b7ca)", desc: "梳理数据指标、识别变化原因，并输出简明的工作分析与汇报建议。", prompt: "请分析这组政务运行数据，提炼主要变化、原因和下一步建议。", tag: "数据分析", calls: 192, published: "2026-06-26" },
     { id: "guide-maker", name: "办事指南生成", icon: "i-compass", color: "linear-gradient(135deg,#9a6700,#d59a24)", desc: "将政策条款转换成面向企业和群众的办事流程、材料清单与常见问答。", prompt: "请把这份政策文件整理成一份企业可直接使用的办事指南。", tag: "综合服务", calls: 159, published: "2026-06-20" },
+    { id: "excel-word", name: "Excel转Word", icon: "i-file", color: "linear-gradient(135deg,#126fae,#1b9a8a)", desc: "将Excel工作表整理为可继续编辑的Word文档，保留表格结构和标题。", prompt: "请将附件Excel转换为Word，保留各工作表标题和表格结构。", tag: "内容处理", calls: 86, published: "2026-09-28" },
    { id: "ocr-clean", name: "图片文字整理", icon: "i-scan", color: "linear-gradient(135deg,#b42318,#dc6258)", desc: "识别图片或扫描件中的文字，整理成结构化内容并统一格式。", prompt: "请识别并整理这份扫描材料中的文字，输出结构化文本。", tag: "内容处理", calls: 128, published: "2026-06-16" }
  ];
   const SKILL_PROMPT_EXAMPLES = {
@@ -11678,6 +11802,7 @@ function cfgRoleManagementHTML() {
     "meeting-summary":["请根据会议转写内容，生成包含议题、结论和待办的会议纪要。","从附件会议录音中提取责任单位、责任人和完成时限。","把这段会商记录整理成领导可快速阅知的会议摘要。"],
     "data-brief":["请分析这组政务运行数据，提炼主要变化、原因和下一步建议。","比较本月与上月项目办理数据，找出异常指标并说明原因。","把附件表格整理成一页式数据分析简报。"],
     "guide-maker":["请把这份政策文件整理成一份企业可直接使用的办事指南。","根据附件制度，列出申请对象、所需材料、办理流程和咨询方式。","把专业政策条款改写成群众容易理解的办事问答。"],
+    "excel-word":["请将附件Excel转换为Word，保留各工作表标题和表格结构。","把这份项目台账转成Word，按工作表分别生成章节。","将表格整理成可编辑的Word文件，并保留原字段顺序。"],
     "ocr-clean":["请识别并整理这份扫描材料中的文字，输出结构化文本。","提取图片中的表格并按原有行列顺序整理。","识别这批扫描件中的标题、正文和落款，并合并成一份文档。"]
   };
   const userInstalledSkillIds = new Set(["policy-guide", "doc-check"]);
@@ -13456,6 +13581,11 @@ function cfgRoleManagementHTML() {
     $("#structuredConfirmPrev").addEventListener("click", () => { if (!structuredConfirmDraft || structuredConfirmDraft.pageIndex <= 0) return; structuredConfirmDraft.pageIndex -= 1; renderStructuredConfirmSheet(); });
     $("#structuredConfirmClose").addEventListener("click", () => { closeStructuredConfirmSheet(); showToast("已取消本次要素确认"); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (document.body.classList.contains("agent-confirming")) closeStructuredConfirmSheet(); else closeModal(); } });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const card = e.target.closest('.generated-file-card[role="button"][data-act]');
+      if (card && e.target === card) { e.preventDefault(); card.click(); }
+    });
 
     // ===== 全局点击委托 =====
     document.addEventListener("click", (e) => {
@@ -14067,6 +14197,11 @@ function cfgRoleManagementHTML() {
       case "retryFailedReply": openFailedReplyRetry(el.dataset.msgIndex); break;
       case "saveConversationKnowledge": saveConversationKnowledge(el.dataset.msgIndex); break;
       case "generatedExport": openDownloadFormatMenu(el,"conversation",el.dataset.msgIndex); break;
+      case "skillOpenData": openSkillDataResult(el.dataset.msgIndex); break;
+      case "skillReturnChat": returnSkillConversation(); break;
+      case "skillDownloadData": downloadSkillData(); break;
+      case "skillOpenReview": openSkillReview(el.dataset.msgIndex); break;
+      case "skillPickAttachment": pickSkillMaterial(el.dataset.skillId); break;
       case "generatedEdit": openDocumentEditor(el.dataset.msgIndex); break;
       case "documentToolOpen": openDocumentEditor(el.dataset.msgIndex); break;
       case "documentToolResume": resumeDocumentToolTask(el.dataset.msgIndex); break;
