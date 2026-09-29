@@ -102,7 +102,6 @@
 .review-basis dl>div { display:grid;grid-template-columns:70px 1fr;gap:6px; }
 .review-basis dt { color:#8b979d; }
 .review-basis dd { margin:0;color:#4a606c; }
-.review-basis>p { margin:5px 0 0;color:#7f8d94; }
 .review-issue-actions { display:flex;gap:6px;align-items:flex-start; }
 .review-issue-actions button.active { border-color:#67b18d;background:#eaf7f0;color:#16704a; }
 .review-issue-actions button:last-child.active { border-color:#c8d1d5;background:#eef1f2;color:#66777f; }

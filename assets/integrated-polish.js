@@ -257,13 +257,27 @@
     return { ...counts, manuallyEdited, conclusion:counts.pending?`已形成当前润色稿${manuallyEdited?"（含手工编辑）":""}，${counts.pending} 项未处理并保留原文`:counts.accepted?`已采纳 ${counts.accepted} 项优化建议${manuallyEdited?"并包含手工编辑":""}`:manuallyEdited?"当前润色稿包含手工编辑":"已保留原文，未采纳优化建议" };
   }
 
-  function reportHTML() {
+  function reportHTML(selectedVersion) {
     const data=reportData();
-    const rows=active.changes.map((item,index)=>`<tr><td>${index+1}</td><td>${esc(categoryLabel(item.category))}</td><td>${esc(item.type)}</td><td>${esc(item.original)}</td><td>${esc(item.suggestion)}</td><td>${esc(item.reason)}</td><td>${item.state==="accepted"?"已采纳（写入当前润色稿）":item.state==="ignored"?"已忽略（保留原文）":"未处理（保留原文）"}</td></tr>`).join("");
-    return `<article class="polish-report"><header><p>文本智能润色报告</p><h2>${esc(active.documentInfo.title)}</h2><span>${esc(data.conclusion)}</span></header>
-      <div class="polish-report-kpis"><div><b>${data.total}</b><span>识别优化项</span></div><div><b>${data.categories}</b><span>覆盖分类</span></div><div><b>${data.accepted}</b><span>已采纳</span></div><div><b>${data.ignored}</b><span>已忽略</span></div></div>
-      <section><h3>润色说明</h3><p>本报告记录本次润色识别出的优化项、分类、原文、建议、修改原因及用户处理结果。未处理及已忽略的建议均保持原文；数字、日期、机构、人名和政策名称未主动改写。</p></section>
-      <section><h3>优化项处理明细</h3><div class="polish-report-table"><table><thead><tr><th>序号</th><th>分类</th><th>细分类型</th><th>原文</th><th>润色建议</th><th>修改说明</th><th>处理结果</th></tr></thead><tbody>${rows||'<tr><td colspan="7">本次未识别到可优化项。</td></tr>'}</tbody></table></div></section></article>`;
+    const reportTime=new Date().toLocaleString("zh-CN",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+    const version=selectedVersion==="original"?"使用原稿":selectedVersion==="polished"?"使用修订稿":"当前处理稿（待确认）";
+    const usesOriginal=selectedVersion==="original";
+    const categoryRows=CATEGORIES.map(([key,label])=>{
+      const items=active.changes.filter(item=>item.category===key);
+      return `<tr><td>${esc(label)}</td><td>${items.length}</td><td>${items.filter(item=>item.state==="accepted").length}</td><td>${items.filter(item=>item.state==="ignored").length}</td><td>${items.filter(item=>item.state==="pending").length}</td></tr>`;
+    }).join("");
+    const details=active.changes.map((item,index)=>{
+      const state=item.state==="accepted"?"已采纳":item.state==="ignored"?"已忽略":"未处理";
+      const result=item.state==="accepted"?(usesOriginal?"曾采纳；最终使用原稿，未写入最终文稿":"已采纳，写入当前修订稿"):`${state}，保留原文`;
+      return `<div class="polish-report-item"><h4>${String(index+1).padStart(2,"0")}　${esc(categoryLabel(item.category))} · ${esc(item.type)} <span>${state}</span></h4>
+        <table><tbody><tr><th>原文位置</th><td>${esc(item.position || "未定位")}</td></tr><tr><th>问题描述</th><td>${esc(item.problem)}</td></tr><tr><th>原文内容</th><td>${esc(item.original)}</td></tr><tr><th>润色建议</th><td>${esc(item.suggestion)}</td></tr><tr><th>修改说明</th><td>${esc(item.reason)}</td></tr><tr><th>建议依据来源</th><td>${esc(item.basis || "未关联")}</td></tr><tr><th>依据文件名称</th><td>${esc(item.evidenceFile || "未关联")}</td></tr><tr><th>依据条款</th><td>${esc(item.evidenceClause || "未关联")}</td></tr><tr><th>处理结果</th><td>${esc(result)}</td></tr></tbody></table></div>`;
+    }).join("");
+    return `<article class="polish-report"><header><h2>文本智能润色报告</h2><p>${esc(active.documentInfo.title)}</p></header>
+      <section><h3>一、报告基本信息</h3><table class="polish-report-meta"><tbody><tr><th>报告编号</th><td>${esc(active.reportNo)}</td><th>生成时间</th><td>${esc(reportTime)}</td></tr><tr><th>原文标题</th><td colspan="3">${esc(active.documentInfo.title)}</td></tr><tr><th>处理版本</th><td>${version}</td><th>过程人工编辑</th><td>${data.manuallyEdited?(usesOriginal?"有，最终未采用":"有"):"无"}</td></tr></tbody></table></section>
+      <section><h3>二、润色处理概况</h3><p class="polish-report-summary">${usesOriginal?"已选择使用原稿，最终文稿不含本次润色改动":esc(data.conclusion)}。共识别 ${data.total} 项，已采纳 ${data.accepted} 项，已忽略 ${data.ignored} 项，未处理 ${data.pending} 项。${usesOriginal?"采纳数记录处理过程，最终仍以原稿为准。":"已忽略及未处理项均保持原文。"}</p></section>
+      <section><h3>三、优化分类统计</h3><table class="polish-report-category"><thead><tr><th>优化分类</th><th>识别</th><th>采纳</th><th>忽略</th><th>未处理</th></tr></thead><tbody>${categoryRows}<tr class="polish-report-total"><th>合计</th><td>${data.total}</td><td>${data.accepted}</td><td>${data.ignored}</td><td>${data.pending}</td></tr></tbody></table></section>
+      <section><h3>四、优化项处理明细</h3>${details||'<p class="polish-report-empty">本次未识别到可优化项。</p>'}</section>
+      <section><h3>五、版本与使用说明</h3><p>本报告记录建议及用户处理状态。${usesOriginal?"用户最终选择原稿，本次建议和手工编辑均未写入最终文稿。":"只有已采纳项写入当前修订稿。"}${data.manuallyEdited&&!usesOriginal?"当前修订稿还包含用户在线编辑内容，需以实际保存的文稿版本为准。":""}正式使用前，请复核事实、数字、日期、机构名称及政策引用。</p></section></article>`;
   }
 
   function reportViewHTML() {
@@ -344,7 +358,9 @@
 
   function openResult(documentInfo, trigger) {
     const decorated = decorateDocument(documentInfo.html);
-    active = { documentInfo, originalHTML:documentInfo.html, template:decorated.template, changes:decorated.changes, manualHTML:null, manualEdited:false, view:"results", activeCategories:new Set(CATEGORIES.map(item=>item[0])), reportRecordId:"", trigger:trigger || "button" };
+    const reportCreatedAt=Date.now();
+    const reportDate=new Date(reportCreatedAt), reportDay=`${reportDate.getFullYear()}${String(reportDate.getMonth()+1).padStart(2,"0")}${String(reportDate.getDate()).padStart(2,"0")}`;
+    active = { documentInfo, originalHTML:documentInfo.html, template:decorated.template, changes:decorated.changes, manualHTML:null, manualEdited:false, view:"results", activeCategories:new Set(CATEGORIES.map(item=>item[0])), reportRecordId:"", reportCreatedAt, reportNo:`PLS-${reportDay}-${String(reportCreatedAt).slice(-6)}`, trigger:trigger || "button" };
     running = false;
     taskDocumentInfo = documentInfo;
     syncTask("ready", {stage:`已识别 ${decorated.changes.length} 项可优化内容，请进入专注模式继续处理。`});
@@ -418,8 +434,8 @@
     if (!active) return;
     const counts = changeCounts();
     if (!counts.accepted && !active.manualEdited) { host()?.toast?.("当前没有可应用的修改。"); return; }
-    const html = resultHTML("commit"), report=reportHTML();
-    const saved=host()?.savePolishReport?.({reportId:active.reportRecordId,reportHTML:report,totalCount:counts.total,acceptedCount:counts.accepted,ignoredCount:counts.ignored,pendingCount:counts.pending,categoryCount:counts.categories,selectedVersion:"polished",summary:`全文智能润色：采纳${counts.accepted}处，忽略${counts.ignored}处，未处理${counts.pending}处`});
+    const html = resultHTML("commit"), report=reportHTML("polished");
+    const saved=host()?.savePolishReport?.({reportId:active.reportRecordId,reportNo:active.reportNo,reportHTML:report,totalCount:counts.total,acceptedCount:counts.accepted,ignoredCount:counts.ignored,pendingCount:counts.pending,categoryCount:counts.categories,selectedVersion:"polished",summary:`全文智能润色：采纳${counts.accepted}处，忽略${counts.ignored}处，未处理${counts.pending}处`});
     if(saved?.id)active.reportRecordId=saved.id;
     const ok = host()?.commitPolishedDocument?.({ html, reportId:active.reportRecordId,reportHTML:report,acceptedCount:counts.accepted,ignoredCount:counts.ignored,pendingCount:counts.pending,totalCount:counts.total,categoryCount:counts.categories,summary:`全文智能润色：采纳${counts.accepted}处，忽略${counts.ignored}处，未处理${counts.pending}处` });
     if (ok) {
@@ -431,7 +447,7 @@
 
   function useOriginal() {
     if(!active)return false;
-    const html=active.originalHTML, counts=changeCounts(), saved=host()?.savePolishReport?.({reportId:active.reportRecordId,reportHTML:reportHTML(),totalCount:counts.total,acceptedCount:counts.accepted,ignoredCount:counts.ignored,pendingCount:counts.pending,categoryCount:counts.categories,selectedVersion:"original",summary:`全文智能润色：识别${counts.total}处，选择保留原稿`});
+    const html=active.originalHTML, counts=changeCounts(), saved=host()?.savePolishReport?.({reportId:active.reportRecordId,reportNo:active.reportNo,reportHTML:reportHTML("original"),totalCount:counts.total,acceptedCount:counts.accepted,ignoredCount:counts.ignored,pendingCount:counts.pending,categoryCount:counts.categories,selectedVersion:"original",summary:`全文智能润色：识别${counts.total}处，选择保留原稿`});
     if(saved?.id)active.reportRecordId=saved.id;
     syncTask("complete",{selectedVersion:"original",stage:"全文智能润色已完成，润色报告已保存。"});
     discard({silent:true,finalHTML:html});
@@ -441,7 +457,7 @@
 
   function downloadReport() {
     if(!active)return false;
-    return host()?.downloadActivePolishReport?.({title:`${active.documentInfo.title}（文本润色报告）`,html:reportHTML()})!==false;
+    return host()?.downloadActivePolishReport?.({title:`${active.documentInfo.title}_文本智能润色报告_${active.reportNo}`,html:reportHTML()})!==false;
   }
 
   function repolish() {

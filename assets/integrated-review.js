@@ -187,7 +187,7 @@
         <div class="review-issue-main"><header><span class="review-dimension-badge">${esc(labelOf(DIMENSIONS,row.dimension))}</span><span class="review-risk-badge ${row.risk}">${esc(labelOf(RISKS,row.risk))}</span><b>${esc(row.title)}</b><em>${row.state==="accepted"?"已采纳":row.state==="ignored"?"已忽略":"待处理"}</em></header>
           <div class="review-compare"><div><small>原文</small><p>${esc(row.original || row.from)}</p></div><div><small>修改建议</small><p>${esc(row.suggestion || row.to)}</p></div></div>
           <p class="review-reason"><b>${esc(row.category)}</b> · ${esc(row.reason)}</p>
-          <details class="review-basis"><summary>审查依据与原文位置</summary><dl><div><dt>文件名称</dt><dd>${esc(row.file)}</dd></div><div><dt>发布机关</dt><dd>${esc(row.agency)}</dd></div><div><dt>具体条款</dt><dd>${esc(row.clause)}</dd></div><div><dt>最后同步时间</dt><dd>${esc(row.synced)}</dd></div></dl><p>原文位置：${esc(row.position)}</p></details>
+          <details class="review-basis"><summary>审查依据</summary><dl><div><dt>文件名称</dt><dd>${esc(row.file)}</dd></div><div><dt>具体条款</dt><dd>${esc(row.clause)}</dd></div></dl></details>
         </div>
         <div class="review-issue-actions"><button class="${row.state==="accepted"?"active":""}" data-review-action="accept" data-issue-id="${row.id}">采纳</button><button class="${row.state==="ignored"?"active":""}" data-review-action="ignore" data-issue-id="${row.id}">忽略</button></div>
       </article>`;}).join(""):`<div class="review-filter-empty"><b>当前筛选下没有审查问题</b><p>可切换其他维度或风险程度继续查看。</p></div>`}</div>`;
@@ -315,7 +315,7 @@
     if (running) { host()?.toast?.("合规审查正在处理中，请稍候。"); return false; }
     let documentInfo=host()?.getActiveDocument?.();
     if (!documentInfo) { host()?.toast?.("请先生成或载入一份文稿。"); return false; }
-    if(options?.trigger!=="demo" && !/安全生产检查通知（演示文稿）/.test(documentInfo.title || "")) {
+    if(options?.trigger!=="demo" && options?.trigger!=="skill" && !/安全生产检查通知（演示文稿）/.test(documentInfo.title || "")) {
       const text=window.JBAIPilotContent?.examples?.review?.text;
       const prepared=text && host()?.prepareReviewDocument?.(documentInfo.conversationId,{name:"安全生产检查通知（演示文稿）",type:"政务办公场景演示",text});
       if(!prepared){host()?.toast?.("演示文稿载入失败，请稍后重试。");return false;}
